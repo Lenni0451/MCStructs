@@ -1,0 +1,111 @@
+plugins {
+    id "java"
+    id "maven-publish"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+compileJava.options.encoding = "UTF-8"
+
+archivesBaseName = project.maven_name
+group = project.maven_group
+version = project.maven_version
+
+configurations {
+    include
+
+    implementation.extendsFrom include
+    api.extendsFrom include
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "lenni0451 releases"
+        url = "https://maven.lenni0451.net/releases"
+    }
+    //maven {
+    //    name = "Sonatype Snapshots"
+    //    url "https://oss.sonatype.org/content/repositories/snapshots/"
+    //}
+
+    //ivy { //include "waterfall:1.19:504@jar"
+    //    url "https://papermc.io/api/v2/projects"
+    //    patternLayout {
+    //        artifact "/[organisation]/versions/[module]/builds/[revision]/downloads/[organisation]-[module]-[revision].[ext]"
+    //    }
+    //    metadataSources {
+    //        artifact()
+    //    }
+    //}
+}
+
+dependencies {
+    //if (new File(projectDir, "libs").exists()) {
+    //    include fileTree(include: ["*.jar"], dir: "libs")
+    //}
+
+    //include "net.lenni0451:Reflect:1.0.0"
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+javadoc {
+    failOnError = false
+}
+
+jar {
+    dependsOn configurations.include
+    from {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        configurations.include.collect {
+            zipTree(it)
+        }
+    } {
+        exclude "META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA"
+    }
+
+    manifest {
+        attributes(
+                "Main-Class": "net.lenni0451.gradletemplate.Main",
+                "Multi-Release": "true"
+        )
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "reposilite"
+            url = ((project.snapshot == "true") ? "https://maven.lenni0451.net/snapshots" : "https://maven.lenni0451.net/releases")
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            artifactId = project.maven_name
+            groupId = project.maven_group
+            version = project.maven_version
+
+            from components.java
+        }
+    }
+}
+
+//processResources {
+//    //Config file: "version: ${version}"
+//    inputs.properties(
+//            "version": project.maven_version + ((project.snapshot == "false") ? "-SNAPSHOT" : "")
+//    )
+//    
+//    filesMatching("config") {
+//        expand(
+//                "version": project.maven_version + ((project.snapshot == "false") ? "-SNAPSHOT" : "")
+//        )
+//    }
+//}
