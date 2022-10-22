@@ -24,6 +24,21 @@ public class ByteArrayNbt implements INbtTag {
         this.value = value;
     }
 
+    public byte get(final int index) {
+        return this.value[index];
+    }
+
+    public void set(final int index, final byte b) {
+        this.value[index] = b;
+    }
+
+    public void add(final byte b) {
+        byte[] newValue = new byte[this.value.length + 1];
+        System.arraycopy(this.value, 0, newValue, 0, this.value.length);
+        newValue[this.value.length] = b;
+        this.value = newValue;
+    }
+
     @Override
     public int getId() {
         return NbtRegistry.BYTE_ARRAY_NBT;

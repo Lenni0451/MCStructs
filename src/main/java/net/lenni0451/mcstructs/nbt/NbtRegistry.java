@@ -72,12 +72,32 @@ public class NbtRegistry {
         throw new UnknownTagTypeException(id);
     }
 
+    public static boolean isNumber(final int id) {
+        return BYTE_NBT == id || SHORT_NBT == id || INT_NBT == id || LONG_NBT == id || FLOAT_NBT == id || DOUBLE_NBT == id;
+    }
+
     public static <T extends INbtTag> T newInstance(final Class<?> type) {
         try {
             return (T) UNSAFE.allocateInstance(type);
         } catch (InstantiationException e) {
             throw new IllegalStateException("Failed to allocate nbt instance", e);
         }
+    }
+
+    public static INbtTag wrap(final Object o) {
+        if (o == null) return null;
+        if (o instanceof INbtTag) return (INbtTag) o;
+        if (o instanceof Byte) return new ByteNbt((Byte) o);
+        else if (o instanceof Short) return new ShortNbt((Short) o);
+        else if (o instanceof Integer) return new IntNbt((Integer) o);
+        else if (o instanceof Long) return new LongNbt((Long) o);
+        else if (o instanceof Float) return new FloatNbt((Float) o);
+        else if (o instanceof Double) return new DoubleNbt((Double) o);
+        else if (o instanceof byte[]) return new ByteArrayNbt((byte[]) o);
+        else if (o instanceof String) return new StringNbt((String) o);
+        else if (o instanceof int[]) return new IntArrayNbt((int[]) o);
+        else if (o instanceof long[]) return new LongArrayNbt((long[]) o);
+        throw new UnknownTagTypeException(o.getClass());
     }
 
 }

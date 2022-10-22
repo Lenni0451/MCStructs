@@ -16,6 +16,22 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
     private Class<T> type;
     private List<T> value;
 
+    public ListNbt() {
+        this(null, new ArrayList<>());
+    }
+
+    public ListNbt(final Class<T> type) {
+        this(type, new ArrayList<>());
+    }
+
+    public ListNbt(final List<T> list) {
+        if (!list.isEmpty()) {
+            this.type = (Class<T>) list.get(0).getClass();
+            if (list.stream().anyMatch(tag -> !tag.getClass().equals(this.type))) throw new IllegalArgumentException("Tried to create list with multiple nbt types");
+        }
+        this.value = list;
+    }
+
     public ListNbt(final Class<T> type, final List<T> value) {
         this.type = type;
         this.value = value;
@@ -35,6 +51,40 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
 
     public void setValue(List<T> value) {
         this.value = value;
+    }
+
+    public T get(final int index) {
+        return this.value.get(index);
+    }
+
+    public void add(final T tag) {
+        this.check(tag);
+        this.value.add(tag);
+    }
+
+    public void set(final int index, final T tag) {
+        this.check(tag);
+        this.value.set(index, tag);
+    }
+
+    public void remove(final T tag) {
+        this.check(tag);
+        this.value.remove(tag);
+    }
+
+    public boolean canAdd(final INbtTag tag) {
+        if (this.type == null || this.value.isEmpty()) return true;
+        return this.type.equals(tag.getClass());
+    }
+
+    public boolean canAdd(final int type) {
+        if (this.type == null || this.value.isEmpty()) return true;
+        return NbtRegistry.getTagId(this.type) == type;
+    }
+
+    public boolean canAdd(final Class<? extends INbtTag> type) {
+        if (this.type == null || this.value.isEmpty()) return true;
+        return this.type.equals(type);
     }
 
     @Override
@@ -73,6 +123,16 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         for (T tag : this.value) out.append(tag).append(",");
         if (!this.value.isEmpty()) out.deleteCharAt(out.length() - 1);
         return out.append("]").toString();
+    }
+
+
+    private void check(final T tag) {
+        if (this.type == null || this.value.isEmpty()) {
+            this.type = (Class<T>) tag.getClass();
+            this.value.clear();
+        } else if (!this.type.equals(tag.getClass())) {
+            throw new IllegalArgumentException("Can't add " + tag.getClass().getSimpleName() + " to a " + this.type.getSimpleName() + " list");
+        }
     }
 
 }
