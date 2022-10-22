@@ -1,14 +1,11 @@
 package net.lenni0451.mcstructs.nbt;
 
+import net.lenni0451.mcstructs.general.UnsafeUtils;
 import net.lenni0451.mcstructs.nbt.exceptions.UnknownTagTypeException;
 import net.lenni0451.mcstructs.nbt.tags.*;
-import sun.misc.Unsafe;
-
-import java.lang.reflect.Field;
 
 public class NbtRegistry {
 
-    private static final Unsafe UNSAFE;
     public static final byte END_NBT = 0;
     public static final byte BYTE_NBT = 1;
     public static final byte SHORT_NBT = 2;
@@ -22,23 +19,6 @@ public class NbtRegistry {
     public static final byte COMPOUND_NBT = 10;
     public static final byte INT_ARRAY_NBT = 11;
     public static final byte LONG_ARRAY_NBT = 12;
-
-    static {
-        try {
-            Unsafe unsafe = null;
-            for (Field field : Unsafe.class.getDeclaredFields()) {
-                if (Unsafe.class.equals(field.getType())) {
-                    field.setAccessible(true);
-                    unsafe = (Unsafe) field.get(null);
-                    break;
-                }
-            }
-            if (unsafe == null) throw new IllegalStateException("Failed to find unsafe field");
-            UNSAFE = unsafe;
-        } catch (Throwable t) {
-            throw new IllegalStateException("Failed to get unsafe instance", t);
-        }
-    }
 
     public static int getTagId(final Class<? extends INbtTag> type) {
         if (ByteNbt.class.equals(type)) return BYTE_NBT;
@@ -78,7 +58,7 @@ public class NbtRegistry {
 
     public static <T extends INbtTag> T newInstance(final Class<?> type) {
         try {
-            return (T) UNSAFE.allocateInstance(type);
+            return UnsafeUtils.allocateInstance(type);
         } catch (InstantiationException e) {
             throw new IllegalStateException("Failed to allocate nbt instance", e);
         }
