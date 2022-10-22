@@ -39,6 +39,14 @@ public class ByteArrayNbt implements INbtTag {
         this.value = newValue;
     }
 
+    public int getLength() {
+        return this.value.length;
+    }
+
+    public boolean isEmpty() {
+        return this.value.length == 0;
+    }
+
     @Override
     public int getId() {
         return NbtRegistry.BYTE_ARRAY_NBT;

@@ -202,6 +202,27 @@ public class CompoundNbt implements INbtTag {
         this.add(key, new LongArrayNbt(longs));
     }
 
+    public boolean trim() {
+        if (this.value.isEmpty()) return true;
+        this.value.entrySet().removeIf(entry -> {
+            INbtTag tag = entry.getValue();
+            if (tag instanceof ByteNbt) return ((ByteNbt) tag).getValue() == 0;
+            else if (tag instanceof ShortNbt) return ((ShortNbt) tag).getValue() == 0;
+            else if (tag instanceof IntNbt) return ((IntNbt) tag).getValue() == 0;
+            else if (tag instanceof LongNbt) return ((LongNbt) tag).getValue() == 0;
+            else if (tag instanceof FloatNbt) return ((FloatNbt) tag).getValue() == 0;
+            else if (tag instanceof DoubleNbt) return ((DoubleNbt) tag).getValue() == 0;
+            else if (tag instanceof ByteArrayNbt) return ((ByteArrayNbt) tag).isEmpty();
+            else if (tag instanceof StringNbt) return ((StringNbt) tag).getValue().isEmpty();
+            else if (tag instanceof ListNbt) return ((ListNbt<?>) tag).trim();
+            else if (tag instanceof CompoundNbt) return ((CompoundNbt) tag).trim();
+            else if (tag instanceof IntArrayNbt) return ((IntArrayNbt) tag).isEmpty();
+            else if (tag instanceof LongArrayNbt) return ((LongArrayNbt) tag).isEmpty();
+            return false;
+        });
+        return this.value.isEmpty();
+    }
+
     @Override
     public int getId() {
         return NbtRegistry.COMPOUND_NBT;

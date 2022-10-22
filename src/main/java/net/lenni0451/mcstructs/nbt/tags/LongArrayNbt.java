@@ -24,6 +24,29 @@ public class LongArrayNbt implements INbtTag {
         this.value = value;
     }
 
+    public long get(final int index) {
+        return this.value[index];
+    }
+
+    public void set(final int index, final long l) {
+        this.value[index] = l;
+    }
+
+    public void add(final long l) {
+        long[] newValue = new long[this.value.length + 1];
+        System.arraycopy(this.value, 0, newValue, 0, this.value.length);
+        newValue[this.value.length] = l;
+        this.value = newValue;
+    }
+
+    public int getLength() {
+        return this.value.length;
+    }
+
+    public boolean isEmpty() {
+        return this.value.length == 0;
+    }
+
     @Override
     public int getId() {
         return NbtRegistry.LONG_ARRAY_NBT;

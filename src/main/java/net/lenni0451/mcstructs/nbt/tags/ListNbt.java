@@ -87,6 +87,13 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         return this.type.equals(type);
     }
 
+    public boolean trim() {
+        if (this.value.isEmpty()) return true;
+        if (CompoundNbt.class.equals(this.type)) this.value.forEach(tag -> ((CompoundNbt) tag).trim());
+        else if (ListNbt.class.equals(this.type)) this.value.forEach(tag -> ((ListNbt<?>) tag).trim());
+        return false;
+    }
+
     @Override
     public int getId() {
         return NbtRegistry.LIST_NBT;
