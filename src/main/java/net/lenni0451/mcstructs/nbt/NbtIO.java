@@ -27,11 +27,15 @@ public class NbtIO {
 
 
     public static INbtTag readFile(final File f, final boolean compressed, final NbtReadTracker readTracker) throws IOException {
-        return read(Files.newInputStream(f.toPath()), compressed, readTracker);
+        try (InputStream fis = Files.newInputStream(f.toPath())) {
+            return read(fis, compressed, readTracker);
+        }
     }
 
     public static void writeFile(final File f, final String name, final INbtTag tag, final boolean compressed) throws IOException {
-        write(Files.newOutputStream(f.toPath()), name, tag, compressed);
+        try (OutputStream fos = Files.newOutputStream(f.toPath())) {
+            write(fos, name, tag, compressed);
+        }
     }
 
 
@@ -41,8 +45,13 @@ public class NbtIO {
     }
 
     public static void write(final OutputStream os, final String name, final INbtTag tag, final boolean compressed) throws IOException {
-        if (compressed) write(new DataOutputStream(new GZIPOutputStream(os)), name, tag);
-        else write(new DataOutputStream(os), name, tag);
+        if (compressed) {
+            try (GZIPOutputStream gos = new GZIPOutputStream(os)) {
+                write(new DataOutputStream(gos), name, tag);
+            }
+        } else {
+            write(new DataOutputStream(os), name, tag);
+        }
     }
 
 
