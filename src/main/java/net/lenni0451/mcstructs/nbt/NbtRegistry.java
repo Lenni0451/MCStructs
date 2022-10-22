@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.nbt;
 
+import net.lenni0451.mcstructs.nbt.exceptions.UnknownTagTypeException;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import sun.misc.Unsafe;
 
@@ -52,7 +53,7 @@ public class NbtRegistry {
         else if (CompoundNbt.class.equals(type)) return COMPOUND_NBT;
         else if (IntArrayNbt.class.equals(type)) return INT_ARRAY_NBT;
         else if (LongArrayNbt.class.equals(type)) return LONG_ARRAY_NBT;
-        return -1;
+        throw new UnknownTagTypeException(type);
     }
 
     public static Class<? extends INbtTag> getTagClass(final int id) {
@@ -68,7 +69,7 @@ public class NbtRegistry {
         else if (id == COMPOUND_NBT) return CompoundNbt.class;
         else if (id == INT_ARRAY_NBT) return IntArrayNbt.class;
         else if (id == LONG_ARRAY_NBT) return LongArrayNbt.class;
-        return null;
+        throw new UnknownTagTypeException(id);
     }
 
     public static <T extends INbtTag> T newInstance(final Class<?> type) {
