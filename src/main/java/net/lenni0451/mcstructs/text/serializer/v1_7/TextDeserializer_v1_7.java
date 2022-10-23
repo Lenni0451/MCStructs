@@ -14,7 +14,18 @@ public class TextDeserializer_v1_7 implements JsonDeserializer<ATextComponent> {
     public ATextComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (json.isJsonPrimitive()) {
             return new StringComponent(json.getAsString());
-        } else {
+        } else if (json.isJsonArray()) {
+            JsonArray array = json.getAsJsonArray();
+            ATextComponent component = null;
+
+            for (JsonElement element : array) {
+                ATextComponent serializedElement = this.deserialize(element, element.getClass(), context);
+                if (component == null) component = serializedElement;
+                else component.append(serializedElement);
+            }
+
+            return component;
+        } else if (json.isJsonObject()) {
             JsonObject rawComponent = json.getAsJsonObject();
             ATextComponent component;
 
@@ -50,6 +61,8 @@ public class TextDeserializer_v1_7 implements JsonDeserializer<ATextComponent> {
             Style newStyle = context.deserialize(rawComponent, Style.class);
             if (newStyle != null) component.setStyle(newStyle);
             return component;
+        } else {
+            throw new JsonParseException("Don't know how to turn " + json + " into a Component");
         }
     }
 

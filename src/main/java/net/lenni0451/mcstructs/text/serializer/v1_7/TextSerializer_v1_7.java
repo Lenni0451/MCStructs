@@ -26,7 +26,7 @@ public class TextSerializer_v1_7 implements JsonSerializer<ATextComponent> {
             }
             if (!src.getSiblings().isEmpty()) {
                 JsonArray siblings = new JsonArray();
-                for (ATextComponent sibling : src.getSiblings()) siblings.add(this.serialize(sibling, typeOfSrc, context));
+                for (ATextComponent sibling : src.getSiblings()) siblings.add(this.serialize(sibling, sibling.getClass(), context));
                 serializedComponent.add("extra", siblings);
             }
 
@@ -39,7 +39,7 @@ public class TextSerializer_v1_7 implements JsonSerializer<ATextComponent> {
                     JsonArray with = new JsonArray();
                     Object[] args = translationComponent.getArgs();
                     for (Object arg : args) {
-                        if (arg instanceof StringComponent) with.add(this.serialize((ATextComponent) arg, arg.getClass(), context));
+                        if (arg instanceof ATextComponent) with.add(this.serialize((ATextComponent) arg, arg.getClass(), context));
                         else with.add(new JsonPrimitive(String.valueOf(arg)));
                     }
                     serializedComponent.add("with", with);
