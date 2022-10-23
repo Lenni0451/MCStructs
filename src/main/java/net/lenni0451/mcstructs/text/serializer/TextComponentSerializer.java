@@ -13,6 +13,10 @@ import net.lenni0451.mcstructs.text.serializer.v1_7.StyleDeserializer_v1_7;
 import net.lenni0451.mcstructs.text.serializer.v1_7.StyleSerializer_v1_7;
 import net.lenni0451.mcstructs.text.serializer.v1_7.TextDeserializer_v1_7;
 import net.lenni0451.mcstructs.text.serializer.v1_7.TextSerializer_v1_7;
+import net.lenni0451.mcstructs.text.serializer.v1_8.StyleDeserializer_v1_8;
+import net.lenni0451.mcstructs.text.serializer.v1_8.StyleSerializer_v1_8;
+import net.lenni0451.mcstructs.text.serializer.v1_8.TextDeserializer_v1_8;
+import net.lenni0451.mcstructs.text.serializer.v1_8.TextSerializer_v1_8;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -29,6 +33,12 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_7())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_7())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_7())
+            .create());
+    public static final TextComponentSerializer V1_8 = new TextComponentSerializer(() -> new GsonBuilder()
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_8())
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_8())
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
 
 
