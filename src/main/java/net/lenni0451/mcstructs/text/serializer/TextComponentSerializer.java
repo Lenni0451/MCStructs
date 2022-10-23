@@ -9,6 +9,8 @@ import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.serializer.v1_12.TextDeserializer_v1_12;
 import net.lenni0451.mcstructs.text.serializer.v1_12.TextSerializer_v1_12;
+import net.lenni0451.mcstructs.text.serializer.v1_14.TextDeserializer_v1_14;
+import net.lenni0451.mcstructs.text.serializer.v1_14.TextSerializer_v1_14;
 import net.lenni0451.mcstructs.text.serializer.v1_6.TextDeserializer_v1_6;
 import net.lenni0451.mcstructs.text.serializer.v1_6.TextSerializer_v1_6;
 import net.lenni0451.mcstructs.text.serializer.v1_7.StyleDeserializer_v1_7;
@@ -52,6 +54,12 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_12 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_12())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_12())
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
+            .create());
+    public static final TextComponentSerializer V1_14 = new TextComponentSerializer(() -> new GsonBuilder()
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_14())
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_14())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
