@@ -1,18 +1,15 @@
-package net.lenni0451.mcstructs.text.serializer.v1_8;
+package net.lenni0451.mcstructs.text.serializer.v1_12;
 
 import com.google.gson.*;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
-import net.lenni0451.mcstructs.text.components.ScoreComponent;
-import net.lenni0451.mcstructs.text.components.SelectorComponent;
-import net.lenni0451.mcstructs.text.components.StringComponent;
-import net.lenni0451.mcstructs.text.components.TranslationComponent;
+import net.lenni0451.mcstructs.text.components.*;
 
 import java.lang.reflect.Type;
 
 import static net.lenni0451.mcstructs.text.serializer.TextComponentJsonUtils.getString;
 
-public class TextDeserializer_v1_8 implements JsonDeserializer<ATextComponent> {
+public class TextDeserializer_v1_12 implements JsonDeserializer<ATextComponent> {
 
     @Override
     public ATextComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -60,6 +57,8 @@ public class TextDeserializer_v1_8 implements JsonDeserializer<ATextComponent> {
                 if (score.has("value")) ((ScoreComponent) component).setValue(getString(score, "value"));
             } else if (rawComponent.has("selector")) {
                 component = new SelectorComponent(getString(rawComponent, "selector"));
+            } else if (rawComponent.has("keybind")) {
+                component = new KeybindComponent(getString(rawComponent, "keybind"));
             } else {
                 throw new JsonParseException("Don't know how to turn " + json + " into a Component");
             }
