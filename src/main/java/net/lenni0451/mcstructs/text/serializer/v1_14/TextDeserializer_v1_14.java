@@ -4,6 +4,8 @@ import com.google.gson.*;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.components.*;
+import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
+import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 
 import java.lang.reflect.Type;
 
@@ -63,8 +65,8 @@ public class TextDeserializer_v1_14 implements JsonDeserializer<ATextComponent> 
             } else if (rawComponent.has("nbt")) {
                 String nbt = getString(rawComponent, "nbt");
                 boolean interpret = getBoolean(rawComponent, "interpret", false);
-                if (rawComponent.has("block")) component = new NbtComponent(NbtComponent.NbtComponentType.BLOCK, nbt, interpret, getString(rawComponent, "block"));
-                else if (rawComponent.has("entity")) component = new NbtComponent(NbtComponent.NbtComponentType.ENTITY, nbt, interpret, getString(rawComponent, "entity"));
+                if (rawComponent.has("block")) component = new BlockNbtComponent(nbt, interpret, getString(rawComponent, "block"));
+                else if (rawComponent.has("entity")) component = new EntityNbtComponent(nbt, interpret, getString(rawComponent, "entity"));
                 else throw new JsonParseException("Don't know how to turn " + json + " into a Component");
             } else {
                 throw new JsonParseException("Don't know how to turn " + json + " into a Component");

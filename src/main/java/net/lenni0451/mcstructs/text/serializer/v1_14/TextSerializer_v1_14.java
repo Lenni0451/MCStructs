@@ -3,6 +3,8 @@ package net.lenni0451.mcstructs.text.serializer.v1_14;
 import com.google.gson.*;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.*;
+import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
+import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -53,9 +55,11 @@ public class TextSerializer_v1_14 implements JsonSerializer<ATextComponent> {
             serializedComponent.addProperty("keybind", ((KeybindComponent) src).getKeybind());
         } else if (src instanceof NbtComponent) {
             NbtComponent nbtComponent = (NbtComponent) src;
-            serializedComponent.addProperty("nbt", nbtComponent.getRawComponent());
+            serializedComponent.addProperty("nbt", nbtComponent.getComponent());
             serializedComponent.addProperty("resolve", nbtComponent.isResolve());
-            serializedComponent.addProperty(nbtComponent.getType().getName(), nbtComponent.getTypeComponent());
+            if (nbtComponent instanceof BlockNbtComponent) serializedComponent.addProperty("block", ((BlockNbtComponent) nbtComponent).getPos());
+            else if (nbtComponent instanceof EntityNbtComponent) serializedComponent.addProperty("entity", ((EntityNbtComponent) nbtComponent).getSelector());
+            else throw new JsonParseException("Don't know how to serialize " + src + " as a Component");
         } else {
             throw new JsonParseException("Don't know how to serialize " + src + " as a Component");
         }
