@@ -1,16 +1,22 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtNumber;
+import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtRegistry;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Objects;
 
 public class FloatNbt implements INbtNumber {
 
     private float value;
+
+    public FloatNbt() {
+        this(0);
+    }
 
     public FloatNbt(final float value) {
         this.value = value;
@@ -73,6 +79,24 @@ public class FloatNbt implements INbtNumber {
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeFloat(this.value);
+    }
+
+    @Override
+    public INbtTag copy() {
+        return new FloatNbt(this.value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FloatNbt floatNbt = (FloatNbt) o;
+        return Float.compare(floatNbt.value, value) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     @Override

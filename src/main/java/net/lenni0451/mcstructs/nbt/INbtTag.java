@@ -12,6 +12,12 @@ public interface INbtTag {
 
     void write(final DataOutput out) throws IOException;
 
+    INbtTag copy();
+
+    boolean equals(final Object o);
+
+    int hashCode();
+
     String toString();
 
 }

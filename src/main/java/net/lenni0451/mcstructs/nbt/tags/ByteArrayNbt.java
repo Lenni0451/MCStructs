@@ -7,10 +7,15 @@ import net.lenni0451.mcstructs.nbt.NbtRegistry;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ByteArrayNbt implements INbtTag {
 
     private byte[] value;
+
+    public ByteArrayNbt() {
+        this(new byte[0]);
+    }
 
     public ByteArrayNbt(final byte[] value) {
         this.value = value;
@@ -69,9 +74,27 @@ public class ByteArrayNbt implements INbtTag {
     }
 
     @Override
+    public INbtTag copy() {
+        return new ByteArrayNbt(this.value.clone());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ByteArrayNbt that = (ByteArrayNbt) o;
+        return Arrays.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(value);
+    }
+
+    @Override
     public String toString() {
         StringBuilder out = new StringBuilder("[B;");
-        for (int i = 0; i < this.value.length; i++) out.append(i).append(",");
+        for (byte b : this.value) out.append(b).append(",");
         if (this.value.length > 0) out.deleteCharAt(out.length() - 1);
         return out.append("]").toString();
     }

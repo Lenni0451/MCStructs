@@ -7,10 +7,15 @@ import net.lenni0451.mcstructs.nbt.NbtRegistry;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class LongArrayNbt implements INbtTag {
 
     private long[] value;
+
+    public LongArrayNbt() {
+        this(new long[0]);
+    }
 
     public LongArrayNbt(final long[] value) {
         this.value = value;
@@ -68,9 +73,27 @@ public class LongArrayNbt implements INbtTag {
     }
 
     @Override
+    public INbtTag copy() {
+        return new LongArrayNbt(this.value.clone());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LongArrayNbt that = (LongArrayNbt) o;
+        return Arrays.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(value);
+    }
+
+    @Override
     public String toString() {
         StringBuilder out = new StringBuilder("[L;");
-        for (int i = 0; i < this.value.length; i++) out.append(i).append(",");
+        for (long l : this.value) out.append(l).append(",");
         if (this.value.length > 0) out.deleteCharAt(out.length() - 1);
         return out.append("]").toString();
     }

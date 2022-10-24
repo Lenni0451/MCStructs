@@ -10,6 +10,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListNbt<T extends INbtTag> implements INbtTag {
 
@@ -94,6 +95,15 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         return false;
     }
 
+    private void check(final T tag) {
+        if (this.type == null || this.value.isEmpty()) {
+            this.type = (Class<T>) tag.getClass();
+            this.value.clear();
+        } else if (!this.type.equals(tag.getClass())) {
+            throw new IllegalArgumentException("Can't add " + tag.getClass().getSimpleName() + " to a " + this.type.getSimpleName() + " list");
+        }
+    }
+
     @Override
     public int getId() {
         return NbtRegistry.LIST_NBT;
@@ -125,21 +135,31 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
     }
 
     @Override
+    public INbtTag copy() {
+        List<INbtTag> value = new ArrayList<>();
+        for (T val : this.value) value.add(val.copy());
+        return new ListNbt<>(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ListNbt<?> listNbt = (ListNbt<?>) o;
+        return Objects.equals(type, listNbt.type) && Objects.equals(value, listNbt.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, value);
+    }
+
+    @Override
     public String toString() {
         StringBuilder out = new StringBuilder("[");
         for (T tag : this.value) out.append(tag).append(",");
         if (!this.value.isEmpty()) out.deleteCharAt(out.length() - 1);
         return out.append("]").toString();
-    }
-
-
-    private void check(final T tag) {
-        if (this.type == null || this.value.isEmpty()) {
-            this.type = (Class<T>) tag.getClass();
-            this.value.clear();
-        } else if (!this.type.equals(tag.getClass())) {
-            throw new IllegalArgumentException("Can't add " + tag.getClass().getSimpleName() + " to a " + this.type.getSimpleName() + " list");
-        }
     }
 
 }

@@ -1,16 +1,22 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtNumber;
+import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtRegistry;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ByteNbt implements INbtNumber {
 
     private byte value;
+
+    public ByteNbt() {
+        this((byte) 0);
+    }
 
     public ByteNbt(final byte value) {
         this.value = value;
@@ -73,6 +79,24 @@ public class ByteNbt implements INbtNumber {
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeByte(this.value);
+    }
+
+    @Override
+    public INbtTag copy() {
+        return new ByteNbt(this.value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ByteNbt byteNbt = (ByteNbt) o;
+        return value == byteNbt.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     @Override

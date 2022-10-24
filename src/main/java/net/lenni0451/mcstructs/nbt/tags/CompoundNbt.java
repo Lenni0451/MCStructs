@@ -223,6 +223,11 @@ public class CompoundNbt implements INbtTag {
         return this.value.isEmpty();
     }
 
+    private String escapeName(String name) {
+        if (name.matches("[a-zA-Z0-9._+-]+")) return name;
+        else return new StringNbt(name).toString();
+    }
+
     @Override
     public int getId() {
         return NbtRegistry.COMPOUND_NBT;
@@ -255,16 +260,31 @@ public class CompoundNbt implements INbtTag {
     }
 
     @Override
+    public INbtTag copy() {
+        Map<String, INbtTag> value = new HashMap<>();
+        for (Map.Entry<String, INbtTag> entry : this.value.entrySet()) value.put(entry.getKey(), entry.getValue().copy());
+        return new CompoundNbt(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompoundNbt that = (CompoundNbt) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+
+    @Override
     public String toString() {
         StringBuilder out = new StringBuilder("{");
         for (Map.Entry<String, INbtTag> entry : this.value.entrySet()) out.append(this.escapeName(entry.getKey())).append(":").append(entry.getValue()).append(",");
         if (!this.value.isEmpty()) out.deleteCharAt(out.length() - 1);
         return out.append("}").toString();
-    }
-
-    private String escapeName(String name) {
-        if (name.matches("[a-zA-Z0-9._+-]+")) return name;
-        else return new StringNbt(name).toString();
     }
 
 }
