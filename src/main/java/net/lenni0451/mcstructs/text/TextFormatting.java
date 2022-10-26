@@ -39,6 +39,11 @@ public class TextFormatting {
         return null;
     }
 
+    public static TextFormatting parse(final String s) {
+        if (s.startsWith("#")) return new TextFormatting(Integer.parseInt(s.substring(1)));
+        else return getByName(s);
+    }
+
 
     private final Type type;
     private final String name;
@@ -94,6 +99,11 @@ public class TextFormatting {
 
     public int getRgbValue() {
         return this.rgbValue;
+    }
+
+    public String serialize() {
+        if (Type.RGB.equals(this.type)) return "#" + this.rgbValue;
+        else return this.name.toLowerCase();
     }
 
     @Override

@@ -7,12 +7,14 @@ import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.v1_12.TextDeserializer_v1_12;
 import net.lenni0451.mcstructs.text.serializer.v1_12.TextSerializer_v1_12;
 import net.lenni0451.mcstructs.text.serializer.v1_14.TextDeserializer_v1_14;
 import net.lenni0451.mcstructs.text.serializer.v1_14.TextSerializer_v1_14;
 import net.lenni0451.mcstructs.text.serializer.v1_15.TextDeserializer_v1_15;
 import net.lenni0451.mcstructs.text.serializer.v1_15.TextSerializer_v1_15;
+import net.lenni0451.mcstructs.text.serializer.v1_16.*;
 import net.lenni0451.mcstructs.text.serializer.v1_6.TextDeserializer_v1_6;
 import net.lenni0451.mcstructs.text.serializer.v1_6.TextSerializer_v1_6;
 import net.lenni0451.mcstructs.text.serializer.v1_7.StyleDeserializer_v1_7;
@@ -71,6 +73,14 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
+    public static final TextComponentSerializer V1_16 = new TextComponentSerializer(() -> new GsonBuilder()
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_16())
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_16())
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16())
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16())
+            .create());
 
 
     private final Supplier<Gson> gsonSupplier;
@@ -83,6 +93,14 @@ public class TextComponentSerializer {
     public Gson getGson() {
         if (this.gson == null) this.gson = this.gsonSupplier.get();
         return this.gson;
+    }
+
+    public ATextComponent deserialize(final String json) {
+        return this.getGson().fromJson(json, ATextComponent.class);
+    }
+
+    public ATextComponent deserialize(final JsonElement element) {
+        return this.getGson().fromJson(element, ATextComponent.class);
     }
 
     public ATextComponent deserializeReader(final String json) {
@@ -101,10 +119,6 @@ public class TextComponentSerializer {
         } catch (IOException e) {
             throw new JsonParseException("Failed to parse json", e);
         }
-    }
-
-    public ATextComponent deserialize(final String json) {
-        return this.getGson().fromJson(json, ATextComponent.class);
     }
 
 

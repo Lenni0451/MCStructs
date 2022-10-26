@@ -38,7 +38,7 @@ public class SNbtParser<T extends INbtTag> {
     public T tryParse(final String s) {
         try {
             return this.parse(s);
-        } catch (Throwable t) {
+        } catch (SNbtParseException t) {
             return null;
         }
     }
