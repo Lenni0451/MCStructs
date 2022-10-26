@@ -5,11 +5,12 @@ import net.lenni0451.mcstructs.nbt.snbt.ISNbtParser;
 import net.lenni0451.mcstructs.nbt.snbt.SNbtParseException;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
+import java.util.Arrays;
 import java.util.Stack;
 
-public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
+public class SNbtParser_v1_8 implements ISNbtParser<CompoundNbt> {
 
-    private static final String ARRAY_PATTERN = "\\[[-\\d|,\\s]+]";
+    private static final String ARRAY_PATTERN = "\\[[-+\\d|,\\s]+]";
     private static final String BYTE_PATTERN = "[-+]?[0-9]+[b|B]";
     private static final String SHORT_PATTERN = "[-+]?[0-9]+[s|S]";
     private static final String INT_PATTERN = "[-+]?[0-9]+";
@@ -19,59 +20,49 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
     private static final String SHORT_DOUBLE_PATTERN = "[-+]?[0-9]*\\.?[0-9]+";
 
     @Override
-    public INbtTag parse(String s) throws SNbtParseException {
+    public CompoundNbt parse(String s) throws SNbtParseException {
         s = s.trim();
-        int tagCount = this.getTagCount(s);
-        if (tagCount != 1) throw new SNbtParseException("Encountered multiple top tags, only one expected");
-        INbtTag tag;
-        if (s.startsWith("{")) tag = this.parse("tag", s);
-        else tag = this.parse(this.find(s, true, false), this.find(s, false, false));
-        return tag;
+        if (!s.startsWith("{")) throw new SNbtParseException("Invalid tag encountered, expected '{' as first char.");
+        else if (this.getTagCount(s) != 1) throw new SNbtParseException("Encountered multiple top tags, only one expected");
+        else return (CompoundNbt) this.parseTag(s);
     }
 
-    private INbtTag parse(final String name, String value) throws SNbtParseException {
+    private INbtTag parseTag(String value) throws SNbtParseException {
         value = value.trim();
-        getTagCount(value);
-
         if (value.startsWith("{")) {
-            if (!value.endsWith("}")) throw new SNbtParseException("Unable to locate ending bracket } for: " + value);
-
             value = value.substring(1, value.length() - 1);
             CompoundNbt compound = new CompoundNbt();
-            while (value.length() > 0) {
-                String pair = this.findPair(value, false);
+
+            String pair;
+            for (; value.length() > 0; value = value.substring(pair.length() + 1)) {
+                pair = this.findPair(value, false);
                 if (pair.length() > 0) {
                     String subName = this.find(pair, true, false);
                     String subValue = this.find(pair, false, false);
-                    compound.add(subName, this.parse(subName, subValue));
-
-                    if (value.length() < pair.length() + 1) break;
-                    char next = value.charAt(pair.length());
-                    if (next != ',' && next != '{' && next != '}' && next != '[' && next != ']') {
-                        throw new SNbtParseException("Unexpected troken '" + name + "' at: " + value.substring(pair.length()));
-                    }
-                    value = value.substring(pair.length() + 1);
+                    compound.add(subName, this.parseTag(subValue));
+                }
+                if (value.length() < pair.length() + 1) break;
+                char nextChar = value.charAt(pair.length());
+                if (nextChar != ',' && nextChar != '{' && nextChar != '}' && nextChar != '[' && nextChar != ']') {
+                    throw new SNbtParseException("Unexpected token '" + nextChar + "' at: " + value.substring(pair.length()));
                 }
             }
             return compound;
         } else if (value.startsWith("[") && !value.matches(ARRAY_PATTERN)) {
-            if (!value.endsWith("]")) throw new SNbtParseException("Unable to locate ending bracket ] for: " + value);
-
             value = value.substring(1, value.length() - 1);
             ListNbt<INbtTag> list = new ListNbt<>();
-            while (value.length() > 0) {
-                String pair = this.findPair(value, true);
-                if (pair.length() > 0) {
-                    String subName = this.find(pair, true, true);
-                    String subValue = this.find(pair, false, true);
-                    list.add(this.parse(subName, subValue));
 
-                    if (value.length() < pair.length() + 1) break;
-                    char next = value.charAt(pair.length());
-                    if (next != ',' && next != '{' && next != '}' && next != '[' && next != ']') {
-                        throw new SNbtParseException("Unexpected troken '" + name + "' at: " + value.substring(pair.length()));
-                    }
-                    value = value.substring(pair.length() + 1);
+            String pair;
+            for (; value.length() > 0; value = value.substring(pair.length() + 1)) {
+                pair = this.findPair(value, true);
+                if (pair.length() > 0) {
+                    String subValue = this.find(pair, false, true);
+                    list.add(this.parseTag(subValue));
+                }
+                if (value.length() < pair.length() + 1) break;
+                char nextChar = value.charAt(pair.length());
+                if (nextChar != ',' && nextChar != '{' && nextChar != '}' && nextChar != '[' && nextChar != ']') {
+                    throw new SNbtParseException("Unexpected token '" + nextChar + "' at: " + value.substring(pair.length()));
                 }
             }
             return list;
@@ -82,48 +73,43 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
 
     private INbtTag parsePrimitive(String value) {
         try {
-            if (value.matches(DOUBLE_PATTERN)) {
-                return new DoubleNbt(Double.parseDouble(value.substring(0, value.length() - 1)));
-            } else if (value.matches(FLOAT_PATTERN)) {
-                return new FloatNbt(Float.parseFloat(value.substring(0, value.length() - 1)));
-            } else if (value.matches(BYTE_PATTERN)) {
-                return new ByteNbt(Byte.parseByte(value.substring(0, value.length() - 1)));
-            } else if (value.matches(LONG_PATTERN)) {
-                return new LongNbt(Long.parseLong(value.substring(0, value.length() - 1)));
-            } else if (value.matches(SHORT_PATTERN)) {
-                return new ShortNbt(Short.parseShort(value.substring(0, value.length() - 1)));
-            } else if (value.matches(INT_PATTERN)) {
-                return new IntNbt(Integer.parseInt(value));
-            } else if (value.matches(SHORT_DOUBLE_PATTERN)) {
-                return new DoubleNbt(Double.parseDouble(value));
-            } else if (value.equalsIgnoreCase("false")) {
-                return new ByteNbt((byte) 1);
-            } else if (value.equalsIgnoreCase("true")) {
-                return new ByteNbt((byte) 0);
-            } else if (value.startsWith("[") && value.endsWith("]")) {
-                if (value.length() > 2) {
-                    String arrayContent = value.substring(1, value.length() - 1);
-                    String[] parts = arrayContent.split(",");
-                    try {
-                        if (parts.length <= 1) {
-                            return new IntArrayNbt(new int[]{Integer.parseInt(arrayContent.trim())});
-                        } else {
-                            int[] ints = new int[parts.length];
-                            for (int i = 0; i < parts.length; i++) ints[i] = Integer.parseInt(parts[i].trim());
-                            return new IntArrayNbt(ints);
-                        }
-                    } catch (NumberFormatException e) {
-                        return new StringNbt(value);
-                    }
-                } else {
-                    return new IntArrayNbt(new int[0]);
-                }
-            } else {
-                if (value.startsWith("\"") && value.endsWith("\"") && value.length() > 2) value = value.substring(1, value.length() - 1);
-                return new StringNbt(value.replace("\\\\\"", "\""));
-            }
+            if (value.matches(DOUBLE_PATTERN)) return new DoubleNbt(Double.parseDouble(value.substring(0, value.length() - 1)));
+            else if (value.matches(FLOAT_PATTERN)) return new FloatNbt(Float.parseFloat(value.substring(0, value.length() - 1)));
+            else if (value.matches(BYTE_PATTERN)) return new ByteNbt(Byte.parseByte(value.substring(0, value.length() - 1)));
+            else if (value.matches(LONG_PATTERN)) return new LongNbt(Long.parseLong(value.substring(0, value.length() - 1)));
+            else if (value.matches(SHORT_PATTERN)) return new ShortNbt(Short.parseShort(value.substring(0, value.length() - 1)));
+            else if (value.matches(INT_PATTERN)) return new IntNbt(Integer.parseInt(value));
+            else if (value.matches(SHORT_DOUBLE_PATTERN)) return new DoubleNbt(Double.parseDouble(value));
+            else if (value.equalsIgnoreCase("false")) return new ByteNbt((byte) 0);
+            else if (value.equalsIgnoreCase("true")) return new ByteNbt((byte) 1);
         } catch (NumberFormatException e) {
             return new StringNbt(value.replace("\\\\\"", "\""));
+        }
+        if (value.startsWith("[") && value.endsWith("]")) {
+            String arrayContent = value.substring(1, value.length() - 1);
+            String[] parts = this.trimSplit(arrayContent);
+            try {
+                int[] ints = new int[parts.length];
+                for (int i = 0; i < parts.length; i++) ints[i] = Integer.parseInt(parts[i].trim());
+                return new IntArrayNbt(ints);
+            } catch (NumberFormatException e) {
+                return new StringNbt(value);
+            }
+        } else {
+            if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length() - 1);
+            value = value.replace("\\\\\"", "\"");
+            StringBuilder out = new StringBuilder();
+            char[] chars = value.toCharArray();
+            for (int i = 0; i < chars.length; i++) {
+                char c = chars[i];
+                if (i < chars.length - 1 && c == '\\' && chars[i + 1] != '\\') {
+                    out.append("\\");
+                    i++;
+                } else {
+                    out.append(c);
+                }
+            }
+            return new StringNbt(out.toString());
         }
     }
 
@@ -136,7 +122,7 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
         for (int i = 0; i < chars.length; i++) {
             char c = chars[i];
             if (c == '"') {
-                if (i > 0 && chars[i - 1] == '\\') {
+                if (this.isEscaped(s, i)) {
                     if (!quoted) throw new SNbtParseException("Illegal use of \\\": " + s);
                 } else {
                     quoted = !quoted;
@@ -159,10 +145,10 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
 
     private String findPair(final String s, final boolean isArray) throws SNbtParseException {
         int separatorIndex = this.getCharIndex(s, ':');
-        if (separatorIndex < 0 && !isArray) throw new SNbtParseException("Unable to locate name/value for string: " + s);
+        if (separatorIndex == -1 && !isArray) throw new SNbtParseException("Unable to locate name/value separator for string: " + s);
         int pairSeparator = this.getCharIndex(s, ',');
-        if (pairSeparator >= 0 && pairSeparator < separatorIndex && !isArray) throw new SNbtParseException("Name error at: " + s);
-        if (isArray && (separatorIndex < 0 || separatorIndex > pairSeparator)) separatorIndex = -1;
+        if (pairSeparator != -1 && pairSeparator < separatorIndex && !isArray) throw new SNbtParseException("Name error at: " + s);
+        if (isArray && (separatorIndex == -1 || separatorIndex > pairSeparator)) separatorIndex = -1;
 
         Stack<Character> brackets = new Stack<>();
         int i = separatorIndex + 1;
@@ -175,7 +161,7 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
         for (; i < chars.length; i++) {
             char c = chars[i];
             if (c == '"') {
-                if (i > 0 && chars[i - 1] == '\\') {
+                if (this.isEscaped(s, i)) {
                     if (!quoted) throw new SNbtParseException("Illegal use of \\\": " + s);
                 } else {
                     quoted = !quoted;
@@ -207,8 +193,8 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
             }
         }
 
-        int separatorIndex = s.indexOf(":");
-        if (separatorIndex < 0) {
+        int separatorIndex = this.getCharIndex(s, ':');
+        if (separatorIndex == -1) {
             if (isArray) {
                 if (name) return "";
                 else return s;
@@ -222,19 +208,33 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
     }
 
     private int getCharIndex(final String s, final char wanted) {
-        boolean quoted = false;
+        boolean quoted = true;
 
         char[] chars = s.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             char c = chars[i];
             if (c == '"') {
-                if (i <= 0 || chars[i - 1] != '\\') quoted = !quoted;
-            } else if (!quoted) {
+                if (!this.isEscaped(s, i)) quoted = !quoted;
+            } else if (quoted) {
                 if (c == wanted) return i;
                 if (c == '{' || c == '[') return -1;
             }
         }
         return -1;
+    }
+
+    private String[] trimSplit(final String s) {
+        String[] split = s.split(",");
+        String[] clean = new String[split.length];
+        int index = 0;
+        for (String value : split) {
+            if (!value.isEmpty()) clean[index++] = value;
+        }
+        return Arrays.copyOfRange(clean, 0, index);
+    }
+
+    private boolean isEscaped(final String s, final int index) {
+        return index > 0 && s.charAt(index - 1) == '\\' && !this.isEscaped(s, index - 1);
     }
 
     private void checkBrackets(final String s, final char close, final Stack<Character> brackets) throws SNbtParseException {
