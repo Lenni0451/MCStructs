@@ -23,7 +23,7 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
         StringReader reader = new StringReader(s);
         CompoundNbt compoundNbt = this.readCompound(reader);
         reader.skipWhitespaces();
-        if (reader.canRead()) throw new SNbtParseException("Trailing data found", reader.getString(), reader.getIndex());
+        if (reader.canRead()) throw this.makeException(reader, "Trailing data found");
         else return compoundNbt;
     }
 
@@ -33,12 +33,12 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
         reader.skipWhitespaces();
         while (reader.canRead() && reader.peek() != '}') {
             String key = reader.readString();
-            if (key == null) throw new SNbtParseException("Expected key", reader.getString(), reader.getIndex());
-            if (key.isEmpty()) throw new SNbtParseException("Expected non-empty key", reader.getString(), reader.getIndex());
+            if (key == null) throw this.makeException(reader, "Expected key");
+            if (key.isEmpty()) throw this.makeException(reader, "Expected non-empty key");
             reader.jumpTo(':');
             compound.add(key, this.readValue(reader));
             if (!this.hasNextValue(reader)) break;
-            if (!reader.canRead()) throw new SNbtParseException("Expected key", reader.getString(), reader.getIndex());
+            if (!reader.canRead()) throw this.makeException(reader, "Expected key");
         }
         reader.jumpTo('}');
         return compound;
@@ -52,14 +52,14 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
     private ListNbt<INbtTag> readList(final StringReader reader) throws SNbtParseException {
         reader.jumpTo('[');
         reader.skipWhitespaces();
-        if (!reader.canRead()) throw new SNbtParseException("Expected value", reader.getString(), reader.getIndex());
+        if (!reader.canRead()) throw this.makeException(reader, "Expected value");
         ListNbt<INbtTag> list = new ListNbt<>();
         while (reader.peek() != ']') {
             INbtTag tag = this.readValue(reader);
             if (!list.canAdd(tag)) throw new SNbtParseException("Unable to insert " + tag.getClass().getSimpleName() + " into ListTag of type " + list.getType().getSimpleName());
             list.add(tag);
             if (!this.hasNextValue(reader)) break;
-            if (!reader.canRead()) throw new SNbtParseException("Expected value", reader.getString(), reader.getIndex());
+            if (!reader.canRead()) throw this.makeException(reader, "Expected value");
         }
         reader.jumpTo(']');
         return list;
@@ -75,7 +75,7 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
                 }
                 list.add((T) tag);
                 if (this.hasNextValue(reader)) {
-                    if (!reader.canRead()) throw new SNbtParseException("Expected value", reader.getString(), reader.getIndex());
+                    if (!reader.canRead()) throw this.makeException(reader, "Expected value");
                     continue;
                 }
             }
@@ -89,7 +89,7 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
         char c = reader.read();
         reader.read();
         reader.skipWhitespaces();
-        if (!reader.canRead()) throw new SNbtParseException("Expected value", reader.getString(), reader.getIndex());
+        if (!reader.canRead()) throw this.makeException(reader, "Expected value");
         else if (c == 'B') return new ByteArrayNbt(this.readPrimitiveList(reader, ByteNbt.class, ByteArrayNbt.class));
         else if (c == 'L') return new LongArrayNbt(this.readPrimitiveList(reader, LongNbt.class, LongArrayNbt.class));
         else if (c == 'I') return new IntArrayNbt(this.readPrimitiveList(reader, IntNbt.class, IntArrayNbt.class));
@@ -98,7 +98,7 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
 
     private INbtTag readValue(final StringReader reader) throws SNbtParseException {
         reader.skipWhitespaces();
-        if (!reader.canRead()) throw new SNbtParseException("Expected value", reader.getString(), reader.getIndex());
+        if (!reader.canRead()) throw this.makeException(reader, "Expected value");
         char c = reader.peek();
         if (c == '{') return this.readCompound(reader);
         else if (c == '[') return this.readListOrArray(reader);
@@ -109,7 +109,7 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
         reader.skipWhitespaces();
         if (reader.peek() == '"') return new StringNbt(reader.readQuotedString());
         String value = reader.readUnquotedString();
-        if (value.isEmpty()) throw new SNbtParseException("Expected value", reader.getString(), reader.getIndex());
+        if (value.isEmpty()) throw this.makeException(reader, "Expected value");
         else return this.readPrimitive(value);
     }
 
@@ -138,6 +138,10 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
         } else {
             return false;
         }
+    }
+
+    private SNbtParseException makeException(final StringReader reader, final String message) {
+        return new SNbtParseException(message, reader.getString(), reader.getIndex());
     }
 
 }
