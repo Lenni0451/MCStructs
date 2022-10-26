@@ -17,6 +17,11 @@ public class ByteArrayNbt implements INbtTag {
         this(new byte[0]);
     }
 
+    public ByteArrayNbt(final ListNbt<ByteNbt> list) {
+        this.value = new byte[list.size()];
+        for (int i = 0; i < list.size(); i++) this.value[i] = list.get(i).getValue();
+    }
+
     public ByteArrayNbt(final byte[] value) {
         this.value = value;
     }

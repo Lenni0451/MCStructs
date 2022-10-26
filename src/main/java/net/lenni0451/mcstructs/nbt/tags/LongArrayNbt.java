@@ -17,6 +17,11 @@ public class LongArrayNbt implements INbtTag {
         this(new long[0]);
     }
 
+    public LongArrayNbt(final ListNbt<LongNbt> list) {
+        this.value = new long[list.size()];
+        for (int i = 0; i < list.size(); i++) this.value[i] = list.get(i).getValue();
+    }
+
     public LongArrayNbt(final long[] value) {
         this.value = value;
     }

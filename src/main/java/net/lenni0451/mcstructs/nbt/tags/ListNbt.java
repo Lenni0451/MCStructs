@@ -104,6 +104,10 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         }
     }
 
+    public int size() {
+        return this.value.size();
+    }
+
     @Override
     public int getId() {
         return NbtRegistry.LIST_NBT;

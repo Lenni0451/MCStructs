@@ -17,6 +17,11 @@ public class IntArrayNbt implements INbtTag {
         this(new int[0]);
     }
 
+    public IntArrayNbt(final ListNbt<IntNbt> list) {
+        this.value = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) this.value[i] = list.get(i).getValue();
+    }
+
     public IntArrayNbt(final int[] value) {
         this.value = value;
     }
