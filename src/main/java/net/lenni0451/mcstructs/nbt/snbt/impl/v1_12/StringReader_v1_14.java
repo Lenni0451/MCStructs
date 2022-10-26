@@ -2,12 +2,12 @@ package net.lenni0451.mcstructs.nbt.snbt.impl.v1_12;
 
 import net.lenni0451.mcstructs.nbt.snbt.SNbtParseException;
 
-class StringReader {
+public class StringReader_v1_14 {
 
     private final String s;
     private int index;
 
-    public StringReader(final String s) {
+    public StringReader_v1_14(final String s) {
         this.s = s;
     }
 
