@@ -17,6 +17,11 @@ public class StringComponent extends ATextComponent {
     }
 
     @Override
+    public String asString() {
+        return this.text;
+    }
+
+    @Override
     public ATextComponent copy() {
         return this.putMetaCopy(new StringComponent(this.text));
     }

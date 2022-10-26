@@ -10,7 +10,6 @@ public abstract class NbtComponent extends ATextComponent {
     public NbtComponent(final String component, final boolean resolve) {
         this.component = component;
         this.resolve = resolve;
-
     }
 
     public String getComponent() {
@@ -19,6 +18,11 @@ public abstract class NbtComponent extends ATextComponent {
 
     public boolean isResolve() {
         return this.resolve;
+    }
+
+    @Override
+    public String asString() {
+        return "";
     }
 
 }

@@ -31,6 +31,11 @@ public class ScoreComponent extends ATextComponent {
     }
 
     @Override
+    public String asString() {
+        return this.value;
+    }
+
+    @Override
     public ATextComponent copy() {
         return new ScoreComponent(this.name, this.objective);
     }

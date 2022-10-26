@@ -2,9 +2,12 @@ package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.text.ATextComponent;
 
+import java.util.function.Function;
+
 public class KeybindComponent extends ATextComponent {
 
     private final String keybind;
+    private Function<String, String> translator = s -> s;
 
     public KeybindComponent(final String keybind) {
         this.keybind = keybind;
@@ -12,6 +15,15 @@ public class KeybindComponent extends ATextComponent {
 
     public String getKeybind() {
         return this.keybind;
+    }
+
+    public void setTranslator(Function<String, String> translator) {
+        this.translator = translator;
+    }
+
+    @Override
+    public String asString() {
+        return this.translator.apply(this.keybind);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class ATextComponent {
 
     private final List<ATextComponent> siblings = new ArrayList<>();
-    private Style style= new Style();
+    private Style style = new Style();
 
     public void append(final String s) {
         this.siblings.add(new StringComponent(s));
@@ -35,6 +35,8 @@ public abstract class ATextComponent {
         for (ATextComponent sibling : this.siblings) component.append(sibling.copy());
         return component;
     }
+
+    public abstract String asString();
 
     public abstract ATextComponent copy();
 

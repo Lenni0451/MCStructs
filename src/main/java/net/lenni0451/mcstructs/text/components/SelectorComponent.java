@@ -15,6 +15,11 @@ public class SelectorComponent extends ATextComponent {
     }
 
     @Override
+    public String asString() {
+        return this.selector;
+    }
+
+    @Override
     public ATextComponent copy() {
         return new SelectorComponent(this.selector);
     }
