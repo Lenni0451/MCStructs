@@ -56,9 +56,9 @@ public class NbtIO {
 
 
     public static INbtTag read(final DataInput in, final NbtReadTracker readTracker) throws IOException {
-        NbtHeader<?> header = NbtIO.readNbtHeader(in, readTracker);
+        NbtHeader header = readNbtHeader(in, readTracker);
         if (header.isEnd()) return null;
-        INbtTag tag = NbtRegistry.newInstance(header.getType());
+        INbtTag tag = header.getType().newInstance();
         readTracker.pushDepth();
         tag.read(in, readTracker);
         readTracker.popDepth();
@@ -66,22 +66,22 @@ public class NbtIO {
     }
 
     public static void write(final DataOutput out, final String name, final INbtTag tag) throws IOException {
-        writeNbtHeader(out, new NbtHeader<>(tag.getClass(), name));
+        writeNbtHeader(out, new NbtHeader(NbtType.byClass(tag.getClass()), name));
         tag.write(out);
     }
 
 
-    public static NbtHeader<?> readNbtHeader(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+    public static NbtHeader readNbtHeader(final DataInput in, final NbtReadTracker readTracker) throws IOException {
         byte type = in.readByte();
-        if (type == NbtRegistry.END_NBT) return NbtHeader.END;
-        return new NbtHeader<>(NbtRegistry.getTagClass(type), in.readUTF());
+        if (NbtType.END.getId() == type) return NbtHeader.END;
+        return new NbtHeader(NbtType.byId(type), in.readUTF());
     }
 
-    public static void writeNbtHeader(final DataOutput out, final NbtHeader<?> header) throws IOException {
+    public static void writeNbtHeader(final DataOutput out, final NbtHeader header) throws IOException {
         if (header.isEnd()) {
-            out.writeByte(NbtRegistry.END_NBT);
+            out.writeByte(NbtType.END.getId());
         } else {
-            out.writeByte(NbtRegistry.getTagId(header.getType()));
+            out.writeByte(header.getType().getId());
             out.writeUTF(header.getName());
         }
     }

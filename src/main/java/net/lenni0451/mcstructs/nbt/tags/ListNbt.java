@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
-import net.lenni0451.mcstructs.nbt.NbtRegistry;
+import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
 
 import java.io.DataInput;
@@ -14,35 +14,35 @@ import java.util.Objects;
 
 public class ListNbt<T extends INbtTag> implements INbtTag {
 
-    private Class<T> type;
+    private NbtType type;
     private List<T> value;
 
     public ListNbt() {
         this(null, new ArrayList<>());
     }
 
-    public ListNbt(final Class<T> type) {
+    public ListNbt(final NbtType type) {
         this(type, new ArrayList<>());
     }
 
     public ListNbt(final List<T> list) {
         if (!list.isEmpty()) {
-            this.type = (Class<T>) list.get(0).getClass();
-            if (list.stream().anyMatch(tag -> !tag.getClass().equals(this.type))) throw new IllegalArgumentException("Tried to create list with multiple nbt types");
+            this.type = NbtType.byClass(list.get(0).getClass());
+            if (list.stream().anyMatch(tag -> !tag.getNbtType().equals(this.type))) throw new IllegalArgumentException("Tried to create list with multiple nbt types");
         }
         this.value = list;
     }
 
-    public ListNbt(final Class<T> type, final List<T> value) {
+    public ListNbt(final NbtType type, final List<T> value) {
         this.type = type;
         this.value = value;
     }
 
-    public Class<T> getType() {
+    public NbtType getType() {
         return this.type;
     }
 
-    public void setType(Class<T> type) {
+    public void setType(final NbtType type) {
         this.type = type;
     }
 
@@ -50,7 +50,7 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         return this.value;
     }
 
-    public void setValue(List<T> value) {
+    public void setValue(final List<T> value) {
         this.value = value;
     }
 
@@ -75,32 +75,27 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
 
     public boolean canAdd(final INbtTag tag) {
         if (this.type == null || this.value.isEmpty()) return true;
-        return this.type.equals(tag.getClass());
+        return this.type.equals(tag.getNbtType());
     }
 
-    public boolean canAdd(final int type) {
-        if (this.type == null || this.value.isEmpty()) return true;
-        return NbtRegistry.getTagId(this.type) == type;
-    }
-
-    public boolean canAdd(final Class<? extends INbtTag> type) {
+    public boolean canAdd(final NbtType type) {
         if (this.type == null || this.value.isEmpty()) return true;
         return this.type.equals(type);
     }
 
     public boolean trim() {
         if (this.value.isEmpty()) return true;
-        if (CompoundNbt.class.equals(this.type)) this.value.forEach(tag -> ((CompoundNbt) tag).trim());
-        else if (ListNbt.class.equals(this.type)) this.value.forEach(tag -> ((ListNbt<?>) tag).trim());
+        if (NbtType.COMPOUND.equals(this.type)) this.value.forEach(tag -> ((CompoundNbt) tag).trim());
+        else if (NbtType.LIST.equals(this.type)) this.value.forEach(tag -> ((ListNbt<?>) tag).trim());
         return false;
     }
 
     private void check(final T tag) {
         if (this.type == null || this.value.isEmpty()) {
-            this.type = (Class<T>) tag.getClass();
+            this.type = tag.getNbtType();
             this.value.clear();
-        } else if (!this.type.equals(tag.getClass())) {
-            throw new IllegalArgumentException("Can't add " + tag.getClass().getSimpleName() + " to a " + this.type.getSimpleName() + " list");
+        } else if (!this.type.equals(tag.getNbtType())) {
+            throw new IllegalArgumentException("Can't add " + tag.getClass().getSimpleName() + " to a " + this.type.name() + " list");
         }
     }
 
@@ -109,8 +104,8 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
     }
 
     @Override
-    public int getId() {
-        return NbtRegistry.LIST_NBT;
+    public NbtType getNbtType() {
+        return NbtType.LIST;
     }
 
     @Override
@@ -118,12 +113,12 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         readTracker.read(296);
         int typeId = in.readByte();
         int count = in.readInt();
-        if (typeId == NbtRegistry.END_NBT && count > 0) throw new NbtReadException("ListNbt with type EndNbt and count > 0");
+        if (typeId == NbtType.END.getId() && count > 0) throw new NbtReadException("ListNbt with type END and count > 0");
         readTracker.read(32 * count);
-        this.type = (Class<T>) NbtRegistry.getTagClass(typeId);
+        this.type = NbtType.byId(typeId);
         this.value = new ArrayList<>(Math.min(count, 512));
         for (int i = 0; i < count; i++) {
-            T tag = NbtRegistry.newInstance(this.type);
+            T tag = (T) this.type.newInstance();
             readTracker.pushDepth();
             tag.read(in, readTracker);
             readTracker.popDepth();
@@ -133,7 +128,7 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
 
     @Override
     public void write(DataOutput out) throws IOException {
-        out.writeByte(NbtRegistry.getTagId(this.type));
+        out.writeByte(this.type.getId());
         out.writeInt(this.value.size());
         for (T tag : this.value) tag.write(out);
     }

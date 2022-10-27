@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.*;
+import net.lenni0451.mcstructs.nbt.exceptions.UnknownTagTypeException;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -31,17 +32,17 @@ public class CompoundNbt implements INbtTag {
         return this.value.containsKey(key);
     }
 
-    public boolean contains(final String key, final int type) {
+    public boolean contains(final String key, final NbtType type) {
         INbtTag tag = this.get(key);
         if (tag == null) return false;
-        if (NbtRegistry.isNumber(type) && NbtRegistry.isNumber(tag.getId())) return true;
-        return tag.getId() == type;
+        if (type.isNumber() && tag.getNbtType().isNumber()) return true;
+        return tag.getNbtType().equals(type);
     }
 
-    public boolean containsExact(final String key, final int type) {
+    public boolean containsExact(final String key, final NbtType type) {
         INbtTag tag = this.get(key);
         if (tag == null) return false;
-        return tag.getId() == type;
+        return tag.getNbtType().equals(type);
     }
 
     public <T extends INbtTag> T get(final String key) {
@@ -53,11 +54,11 @@ public class CompoundNbt implements INbtTag {
     }
 
     public void add(final String key, final Object o) {
-        this.add(key, NbtRegistry.wrap(o));
+        this.add(key, this.wrap(o));
     }
 
     public byte getByte(final String key) {
-        if (this.contains(key, NbtRegistry.BYTE_NBT)) return this.<INbtNumber>get(key).byteValue();
+        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue();
         return 0;
     }
 
@@ -66,7 +67,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public short getShort(final String key) {
-        if (this.contains(key, NbtRegistry.SHORT_NBT)) return this.<INbtNumber>get(key).shortValue();
+        if (this.contains(key, NbtType.SHORT)) return this.<INbtNumber>get(key).shortValue();
         return 0;
     }
 
@@ -75,7 +76,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public int getInt(final String key) {
-        if (this.contains(key, NbtRegistry.INT_NBT)) return this.<INbtNumber>get(key).intValue();
+        if (this.contains(key, NbtType.INT)) return this.<INbtNumber>get(key).intValue();
         return 0;
     }
 
@@ -84,7 +85,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public long getLong(final String key) {
-        if (this.contains(key, NbtRegistry.LONG_NBT)) return this.<INbtNumber>get(key).longValue();
+        if (this.contains(key, NbtType.LONG)) return this.<INbtNumber>get(key).longValue();
         return 0;
     }
 
@@ -93,7 +94,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public float getFloat(final String key) {
-        if (this.contains(key, NbtRegistry.FLOAT_NBT)) return this.<INbtNumber>get(key).floatValue();
+        if (this.contains(key, NbtType.FLOAT)) return this.<INbtNumber>get(key).floatValue();
         return 0;
     }
 
@@ -102,7 +103,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public double getDouble(final String key) {
-        if (this.contains(key, NbtRegistry.DOUBLE_NBT)) return this.<INbtNumber>get(key).doubleValue();
+        if (this.contains(key, NbtType.DOUBLE)) return this.<INbtNumber>get(key).doubleValue();
         return 0;
     }
 
@@ -111,7 +112,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public byte[] getByteArray(final String key) {
-        if (this.contains(key, NbtRegistry.BYTE_ARRAY_NBT)) return this.<ByteArrayNbt>get(key).getValue();
+        if (this.contains(key, NbtType.BYTE_ARRAY)) return this.<ByteArrayNbt>get(key).getValue();
         return new byte[0];
     }
 
@@ -120,7 +121,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public String getString(final String key) {
-        if (this.contains(key, NbtRegistry.STRING_NBT)) return this.<StringNbt>get(key).getValue();
+        if (this.contains(key, NbtType.STRING)) return this.<StringNbt>get(key).getValue();
         return "";
     }
 
@@ -129,24 +130,15 @@ public class CompoundNbt implements INbtTag {
     }
 
     public ListNbt<?> getList(final String key) {
-        if (this.contains(key, NbtRegistry.LIST_NBT)) return this.get(key);
+        if (this.contains(key, NbtType.LIST)) return this.get(key);
         return new ListNbt<>();
     }
 
-    public ListNbt<?> getList(final String key, final int type) {
-        if (this.contains(key, NbtRegistry.LIST_NBT)) {
-            ListNbt<?> list = this.get(key);
-            if (!list.canAdd(type)) return new ListNbt<>(NbtRegistry.getTagClass(type));
-            else return list;
-        }
-        return new ListNbt<>();
-    }
-
-    public <T extends INbtTag> ListNbt<T> getList(final String key, final Class<T> type) {
-        if (this.contains(key, NbtRegistry.LIST_NBT)) {
+    public ListNbt<?> getList(final String key, final NbtType type) {
+        if (this.contains(key, NbtType.LIST)) {
             ListNbt<?> list = this.get(key);
             if (!list.canAdd(type)) return new ListNbt<>(type);
-            else return (ListNbt<T>) list;
+            else return list;
         }
         return new ListNbt<>();
     }
@@ -170,13 +162,13 @@ public class CompoundNbt implements INbtTag {
             this.add(key, new ListNbt<>());
         } else {
             List<INbtTag> list = new ArrayList<>();
-            for (Object item : items) list.add(NbtRegistry.wrap(item));
+            for (Object item : items) list.add(this.wrap(item));
             this.add(key, new ListNbt<>(list));
         }
     }
 
     public CompoundNbt getCompound(final String key) {
-        if (this.contains(key, NbtRegistry.COMPOUND_NBT)) return this.get(key);
+        if (this.contains(key, NbtType.COMPOUND)) return this.get(key);
         return new CompoundNbt();
     }
 
@@ -185,7 +177,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public int[] getIntArray(final String key) {
-        if (this.contains(key, NbtRegistry.INT_ARRAY_NBT)) return this.<IntArrayNbt>get(key).getValue();
+        if (this.contains(key, NbtType.INT_ARRAY)) return this.<IntArrayNbt>get(key).getValue();
         return new int[0];
     }
 
@@ -194,7 +186,7 @@ public class CompoundNbt implements INbtTag {
     }
 
     public long[] getLongArray(final String key) {
-        if (this.contains(key, NbtRegistry.LONG_ARRAY_NBT)) return this.<LongArrayNbt>get(key).getValue();
+        if (this.contains(key, NbtType.LONG_ARRAY)) return this.<LongArrayNbt>get(key).getValue();
         return new long[0];
     }
 
@@ -228,9 +220,25 @@ public class CompoundNbt implements INbtTag {
         else return new StringNbt(name).toString();
     }
 
+    private INbtTag wrap(final Object o) {
+        if (o == null) return null;
+        if (o instanceof INbtTag) return (INbtTag) o;
+        if (o instanceof Byte) return new ByteNbt((Byte) o);
+        else if (o instanceof Short) return new ShortNbt((Short) o);
+        else if (o instanceof Integer) return new IntNbt((Integer) o);
+        else if (o instanceof Long) return new LongNbt((Long) o);
+        else if (o instanceof Float) return new FloatNbt((Float) o);
+        else if (o instanceof Double) return new DoubleNbt((Double) o);
+        else if (o instanceof byte[]) return new ByteArrayNbt((byte[]) o);
+        else if (o instanceof String) return new StringNbt((String) o);
+        else if (o instanceof int[]) return new IntArrayNbt((int[]) o);
+        else if (o instanceof long[]) return new LongArrayNbt((long[]) o);
+        throw new UnknownTagTypeException(o.getClass());
+    }
+
     @Override
-    public int getId() {
-        return NbtRegistry.COMPOUND_NBT;
+    public NbtType getNbtType() {
+        return NbtType.COMPOUND;
     }
 
     @Override
@@ -238,11 +246,11 @@ public class CompoundNbt implements INbtTag {
         readTracker.read(384);
         this.value = new HashMap<>();
         while (true) {
-            NbtHeader<?> header = NbtIO.readNbtHeader(in, readTracker);
+            NbtHeader header = NbtIO.readNbtHeader(in, readTracker);
             if (header.isEnd()) break;
             readTracker.read(224 + 16 * header.getName().length());
 
-            INbtTag tag = NbtRegistry.newInstance(header.getType());
+            INbtTag tag = header.getType().newInstance();
             readTracker.pushDepth();
             tag.read(in, readTracker);
             readTracker.popDepth();
@@ -253,7 +261,7 @@ public class CompoundNbt implements INbtTag {
     @Override
     public void write(DataOutput out) throws IOException {
         for (Map.Entry<String, INbtTag> entry : this.value.entrySet()) {
-            NbtIO.writeNbtHeader(out, new NbtHeader<>(entry.getValue().getClass(), entry.getKey()));
+            NbtIO.writeNbtHeader(out, new NbtHeader(entry.getValue().getNbtType(), entry.getKey()));
             entry.getValue().write(out);
         }
         NbtIO.writeNbtHeader(out, NbtHeader.END);

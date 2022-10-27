@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.nbt.tags;
 import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
-import net.lenni0451.mcstructs.nbt.NbtRegistry;
+import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -66,8 +66,8 @@ public class FloatNbt implements INbtNumber {
     }
 
     @Override
-    public int getId() {
-        return NbtRegistry.FLOAT_NBT;
+    public NbtType getNbtType() {
+        return NbtType.FLOAT;
     }
 
     @Override

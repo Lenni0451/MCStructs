@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.text.serializer.v1_16;
 
 import com.google.gson.*;
 import net.lenni0451.mcstructs.general.Identifier;
-import net.lenni0451.mcstructs.nbt.NbtRegistry;
+import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.snbt.SNbtParseException;
 import net.lenni0451.mcstructs.nbt.snbt.SNbtParser;
 import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
@@ -83,7 +83,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<AHoverEven
                 Identifier id = Identifier.of(rawTag.getString("id"));
                 int count = rawTag.getByte("count");
                 CompoundNbt tag = null;
-                if (rawTag.contains("tag", NbtRegistry.COMPOUND_NBT)) tag = rawTag.getCompound("tag");
+                if (rawTag.contains("tag", NbtType.COMPOUND)) tag = rawTag.getCompound("tag");
                 return new ItemHoverEvent(action, id, count, tag);
             case SHOW_ENTITY:
                 try {

@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
-import net.lenni0451.mcstructs.nbt.NbtRegistry;
+import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -50,8 +50,8 @@ public class StringNbt implements INbtTag {
     }
 
     @Override
-    public int getId() {
-        return NbtRegistry.STRING_NBT;
+    public NbtType getNbtType() {
+        return NbtType.STRING;
     }
 
     @Override

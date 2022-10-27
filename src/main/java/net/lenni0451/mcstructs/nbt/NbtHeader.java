@@ -1,19 +1,23 @@
 package net.lenni0451.mcstructs.nbt;
 
-public class NbtHeader<T extends INbtTag> {
+import java.util.Objects;
 
-    public static NbtHeader<INbtTag> END = new NbtHeader<>(null, null);
+public class NbtHeader {
+
+    public static NbtHeader END = new NbtHeader(NbtType.END, null);
 
 
-    private final Class<T> type;
+    private final NbtType type;
     private final String name;
 
-    public NbtHeader(final Class<T> type, final String name) {
+    public NbtHeader(final NbtType type, final String name) {
+        Objects.requireNonNull(type);
+
         this.type = type;
         this.name = name;
     }
 
-    public Class<T> getType() {
+    public NbtType getType() {
         return this.type;
     }
 
@@ -22,7 +26,7 @@ public class NbtHeader<T extends INbtTag> {
     }
 
     public boolean isEnd() {
-        return this.type == null && this.name == null;
+        return NbtType.END.equals(this.type);
     }
 
 }

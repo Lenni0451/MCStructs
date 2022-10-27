@@ -56,7 +56,7 @@ public class SNbtParser_v1_12 implements ISNbtParser<CompoundNbt> {
         ListNbt<INbtTag> list = new ListNbt<>();
         while (reader.peek() != ']') {
             INbtTag tag = this.readValue(reader);
-            if (!list.canAdd(tag)) throw new SNbtParseException("Unable to insert " + tag.getClass().getSimpleName() + " into ListTag of type " + list.getType().getSimpleName());
+            if (!list.canAdd(tag)) throw new SNbtParseException("Unable to insert " + tag.getClass().getSimpleName() + " into ListTag of type " + list.getType().name());
             list.add(tag);
             if (!this.hasNextValue(reader)) break;
             if (!reader.canRead()) throw this.makeException(reader, "Expected value");

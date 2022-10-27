@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface INbtTag {
 
-    int getId();
+    NbtType getNbtType();
 
     void read(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
