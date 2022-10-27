@@ -61,15 +61,15 @@ public class TextDeserializer_v1_15 implements JsonDeserializer<ATextComponent> 
                 component = new ScoreComponent(getString(score, "name"), getString(score, "objective"));
                 if (score.has("value")) ((ScoreComponent) component).setValue(getString(score, "value"));
             } else if (rawComponent.has("selector")) {
-                component = new SelectorComponent(getString(rawComponent, "selector"));
+                component = new SelectorComponent(getString(rawComponent, "selector"), null);
             } else if (rawComponent.has("keybind")) {
                 component = new KeybindComponent(getString(rawComponent, "keybind"));
             } else if (rawComponent.has("nbt")) {
                 String nbt = getString(rawComponent, "nbt");
                 boolean interpret = getBoolean(rawComponent, "interpret", false);
-                if (rawComponent.has("block")) component = new BlockNbtComponent(nbt, interpret, getString(rawComponent, "block"));
-                else if (rawComponent.has("entity")) component = new EntityNbtComponent(nbt, interpret, getString(rawComponent, "entity"));
-                else if (rawComponent.has("storage")) component = new StorageNbtComponent(nbt, interpret, Identifier.of(getString(rawComponent, "storage")));
+                if (rawComponent.has("block")) component = new BlockNbtComponent(nbt, interpret, null, getString(rawComponent, "block"));
+                else if (rawComponent.has("entity")) component = new EntityNbtComponent(nbt, interpret, null, getString(rawComponent, "entity"));
+                else if (rawComponent.has("storage")) component = new StorageNbtComponent(nbt, interpret, null, Identifier.of(getString(rawComponent, "storage")));
                 else throw new JsonParseException("Don't know how to turn " + json + " into a Component");
             } else {
                 throw new JsonParseException("Don't know how to turn " + json + " into a Component");

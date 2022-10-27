@@ -14,6 +14,12 @@ import java.lang.reflect.Type;
 
 public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
 
+    private final TextComponentSerializer textComponentSerializer;
+
+    public HoverEventSerializer_v1_16(final TextComponentSerializer textComponentSerializer) {
+        this.textComponentSerializer = textComponentSerializer;
+    }
+
     @Override
     public JsonElement serialize(AHoverEvent src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject serializedHoverEvent = new JsonObject();
@@ -21,7 +27,7 @@ public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
         serializedHoverEvent.addProperty("action", src.getAction().getName());
         if (src instanceof TextHoverEvent) {
             TextHoverEvent textHoverEvent = (TextHoverEvent) src;
-            serializedHoverEvent.add("contents", TextComponentSerializer.V1_16.serializeJson(textHoverEvent.getText()));
+            serializedHoverEvent.add("contents", this.textComponentSerializer.serializeJson(textHoverEvent.getText()));
         } else if (src instanceof ItemHoverEvent) {
             ItemHoverEvent itemHoverEvent = (ItemHoverEvent) src;
             JsonObject serializedItem = new JsonObject();
@@ -34,7 +40,7 @@ public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
             JsonObject serializedEntity = new JsonObject();
             serializedEntity.addProperty("type", entityHoverEvent.getEntityType().toString());
             serializedEntity.addProperty("id", entityHoverEvent.getUuid().toString());
-            if (entityHoverEvent.getName() != null) serializedEntity.add("name", TextComponentSerializer.V1_16.serializeJson(entityHoverEvent.getName()));
+            if (entityHoverEvent.getName() != null) serializedEntity.add("name", this.textComponentSerializer.serializeJson(entityHoverEvent.getName()));
             serializedHoverEvent.add("contents", serializedEntity);
         }
 

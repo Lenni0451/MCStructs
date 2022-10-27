@@ -59,7 +59,7 @@ public class TextDeserializer_v1_8 implements JsonDeserializer<ATextComponent> {
                 component = new ScoreComponent(getString(score, "name"), getString(score, "objective"));
                 if (score.has("value")) ((ScoreComponent) component).setValue(getString(score, "value"));
             } else if (rawComponent.has("selector")) {
-                component = new SelectorComponent(getString(rawComponent, "selector"));
+                component = new SelectorComponent(getString(rawComponent, "selector"), null);
             } else {
                 throw new JsonParseException("Don't know how to turn " + json + " into a Component");
             }

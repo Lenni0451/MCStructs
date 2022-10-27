@@ -56,7 +56,7 @@ public class TextDeserializer_v1_12 implements JsonDeserializer<ATextComponent> 
                 component = new ScoreComponent(getString(score, "name"), getString(score, "objective"));
                 if (score.has("value")) ((ScoreComponent) component).setValue(getString(score, "value"));
             } else if (rawComponent.has("selector")) {
-                component = new SelectorComponent(getString(rawComponent, "selector"));
+                component = new SelectorComponent(getString(rawComponent, "selector"), null);
             } else if (rawComponent.has("keybind")) {
                 component = new KeybindComponent(getString(rawComponent, "keybind"));
             } else {
