@@ -83,7 +83,7 @@ public class TranslationComponent extends ATextComponent {
             if (arg instanceof ATextComponent) copyArgs[i] = ((ATextComponent) arg).copy();
             else copyArgs[i] = arg;
         }
-        return new TranslationComponent(this.key, copyArgs);
+        return this.putMetaCopy(new TranslationComponent(this.key, copyArgs));
     }
 
     @Override

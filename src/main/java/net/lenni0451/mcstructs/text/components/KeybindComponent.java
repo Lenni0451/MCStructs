@@ -31,7 +31,7 @@ public class KeybindComponent extends ATextComponent {
 
     @Override
     public ATextComponent copy() {
-        return new KeybindComponent(this.keybind);
+        return this.putMetaCopy(new KeybindComponent(this.keybind));
     }
 
     @Override

@@ -31,8 +31,8 @@ public class SelectorComponent extends ATextComponent {
 
     @Override
     public ATextComponent copy() {
-        if (this.separator == null) return new SelectorComponent(this.selector, null);
-        else return new SelectorComponent(this.selector, this.separator.copy());
+        if (this.separator == null) return this.putMetaCopy(new SelectorComponent(this.selector, null));
+        else return this.putMetaCopy(new SelectorComponent(this.selector, this.separator.copy()));
     }
 
     @Override
