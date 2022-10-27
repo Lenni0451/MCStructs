@@ -15,6 +15,8 @@ import net.lenni0451.mcstructs.text.serializer.v1_14.TextSerializer_v1_14;
 import net.lenni0451.mcstructs.text.serializer.v1_15.TextDeserializer_v1_15;
 import net.lenni0451.mcstructs.text.serializer.v1_15.TextSerializer_v1_15;
 import net.lenni0451.mcstructs.text.serializer.v1_16.*;
+import net.lenni0451.mcstructs.text.serializer.v1_17.TextDeserializer_v1_17;
+import net.lenni0451.mcstructs.text.serializer.v1_17.TextSerializer_v1_17;
 import net.lenni0451.mcstructs.text.serializer.v1_6.TextDeserializer_v1_6;
 import net.lenni0451.mcstructs.text.serializer.v1_6.TextSerializer_v1_6;
 import net.lenni0451.mcstructs.text.serializer.v1_7.StyleDeserializer_v1_7;
@@ -76,6 +78,14 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_16 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_16())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_16())
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16())
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16())
+            .create());
+    public static final TextComponentSerializer V1_17 = new TextComponentSerializer(() -> new GsonBuilder()
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_17())
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_17())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16())

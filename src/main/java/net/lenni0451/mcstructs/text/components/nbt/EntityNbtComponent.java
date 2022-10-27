@@ -7,8 +7,8 @@ public class EntityNbtComponent extends NbtComponent {
 
     private final String selector;
 
-    public EntityNbtComponent(final String component, final boolean resolve, final String selector) {
-        super(component, resolve);
+    public EntityNbtComponent(final String component, final boolean resolve, final ATextComponent separator, final String selector) {
+        super(component, resolve, separator);
         this.selector = selector;
     }
 
@@ -18,7 +18,8 @@ public class EntityNbtComponent extends NbtComponent {
 
     @Override
     public ATextComponent copy() {
-        return new EntityNbtComponent(this.getComponent(), this.isResolve(), this.selector);
+        if (this.getSeparator() == null) return new EntityNbtComponent(this.getComponent(), this.isResolve(), null, this.selector);
+        else return new EntityNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.selector);
     }
 
     @Override

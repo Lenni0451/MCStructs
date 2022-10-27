@@ -6,10 +6,12 @@ public abstract class NbtComponent extends ATextComponent {
 
     private final String component;
     private final boolean resolve;
+    private final ATextComponent separator;
 
-    public NbtComponent(final String component, final boolean resolve) {
+    public NbtComponent(final String component, final boolean resolve, final ATextComponent separator) {
         this.component = component;
         this.resolve = resolve;
+        this.separator = separator;
     }
 
     public String getComponent() {
@@ -18,6 +20,10 @@ public abstract class NbtComponent extends ATextComponent {
 
     public boolean isResolve() {
         return this.resolve;
+    }
+
+    public ATextComponent getSeparator() {
+        return this.separator;
     }
 
     @Override

@@ -7,8 +7,8 @@ public class BlockNbtComponent extends NbtComponent {
 
     private final String pos;
 
-    public BlockNbtComponent(final String rawComponent, final boolean resolve, final String pos) {
-        super(rawComponent, resolve);
+    public BlockNbtComponent(final String rawComponent, final boolean resolve, final ATextComponent separator, final String pos) {
+        super(rawComponent, resolve, separator);
         this.pos = pos;
     }
 
@@ -18,7 +18,8 @@ public class BlockNbtComponent extends NbtComponent {
 
     @Override
     public ATextComponent copy() {
-        return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.pos);
+        if (this.getSeparator() == null) return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.pos);
+        else return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator().copy(), this.pos);
     }
 
     @Override

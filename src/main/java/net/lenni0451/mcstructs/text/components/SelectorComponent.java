@@ -5,13 +5,19 @@ import net.lenni0451.mcstructs.text.ATextComponent;
 public class SelectorComponent extends ATextComponent {
 
     private final String selector;
+    private final ATextComponent separator;
 
-    public SelectorComponent(final String selector) {
+    public SelectorComponent(final String selector, final ATextComponent separator) {
         this.selector = selector;
+        this.separator = separator;
     }
 
     public String getSelector() {
         return this.selector;
+    }
+
+    public ATextComponent getSeparator() {
+        return this.separator;
     }
 
     @Override
@@ -21,7 +27,8 @@ public class SelectorComponent extends ATextComponent {
 
     @Override
     public ATextComponent copy() {
-        return new SelectorComponent(this.selector);
+        if (this.separator == null) return new SelectorComponent(this.selector, null);
+        else return new SelectorComponent(this.selector, this.separator.copy());
     }
 
     @Override

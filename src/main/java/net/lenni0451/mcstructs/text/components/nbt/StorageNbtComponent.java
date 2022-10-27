@@ -8,8 +8,8 @@ public class StorageNbtComponent extends NbtComponent {
 
     private final Identifier id;
 
-    public StorageNbtComponent(final String component, final boolean resolve, final Identifier id) {
-        super(component, resolve);
+    public StorageNbtComponent(final String component, final boolean resolve, final ATextComponent separator, final Identifier id) {
+        super(component, resolve, separator);
         this.id = id;
     }
 
@@ -19,7 +19,8 @@ public class StorageNbtComponent extends NbtComponent {
 
     @Override
     public ATextComponent copy() {
-        return new StorageNbtComponent(this.getComponent(), this.isResolve(), this.id);
+        if (this.getSeparator() == null) return new StorageNbtComponent(this.getComponent(), this.isResolve(), null, this.id);
+        else return new StorageNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.id);
     }
 
     @Override
