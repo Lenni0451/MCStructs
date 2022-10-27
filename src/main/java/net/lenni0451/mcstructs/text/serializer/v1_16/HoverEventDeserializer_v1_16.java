@@ -22,8 +22,8 @@ import static net.lenni0451.mcstructs.text.serializer.TextComponentJsonUtils.get
 
 public class HoverEventDeserializer_v1_16 implements JsonDeserializer<AHoverEvent> {
 
-    private final TextComponentSerializer textComponentSerializer;
-    private final SNbtParser<?> sNbtParser;
+    protected final TextComponentSerializer textComponentSerializer;
+    protected final SNbtParser<?> sNbtParser;
 
     public HoverEventDeserializer_v1_16(final TextComponentSerializer textComponentSerializer, final SNbtParser<?> sNbtParser) {
         this.textComponentSerializer = textComponentSerializer;
@@ -47,7 +47,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<AHoverEven
         return this.deserializeLegacy(action, text);
     }
 
-    private AHoverEvent deserialize(final HoverEventAction action, final JsonElement contents) {
+    protected AHoverEvent deserialize(final HoverEventAction action, final JsonElement contents) {
         switch (action) {
             case SHOW_TEXT:
                 return new TextHoverEvent(action, this.textComponentSerializer.deserialize(contents));
@@ -73,7 +73,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<AHoverEven
         }
     }
 
-    private AHoverEvent deserializeLegacy(final HoverEventAction action, final ATextComponent text) {
+    protected AHoverEvent deserializeLegacy(final HoverEventAction action, final ATextComponent text) {
         switch (action) {
             case SHOW_TEXT:
                 return new TextHoverEvent(action, text);
