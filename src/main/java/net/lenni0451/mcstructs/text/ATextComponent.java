@@ -11,10 +11,11 @@ public abstract class ATextComponent {
     private Style style = new Style();
 
     public void append(final String s) {
-        this.siblings.add(new StringComponent(s));
+        this.append(new StringComponent(s));
     }
 
     public void append(final ATextComponent component) {
+        component.getStyle().setParent(this.style);
         this.siblings.add(component);
     }
 
@@ -28,6 +29,7 @@ public abstract class ATextComponent {
 
     public void setStyle(final Style style) {
         this.style = style;
+        for (ATextComponent sibling : this.siblings) sibling.getStyle().setParent(this.style);
     }
 
     public <C extends ATextComponent> C putMetaCopy(final C component) {
