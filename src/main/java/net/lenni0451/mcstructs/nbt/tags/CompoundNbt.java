@@ -129,14 +129,14 @@ public class CompoundNbt implements INbtTag {
         this.add(key, new StringNbt(s));
     }
 
-    public ListNbt<?> getList(final String key) {
+    public <T extends INbtTag> ListNbt<T> getList(final String key) {
         if (this.contains(key, NbtType.LIST)) return this.get(key);
         return new ListNbt<>();
     }
 
-    public ListNbt<?> getList(final String key, final NbtType type) {
+    public <T extends INbtTag> ListNbt<T> getList(final String key, final NbtType type) {
         if (this.contains(key, NbtType.LIST)) {
-            ListNbt<?> list = this.get(key);
+            ListNbt<T> list = this.get(key);
             if (!list.canAdd(type)) return new ListNbt<>(type);
             else return list;
         }
@@ -147,7 +147,7 @@ public class CompoundNbt implements INbtTag {
         this.add(key, list);
     }
 
-    public void addList(final String key, final INbtTag... items) {
+    public <T extends INbtTag> void addList(final String key, final T... items) {
         if (items.length == 0) {
             this.add(key, new ListNbt<>());
         } else {
