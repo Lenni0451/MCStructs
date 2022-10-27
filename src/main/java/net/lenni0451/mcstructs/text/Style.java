@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.text;
 
 import net.lenni0451.mcstructs.general.Identifier;
+import net.lenni0451.mcstructs.general.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 

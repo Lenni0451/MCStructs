@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.text;
+package net.lenni0451.mcstructs.general;
 
 import java.util.ArrayList;
 import java.util.List;

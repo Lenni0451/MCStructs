@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.text.serializer.v1_8;
 
 import com.google.gson.*;
+import net.lenni0451.mcstructs.general.TextFormatting;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
-import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
