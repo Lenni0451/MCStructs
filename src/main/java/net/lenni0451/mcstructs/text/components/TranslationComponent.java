@@ -71,6 +71,7 @@ public class TranslationComponent extends ATextComponent {
             }
         }
         if (start < translated.length()) out.append(String.format(translated.substring(start)));
+        this.appendSiblings(out);
         return out.toString();
     }
 

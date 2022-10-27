@@ -18,7 +18,9 @@ public class StringComponent extends ATextComponent {
 
     @Override
     public String asString() {
-        return this.text;
+        StringBuilder out = new StringBuilder(this.text);
+        this.appendSiblings(out);
+        return out.toString();
     }
 
     @Override

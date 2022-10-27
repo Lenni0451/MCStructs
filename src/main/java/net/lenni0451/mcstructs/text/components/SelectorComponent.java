@@ -24,7 +24,9 @@ public class SelectorComponent extends ATextComponent {
 
     @Override
     public String asString() {
-        return this.selector;
+        StringBuilder out = new StringBuilder(this.selector);
+        this.appendSiblings(out);
+        return out.toString();
     }
 
     @Override

@@ -36,6 +36,10 @@ public abstract class ATextComponent {
         return component;
     }
 
+    protected void appendSiblings(final StringBuilder out) {
+        for (ATextComponent sibling : this.siblings) out.append(sibling.asString());
+    }
+
     public abstract String asString();
 
     public abstract ATextComponent copy();
