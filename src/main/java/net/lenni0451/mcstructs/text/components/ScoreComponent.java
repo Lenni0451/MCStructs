@@ -2,6 +2,8 @@ package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.text.ATextComponent;
 
+import java.util.Objects;
+
 public class ScoreComponent extends ATextComponent {
 
     private final String name;
@@ -42,17 +44,26 @@ public class ScoreComponent extends ATextComponent {
 
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ScoreComponent that = (ScoreComponent) o;
+        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(name, that.name) && Objects.equals(objective, that.objective) && Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(getSiblings(), getStyle(), name, objective, value);
     }
 
     @Override
     public String toString() {
-        return null;
+        return "ScoreComponent{" +
+                "siblings=" + getSiblings() +
+                ", style=" + getStyle() +
+                ", name='" + name + '\'' +
+                ", objective='" + objective + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 
 }

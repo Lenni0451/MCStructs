@@ -90,19 +90,25 @@ public class TranslationComponent extends ATextComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TranslationComponent that = (TranslationComponent) o;
-        return Objects.equals(key, that.key) && Arrays.equals(args, that.args);
+        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(key, that.key) && Arrays.equals(args, that.args) && Objects.equals(translator, that.translator);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(key);
+        int result = Objects.hash(getSiblings(), getStyle(), key, translator);
         result = 31 * result + Arrays.hashCode(args);
         return result;
     }
 
     @Override
     public String toString() {
-        return "TranslationComponent{key='" + key + "', args=" + Arrays.toString(args) + "}";
+        return "TranslationComponent{" +
+                "siblings=" + getSiblings() +
+                ", style=" + getStyle() +
+                ", key='" + key + '\'' +
+                ", args=" + Arrays.toString(args) +
+                ", translator=" + translator +
+                '}';
     }
 
 }

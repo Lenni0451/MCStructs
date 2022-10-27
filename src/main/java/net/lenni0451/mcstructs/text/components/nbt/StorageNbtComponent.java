@@ -4,6 +4,8 @@ import net.lenni0451.mcstructs.general.Identifier;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.NbtComponent;
 
+import java.util.Objects;
+
 public class StorageNbtComponent extends NbtComponent {
 
     private final Identifier id;
@@ -25,17 +27,24 @@ public class StorageNbtComponent extends NbtComponent {
 
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StorageNbtComponent that = (StorageNbtComponent) o;
+        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(getSiblings(), getStyle(), id);
     }
 
     @Override
     public String toString() {
-        return null;
+        return "StorageNbtComponent{" +
+                "siblings=" + getSiblings() +
+                ", style=" + getStyle() +
+                ", id=" + id +
+                '}';
     }
 
 }

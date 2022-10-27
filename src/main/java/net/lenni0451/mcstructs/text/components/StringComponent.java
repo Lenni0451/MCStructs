@@ -31,17 +31,21 @@ public class StringComponent extends ATextComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StringComponent that = (StringComponent) o;
-        return Objects.equals(text, that.text);
+        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text);
+        return Objects.hash(getSiblings(), getStyle(), text);
     }
 
     @Override
     public String toString() {
-        return "StringComponent{text='" + text + "', siblings=" + this.getSiblings() + ", style=" + this.getStyle() + "}";
+        return "StringComponent{" +
+                "siblings=" + getSiblings() +
+                ", style=" + getStyle() +
+                ", text='" + text + '\'' +
+                '}';
     }
 
 }

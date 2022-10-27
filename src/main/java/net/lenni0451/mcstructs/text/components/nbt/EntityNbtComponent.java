@@ -3,6 +3,8 @@ package net.lenni0451.mcstructs.text.components.nbt;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.NbtComponent;
 
+import java.util.Objects;
+
 public class EntityNbtComponent extends NbtComponent {
 
     private final String selector;
@@ -24,17 +26,24 @@ public class EntityNbtComponent extends NbtComponent {
 
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EntityNbtComponent that = (EntityNbtComponent) o;
+        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(selector, that.selector);
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(getSiblings(), getStyle(), selector);
     }
 
     @Override
     public String toString() {
-        return null;
+        return "EntityNbtComponent{" +
+                "siblings=" + getSiblings() +
+                ", style=" + getStyle() +
+                ", selector='" + selector + '\'' +
+                '}';
     }
 
 }

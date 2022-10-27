@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.text.ATextComponent;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 public class KeybindComponent extends ATextComponent {
@@ -33,17 +34,25 @@ public class KeybindComponent extends ATextComponent {
 
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KeybindComponent that = (KeybindComponent) o;
+        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(keybind, that.keybind) && Objects.equals(translator, that.translator);
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(getSiblings(), getStyle(), keybind, translator);
     }
 
     @Override
     public String toString() {
-        return null;
+        return "KeybindComponent{" +
+                "siblings=" + getSiblings() +
+                ", style=" + getStyle() +
+                ", keybind='" + keybind + '\'' +
+                ", translator=" + translator +
+                '}';
     }
 
 }
