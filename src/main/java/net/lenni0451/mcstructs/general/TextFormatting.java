@@ -40,7 +40,7 @@ public class TextFormatting {
     }
 
     public static TextFormatting parse(final String s) {
-        if (s.startsWith("#")) return new TextFormatting(Integer.parseInt(s.substring(1)));
+        if (s.startsWith("#")) return new TextFormatting(Integer.parseInt(s.substring(1), 16));
         else return getByName(s);
     }
 
@@ -102,7 +102,7 @@ public class TextFormatting {
     }
 
     public String serialize() {
-        if (Type.RGB.equals(this.type)) return "#" + this.rgbValue;
+        if (Type.RGB.equals(this.type)) return "#" + String.format("%06X", this.rgbValue);
         else return this.name.toLowerCase();
     }
 
