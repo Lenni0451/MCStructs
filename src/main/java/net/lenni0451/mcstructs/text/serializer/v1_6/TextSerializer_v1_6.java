@@ -16,7 +16,7 @@ public class TextSerializer_v1_6 implements JsonSerializer<ATextComponent> {
         JsonObject component = new JsonObject();
 
         if (style != null) {
-            if (style.getColor() != null && !style.getColor().isRGBColor()) component.addProperty("color", style.getColor().getName().toLowerCase());
+            if (style.getColor() != null && !style.getColor().isRGBColor()) component.addProperty("color", style.getColor().serialize());
             if (style.getBold() != null) component.addProperty("bold", style.isBold());
             if (style.getItalic() != null) component.addProperty("italic", style.isItalic());
             if (style.getUnderlined() != null) component.addProperty("underlined", style.isUnderlined());

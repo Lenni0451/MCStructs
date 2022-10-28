@@ -20,7 +20,7 @@ public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
         if (src.getUnderlined() != null) serializedStyle.addProperty("underlined", src.isUnderlined());
         if (src.getStrikethrough() != null) serializedStyle.addProperty("strikethrough", src.isStrikethrough());
         if (src.getObfuscated() != null) serializedStyle.addProperty("obfuscated", src.isObfuscated());
-        if (src.getColor() != null && !src.getColor().isRGBColor()) serializedStyle.addProperty("color", src.getColor().serialize());
+        if (src.getColor() != null) serializedStyle.addProperty("color", src.getColor().serialize());
         if (src.getInsertion() != null) serializedStyle.add("insertion", context.serialize(src.getInsertion()));
         if (src.getClickEvent() != null) {
             JsonObject clickEvent = new JsonObject();
