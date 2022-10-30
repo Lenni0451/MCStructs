@@ -1,13 +1,13 @@
-package net.lenni0451.mcstructs.nbt.snbt.impl;
+package net.lenni0451.mcstructs.nbt.snbt.impl.v1_7;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.snbt.ISNbtParser;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtParseException;
+import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
+import net.lenni0451.mcstructs.nbt.snbt.ISNbtDeserializer;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
 import java.util.Stack;
 
-public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
+public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
 
     private static final String ARRAY_PATTERN = "\\[[-\\d|,\\s]+]";
     private static final String BYTE_PATTERN = "[-+]?[0-9]+[b|B]";
@@ -19,22 +19,22 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
     private static final String SHORT_DOUBLE_PATTERN = "[-+]?[0-9]*\\.?[0-9]+";
 
     @Override
-    public INbtTag parse(String s) throws SNbtParseException {
+    public INbtTag deserialize(String s) throws SNbtDeserializeException {
         s = s.trim();
         int tagCount = this.getTagCount(s);
-        if (tagCount != 1) throw new SNbtParseException("Encountered multiple top tags, only one expected");
+        if (tagCount != 1) throw new SNbtDeserializeException("Encountered multiple top tags, only one expected");
         INbtTag tag;
         if (s.startsWith("{")) tag = this.parse("tag", s);
         else tag = this.parse(this.find(s, true, false), this.find(s, false, false));
         return tag;
     }
 
-    private INbtTag parse(final String name, String value) throws SNbtParseException {
+    private INbtTag parse(final String name, String value) throws SNbtDeserializeException {
         value = value.trim();
         getTagCount(value);
 
         if (value.startsWith("{")) {
-            if (!value.endsWith("}")) throw new SNbtParseException("Unable to locate ending bracket } for: " + value);
+            if (!value.endsWith("}")) throw new SNbtDeserializeException("Unable to locate ending bracket } for: " + value);
 
             value = value.substring(1, value.length() - 1);
             CompoundNbt compound = new CompoundNbt();
@@ -48,14 +48,14 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
                     if (value.length() < pair.length() + 1) break;
                     char next = value.charAt(pair.length());
                     if (next != ',' && next != '{' && next != '}' && next != '[' && next != ']') {
-                        throw new SNbtParseException("Unexpected troken '" + name + "' at: " + value.substring(pair.length()));
+                        throw new SNbtDeserializeException("Unexpected troken '" + name + "' at: " + value.substring(pair.length()));
                     }
                     value = value.substring(pair.length() + 1);
                 }
             }
             return compound;
         } else if (value.startsWith("[") && !value.matches(ARRAY_PATTERN)) {
-            if (!value.endsWith("]")) throw new SNbtParseException("Unable to locate ending bracket ] for: " + value);
+            if (!value.endsWith("]")) throw new SNbtDeserializeException("Unable to locate ending bracket ] for: " + value);
 
             value = value.substring(1, value.length() - 1);
             ListNbt<INbtTag> list = new ListNbt<>();
@@ -69,7 +69,7 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
                     if (value.length() < pair.length() + 1) break;
                     char next = value.charAt(pair.length());
                     if (next != ',' && next != '{' && next != '}' && next != '[' && next != ']') {
-                        throw new SNbtParseException("Unexpected troken '" + name + "' at: " + value.substring(pair.length()));
+                        throw new SNbtDeserializeException("Unexpected troken '" + name + "' at: " + value.substring(pair.length()));
                     }
                     value = value.substring(pair.length() + 1);
                 }
@@ -127,7 +127,7 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
         }
     }
 
-    private int getTagCount(final String s) throws SNbtParseException {
+    private int getTagCount(final String s) throws SNbtDeserializeException {
         Stack<Character> brackets = new Stack<>();
         boolean quoted = false;
         int count = 0;
@@ -137,7 +137,7 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
             char c = chars[i];
             if (c == '"') {
                 if (i > 0 && chars[i - 1] == '\\') {
-                    if (!quoted) throw new SNbtParseException("Illegal use of \\\": " + s);
+                    if (!quoted) throw new SNbtDeserializeException("Illegal use of \\\": " + s);
                 } else {
                     quoted = !quoted;
                 }
@@ -151,17 +151,17 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
             }
         }
 
-        if (quoted) throw new SNbtParseException("Unbalanced quotation: " + s);
-        else if (!brackets.isEmpty()) throw new SNbtParseException("Unbalanced brackets " + this.quotesToString(brackets) + ": " + s);
+        if (quoted) throw new SNbtDeserializeException("Unbalanced quotation: " + s);
+        else if (!brackets.isEmpty()) throw new SNbtDeserializeException("Unbalanced brackets " + this.quotesToString(brackets) + ": " + s);
         else if (count == 0 && !s.isEmpty()) return 1;
         else return count;
     }
 
-    private String findPair(final String s, final boolean isArray) throws SNbtParseException {
+    private String findPair(final String s, final boolean isArray) throws SNbtDeserializeException {
         int separatorIndex = this.getCharIndex(s, ':');
-        if (separatorIndex < 0 && !isArray) throw new SNbtParseException("Unable to locate name/value for string: " + s);
+        if (separatorIndex < 0 && !isArray) throw new SNbtDeserializeException("Unable to locate name/value for string: " + s);
         int pairSeparator = this.getCharIndex(s, ',');
-        if (pairSeparator >= 0 && pairSeparator < separatorIndex && !isArray) throw new SNbtParseException("Name error at: " + s);
+        if (pairSeparator >= 0 && pairSeparator < separatorIndex && !isArray) throw new SNbtDeserializeException("Name error at: " + s);
         if (isArray && (separatorIndex < 0 || separatorIndex > pairSeparator)) separatorIndex = -1;
 
         Stack<Character> brackets = new Stack<>();
@@ -176,7 +176,7 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
             char c = chars[i];
             if (c == '"') {
                 if (i > 0 && chars[i - 1] == '\\') {
-                    if (!quoted) throw new SNbtParseException("Illegal use of \\\": " + s);
+                    if (!quoted) throw new SNbtDeserializeException("Illegal use of \\\": " + s);
                 } else {
                     quoted = !quoted;
                     if (quoted && !hasContent) isString = true;
@@ -198,7 +198,7 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
         return s.substring(0, i);
     }
 
-    private String find(String s, final boolean name, final boolean isArray) throws SNbtParseException {
+    private String find(String s, final boolean name, final boolean isArray) throws SNbtDeserializeException {
         if (isArray) {
             s = s.trim();
             if (s.startsWith("{") || s.startsWith("[")) {
@@ -213,7 +213,7 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
                 if (name) return "";
                 else return s;
             } else {
-                throw new SNbtParseException("Unable to locate name/value separator for string: " + s);
+                throw new SNbtDeserializeException("Unable to locate name/value separator for string: " + s);
             }
         } else {
             if (name) return s.substring(0, separatorIndex).trim();
@@ -237,9 +237,9 @@ public class SNbtParser_v1_7 implements ISNbtParser<INbtTag> {
         return -1;
     }
 
-    private void checkBrackets(final String s, final char close, final Stack<Character> brackets) throws SNbtParseException {
-        if (close == '}' && (brackets.isEmpty() || brackets.pop() != '{')) throw new SNbtParseException("Unbalanced curly brackets {}: " + s);
-        else if (close == ']' && (brackets.isEmpty() || brackets.pop() != '[')) throw new SNbtParseException("Unbalanced square brackets []: " + s);
+    private void checkBrackets(final String s, final char close, final Stack<Character> brackets) throws SNbtDeserializeException {
+        if (close == '}' && (brackets.isEmpty() || brackets.pop() != '{')) throw new SNbtDeserializeException("Unbalanced curly brackets {}: " + s);
+        else if (close == ']' && (brackets.isEmpty() || brackets.pop() != '[')) throw new SNbtDeserializeException("Unbalanced square brackets []: " + s);
     }
 
     private String quotesToString(final Stack<Character> quotes) {

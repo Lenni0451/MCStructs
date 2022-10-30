@@ -1,13 +1,13 @@
 package net.lenni0451.mcstructs.nbt.snbt.impl.v1_12;
 
-import net.lenni0451.mcstructs.nbt.snbt.SNbtParseException;
+import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
 
-public class StringReader_v1_14 {
+public class StringReader_v1_12 {
 
     private final String s;
     private int index;
 
-    public StringReader_v1_14(final String s) {
+    public StringReader_v1_12(final String s) {
         this.s = s;
     }
 
@@ -47,7 +47,7 @@ public class StringReader_v1_14 {
         while (this.canRead() && Character.isWhitespace(this.peek())) this.index++;
     }
 
-    public String readString() throws SNbtParseException {
+    public String readString() throws SNbtDeserializeException {
         this.skipWhitespaces();
         if (!this.canRead()) return null;
         else return this.peek() == '"' ? this.readQuotedString() : this.readUnquotedString();
@@ -59,14 +59,14 @@ public class StringReader_v1_14 {
         return this.s.substring(start, this.index);
     }
 
-    public String readQuotedString() throws SNbtParseException {
+    public String readQuotedString() throws SNbtDeserializeException {
         int start = ++this.index;
         StringBuilder out = null;
         boolean escaped = false;
         while (this.canRead()) {
             char c = this.read();
             if (escaped) {
-                if (c != '\\' && c != '"') throw new SNbtParseException("Invalid escape of '" + c + "'");
+                if (c != '\\' && c != '"') throw new SNbtDeserializeException("Invalid escape of '" + c + "'");
                 escaped = false;
             } else {
                 if (c == '\\') {
@@ -79,14 +79,14 @@ public class StringReader_v1_14 {
             }
             if (out != null) out.append(c);
         }
-        throw new SNbtParseException("Missing termination quote", this.s, start - 1);
+        throw new SNbtDeserializeException("Missing termination quote", this.s, start - 1);
     }
 
-    public void jumpTo(final char wanted) throws SNbtParseException {
+    public void jumpTo(final char wanted) throws SNbtDeserializeException {
         this.skipWhitespaces();
         boolean canRead = this.canRead();
         if (canRead && this.peek() == wanted) this.index++;
-        else throw new SNbtParseException("Expected '" + wanted + "' but got '" + (canRead ? this.peek() : "<EOL>") + "'", this.s, this.index + 1);
+        else throw new SNbtDeserializeException("Expected '" + wanted + "' but got '" + (canRead ? this.peek() : "<EOL>") + "'", this.s, this.index + 1);
     }
 
 

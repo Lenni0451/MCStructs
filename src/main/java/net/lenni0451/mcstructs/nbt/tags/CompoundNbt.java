@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.*;
 import net.lenni0451.mcstructs.nbt.exceptions.UnknownTagTypeException;
+import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -215,11 +216,6 @@ public class CompoundNbt implements INbtTag {
         return this.value.isEmpty();
     }
 
-    private String escapeName(String name) {
-        if (name.matches("[a-zA-Z0-9._+-]+")) return name;
-        else return new StringNbt(name).toString();
-    }
-
     private INbtTag wrap(final Object o) {
         if (o == null) return null;
         if (o instanceof INbtTag) return (INbtTag) o;
@@ -289,10 +285,7 @@ public class CompoundNbt implements INbtTag {
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder("{");
-        for (Map.Entry<String, INbtTag> entry : this.value.entrySet()) out.append(this.escapeName(entry.getKey())).append(":").append(entry.getValue()).append(",");
-        if (!this.value.isEmpty()) out.deleteCharAt(out.length() - 1);
-        return out.append("}").toString();
+        return SNbtSerializer.V1_14.trySerialize(this);
     }
 
 }

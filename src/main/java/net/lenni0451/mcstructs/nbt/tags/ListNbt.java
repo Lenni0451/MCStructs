@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
+import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -155,10 +156,7 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder("[");
-        for (T tag : this.value) out.append(tag).append(",");
-        if (!this.value.isEmpty()) out.deleteCharAt(out.length() - 1);
-        return out.append("]").toString();
+        return SNbtSerializer.V1_14.trySerialize(this);
     }
 
 }

@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.nbt.tags;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
+import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -97,10 +98,7 @@ public class IntArrayNbt implements INbtTag {
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder("[I;");
-        for (int i : this.value) out.append(i).append(",");
-        if (this.value.length > 0) out.deleteCharAt(out.length() - 1);
-        return out.append("]").toString();
+        return SNbtSerializer.V1_14.trySerialize(this);
     }
 
 }

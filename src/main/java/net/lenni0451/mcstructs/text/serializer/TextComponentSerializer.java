@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtParser;
+import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
@@ -82,7 +82,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
-            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbtParser.V1_14))
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16))
             .create());
     public static final TextComponentSerializer V1_17 = new TextComponentSerializer(() -> new GsonBuilder()
@@ -90,7 +90,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_17())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
-            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbtParser.V1_14))
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17))
             .create());
     public static final TextComponentSerializer V1_18 = new TextComponentSerializer(() -> new GsonBuilder()
@@ -98,7 +98,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_17())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
-            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbtParser.V1_14))
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18))
             .create());
 

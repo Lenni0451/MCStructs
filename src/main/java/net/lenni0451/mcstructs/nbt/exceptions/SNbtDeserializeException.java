@@ -1,6 +1,6 @@
-package net.lenni0451.mcstructs.nbt.snbt;
+package net.lenni0451.mcstructs.nbt.exceptions;
 
-public class SNbtParseException extends Exception {
+public class SNbtDeserializeException extends Exception {
 
     private static String trim(final String rawTag, final int position) {
         StringBuilder out = new StringBuilder();
@@ -11,11 +11,11 @@ public class SNbtParseException extends Exception {
     }
 
 
-    public SNbtParseException(final String message) {
+    public SNbtDeserializeException(final String message) {
         super(message);
     }
 
-    public SNbtParseException(final String message, final String rawTag, final int position) {
+    public SNbtDeserializeException(final String message, final String rawTag, final int position) {
         super(message + " at: " + trim(rawTag, position));
     }
 

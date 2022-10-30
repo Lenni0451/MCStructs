@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
+import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -101,7 +102,7 @@ public class ByteNbt implements INbtNumber {
 
     @Override
     public String toString() {
-        return this.value + "b";
+        return SNbtSerializer.V1_14.trySerialize(this);
     }
 
 }
