@@ -6,3 +6,7 @@ pluginManagement {
 }
 
 rootProject.name = "MCStructs"
+
+include(":MCStructs-core")
+include(":MCStructs-nbt")
+include(":MCStructs-text")

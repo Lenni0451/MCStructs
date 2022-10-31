@@ -1,54 +1,50 @@
-plugins {
-    id "java-library"
-    id "maven-publish"
-}
+subprojects {
+    apply plugin: "java-library"
+    apply plugin: "maven-publish"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-compileJava.options.encoding = "UTF-8"
+    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+    compileJava.options.encoding = "UTF-8"
 
-archivesBaseName = project.maven_name
-group = project.maven_group
-version = project.maven_version
+    archivesBaseName = project.maven_name
+    group = project.maven_group
+    version = project.maven_version
 
-repositories {
-    mavenCentral()
-    maven {
-        name = "lenni0451 releases"
-        url = "https://maven.lenni0451.net/releases"
-    }
-}
-
-dependencies {
-    api "com.google.code.gson:gson:2.9.1"
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
-javadoc {
-    failOnError = false
-}
-
-publishing {
     repositories {
+        mavenCentral()
         maven {
-            name = "reposilite"
-            url = ((project.snapshot == "true") ? "https://maven.lenni0451.net/snapshots" : "https://maven.lenni0451.net/releases")
-            credentials(PasswordCredentials)
-            authentication {
-                basic(BasicAuthentication)
-            }
+            name = "lenni0451 releases"
+            url = "https://maven.lenni0451.net/releases"
         }
     }
-    publications {
-        maven(MavenPublication) {
-            artifactId = project.maven_name
-            groupId = project.maven_group
-            version = project.maven_version
 
-            from components.java
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    javadoc {
+        failOnError = false
+    }
+
+    publishing {
+        repositories {
+            maven {
+                name = "reposilite"
+                url = ((project.snapshot == "true") ? "https://maven.lenni0451.net/snapshots" : "https://maven.lenni0451.net/releases")
+                credentials(PasswordCredentials)
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
+        }
+        publications {
+            maven(MavenPublication) {
+                artifactId = project.maven_name
+                groupId = project.maven_group
+                version = project.maven_version
+
+                from components.java
+            }
         }
     }
 }

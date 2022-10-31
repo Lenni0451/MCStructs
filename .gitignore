@@ -2,6 +2,6 @@
 /.idea/
 /.vscode/
 /bin/
-/build/
-/out/
+build
+out
 *.iml
