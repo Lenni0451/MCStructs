@@ -6,28 +6,28 @@ import net.lenni0451.mcstructs.items.AItemStack;
 
 import java.util.function.Function;
 
-public class InventoryHolder<I extends IInventory<S>, S extends AItemStack<?, ?>> {
+public class InventoryHolder<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
 
-    private final I playerInventory;
-    private final AContainer<I, S> playerInventoryContainer;
-    private AContainer<I, S> container;
+    private final T playerInventory;
+    private final AContainer<T, I, S> playerInventoryContainer;
+    private AContainer<T, I, S> container;
     private boolean creativeMode;
 
-    public InventoryHolder(final I playerInventory, final Function<I, AContainer<I, S>> containerSupplier) {
+    public InventoryHolder(final T playerInventory, final Function<T, AContainer<T, I, S>> containerSupplier) {
         this.playerInventory = playerInventory;
         this.playerInventoryContainer = containerSupplier.apply(playerInventory);
         this.container = this.playerInventoryContainer;
     }
 
-    public I getPlayerInventory() {
+    public T getPlayerInventory() {
         return this.playerInventory;
     }
 
-    public AContainer<I, S> getContainer() {
+    public AContainer<T, I, S> getContainer() {
         return this.container;
     }
 
-    public void setContainer(final AContainer<I, S> container) {
+    public void setContainer(final AContainer<T, I, S> container) {
         if (container == null) this.container = this.playerInventoryContainer;
         else this.container = container;
     }

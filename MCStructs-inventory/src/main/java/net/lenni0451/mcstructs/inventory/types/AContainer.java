@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class AContainer<I extends IInventory<S>, S extends AItemStack<?, ?>> {
+public abstract class AContainer<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
 
     private final int windowId;
-    private final List<Slot<S>> slots;
+    private final List<Slot<I, S>> slots;
 
     public AContainer(final int windowId) {
         this.windowId = windowId;
@@ -23,13 +23,13 @@ public abstract class AContainer<I extends IInventory<S>, S extends AItemStack<?
         return this.windowId;
     }
 
-    protected Slot<S> addSlot(final IInventory<S> inventory, final int inventoryIndex, final Function<S, Integer> acceptor) {
-        Slot<S> slot = new Slot<>(inventory, this.slots.size(), inventoryIndex, acceptor);
+    protected Slot<I, S> addSlot(final IInventory<I, S> inventory, final int inventoryIndex, final Function<S, Integer> acceptor) {
+        Slot<I, S> slot = new Slot<>(inventory, this.slots.size(), inventoryIndex, acceptor);
         this.slots.add(slot);
         return slot;
     }
 
-    public Slot<S> getSlot(final int index) {
+    public Slot<I, S> getSlot(final int index) {
         return this.slots.get(index);
     }
 
@@ -37,6 +37,6 @@ public abstract class AContainer<I extends IInventory<S>, S extends AItemStack<?
         return this.slots.size();
     }
 
-    public abstract S click(final InventoryHolder<I, S> inventoryHolder, final int slot, final int button, final InventoryAction action);
+    public abstract S click(final InventoryHolder<T, I, S> inventoryHolder, final int slot, final int button, final InventoryAction action);
 
 }

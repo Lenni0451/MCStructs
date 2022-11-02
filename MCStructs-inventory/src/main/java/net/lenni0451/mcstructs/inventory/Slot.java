@@ -6,38 +6,38 @@ import net.lenni0451.mcstructs.items.info.ItemType;
 
 import java.util.function.Function;
 
-public class Slot<S extends AItemStack<?, ?>> {
+public class Slot<I, S extends AItemStack<I, S>> {
 
-    public static <S extends AItemStack<?, ?>> Function<S, Integer> acceptAll() {
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptAll() {
         return stack -> stack.getMeta().maxCount();
     }
 
-    public static <S extends AItemStack<?, ?>> Function<S, Integer> acceptNone() {
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptNone() {
         return item -> 0;
     }
 
-    public static <S extends AItemStack<?, ?>> Function<S, Integer> acceptType(final ItemType type) {
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptType(final ItemType type) {
         return item -> item.getMeta().type().equals(type) ? item.getMeta().maxCount() : 0;
     }
 
-    public static <S extends AItemStack<?, ?>> Function<S, Integer> acceptType(final ItemType type, final int maxCount) {
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptType(final ItemType type, final int maxCount) {
         return item -> item.getMeta().type().equals(type) ? Math.min(item.getMeta().maxCount(), maxCount) : 0;
     }
 
 
-    private final IInventory<S> inventory;
+    private final IInventory<I, S> inventory;
     private final int slotIndex;
     private final int inventoryIndex;
     private final Function<S, Integer> acceptor;
 
-    public Slot(final IInventory<S> inventory, final int slotIndex, final int inventoryIndex, final Function<S, Integer> acceptor) {
+    public Slot(final IInventory<I, S> inventory, final int slotIndex, final int inventoryIndex, final Function<S, Integer> acceptor) {
         this.inventory = inventory;
         this.slotIndex = slotIndex;
         this.inventoryIndex = inventoryIndex;
         this.acceptor = acceptor;
     }
 
-    public IInventory<S> getInventory() {
+    public IInventory<I, S> getInventory() {
         return this.inventory;
     }
 
@@ -65,7 +65,7 @@ public class Slot<S extends AItemStack<?, ?>> {
         return this.acceptor.apply(stack);
     }
 
-    public boolean canTake(final InventoryHolder<? extends IInventory<S>, S> inventoryHolder) {
+    public boolean canTake(final InventoryHolder<? extends IInventory<I, S>, I, S> inventoryHolder) {
         //TODO: canTakeStack (anvil xp check)
         return true;
     }

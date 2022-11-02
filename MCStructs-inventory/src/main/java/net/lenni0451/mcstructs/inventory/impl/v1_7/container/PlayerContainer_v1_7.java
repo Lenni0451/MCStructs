@@ -1,11 +1,11 @@
-package net.lenni0451.mcstructs.inventory.v1_7.container;
+package net.lenni0451.mcstructs.inventory.impl.v1_7.container;
 
 import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.Slot;
-import net.lenni0451.mcstructs.inventory.v1_7.AContainer_v1_7;
-import net.lenni0451.mcstructs.inventory.v1_7.inventory.CraftingInventory_v1_7;
-import net.lenni0451.mcstructs.inventory.v1_7.inventory.CraftingResultInventory_v1_7;
-import net.lenni0451.mcstructs.inventory.v1_7.inventory.PlayerInventory_v1_7;
+import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
+import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingInventory_v1_7;
+import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingResultInventory_v1_7;
+import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
@@ -16,17 +16,17 @@ import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
  * 9-35: upper inventory slots<br>
  * 36-44: hotbar slots
  */
-public class PlayerContainer_v1_7 extends AContainer_v1_7 {
+public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> {
 
-    private final PlayerInventory_v1_7 playerInventory;
-    private final CraftingInventory_v1_7 craftingInventory;
-    private final CraftingResultInventory_v1_7 craftingResultInventory;
+    private final PlayerInventory_v1_7<I> playerInventory;
+    private final CraftingInventory_v1_7<I> craftingInventory;
+    private final CraftingResultInventory_v1_7<I> craftingResultInventory;
 
-    public PlayerContainer_v1_7(final PlayerInventory_v1_7 playerInventory) {
+    public PlayerContainer_v1_7(final PlayerInventory_v1_7<I> playerInventory) {
         super(0);
         this.playerInventory = playerInventory;
-        this.craftingInventory = new CraftingInventory_v1_7(2, 2);
-        this.craftingResultInventory = new CraftingResultInventory_v1_7();
+        this.craftingInventory = new CraftingInventory_v1_7<>(2, 2);
+        this.craftingResultInventory = new CraftingResultInventory_v1_7<>();
 
         this.addSlot(this.craftingResultInventory, 0, Slot.acceptNone());
         for (int i = 0; i < this.craftingInventory.getSize(); i++) this.addSlot(this.craftingInventory, i, Slot.acceptAll());
@@ -38,15 +38,15 @@ public class PlayerContainer_v1_7 extends AContainer_v1_7 {
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7 getPlayerInventory() {
+    public PlayerInventory_v1_7<I> getPlayerInventory() {
         return this.playerInventory;
     }
 
-    public CraftingInventory_v1_7 getCraftingInventory() {
+    public CraftingInventory_v1_7<I> getCraftingInventory() {
         return this.craftingInventory;
     }
 
-    public CraftingResultInventory_v1_7 getCraftingResultInventory() {
+    public CraftingResultInventory_v1_7<I> getCraftingResultInventory() {
         return this.craftingResultInventory;
     }
 
@@ -65,16 +65,16 @@ public class PlayerContainer_v1_7 extends AContainer_v1_7 {
     }
 
     @Override
-    protected boolean canTakeAll(Slot<LegacyItemStack<?>> slot, LegacyItemStack<?> stack) {
+    protected boolean canTakeAll(Slot<I, LegacyItemStack<I>> slot, LegacyItemStack<I> stack) {
         return !this.craftingResultInventory.equals(slot.getInventory());
     }
 
     @Override
-    protected LegacyItemStack<?> moveStack(InventoryHolder<PlayerInventory_v1_7, LegacyItemStack<?>> inventoryHolder, int slotId) {
-        LegacyItemStack<?> out = null;
-        Slot<LegacyItemStack<?>> slot = this.getSlot(slotId);
+    protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
+        LegacyItemStack<I> out = null;
+        Slot<I, LegacyItemStack<I>> slot = this.getSlot(slotId);
         if (slot != null && slot.getStack() != null) {
-            LegacyItemStack<?> slotStack = slot.getStack();
+            LegacyItemStack<I> slotStack = slot.getStack();
             out = slotStack.copy();
             if (slotId == 0) {
                 if (!this.mergeStack(slotStack, 9, 45, true)) return null;
