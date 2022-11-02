@@ -8,6 +8,9 @@ pluginManagement {
 rootProject.name = "MCStructs"
 
 include(":MCStructs-all")
+include(":MCStructs-data")
 include(":MCStructs-core")
+include(":MCStructs-inventory")
+include(":MCStructs-items")
 include(":MCStructs-nbt")
 include(":MCStructs-text")

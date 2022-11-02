@@ -1,5 +1,7 @@
 dependencies {
     api project(":MCStructs-core")
+    api project(":MCStructs-inventory")
+    api project(":MCStructs-items")
     api project(":MCStructs-nbt")
     api project(":MCStructs-text")
 }
