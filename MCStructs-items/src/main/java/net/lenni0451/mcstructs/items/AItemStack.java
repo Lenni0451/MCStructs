@@ -61,6 +61,10 @@ public abstract class AItemStack<I, S extends AItemStack<I, S>> {
         this.tag = tag;
     }
 
+    public boolean hasTag() {
+        return this.tag != null;
+    }
+
     public S copy() {
         S stack = this.getRegistry().create(this.getItem(), this.getCount(), this.copyTag());
         stack.setDamage(this.getDamage());

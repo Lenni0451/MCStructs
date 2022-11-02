@@ -4,7 +4,7 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
-public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingInventory<LegacyItemStack<I>> {
+public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingInventory<I, LegacyItemStack<I>> {
 
     private final int width;
     private final int height;
