@@ -10,26 +10,31 @@ public class InventoryHolder<T extends IInventory<I, S>, I, S extends AItemStack
 
     private final T playerInventory;
     private final AContainer<T, I, S> playerInventoryContainer;
-    private AContainer<T, I, S> container;
+    private AContainer<T, I, S> openContainer;
     private boolean creativeMode;
 
     public InventoryHolder(final T playerInventory, final Function<T, AContainer<T, I, S>> containerSupplier) {
         this.playerInventory = playerInventory;
         this.playerInventoryContainer = containerSupplier.apply(playerInventory);
-        this.container = this.playerInventoryContainer;
+        this.openContainer = this.playerInventoryContainer;
     }
 
     public T getPlayerInventory() {
         return this.playerInventory;
     }
 
-    public AContainer<T, I, S> getContainer() {
-        return this.container;
+    public AContainer<T, I, S> getPlayerInventoryContainer() {
+        return this.playerInventoryContainer;
     }
 
-    public void setContainer(final AContainer<T, I, S> container) {
-        if (container == null) this.container = this.playerInventoryContainer;
-        else this.container = container;
+    public AContainer<T, I, S> getOpenContainer() {
+        return this.openContainer;
+    }
+
+    public void setOpenContainer(final AContainer<T, I, S> openContainer) {
+        this.openContainer.close();
+        if (openContainer == null) this.openContainer = this.playerInventoryContainer;
+        else this.openContainer = openContainer;
     }
 
     public boolean isCreativeMode() {

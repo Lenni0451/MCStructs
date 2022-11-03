@@ -43,15 +43,19 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
         return -1;
     }
 
-    public void addStack(final InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, LegacyItemStack<I> stack) {
-        if (stack == null || stack.getCount() == 0 || stack.getItem() == null) return;
+    public boolean addStack(final InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, LegacyItemStack<I> stack) {
+        if (stack == null || stack.getCount() == 0 || stack.getItem() == null) return false;
         if (stack.getMeta().damageable() && stack.getDamage() > 0) {
             int emptySlot = this.getEmptySlot();
             if (emptySlot >= 0) {
                 this.main[emptySlot] = stack.copy();
                 stack.setCount(0);
+                return true;
             } else if (inventoryHolder.isCreativeMode()) {
                 stack.setCount(0);
+                return true;
+            } else {
+                return false;
             }
         } else {
             int leftItems;
@@ -59,7 +63,12 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
                 leftItems = stack.getCount();
                 stack.setCount(this.addItems(stack));
             } while (stack.getCount() > 0 && stack.getCount() < leftItems);
-            if (stack.getCount() == leftItems && inventoryHolder.isCreativeMode()) stack.setCount(0);
+            if (stack.getCount() == leftItems && inventoryHolder.isCreativeMode()) {
+                stack.setCount(0);
+                return true;
+            } else {
+                return stack.getCount() < leftItems;
+            }
         }
     }
 

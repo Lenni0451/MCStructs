@@ -36,15 +36,11 @@ public class ItemMeta {
     };
 
 
-    private List<ItemType> types = new ArrayList<>();
+    private final List<ItemType> types = new ArrayList<>();
     private int maxCount = 64;
     private int maxDamage = 0;
     private boolean damageable = false;
     private boolean hasSubtypes = false;
-
-    public ItemMeta() {
-        this.types.add(ItemType.GENERIC);
-    }
 
     public List<ItemType> types() {
         return this.types;

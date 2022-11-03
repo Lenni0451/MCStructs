@@ -15,7 +15,7 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
 
     private DraggingState draggingState = DraggingState.NOT_DRAGGING;
     private int draggingButton;
-    private final List<Slot<I, LegacyItemStack<I>>> draggingSlots = new ArrayList<>();
+    private final List<Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>>> draggingSlots = new ArrayList<>();
 
     public AContainer_v1_7(final int windowId) {
         super(windowId);
@@ -41,13 +41,13 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
                     this.resetDraggingState();
                 }
             } else if (DraggingState.DRAGGING.equals(this.draggingState)) {
-                Slot<I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+                Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
                 if (this.isValidDraggingSlot(slot, playerInventory.getCursorStack(), this.draggingSlots.size())) this.draggingSlots.add(slot);
             } else if (DraggingState.FINISHED_DRAGGING.equals(this.draggingState)) {
                 if (!this.draggingSlots.isEmpty()) {
                     LegacyItemStack<I> cursorStack = playerInventory.getCursorStack().copy();
                     int cursorCount = cursorStack.getCount();
-                    for (Slot<I, LegacyItemStack<I>> slot : this.draggingSlots) {
+                    for (Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot : this.draggingSlots) {
                         if (this.isValidDraggingSlot(slot, cursorStack, this.draggingSlots.size() - 1)) {
                             LegacyItemStack<I> newStack = cursorStack.copy();
                             int oldSlotCount = slot.getStack() == null ? 0 : slot.getStack().getCount();
@@ -86,7 +86,7 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
                 }
             } else {
                 if (slotId < 0) return null;
-                Slot<I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+                Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
                 if (InventoryAction.QUICK_MOVE.equals(action)) {
                     if (slot != null && slot.canTake(inventoryHolder)) {
                         LegacyItemStack<I> movedStack = this.moveStack(inventoryHolder, slotId);
@@ -113,7 +113,7 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
                                 LegacyItemStack<I> leftStack = ((IInventory_v1_7<I>) slot.getInventory()).split(slot.getInventoryIndex(), takeCount);
                                 playerInventory.setCursorStack(leftStack);
                                 if (slotStack.getCount() == 0) slot.setStack(null);
-                                //slot.onTake(inventoryHolder, leftStack);
+                                slot.onTake(inventoryHolder, playerInventory.getCursorStack());
                             } else if (slot.accepts(cursorStack)) {
                                 if (this.isSameItem(slotStack, cursorStack) && this.isSameTag(slotStack, cursorStack)) {
                                     int putCount = button == 0 ? cursorStack.getCount() : 1;
@@ -132,16 +132,16 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
                                     cursorStack.setCount(cursorStack.getCount() + takeCount);
                                     slotStack = ((IInventory_v1_7<I>) slot.getInventory()).split(slot.getInventoryIndex(), takeCount);
                                     if (slotStack.getCount() == 0) slot.setStack(null);
-                                    //slot.onTake(inventoryHolder, playerInventory.getCursorStack());
+                                    slot.onTake(inventoryHolder, playerInventory.getCursorStack());
                                 }
                             }
                         }
-                        //slot.onChange();
+                        slot.onUpdate();
                     }
                 }
             }
         } else if (InventoryAction.SWAP.equals(action) && button >= 0 && button <= 8) {
-            Slot<I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+            Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
             if (slot.canTake(inventoryHolder)) {
                 LegacyItemStack<I> hotbarStack = playerInventory.getStack(button);
                 boolean canSwap = hotbarStack == null || (slot.getInventory().equals(playerInventory) && slot.accepts(hotbarStack));
@@ -158,12 +158,12 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
                             playerInventory.addStack(inventoryHolder, hotbarStack);
                             ((IInventory_v1_7<I>) slot.getInventory()).split(slot.getInventoryIndex(), slotStack.getCount());
                             slot.setStack(null);
-                            //slot.onTake(inventoryHolder, slotStack);
+                            slot.onTake(inventoryHolder, slotStack);
                         }
                     } else {
                         ((IInventory_v1_7<I>) slot.getInventory()).split(slot.getInventoryIndex(), slotStack.getCount());
                         slot.setStack(hotbarStack);
-                        //slot.onTake(inventoryHolder, slotStack);
+                        slot.onTake(inventoryHolder, slotStack);
                     }
                 } else if (slot.getStack() == null && hotbarStack != null && slot.accepts(hotbarStack)) {
                     playerInventory.setStack(button, null);
@@ -171,34 +171,34 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
                 }
             }
         } else if (InventoryAction.COPY.equals(action) && inventoryHolder.isCreativeMode() && playerInventory.getCursorStack() == null && slotId >= 0) {
-            Slot<I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+            Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
             if (slot != null && slot.getStack() != null && slot.canTake(inventoryHolder)) {
                 LegacyItemStack<I> copiedStack = slot.getStack().copy();
                 copiedStack.setCount(copiedStack.getMeta().maxCount());
                 playerInventory.setCursorStack(copiedStack);
             }
         } else if (InventoryAction.THROW.equals(action) && playerInventory.getCursorStack() == null && slotId >= 0) {
-            Slot<I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+            Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
             if (slot != null && slot.getStack() != null && slot.canTake(inventoryHolder)) {
                 LegacyItemStack<I> droppedStack = ((IInventory_v1_7<I>) slot.getInventory()).split(slot.getInventoryIndex(), button == 0 ? 1 : slot.getStack().getCount());
-                //slot.onTake(inventoryHolder, droppedStack);
+                slot.onTake(inventoryHolder, droppedStack);
                 //drop droppedStack
             }
         } else if (InventoryAction.TAKE_ALL.equals(action) && slotId >= 0) {
-            Slot<I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+            Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
             LegacyItemStack<I> cursorStack = playerInventory.getCursorStack();
             if (cursorStack != null && (slot == null || slot.getStack() == null || !slot.canTake(inventoryHolder))) {
                 int startSlot = button == 0 ? 0 : this.getSlotCount() - 1;
                 int increment = button == 0 ? 1 : -1;
                 for (int i = 0; i < 2; i++) {
                     for (int id = startSlot; id >= 0 && id < this.getSlotCount() && cursorStack.getCount() < cursorStack.getMeta().maxCount(); id += increment) {
-                        Slot<I, LegacyItemStack<I>> slotAtId = this.getSlot(id);
+                        Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slotAtId = this.getSlot(id);
                         if (slotAtId.getStack() != null && this.hasSlotSpace(slotAtId, cursorStack) && slotAtId.canTake(inventoryHolder) && this.canTakeAll(slotAtId, cursorStack) && (i != 0 || slotAtId.getStack().getCount() != slotAtId.getStack().getMeta().maxCount())) {
                             int takeCount = Math.min(cursorStack.getMeta().maxCount() - cursorStack.getCount(), slotAtId.getStack().getCount());
                             LegacyItemStack<I> newSlotStack = ((IInventory_v1_7<I>) slotAtId.getInventory()).split(slotAtId.getInventoryIndex(), takeCount);
                             cursorStack.setCount(cursorStack.getCount() + takeCount);
                             if (newSlotStack.getCount() <= 0) slotAtId.setStack(null);
-                            //slotAtId.onTake(inventoryHolder, newSlotStack);
+                            slotAtId.onTake(inventoryHolder, newSlotStack);
                         }
                     }
                 }
@@ -213,7 +213,7 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
 
     protected abstract LegacyItemStack<I> moveStack(final InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, final int slotId);
 
-    protected boolean canTakeAll(final Slot<I, LegacyItemStack<I>> slot, final LegacyItemStack<I> stack) {
+    protected boolean canTakeAll(final Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot, final LegacyItemStack<I> stack) {
         return true;
     }
 
@@ -223,20 +223,20 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
         if (reverse) currentSlotId = endId - 1;
         if (this.isStackable(stack)) {
             while (stack.getCount() > 0 && ((!reverse && currentSlotId < endId) || (reverse && currentSlotId >= startId))) {
-                Slot<I, LegacyItemStack<I>> slot = this.getSlot(currentSlotId);
+                Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(currentSlotId);
                 LegacyItemStack<I> slotStack = slot.getStack();
                 if (slotStack != null && this.isSameItem(slotStack, stack) && (!stack.getMeta().hasSubtypes() || stack.getDamage() == slotStack.getDamage()) && this.isSameTag(slotStack, stack)) {
                     int mergedCount = slotStack.getCount() + stack.getCount();
                     if (mergedCount <= stack.getMeta().maxCount()) {
                         stack.setCount(0);
                         slotStack.setCount(mergedCount);
+                        slot.onUpdate();
                         success = true;
-                        //slot.onChange();
                     } else if (slotStack.getCount() < stack.getMeta().maxCount()) {
                         stack.setCount(stack.getCount() - (stack.getMeta().maxCount() - slotStack.getCount()));
                         slotStack.setCount(stack.getMeta().maxCount());
+                        slot.onUpdate();
                         success = true;
-                        //slot.onChange();
                     }
                 }
                 if (reverse) currentSlotId--;
@@ -247,13 +247,13 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
             if (reverse) currentSlotId = endId - 1;
             else currentSlotId = startId;
             while ((!reverse && currentSlotId < endId) || (reverse && currentSlotId >= startId)) {
-                Slot<I, LegacyItemStack<I>> slot = this.getSlot(currentSlotId);
+                Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(currentSlotId);
                 LegacyItemStack<I> slotStack = slot.getStack();
                 if (slotStack == null) {
                     slot.setStack(stack.copy());
+                    slot.onUpdate();
                     stack.setCount(0);
                     success = true;
-                    //slot.onChange();
                     break;
                 }
                 if (reverse) currentSlotId--;
@@ -268,11 +268,11 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
         this.draggingSlots.clear();
     }
 
-    private boolean isValidDraggingSlot(final Slot<I, LegacyItemStack<I>> slot, final LegacyItemStack<I> stack, final int minCount) {
+    private boolean isValidDraggingSlot(final Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot, final LegacyItemStack<I> stack, final int minCount) {
         return slot != null && this.hasSlotSpace(slot, stack) && slot.accepts(stack) && stack.getCount() > minCount/*TODO: canDragIntoSlot check*/;
     }
 
-    private boolean hasSlotSpace(final Slot<I, LegacyItemStack<I>> slot, final LegacyItemStack<I> stack) {
+    private boolean hasSlotSpace(final Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot, final LegacyItemStack<I> stack) {
         if (slot == null || slot.getStack() == null) return true;
         if (!this.isSameItem(slot.getStack(), stack) || !this.isSameTag(slot.getStack(), stack)) return false;
         return slot.getStack().getCount() <= stack.getMeta().maxCount();

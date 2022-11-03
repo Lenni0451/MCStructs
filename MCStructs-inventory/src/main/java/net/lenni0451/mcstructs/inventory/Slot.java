@@ -6,7 +6,7 @@ import net.lenni0451.mcstructs.items.info.ItemType;
 
 import java.util.function.Function;
 
-public class Slot<I, S extends AItemStack<I, S>> {
+public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
 
     public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptAll() {
         return stack -> stack.getMeta().maxCount();
@@ -73,6 +73,7 @@ public class Slot<I, S extends AItemStack<I, S>> {
 
     public void setStack(final S stack) {
         this.inventory.setStack(this.inventoryIndex, stack);
+        this.onUpdate();
     }
 
     public boolean accepts(final S stack) {
@@ -86,6 +87,13 @@ public class Slot<I, S extends AItemStack<I, S>> {
     public boolean canTake(final InventoryHolder<? extends IInventory<I, S>, I, S> inventoryHolder) {
         //TODO: canTakeStack (anvil xp check)
         return true;
+    }
+
+    public void onUpdate() {
+    }
+
+    public void onTake(final InventoryHolder<T, I, S> inventoryHolder, final S stack) {
+        this.onUpdate();
     }
 
 }

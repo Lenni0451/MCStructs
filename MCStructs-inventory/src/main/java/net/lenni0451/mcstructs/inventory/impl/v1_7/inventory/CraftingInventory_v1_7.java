@@ -1,16 +1,19 @@
 package net.lenni0451.mcstructs.inventory.impl.v1_7.inventory;
 
 import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
+import net.lenni0451.mcstructs.inventory.types.ICraftingContainer;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
 public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingInventory<I, LegacyItemStack<I>> {
 
+    private final ICraftingContainer<I, LegacyItemStack<I>> craftingContainer;
     private final int width;
     private final int height;
     private final LegacyItemStack<I>[] stacks;
 
-    public CraftingInventory_v1_7(final int width, final int height) {
+    public CraftingInventory_v1_7(final ICraftingContainer<I, LegacyItemStack<I>> craftingContainer, final int width, final int height) {
+        this.craftingContainer = craftingContainer;
         this.width = width;
         this.height = height;
         this.stacks = new LegacyItemStack[width * height];
@@ -38,6 +41,7 @@ public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingI
     @Override
     public void setStack(int slot, LegacyItemStack<I> stack) {
         this.stacks[slot] = stack;
+        this.craftingContainer.craftingUpdate(this);
     }
 
     @Override
@@ -51,6 +55,7 @@ public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingI
             stack = this.stacks[slot].split(count);
             if (this.stacks[slot].getCount() == 0) this.stacks[slot] = null;
         }
+        this.craftingContainer.craftingUpdate(this);
         return stack;
     }
 
