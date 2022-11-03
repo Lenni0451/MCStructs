@@ -1,7 +1,9 @@
 package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7;
 
+import net.lenni0451.mcstructs.inventory.crafting.IRecipe;
 import net.lenni0451.mcstructs.inventory.crafting.RecipeRegistry;
 import net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.impl.*;
+import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
@@ -103,6 +105,37 @@ public class RecipeRegistry_v1_7<I> extends RecipeRegistry<I, LegacyItemStack<I>
         ShapedRecipe_v1_7<I> recipe = new ShapedRecipe_v1_7<>(width, height, ingredients, result);
         this.register(recipe);
         return recipe;
+    }
+
+    public LegacyItemStack<I> find(final ICraftingInventory<I, LegacyItemStack<I>> craftingInventory) {
+        LegacyItemStack<I> stack1 = null;
+        LegacyItemStack<I> stack2 = null;
+        int stackCount = 0;
+
+        for (int i = 0; i < craftingInventory.getSize(); i++) {
+            LegacyItemStack<I> stack = craftingInventory.getStack(i);
+            if (stack == null) continue;
+
+            if (stackCount == 0) stack1 = stack;
+            else if (stackCount == 1) stack2 = stack;
+            stackCount++;
+        }
+
+        if (stackCount == 2 && stack1.getItem().equals(stack2.getItem()) && stack1.getCount() == 1 && stack2.getCount() == 1 && stack1.getMeta().damageable()) {
+            int damage1 = stack1.getMeta().maxDamage() - stack1.getDamage();
+            int damage2 = stack2.getMeta().maxDamage() - stack2.getDamage();
+            int totalDamage = damage1 + damage2 + stack1.getMeta().maxDamage() * 5 / 100;
+            int newDamage = Math.max(0, stack1.getMeta().maxDamage() - totalDamage);
+
+            return this.getItemRegistry().create(stack1.getItem(), 1, newDamage);
+        } else {
+            for (IRecipe<I, LegacyItemStack<I>> recipe : this.getRecipes()) {
+                if (recipe.matches(this.getItemRegistry(), craftingInventory)) {
+                    return recipe.getResult(this.getItemRegistry(), craftingInventory);
+                }
+            }
+            return null;
+        }
     }
 
 }
