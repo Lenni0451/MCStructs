@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7;
+package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.impl;
 
 import net.lenni0451.mcstructs.inventory.crafting.IRecipe;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
@@ -42,7 +42,7 @@ public class ShapedRecipe_v1_7<I> implements IRecipe<I, LegacyItemStack<I>> {
     }
 
     @Override
-    public boolean matches(ICraftingInventory<I, LegacyItemStack<I>> craftingInventory) {
+    public boolean matches(ItemRegistry<I, LegacyItemStack<I>> itemRegistry, ICraftingInventory<I, LegacyItemStack<I>> craftingInventory) {
         for (int x = 0; x <= 3 - this.width; x++) {
             for (int y = 0; y <= 3 - this.height; y++) {
                 if (this.matches(craftingInventory, x, y, true)) return true;

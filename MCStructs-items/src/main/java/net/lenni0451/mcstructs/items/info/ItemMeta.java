@@ -1,5 +1,9 @@
 package net.lenni0451.mcstructs.items.info;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ItemMeta {
 
     public static final ItemMeta EMPTY = new ItemMeta() {
@@ -17,17 +21,21 @@ public class ItemMeta {
     };
 
 
-    private ItemType type = ItemType.GENERIC;
+    private List<ItemType> types = new ArrayList<>();
     private int maxCount = 64;
     private boolean damageable = false;
     private boolean hasSubtypes = false;
 
-    public ItemType type() {
-        return this.type;
+    public ItemMeta() {
+        this.types.add(ItemType.GENERIC);
     }
 
-    public ItemMeta type(final ItemType type) {
-        this.type = type;
+    public List<ItemType> types() {
+        return this.types;
+    }
+
+    public ItemMeta types(final ItemType... types) {
+        Collections.addAll(this.types, types);
         return this;
     }
 

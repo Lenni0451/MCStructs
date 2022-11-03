@@ -24,4 +24,8 @@ public class RecipeRegistry<I, S extends AItemStack<I, S>> {
         return this.recipes;
     }
 
+    public void register(final IRecipe<I, S> recipe) {
+        this.recipes.add(recipe);
+    }
+
 }

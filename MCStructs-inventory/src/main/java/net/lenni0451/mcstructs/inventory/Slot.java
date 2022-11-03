@@ -17,11 +17,29 @@ public class Slot<I, S extends AItemStack<I, S>> {
     }
 
     public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptType(final ItemType type) {
-        return item -> item.getMeta().type().equals(type) ? item.getMeta().maxCount() : 0;
+        return item -> item.getMeta().types().contains(type) ? item.getMeta().maxCount() : 0;
     }
 
     public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptType(final ItemType type, final int maxCount) {
-        return item -> item.getMeta().type().equals(type) ? Math.min(item.getMeta().maxCount(), maxCount) : 0;
+        return item -> item.getMeta().types().contains(type) ? Math.min(item.getMeta().maxCount(), maxCount) : 0;
+    }
+
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptTypes(final ItemType... types) {
+        return item -> {
+            for (ItemType type : types) {
+                if (item.getMeta().types().contains(type)) return item.getMeta().maxCount();
+            }
+            return 0;
+        };
+    }
+
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptTypes(final int maxCount, final ItemType... types) {
+        return item -> {
+            for (ItemType type : types) {
+                if (item.getMeta().types().contains(type)) return Math.min(item.getMeta().maxCount(), maxCount);
+            }
+            return 0;
+        };
     }
 
 
