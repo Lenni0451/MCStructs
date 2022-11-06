@@ -130,9 +130,7 @@ public class RecipeRegistry_v1_7<I> extends RecipeRegistry<I, LegacyItemStack<I>
             return this.getItemRegistry().create(stack1.getItem(), 1, newDamage);
         } else {
             for (IRecipe<I, LegacyItemStack<I>> recipe : this.getRecipes()) {
-                if (recipe.matches(this.getItemRegistry(), craftingInventory)) {
-                    return recipe.getResult(this.getItemRegistry(), craftingInventory);
-                }
+                if (recipe.matches(this.getItemRegistry(), craftingInventory)) return recipe.getResult(this.getItemRegistry(), craftingInventory);
             }
             return null;
         }
