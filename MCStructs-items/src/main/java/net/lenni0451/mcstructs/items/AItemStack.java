@@ -79,4 +79,10 @@ public abstract class AItemStack<I, S extends AItemStack<I, S>> {
         return stack;
     }
 
+    public abstract boolean equals(final Object other);
+
+    public abstract int hashCode();
+
+    public abstract String toString();
+
 }

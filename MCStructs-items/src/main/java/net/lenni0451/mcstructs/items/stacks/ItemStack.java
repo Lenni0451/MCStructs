@@ -3,6 +3,8 @@ package net.lenni0451.mcstructs.items.stacks;
 import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 
+import java.util.Objects;
+
 public class ItemStack<I> extends AItemStack<I, ItemStack<I>> {
 
     public ItemStack(final ItemRegistry<I, ItemStack<I>> registry, final I item) {
@@ -18,6 +20,28 @@ public class ItemStack<I> extends AItemStack<I, ItemStack<I>> {
     @Override
     public void setDamage(int damage) {
         this.getOrCreateTag().addInt("Damage", Math.max(0, damage));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemStack<?> itemStack = (ItemStack<?>) o;
+        return getCount() == itemStack.getCount() && Objects.equals(getItem(), itemStack.getItem()) && Objects.equals(getTag(), itemStack.getTag());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getItem(), getCount(), getTag());
+    }
+
+    @Override
+    public String toString() {
+        return "ItemStack{" +
+                "item=" + getItem() +
+                ", count=" + getCount() +
+                ", tag=" + getTag() +
+                '}';
     }
 
 }
