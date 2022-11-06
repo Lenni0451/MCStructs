@@ -36,7 +36,7 @@ public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraf
         this.craftingResultInventory = new CraftingResultInventory_v1_7<>();
         this.recipeRegistry = recipeRegistry;
 
-        this.addSlot(id -> new CraftingResultSlot_v1_7<>(this.craftingResultInventory, id));
+        this.addSlot(id -> new CraftingResultSlot_v1_7<>(this.craftingResultInventory, id, this.craftingInventory));
         for (int i = 0; i < this.craftingInventory.getSize(); i++) this.addSlot(this.craftingInventory, i, Slot.acceptAll());
         this.addSlot(this.playerInventory, this.playerInventory.getSize() - 1, Slot.acceptTypes(1, ItemType.HELMET, ItemType.SKULL, ItemType.PUMPKIN));
         this.addSlot(this.playerInventory, this.playerInventory.getSize() - 2, Slot.acceptType(ItemType.CHESTPLATE, 1));

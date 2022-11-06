@@ -14,13 +14,11 @@ public class CraftingResultInventory_v1_7<I> implements IInventory_v1_7<I> {
 
     @Override
     public LegacyItemStack<I> getStack(int slot) {
-        if (slot != 0) throw new ArrayIndexOutOfBoundsException(slot);
         return this.result;
     }
 
     @Override
     public void setStack(int slot, LegacyItemStack<I> stack) {
-        if (slot != 0) throw new ArrayIndexOutOfBoundsException(slot);
         this.result = stack;
     }
 
