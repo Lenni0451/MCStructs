@@ -7,8 +7,8 @@ public abstract class AItemStack<I, S extends AItemStack<I, S>> {
 
     private final ItemRegistry<I, S> registry;
     private final I item;
-    private int count;
-    private CompoundNbt tag;
+    private int count = 1;
+    private CompoundNbt tag = null;
 
     public AItemStack(final ItemRegistry<I, S> registry, final I item) {
         this.registry = registry;
