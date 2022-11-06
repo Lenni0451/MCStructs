@@ -60,6 +60,10 @@ public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraf
         return this.craftingResultInventory;
     }
 
+    public RecipeRegistry_v1_7<I> getRecipeRegistry() {
+        return this.recipeRegistry;
+    }
+
     public int getArmorSlotOffset(final List<ItemType> types) {
         if (types.contains(ItemType.HELMET)) return 0;
         else if (types.contains(ItemType.CHESTPLATE)) return 1;
@@ -75,12 +79,8 @@ public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraf
 
     @Override
     public void close() {
+        for (int i = 0; i < this.craftingInventory.getSize(); i++) this.craftingInventory.setStack(i, null);
         this.craftingResultInventory.setStack(0, null);
-    }
-
-    @Override
-    protected boolean canTakeAll(Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot, LegacyItemStack<I> stack) {
-        return !this.craftingResultInventory.equals(slot.getInventory());
     }
 
     @Override
@@ -111,6 +111,11 @@ public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraf
             slot.onTake(inventoryHolder, slotStack);
         }
         return out;
+    }
+
+    @Override
+    protected boolean canTakeAll(Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot, LegacyItemStack<I> stack) {
+        return !this.craftingResultInventory.equals(slot.getInventory());
     }
 
 }
