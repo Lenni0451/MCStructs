@@ -62,6 +62,7 @@ public class BrewingStandContainer_v1_7<I> extends AContainer_v1_7<I> {
         if (slotStack.getCount() == 0) slot.setStack(null);
         else slot.onUpdate();
         if (slotStack.getCount() == out.getCount()) return null;
+        slot.onTake(inventoryHolder, slotStack);
         return out;
     }
 

@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.impl;
+package net.lenni0451.mcstructs.inventory.recipes.impl.v1_7.impl;
 
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;

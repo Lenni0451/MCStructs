@@ -1,8 +1,8 @@
-package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7;
+package net.lenni0451.mcstructs.inventory.recipes.impl.v1_7;
 
-import net.lenni0451.mcstructs.inventory.crafting.ARecipeRegistry;
-import net.lenni0451.mcstructs.inventory.crafting.ICraftingRecipe;
-import net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.impl.*;
+import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
+import net.lenni0451.mcstructs.inventory.recipes.ICraftingRecipe;
+import net.lenni0451.mcstructs.inventory.recipes.impl.v1_7.impl.*;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemTag;
@@ -24,11 +24,11 @@ public class RecipeRegistry_v1_7<I> extends ARecipeRegistry<I, LegacyItemStack<I
     public RecipeRegistry_v1_7(final ItemRegistry<I, LegacyItemStack<I>> itemRegistry, final Function<LegacyItemStack<I>, Integer> mapScaleProvider) {
         super(itemRegistry);
 
-        this.register(new ArmorColorCraftingRecipe_v1_7<>());
-        this.register(new BookCopyCraftingRecipe_v1_7<>());
-        this.register(new MapCopyCraftingRecipe_v1_7<>());
-        this.register(new ExtendMapCraftingRecipe_v1_7<>(itemRegistry, mapScaleProvider));
-        this.register(new FireworksCraftingRecipe_v1_7<>());
+        this.registerCraftingRecipe(new ArmorColorCraftingRecipe_v1_7<>());
+        this.registerCraftingRecipe(new BookCopyCraftingRecipe_v1_7<>());
+        this.registerCraftingRecipe(new MapCopyCraftingRecipe_v1_7<>());
+        this.registerCraftingRecipe(new ExtendMapCraftingRecipe_v1_7<>(itemRegistry, mapScaleProvider));
+        this.registerCraftingRecipe(new FireworksCraftingRecipe_v1_7<>());
     }
 
     public ShapelessCraftingRecipe_v1_7<I> shapelessCraftingRecipe(final LegacyItemStack<I> result, final Object... args) {
@@ -49,7 +49,7 @@ public class RecipeRegistry_v1_7<I> extends ARecipeRegistry<I, LegacyItemStack<I
         }
 
         ShapelessCraftingRecipe_v1_7<I> recipe = new ShapelessCraftingRecipe_v1_7<>(ingredients.toArray(new LegacyItemStack[0]), result);
-        this.register(recipe);
+        this.registerCraftingRecipe(recipe);
         return recipe;
     }
 
@@ -104,7 +104,7 @@ public class RecipeRegistry_v1_7<I> extends ARecipeRegistry<I, LegacyItemStack<I
         }
 
         ShapedCraftingRecipe_v1_7<I> recipe = new ShapedCraftingRecipe_v1_7<>(width, height, ingredients, result);
-        this.register(recipe);
+        this.registerCraftingRecipe(recipe);
         return recipe;
     }
 

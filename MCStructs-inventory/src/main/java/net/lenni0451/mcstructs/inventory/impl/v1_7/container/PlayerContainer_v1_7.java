@@ -2,12 +2,12 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.container;
 
 import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.Slot;
-import net.lenni0451.mcstructs.inventory.crafting.ARecipeRegistry;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingResultInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.slots.CraftingResultSlot_v1_7;
+import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
 import net.lenni0451.mcstructs.inventory.types.ICraftingContainer;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.info.ItemType;

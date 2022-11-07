@@ -95,6 +95,7 @@ public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
     }
 
     public void onUpdate() {
+        this.inventory.onUpdate();
     }
 
     public void onTake(final InventoryHolder<T, I, S> inventoryHolder, final S stack) {
