@@ -125,21 +125,21 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
 
     @Override
     public LegacyItemStack<I> split(int slotId, int count) {
-        LegacyItemStack<I>[] items = this.main;
+        LegacyItemStack<I>[] stacks = this.main;
         if (slotId >= this.main.length) {
-            items = this.armor;
+            stacks = this.armor;
             slotId -= this.main.length;
         }
-        if (items[slotId] == null) return null;
-        LegacyItemStack<I> item;
-        if (items[slotId].getCount() <= count) {
-            item = items[slotId];
-            items[slotId] = null;
+        if (stacks[slotId] == null) return null;
+
+        LegacyItemStack<I> stack = stacks[slotId];
+        if (stacks[slotId].getCount() <= count) {
+            stacks[slotId] = null;
         } else {
-            item = items[slotId].split(count);
-            if (items[slotId].getCount() == 0) items[slotId] = null;
+            stack = stack.split(count);
+            if (stacks[slotId].getCount() == 0) stacks[slotId] = null;
         }
-        return item;
+        return stack;
     }
 
 }

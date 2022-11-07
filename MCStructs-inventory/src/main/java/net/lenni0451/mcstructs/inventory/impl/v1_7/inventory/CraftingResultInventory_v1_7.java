@@ -24,12 +24,11 @@ public class CraftingResultInventory_v1_7<I> implements IInventory_v1_7<I> {
 
     @Override
     public LegacyItemStack<I> split(int slotId, int count) {
-        if (this.result != null) {
-            LegacyItemStack<I> stack = this.result;
-            this.result = null;
-            return stack;
-        }
-        return null;
+        if (this.result == null) return null;
+
+        LegacyItemStack<I> stack = this.result;
+        this.result = null;
+        return stack;
     }
 
 }

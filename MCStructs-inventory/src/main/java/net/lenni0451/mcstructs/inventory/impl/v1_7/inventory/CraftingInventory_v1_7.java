@@ -19,12 +19,20 @@ public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingI
         this.stacks = new LegacyItemStack[width * height];
     }
 
+    public ICraftingContainer<I, LegacyItemStack<I>> getCraftingContainer() {
+        return this.craftingContainer;
+    }
+
     public int getWidth() {
         return this.width;
     }
 
     public int getHeight() {
         return this.height;
+    }
+
+    public LegacyItemStack<I>[] getStacks() {
+        return this.stacks;
     }
 
     @Override
@@ -47,12 +55,12 @@ public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingI
     @Override
     public LegacyItemStack<I> split(int slotId, int count) {
         if (this.stacks[slotId] == null) return null;
-        LegacyItemStack<I> stack;
+
+        LegacyItemStack<I> stack = this.stacks[slotId];
         if (this.stacks[slotId].getCount() <= count) {
-            stack = this.stacks[slotId];
             this.stacks[slotId] = null;
         } else {
-            stack = this.stacks[slotId].split(count);
+            stack = stack.split(count);
             if (this.stacks[slotId].getCount() == 0) this.stacks[slotId] = null;
         }
         this.craftingContainer.craftingUpdate(this);
