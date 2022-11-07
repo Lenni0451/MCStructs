@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.inventory;
 
 import net.lenni0451.mcstructs.inventory.types.IInventory;
 import net.lenni0451.mcstructs.items.AItemStack;
+import net.lenni0451.mcstructs.items.info.ItemTag;
 import net.lenni0451.mcstructs.items.info.ItemType;
 
 import java.util.function.Function;
@@ -9,34 +10,38 @@ import java.util.function.Function;
 public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
 
     public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptAll() {
-        return stack -> stack.getMeta().maxCount();
+        return accept(64);
     }
 
     public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptNone() {
-        return item -> 0;
+        return accept(0);
     }
 
-    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptType(final ItemType type) {
-        return item -> item.getMeta().types().contains(type) ? item.getMeta().maxCount() : 0;
-    }
-
-    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptType(final ItemType type, final int maxCount) {
-        return item -> item.getMeta().types().contains(type) ? Math.min(item.getMeta().maxCount(), maxCount) : 0;
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> accept(final int count) {
+        return stack -> Math.min(stack.getMeta().maxCount(), count);
     }
 
     public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptTypes(final ItemType... types) {
-        return item -> {
+        return acceptTypes(64, types);
+    }
+
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptTypes(final int maxCount, final ItemType... types) {
+        return stack -> {
             for (ItemType type : types) {
-                if (item.getMeta().types().contains(type)) return item.getMeta().maxCount();
+                if (stack.getMeta().types().contains(type)) return Math.min(stack.getMeta().maxCount(), maxCount);
             }
             return 0;
         };
     }
 
-    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptTypes(final int maxCount, final ItemType... types) {
-        return item -> {
-            for (ItemType type : types) {
-                if (item.getMeta().types().contains(type)) return Math.min(item.getMeta().maxCount(), maxCount);
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptTags(final ItemTag... tags) {
+        return acceptTags(64, tags);
+    }
+
+    public static <I, S extends AItemStack<I, S>> Function<S, Integer> acceptTags(final int maxCount, final ItemTag... tags) {
+        return stack -> {
+            for (ItemTag tag : tags) {
+                if (stack.getMeta().tags().contains(tag)) return Math.min(stack.getMeta().maxCount(), maxCount);
             }
             return 0;
         };

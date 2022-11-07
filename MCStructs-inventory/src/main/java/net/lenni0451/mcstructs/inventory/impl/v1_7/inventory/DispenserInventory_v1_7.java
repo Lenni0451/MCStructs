@@ -7,6 +7,10 @@ public class DispenserInventory_v1_7<I> implements IInventory_v1_7<I> {
 
     private final LegacyItemStack<I>[] stacks = new LegacyItemStack[9];
 
+    public LegacyItemStack<I>[] getStacks() {
+        return this.stacks;
+    }
+
     @Override
     public LegacyItemStack<I> split(int slotId, int count) {
         if (this.stacks[slotId] == null) return null;

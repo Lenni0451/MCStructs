@@ -39,9 +39,9 @@ public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraf
         this.addSlot(id -> new CraftingResultSlot_v1_7<>(this.craftingResultInventory, id, this.craftingInventory));
         for (int i = 0; i < this.craftingInventory.getSize(); i++) this.addSlot(this.craftingInventory, i, Slot.acceptAll());
         this.addSlot(this.playerInventory, this.playerInventory.getSize() - 1, Slot.acceptTypes(1, ItemType.HELMET, ItemType.SKULL, ItemType.PUMPKIN));
-        this.addSlot(this.playerInventory, this.playerInventory.getSize() - 2, Slot.acceptType(ItemType.CHESTPLATE, 1));
-        this.addSlot(this.playerInventory, this.playerInventory.getSize() - 3, Slot.acceptType(ItemType.LEGGINGS, 1));
-        this.addSlot(this.playerInventory, this.playerInventory.getSize() - 4, Slot.acceptType(ItemType.BOOTS, 1));
+        this.addSlot(this.playerInventory, this.playerInventory.getSize() - 2, Slot.acceptTypes(1, ItemType.CHESTPLATE));
+        this.addSlot(this.playerInventory, this.playerInventory.getSize() - 3, Slot.acceptTypes(1, ItemType.LEGGINGS));
+        this.addSlot(this.playerInventory, this.playerInventory.getSize() - 4, Slot.acceptTypes(1, ItemType.BOOTS));
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
 
