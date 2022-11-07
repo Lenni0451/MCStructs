@@ -6,8 +6,8 @@ public interface IInventory<I, S extends AItemStack<I, S>> {
 
     int getSize();
 
-    S getStack(final int slot);
+    S getStack(final int slotId);
 
-    void setStack(final int slot, final S stack);
+    void setStack(final int slotId, final S stack);
 
 }

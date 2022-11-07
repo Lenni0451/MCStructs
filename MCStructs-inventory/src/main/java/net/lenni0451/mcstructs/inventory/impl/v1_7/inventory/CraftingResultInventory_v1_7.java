@@ -13,17 +13,17 @@ public class CraftingResultInventory_v1_7<I> implements IInventory_v1_7<I> {
     }
 
     @Override
-    public LegacyItemStack<I> getStack(int slot) {
+    public LegacyItemStack<I> getStack(int slotId) {
         return this.result;
     }
 
     @Override
-    public void setStack(int slot, LegacyItemStack<I> stack) {
+    public void setStack(int slotId, LegacyItemStack<I> stack) {
         this.result = stack;
     }
 
     @Override
-    public LegacyItemStack<I> split(int slot, int count) {
+    public LegacyItemStack<I> split(int slotId, int count) {
         if (this.result != null) {
             LegacyItemStack<I> stack = this.result;
             this.result = null;

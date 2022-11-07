@@ -33,27 +33,27 @@ public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingI
     }
 
     @Override
-    public LegacyItemStack<I> getStack(int slot) {
-        if (slot >= this.stacks.length) return null;
-        else return this.stacks[slot];
+    public LegacyItemStack<I> getStack(int slotId) {
+        if (slotId >= this.stacks.length) return null;
+        else return this.stacks[slotId];
     }
 
     @Override
-    public void setStack(int slot, LegacyItemStack<I> stack) {
-        this.stacks[slot] = stack;
+    public void setStack(int slotId, LegacyItemStack<I> stack) {
+        this.stacks[slotId] = stack;
         this.craftingContainer.craftingUpdate(this);
     }
 
     @Override
-    public LegacyItemStack<I> split(int slot, int count) {
-        if (this.stacks[slot] == null) return null;
+    public LegacyItemStack<I> split(int slotId, int count) {
+        if (this.stacks[slotId] == null) return null;
         LegacyItemStack<I> stack;
-        if (this.stacks[slot].getCount() <= count) {
-            stack = this.stacks[slot];
-            this.stacks[slot] = null;
+        if (this.stacks[slotId].getCount() <= count) {
+            stack = this.stacks[slotId];
+            this.stacks[slotId] = null;
         } else {
-            stack = this.stacks[slot].split(count);
-            if (this.stacks[slot].getCount() == 0) this.stacks[slot] = null;
+            stack = this.stacks[slotId].split(count);
+            if (this.stacks[slotId].getCount() == 0) this.stacks[slotId] = null;
         }
         this.craftingContainer.craftingUpdate(this);
         return stack;

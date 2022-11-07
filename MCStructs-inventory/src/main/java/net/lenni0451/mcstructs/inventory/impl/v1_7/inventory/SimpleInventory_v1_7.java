@@ -16,15 +16,15 @@ public class SimpleInventory_v1_7<I> implements IInventory_v1_7<I> {
     }
 
     @Override
-    public LegacyItemStack<I> split(int slot, int count) {
-        if (this.stacks[slot] == null) return null;
+    public LegacyItemStack<I> split(int slotId, int count) {
+        if (this.stacks[slotId] == null) return null;
 
-        LegacyItemStack<I> stack = this.stacks[slot];
-        if (this.stacks[slot].getCount() <= count) {
-            this.stacks[slot] = null;
+        LegacyItemStack<I> stack = this.stacks[slotId];
+        if (this.stacks[slotId].getCount() <= count) {
+            this.stacks[slotId] = null;
         } else {
             stack = stack.copy();
-            if (this.stacks[slot].getCount() == 0) this.stacks[slot] = null;
+            if (this.stacks[slotId].getCount() == 0) this.stacks[slotId] = null;
         }
         return stack;
     }
@@ -35,14 +35,14 @@ public class SimpleInventory_v1_7<I> implements IInventory_v1_7<I> {
     }
 
     @Override
-    public LegacyItemStack<I> getStack(int slot) {
-        if (slot < 0 || slot >= this.stacks.length) return null;
-        return this.stacks[slot];
+    public LegacyItemStack<I> getStack(int slotId) {
+        if (slotId < 0 || slotId >= this.stacks.length) return null;
+        return this.stacks[slotId];
     }
 
     @Override
-    public void setStack(int slot, LegacyItemStack<I> stack) {
-        this.stacks[slot] = stack;
+    public void setStack(int slotId, LegacyItemStack<I> stack) {
+        this.stacks[slotId] = stack;
 
         if (stack != null && stack.getCount() > this.getMaxCount()) stack.setCount(this.getMaxCount());
     }

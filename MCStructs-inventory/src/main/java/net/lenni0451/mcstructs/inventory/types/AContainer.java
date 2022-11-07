@@ -45,7 +45,7 @@ public abstract class AContainer<T extends IInventory<I, S>, I, S extends AItemS
     }
 
 
-    public abstract S click(final InventoryHolder<T, I, S> inventoryHolder, final int slot, final int button, final InventoryAction action);
+    public abstract S click(final InventoryHolder<T, I, S> inventoryHolder, final int slotId, final int button, final InventoryAction action);
 
     public void close() {
     }

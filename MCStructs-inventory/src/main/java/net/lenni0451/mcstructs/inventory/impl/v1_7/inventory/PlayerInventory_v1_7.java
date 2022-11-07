@@ -112,32 +112,32 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
     }
 
     @Override
-    public LegacyItemStack<I> getStack(int slot) {
-        if (slot >= this.main.length) return this.armor[slot - this.main.length];
-        else return this.main[slot];
+    public LegacyItemStack<I> getStack(int slotId) {
+        if (slotId >= this.main.length) return this.armor[slotId - this.main.length];
+        else return this.main[slotId];
     }
 
     @Override
-    public void setStack(int slot, LegacyItemStack<I> stack) {
-        if (slot >= this.main.length) this.armor[slot - this.main.length] = stack;
-        else this.main[slot] = stack;
+    public void setStack(int slotId, LegacyItemStack<I> stack) {
+        if (slotId >= this.main.length) this.armor[slotId - this.main.length] = stack;
+        else this.main[slotId] = stack;
     }
 
     @Override
-    public LegacyItemStack<I> split(int slot, int count) {
+    public LegacyItemStack<I> split(int slotId, int count) {
         LegacyItemStack<I>[] items = this.main;
-        if (slot >= this.main.length) {
+        if (slotId >= this.main.length) {
             items = this.armor;
-            slot -= this.main.length;
+            slotId -= this.main.length;
         }
-        if (items[slot] == null) return null;
+        if (items[slotId] == null) return null;
         LegacyItemStack<I> item;
-        if (items[slot].getCount() <= count) {
-            item = items[slot];
-            items[slot] = null;
+        if (items[slotId].getCount() <= count) {
+            item = items[slotId];
+            items[slotId] = null;
         } else {
-            item = items[slot].split(count);
-            if (items[slot].getCount() == 0) items[slot] = null;
+            item = items[slotId].split(count);
+            if (items[slotId].getCount() == 0) items[slotId] = null;
         }
         return item;
     }
