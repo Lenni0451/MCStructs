@@ -28,11 +28,11 @@ public class ShapedCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyIt
         return this.height;
     }
 
-    public LegacyItemStack<?>[] getIngredients() {
+    public LegacyItemStack<I>[] getIngredients() {
         return this.ingredients;
     }
 
-    public LegacyItemStack<?> getResult() {
+    public LegacyItemStack<I> getResult() {
         return this.result;
     }
 

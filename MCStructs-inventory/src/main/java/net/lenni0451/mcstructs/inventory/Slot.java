@@ -84,7 +84,7 @@ public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
         return this.acceptor.apply(stack);
     }
 
-    public boolean canTake(final InventoryHolder<? extends IInventory<I, S>, I, S> inventoryHolder) {
+    public boolean canTake(final InventoryHolder<T, I, S> inventoryHolder) {
         //TODO: canTakeStack (anvil xp check)
         return true;
     }
