@@ -121,7 +121,7 @@ public class RecipeRegistry_v1_7<I> extends RecipeRegistry<I, LegacyItemStack<I>
             stackCount++;
         }
 
-        if (stackCount == 2 && stack1.getItem().equals(stack2.getItem()) && stack1.getCount() == 1 && stack2.getCount() == 1 && stack1.getMeta().damageable()) {
+        if (stackCount == 2 && stack1.getItem().equals(stack2.getItem()) && stack1.getCount() == 1 && stack2.getCount() == 1 && stack1.getMeta().tags().contains(ItemTag.DAMAGEABLE)) {
             int damage1 = stack1.getMeta().maxDamage() - stack1.getDamage();
             int damage2 = stack2.getMeta().maxDamage() - stack2.getDamage();
             int totalDamage = damage1 + damage2 + stack1.getMeta().maxDamage() * 5 / 100;

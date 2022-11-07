@@ -6,6 +6,7 @@ import net.lenni0451.mcstructs.inventory.enums.DraggingState;
 import net.lenni0451.mcstructs.inventory.enums.InventoryAction;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.types.AContainer;
+import net.lenni0451.mcstructs.items.info.ItemTag;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
                                     slot.setStack(cursorStack);
                                     playerInventory.setCursorStack(slotStack);
                                 }
-                            } else if (this.isSameItem(slotStack, cursorStack) && cursorStack.getMeta().maxCount() > 1 && (!slotStack.getMeta().hasSubtypes() || slotStack.getDamage() == cursorStack.getDamage()) && this.isSameTag(slotStack, cursorStack)) {
+                            } else if (this.isSameItem(slotStack, cursorStack) && cursorStack.getMeta().maxCount() > 1 && (!slotStack.getMeta().tags().contains(ItemTag.SUBTYPES) || slotStack.getDamage() == cursorStack.getDamage()) && this.isSameTag(slotStack, cursorStack)) {
                                 int takeCount = slotStack.getCount();
                                 if (takeCount > 0 && takeCount + cursorStack.getCount() <= cursorStack.getMeta().maxCount()) {
                                     cursorStack.setCount(cursorStack.getCount() + takeCount);
@@ -225,7 +226,7 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
             while (stack.getCount() > 0 && ((!reverse && currentSlotId < endId) || (reverse && currentSlotId >= startId))) {
                 Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(currentSlotId);
                 LegacyItemStack<I> slotStack = slot.getStack();
-                if (slotStack != null && this.isSameItem(slotStack, stack) && (!stack.getMeta().hasSubtypes() || stack.getDamage() == slotStack.getDamage()) && this.isSameTag(slotStack, stack)) {
+                if (slotStack != null && this.isSameItem(slotStack, stack) && (!stack.getMeta().tags().contains(ItemTag.SUBTYPES) || stack.getDamage() == slotStack.getDamage()) && this.isSameTag(slotStack, stack)) {
                     int mergedCount = slotStack.getCount() + stack.getCount();
                     if (mergedCount <= stack.getMeta().maxCount()) {
                         stack.setCount(0);
@@ -291,7 +292,7 @@ public abstract class AContainer_v1_7<I> extends AContainer<PlayerInventory_v1_7
     }
 
     private boolean isStackable(final LegacyItemStack<I> stack) {
-        return stack.getMeta().maxCount() > 1 && (!stack.getMeta().damageable() || stack.getDamage() <= 0);
+        return stack.getMeta().maxCount() > 1 && (!stack.getMeta().tags().contains(ItemTag.DAMAGEABLE) || stack.getDamage() <= 0);
     }
 
 }

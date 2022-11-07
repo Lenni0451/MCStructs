@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.inventory;
 
 import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
+import net.lenni0451.mcstructs.items.info.ItemTag;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
 public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
@@ -45,7 +46,7 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
 
     public boolean addStack(final InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, LegacyItemStack<I> stack) {
         if (stack == null || stack.getCount() == 0 || stack.getItem() == null) return false;
-        if (stack.getMeta().damageable() && stack.getDamage() > 0) {
+        if (stack.getMeta().tags().contains(ItemTag.DAMAGEABLE) && stack.getDamage() > 0) {
             int emptySlot = this.getEmptySlot();
             if (emptySlot >= 0) {
                 this.main[emptySlot] = stack.copy();
@@ -99,7 +100,7 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
     private int getMatchingSlot(final LegacyItemStack<I> stack) {
         for (int i = 0; i < this.main.length; i++) {
             LegacyItemStack<I> inventoryStack = this.main[i];
-            if (inventoryStack != null && inventoryStack.getItem().equals(stack.getItem()) && inventoryStack.getMeta().maxCount() > 1 && inventoryStack.getCount() < inventoryStack.getMeta().maxCount() && (!inventoryStack.getMeta().hasSubtypes() || inventoryStack.getDamage() == stack.getDamage()) && inventoryStack.getTag().equals(stack.getTag())) {
+            if (inventoryStack != null && inventoryStack.getItem().equals(stack.getItem()) && inventoryStack.getMeta().maxCount() > 1 && inventoryStack.getCount() < inventoryStack.getMeta().maxCount() && (!inventoryStack.getMeta().tags().contains(ItemTag.SUBTYPES) || inventoryStack.getDamage() == stack.getDamage()) && inventoryStack.getTag().equals(stack.getTag())) {
                 return i;
             }
         }

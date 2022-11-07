@@ -12,10 +12,7 @@ public enum ItemType {
     SKULL, PUMPKIN, WRITTEN_BOOK, WRITABLE_BOOK, DYE,
     MAP, FILLED_MAP, GUNPOWDER, FIREWORK_STAR, PAPER,
     GLOWSTONE_DUST, DIAMOND, FIRE_CHARGE, FEATHER, GOLD_NUGGET,
-    FIREWORK_ROCKET,
-
-    //materials
-    MATERIAL_LEATHER;
+    FIREWORK_ROCKET;
 
     public static boolean isArmor(final List<ItemType> types) {
         return types.contains(BOOTS) || types.contains(LEGGINGS) || types.contains(CHESTPLATE) || types.contains(HELMET);
