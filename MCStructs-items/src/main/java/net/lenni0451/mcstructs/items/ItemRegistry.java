@@ -21,12 +21,8 @@ public class ItemRegistry<I, S extends AItemStack<I, S>> {
         this.empty = this.createItemStack.apply(this, null);
     }
 
-    public ItemMeta registerMeta(final I item) {
-        return this.itemMetas.computeIfAbsent(item, i -> new ItemMeta());
-    }
-
     public ItemMeta getMeta(final I item) {
-        return this.itemMetas.getOrDefault(item, ItemMeta.EMPTY);
+        return this.itemMetas.computeIfAbsent(item, i -> new ItemMeta());
     }
 
     public List<I> byType(final ItemType type) {

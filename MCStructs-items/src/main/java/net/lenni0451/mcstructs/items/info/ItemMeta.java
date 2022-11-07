@@ -6,36 +6,6 @@ import java.util.List;
 
 public class ItemMeta {
 
-    public static final ItemMeta EMPTY = new ItemMeta() {
-        private final String exceptionMessage = "Unable to modify empty item meta";
-
-        @Override
-        public ItemMeta types(ItemType... types) {
-            throw new UnsupportedOperationException(this.exceptionMessage);
-        }
-
-        @Override
-        public ItemMeta maxCount(int maxStackSize) {
-            throw new UnsupportedOperationException(this.exceptionMessage);
-        }
-
-        @Override
-        public ItemMeta maxDamage(int maxDamage) {
-            throw new UnsupportedOperationException(this.exceptionMessage);
-        }
-
-        @Override
-        public ItemMeta damageable(boolean damageable) {
-            throw new UnsupportedOperationException(this.exceptionMessage);
-        }
-
-        @Override
-        public ItemMeta hasSubtypes(boolean hasSubtypes) {
-            throw new UnsupportedOperationException(this.exceptionMessage);
-        }
-    };
-
-
     private final List<ItemType> types = new ArrayList<>();
     private int maxCount = 64;
     private int maxDamage = 0;
