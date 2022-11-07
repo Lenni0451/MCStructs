@@ -64,11 +64,11 @@ public class ShapedCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyIt
                     else ingredient = this.ingredients[ix + iy * this.width];
                 }
 
-                LegacyItemStack<I> slot = craftingInventory.getStack(xOffset, yOffset);
-                if (slot != null || ingredient != null) {
-                    if (slot == null || ingredient == null) return false;
-                    if (ingredient.getItem().equals(slot.getItem())) return false;
-                    if (ingredient.getDamage() != 32767 && ingredient.getDamage() != slot.getDamage()) return false;
+                LegacyItemStack<I> stack = craftingInventory.getStack(xOffset, yOffset);
+                if (stack != null || ingredient != null) {
+                    if (stack == null || ingredient == null) return false;
+                    if (!ingredient.getItem().equals(stack.getItem())) return false;
+                    if (ingredient.getDamage() != 32767 && ingredient.getDamage() != stack.getDamage()) return false;
                 }
             }
         }

@@ -6,12 +6,8 @@ import net.lenni0451.mcstructs.inventory.recipes.impl.v1_7.impl.*;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemTag;
-import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -29,83 +25,6 @@ public class RecipeRegistry_v1_7<I> extends ARecipeRegistry<I, LegacyItemStack<I
         this.registerCraftingRecipe(new MapCopyCraftingRecipe_v1_7<>());
         this.registerCraftingRecipe(new ExtendMapCraftingRecipe_v1_7<>(itemRegistry, mapScaleProvider));
         this.registerCraftingRecipe(new FireworksCraftingRecipe_v1_7<>());
-    }
-
-    public ShapelessCraftingRecipe_v1_7<I> shapelessCraftingRecipe(final LegacyItemStack<I> result, final Object... args) {
-        List<LegacyItemStack<I>> ingredients = new ArrayList<>();
-        for (Object arg : args) {
-            if (arg instanceof LegacyItemStack) {
-                ingredients.add((LegacyItemStack<I>) arg);
-            } else if (arg instanceof ItemType) {
-                ingredients.add(this.getItemRegistry().create((I) arg));
-            } else {
-                try {
-                    ingredients.add(this.getItemRegistry().create((I) arg));
-                    continue;
-                } catch (Exception ignored) {
-                }
-                throw new IllegalArgumentException("Invalid argument: " + arg);
-            }
-        }
-
-        ShapelessCraftingRecipe_v1_7<I> recipe = new ShapelessCraftingRecipe_v1_7<>(ingredients.toArray(new LegacyItemStack[0]), result);
-        this.registerCraftingRecipe(recipe);
-        return recipe;
-    }
-
-    public ShapedCraftingRecipe_v1_7<I> shapedCraftingRecipe(final LegacyItemStack<I> result, final Object... args) {
-        StringBuilder pattern = new StringBuilder();
-        int index = 0;
-        int width = 0;
-        int height = 0;
-
-        if (args[index] instanceof String[]) {
-            String[] lines = (String[]) args[index++];
-            for (String line : lines) {
-                height++;
-                width = line.length();
-                pattern.append(line);
-            }
-        } else {
-            while (args[index] instanceof String) {
-                String line = (String) args[index++];
-                height++;
-                width = line.length();
-                pattern.append(line);
-            }
-        }
-
-        Map<Character, LegacyItemStack<I>> charToStack = new HashMap<>();
-        while (index < args.length) {
-            Character c = (Character) args[index];
-            LegacyItemStack<I> stack = null;
-
-            Object arg = args[index + 1];
-            if (arg instanceof LegacyItemStack) {
-                stack = (LegacyItemStack<I>) arg;
-            } else if (arg instanceof ItemType) {
-                stack = this.getItemRegistry().create(this.getItemRegistry().requireByType((ItemType) arg));
-            } else {
-                try {
-                    stack = this.getItemRegistry().create((I) arg);
-                } catch (ClassCastException ignored) {
-                }
-            }
-            charToStack.put(c, stack);
-
-            index += 2;
-        }
-
-        LegacyItemStack<I>[] ingredients = new LegacyItemStack[width * height];
-        for (int i = 0; i < ingredients.length; i++) {
-            char c = pattern.charAt(i);
-            if (charToStack.containsKey(c)) ingredients[i] = charToStack.get(c).copy();
-            else ingredients[i] = null;
-        }
-
-        ShapedCraftingRecipe_v1_7<I> recipe = new ShapedCraftingRecipe_v1_7<>(width, height, ingredients, result);
-        this.registerCraftingRecipe(recipe);
-        return recipe;
     }
 
     public LegacyItemStack<I> findCraftingRecipe(final ICraftingInventory<I, LegacyItemStack<I>> craftingInventory) {
