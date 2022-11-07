@@ -85,31 +85,30 @@ public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraf
 
     @Override
     protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
-        LegacyItemStack<I> out = null;
         Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
-        if (slot != null && slot.getStack() != null) {
-            LegacyItemStack<I> slotStack = slot.getStack();
-            out = slotStack.copy();
-            if (slotId == 0) {
-                if (!this.mergeStack(slotStack, 9, 45, true)) return null;
-                //slot.onChange(slotStack, out)
-            } else if (slotId >= 1 && slotId <= 8) {
-                if (!this.mergeStack(slotStack, 9, 45, false)) return null;
-            } else if (ItemType.isArmor(out.getMeta().types()) && this.getSlot(5 + this.getArmorSlotOffset(out.getMeta().types())).getStack() == null) {
-                int armorSlot = 5 + this.getArmorSlotOffset(out.getMeta().types());
-                if (!this.mergeStack(slotStack, armorSlot, armorSlot + 1, false)) return null;
-            } else if (slotId >= 9 && slotId <= 35) {
-                if (!this.mergeStack(slotStack, 36, 45, false)) return null;
-            } else if (slotId >= 36 && slotId <= 44) {
-                if (!this.mergeStack(slotStack, 9, 36, false)) return null;
-            } else if (!this.mergeStack(slotStack, 9, 45, false)) {
-                return null;
-            }
-            if (slotStack.getCount() == 0) slot.setStack(null);
-            else slot.onUpdate();
-            if (slotStack.getCount() == out.getCount()) return null;
-            slot.onTake(inventoryHolder, slotStack);
+        if (slot == null || slot.getStack() == null) return null;
+
+        LegacyItemStack<I> slotStack = slot.getStack();
+        LegacyItemStack<I> out = slotStack.copy();
+        if (slotId == 0) {
+            if (!this.mergeStack(slotStack, 9, 45, true)) return null;
+            //slot.onChange(slotStack, out)
+        } else if (slotId >= 1 && slotId <= 8) {
+            if (!this.mergeStack(slotStack, 9, 45, false)) return null;
+        } else if (ItemType.isArmor(out.getMeta().types()) && this.getSlot(5 + this.getArmorSlotOffset(out.getMeta().types())).getStack() == null) {
+            int armorSlot = 5 + this.getArmorSlotOffset(out.getMeta().types());
+            if (!this.mergeStack(slotStack, armorSlot, armorSlot + 1, false)) return null;
+        } else if (slotId >= 9 && slotId <= 35) {
+            if (!this.mergeStack(slotStack, 36, 45, false)) return null;
+        } else if (slotId >= 36 && slotId <= 44) {
+            if (!this.mergeStack(slotStack, 9, 36, false)) return null;
+        } else if (!this.mergeStack(slotStack, 9, 45, false)) {
+            return null;
         }
+        if (slotStack.getCount() == 0) slot.setStack(null);
+        else slot.onUpdate();
+        if (slotStack.getCount() == out.getCount()) return null;
+        slot.onTake(inventoryHolder, slotStack);
         return out;
     }
 

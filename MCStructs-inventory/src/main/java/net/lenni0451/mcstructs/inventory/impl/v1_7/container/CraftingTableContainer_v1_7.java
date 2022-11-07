@@ -63,12 +63,11 @@ public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implement
 
     @Override
     protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
-        LegacyItemStack<I> out;
         Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
         LegacyItemStack<I> slotStack = slot.getStack();
-        out = slotStack.copy();
+        LegacyItemStack<I> out = slotStack.copy();
         if (slotId == 0) {
             if (!this.mergeStack(slotStack, 10, 46, true)) return null;
         } else if (slotId >= 10 && slotId <= 36) {
