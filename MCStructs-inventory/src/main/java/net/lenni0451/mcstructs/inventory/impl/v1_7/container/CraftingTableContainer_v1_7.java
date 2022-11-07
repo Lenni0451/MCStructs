@@ -52,7 +52,7 @@ public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implement
 
     @Override
     public void craftingUpdate(ICraftingInventory<I, LegacyItemStack<I>> craftingInventory) {
-        this.craftingResultInventory.setStack(0, this.recipeRegistry.find(craftingInventory));
+        this.craftingResultInventory.setStack(0, this.recipeRegistry.findCraftingRecipe(craftingInventory));
     }
 
     @Override

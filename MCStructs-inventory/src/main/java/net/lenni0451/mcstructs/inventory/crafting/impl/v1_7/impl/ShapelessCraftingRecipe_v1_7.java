@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.impl;
 
-import net.lenni0451.mcstructs.inventory.crafting.IRecipe;
+import net.lenni0451.mcstructs.inventory.crafting.ICraftingRecipe;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ShapelessRecipe_v1_7<I> implements IRecipe<I, LegacyItemStack<I>> {
+public class ShapelessCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyItemStack<I>> {
 
     private final LegacyItemStack<I>[] ingredients;
     private final LegacyItemStack<I> result;
 
-    public ShapelessRecipe_v1_7(final LegacyItemStack<I>[] ingredients, final LegacyItemStack<I> result) {
+    public ShapelessCraftingRecipe_v1_7(final LegacyItemStack<I>[] ingredients, final LegacyItemStack<I> result) {
         this.ingredients = ingredients;
         this.result = result;
     }

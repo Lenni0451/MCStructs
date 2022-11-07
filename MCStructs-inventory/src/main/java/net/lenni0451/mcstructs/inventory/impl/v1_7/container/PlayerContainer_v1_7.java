@@ -74,7 +74,7 @@ public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraf
 
     @Override
     public void craftingUpdate(ICraftingInventory<I, LegacyItemStack<I>> craftingInventory) {
-        this.craftingResultInventory.setStack(0, this.recipeRegistry.find(this.craftingInventory));
+        this.craftingResultInventory.setStack(0, this.recipeRegistry.findCraftingRecipe(this.craftingInventory));
     }
 
     @Override
@@ -92,7 +92,6 @@ public class PlayerContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraf
         LegacyItemStack<I> out = slotStack.copy();
         if (slotId == 0) {
             if (!this.mergeStack(slotStack, 9, 45, true)) return null;
-            //slot.onChange(slotStack, out)
         } else if (slotId >= 1 && slotId <= 8) {
             if (!this.mergeStack(slotStack, 9, 45, false)) return null;
         } else if (ItemType.isArmor(out.getMeta().types()) && this.getSlot(5 + this.getArmorSlotOffset(out.getMeta().types())).getStack() == null) {

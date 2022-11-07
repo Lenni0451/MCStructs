@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.impl;
 
-import net.lenni0451.mcstructs.inventory.crafting.IRecipe;
+import net.lenni0451.mcstructs.inventory.crafting.ICraftingRecipe;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemTag;
@@ -12,7 +12,7 @@ import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArmorColorRecipe_v1_7<I> implements IRecipe<I, LegacyItemStack<I>> {
+public class ArmorColorCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyItemStack<I>> {
 
     private static final int[][] DYE_COLOR = {
             {25, 25, 25}, //ink sac

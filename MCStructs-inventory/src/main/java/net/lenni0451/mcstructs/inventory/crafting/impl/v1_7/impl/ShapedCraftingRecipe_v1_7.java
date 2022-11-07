@@ -1,11 +1,11 @@
 package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.impl;
 
-import net.lenni0451.mcstructs.inventory.crafting.IRecipe;
+import net.lenni0451.mcstructs.inventory.crafting.ICraftingRecipe;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
-public class ShapedRecipe_v1_7<I> implements IRecipe<I, LegacyItemStack<I>> {
+public class ShapedCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyItemStack<I>> {
 
     private final int width;
     private final int height;
@@ -13,7 +13,7 @@ public class ShapedRecipe_v1_7<I> implements IRecipe<I, LegacyItemStack<I>> {
     private final LegacyItemStack<I> result;
     private boolean copyNbt = false;
 
-    public ShapedRecipe_v1_7(final int width, final int height, final LegacyItemStack<I>[] ingredients, final LegacyItemStack<I> result) {
+    public ShapedCraftingRecipe_v1_7(final int width, final int height, final LegacyItemStack<I>[] ingredients, final LegacyItemStack<I> result) {
         this.width = width;
         this.height = height;
         this.ingredients = ingredients;
@@ -36,7 +36,7 @@ public class ShapedRecipe_v1_7<I> implements IRecipe<I, LegacyItemStack<I>> {
         return this.result;
     }
 
-    public ShapedRecipe_v1_7<I> setCopyNbt() {
+    public ShapedCraftingRecipe_v1_7<I> setCopyNbt() {
         this.copyNbt = true;
         return this;
     }

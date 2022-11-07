@@ -7,11 +7,11 @@ import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
 import java.util.function.Function;
 
-public class ExtendMapRecipe_v1_7<I> extends ShapedRecipe_v1_7<I> {
+public class ExtendMapCraftingRecipe_v1_7<I> extends ShapedCraftingRecipe_v1_7<I> {
 
     private final Function<LegacyItemStack<I>, Integer> mapScaleProvider;
 
-    public ExtendMapRecipe_v1_7(final ItemRegistry<I, LegacyItemStack<I>> itemRegistry, final Function<LegacyItemStack<I>, Integer> mapScaleProvider) {
+    public ExtendMapCraftingRecipe_v1_7(final ItemRegistry<I, LegacyItemStack<I>> itemRegistry, final Function<LegacyItemStack<I>, Integer> mapScaleProvider) {
         super(3, 3, new LegacyItemStack[]{
                 itemRegistry.create(itemRegistry.requireByType(ItemType.PAPER)),
                 itemRegistry.create(itemRegistry.requireByType(ItemType.PAPER)),
