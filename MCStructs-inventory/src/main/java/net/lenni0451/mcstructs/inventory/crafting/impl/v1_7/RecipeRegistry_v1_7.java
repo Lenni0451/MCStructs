@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.inventory.crafting.impl.v1_7;
 
+import net.lenni0451.mcstructs.inventory.crafting.ARecipeRegistry;
 import net.lenni0451.mcstructs.inventory.crafting.ICraftingRecipe;
-import net.lenni0451.mcstructs.inventory.crafting.RecipeRegistry;
 import net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.impl.*;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class RecipeRegistry_v1_7<I> extends RecipeRegistry<I, LegacyItemStack<I>> {
+public class RecipeRegistry_v1_7<I> extends ARecipeRegistry<I, LegacyItemStack<I>> {
 
     public RecipeRegistry_v1_7(final ItemRegistry<I, LegacyItemStack<I>> itemRegistry) {
         this(itemRegistry, stack -> 0);
@@ -135,6 +135,16 @@ public class RecipeRegistry_v1_7<I> extends RecipeRegistry<I, LegacyItemStack<I>
             }
             return null;
         }
+    }
+
+    @Override
+    public LegacyItemStack<I> findFurnaceRecipe(LegacyItemStack<I> input) {
+        for (Map.Entry<LegacyItemStack<I>, LegacyItemStack<I>> entry : this.getFurnaceRecipes().entrySet()) {
+            if (entry.getKey().getItem().equals(input.getItem()) && (entry.getKey().getDamage() == 32767 || entry.getKey().getDamage() == input.getDamage())) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
 }

@@ -3,28 +3,16 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.inventory;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
-public class SimpleInventory_v1_7<I> implements IInventory_v1_7<I> {
+public class FurnaceInventory_v1_7<I> implements IInventory_v1_7<I> {
 
-    private final LegacyItemStack<I>[] stacks;
-
-    public SimpleInventory_v1_7(final int size) {
-        this.stacks = new LegacyItemStack[size];
-    }
-
-    public LegacyItemStack<I>[] getStacks() {
-        return this.stacks;
-    }
-
-    protected int getMaxCount() {
-        return 64;
-    }
+    private final LegacyItemStack<I>[] stacks = new LegacyItemStack[3];
 
     @Override
     public LegacyItemStack<I> split(int slotId, int count) {
         if (this.stacks[slotId] == null) return null;
 
         LegacyItemStack<I> stack = this.stacks[slotId];
-        if (this.stacks[slotId].getCount() <= count) {
+        if (stack.getCount() <= count) {
             this.stacks[slotId] = null;
         } else {
             stack = stack.split(count);
@@ -40,14 +28,13 @@ public class SimpleInventory_v1_7<I> implements IInventory_v1_7<I> {
 
     @Override
     public LegacyItemStack<I> getStack(int slotId) {
-        if (slotId < 0 || slotId >= this.stacks.length) return null;
         return this.stacks[slotId];
     }
 
     @Override
     public void setStack(int slotId, LegacyItemStack<I> stack) {
         this.stacks[slotId] = stack;
-        if (stack != null && stack.getCount() > this.getMaxCount()) stack.setCount(this.getMaxCount());
+        if (stack != null && stack.getCount() > 64) stack.setCount(64);
     }
 
 }

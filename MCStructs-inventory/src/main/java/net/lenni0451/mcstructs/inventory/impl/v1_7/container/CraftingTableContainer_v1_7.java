@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.container;
 
 import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.Slot;
-import net.lenni0451.mcstructs.inventory.crafting.impl.v1_7.RecipeRegistry_v1_7;
+import net.lenni0451.mcstructs.inventory.crafting.ARecipeRegistry;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingResultInventory_v1_7;
@@ -17,9 +17,9 @@ public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implement
     private final PlayerInventory_v1_7<I> playerInventory;
     private final CraftingInventory_v1_7<I> craftingInventory;
     private final CraftingResultInventory_v1_7<I> craftingResultInventory;
-    private final RecipeRegistry_v1_7<I> recipeRegistry;
+    private final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry;
 
-    public CraftingTableContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final RecipeRegistry_v1_7<I> recipeRegistry) {
+    public CraftingTableContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.craftingInventory = new CraftingInventory_v1_7<>(this, 3, 3);
@@ -46,7 +46,7 @@ public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implement
         return this.craftingResultInventory;
     }
 
-    public RecipeRegistry_v1_7<I> getRecipeRegistry() {
+    public ARecipeRegistry<I, LegacyItemStack<I>> getRecipeRegistry() {
         return this.recipeRegistry;
     }
 

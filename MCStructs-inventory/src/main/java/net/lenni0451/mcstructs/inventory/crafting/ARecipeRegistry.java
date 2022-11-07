@@ -1,20 +1,22 @@
 package net.lenni0451.mcstructs.inventory.crafting;
 
+import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.ItemRegistry;
+import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeRegistry<I, S extends AItemStack<I, S>> {
+public abstract class ARecipeRegistry<I, S extends AItemStack<I, S>> {
 
     private final ItemRegistry<I, S> itemRegistry;
     private final List<ICraftingRecipe<I, S>> craftingRecipes;
-    private final Map<I, I> furnaceRecipes;
+    private final Map<S, S> furnaceRecipes;
 
-    public RecipeRegistry(final ItemRegistry<I, S> itemRegistry) {
+    public ARecipeRegistry(final ItemRegistry<I, S> itemRegistry) {
         this.itemRegistry = itemRegistry;
         this.craftingRecipes = new ArrayList<>();
         this.furnaceRecipes = new HashMap<>();
@@ -28,12 +30,20 @@ public class RecipeRegistry<I, S extends AItemStack<I, S>> {
         return this.craftingRecipes;
     }
 
-    public Map<I, I> getFurnaceRecipes() {
+    public Map<S, S> getFurnaceRecipes() {
         return this.furnaceRecipes;
     }
 
     public void register(final ICraftingRecipe<I, S> recipe) {
         this.craftingRecipes.add(recipe);
     }
+
+    public void register(final S input, final S output) {
+        this.furnaceRecipes.put(input, output);
+    }
+
+    public abstract LegacyItemStack<I> findCraftingRecipe(final ICraftingInventory<I, LegacyItemStack<I>> craftingInventory);
+
+    public abstract S findFurnaceRecipe(final S input);
 
 }
