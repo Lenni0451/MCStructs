@@ -60,4 +60,9 @@ public class EnchantmentTableContainer_v1_7<I> extends AContainer_v1_7<I> {
         return out;
     }
 
+    @Override
+    public void close() {
+        this.getSlot(0).setStack(null);
+    }
+
 }

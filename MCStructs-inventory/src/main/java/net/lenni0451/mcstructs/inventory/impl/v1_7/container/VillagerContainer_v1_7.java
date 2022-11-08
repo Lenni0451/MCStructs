@@ -65,4 +65,10 @@ public class VillagerContainer_v1_7<I> extends AContainer_v1_7<I> {
         return out;
     }
 
+    @Override
+    public void close() {
+        this.getSlot(0).setStack(null);
+        this.getSlot(1).setStack(null);
+    }
+
 }
