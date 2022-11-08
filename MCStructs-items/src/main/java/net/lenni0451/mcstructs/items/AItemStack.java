@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.items;
 
 import net.lenni0451.mcstructs.items.info.ItemMeta;
+import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
 
 public abstract class AItemStack<I, S extends AItemStack<I, S>> {
@@ -77,6 +78,42 @@ public abstract class AItemStack<I, S extends AItemStack<I, S>> {
         stack.setCount(count);
         this.count -= count;
         return stack;
+    }
+
+    public int getRepairCost() {
+        if (this.tag == null) return 0;
+        if (!this.tag.contains("RepairCost", NbtType.INT)) return 0;
+        return this.tag.getInt("RepairCost");
+    }
+
+    public void setRepairCost(final int cost) {
+        this.getOrCreateTag().addInt("RepairCost", cost);
+    }
+
+    public boolean hasCustomName() {
+        if (this.tag == null) return false;
+        if (!this.tag.contains("display", NbtType.COMPOUND)) return false;
+        return this.tag.getCompound("display").contains("Name", NbtType.STRING);
+    }
+
+    public String getCustomName() {
+        if (!this.hasCustomName()) return null;
+        return this.tag.getCompound("display").getString("Name");
+    }
+
+    public void setCustomName(final String name) {
+        if (this.tag == null) this.tag = new CompoundNbt();
+        if (!this.tag.contains("display", NbtType.COMPOUND)) this.tag.addCompound("display", new CompoundNbt());
+        this.tag.getCompound("display").addString("Name", name);
+    }
+
+    public void removeCustomName() {
+        if (this.tag == null) return;
+        if (!this.tag.contains("display", NbtType.COMPOUND)) return;
+        CompoundNbt display = this.tag.getCompound("display");
+        display.remove("Name");
+        if (display.isEmpty()) this.tag.remove("display");
+        if (this.tag.isEmpty()) this.tag = null;
     }
 
     public abstract boolean equals(final Object other);

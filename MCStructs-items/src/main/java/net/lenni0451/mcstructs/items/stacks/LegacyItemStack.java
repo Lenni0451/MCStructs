@@ -41,8 +41,8 @@ public class LegacyItemStack<I> extends AItemStack<I, LegacyItemStack<I>> {
         return "LegacyItemStack{" +
                 "item=" + getItem() +
                 ", count=" + getCount() +
-                ", tag=" + getTag() +
                 ", damage=" + damage +
+                ", tag=" + getTag() +
                 '}';
     }
 

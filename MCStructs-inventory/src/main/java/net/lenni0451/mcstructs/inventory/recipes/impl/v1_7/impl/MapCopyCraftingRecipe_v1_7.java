@@ -5,8 +5,6 @@ import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
-import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
 
 public class MapCopyCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyItemStack<I>> {
 
@@ -50,26 +48,8 @@ public class MapCopyCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyI
         if (filledMapStack == null || mapCount < 1) return null;
 
         LegacyItemStack<I> result = itemRegistry.create(filledMapStack.getItem(), mapCount + 1, filledMapStack.getDamage());
-        if (this.hasDisplayName(filledMapStack)) this.setDisplayName(result, this.getDisplayName(filledMapStack));
+        if (filledMapStack.hasCustomName()) result.setCustomName(filledMapStack.getCustomName());
         return result;
-    }
-
-    private boolean hasDisplayName(final LegacyItemStack<I> stack) {
-        if (!stack.hasTag()) return false;
-        if (!stack.getTag().contains("display", NbtType.COMPOUND)) return false;
-        return stack.getTag().getCompound("display").contains("Name", NbtType.STRING);
-    }
-
-    private String getDisplayName(final LegacyItemStack<I> stack) {
-        if (!this.hasDisplayName(stack)) return null;
-        return stack.getTag().getCompound("display").getString("Name");
-    }
-
-    private void setDisplayName(final LegacyItemStack<I> stack, final String name) {
-        CompoundNbt tag = stack.getOrCreateTag();
-        if (!tag.contains("display", NbtType.COMPOUND)) tag.add("display", new CompoundNbt());
-        CompoundNbt display = tag.getCompound("display");
-        display.addString("Name", name);
     }
 
 }
