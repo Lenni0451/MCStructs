@@ -29,6 +29,14 @@ public class CompoundNbt implements INbtTag {
         this.value = value;
     }
 
+    public int getSize() {
+        return this.value.size();
+    }
+
+    public boolean isEmpty() {
+        return this.value.isEmpty();
+    }
+
     public boolean contains(final String key) {
         return this.value.containsKey(key);
     }
@@ -56,6 +64,10 @@ public class CompoundNbt implements INbtTag {
 
     public void add(final String key, final Object o) {
         this.add(key, this.wrap(o));
+    }
+
+    public INbtTag remove(final String key) {
+        return this.value.remove(key);
     }
 
     public byte getByte(final String key) {
