@@ -29,7 +29,7 @@ public class CompoundNbt implements INbtTag {
         this.value = value;
     }
 
-    public int getSize() {
+    public int size() {
         return this.value.size();
     }
 

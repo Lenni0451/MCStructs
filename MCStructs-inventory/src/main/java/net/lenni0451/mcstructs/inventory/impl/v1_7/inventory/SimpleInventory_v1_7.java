@@ -26,9 +26,11 @@ public class SimpleInventory_v1_7<I> implements IInventory_v1_7<I> {
         LegacyItemStack<I> stack = this.stacks[slotId];
         if (this.stacks[slotId].getCount() <= count) {
             this.stacks[slotId] = null;
+            this.onUpdate();
         } else {
             stack = stack.split(count);
             if (this.stacks[slotId].getCount() == 0) this.stacks[slotId] = null;
+            this.onUpdate();
         }
         return stack;
     }
@@ -48,6 +50,7 @@ public class SimpleInventory_v1_7<I> implements IInventory_v1_7<I> {
     public void setStack(int slotId, LegacyItemStack<I> stack) {
         this.stacks[slotId] = stack;
         if (stack != null && stack.getCount() > this.getMaxCount()) stack.setCount(this.getMaxCount());
+        this.onUpdate();
     }
 
 }

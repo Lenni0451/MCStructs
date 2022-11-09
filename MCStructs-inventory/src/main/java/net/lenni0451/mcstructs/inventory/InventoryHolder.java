@@ -12,6 +12,7 @@ public class InventoryHolder<T extends IInventory<I, S>, I, S extends AItemStack
     private final AContainer<T, I, S> playerInventoryContainer;
     private AContainer<T, I, S> openContainer;
     private boolean creativeMode;
+    private int xpLevel;
 
     public InventoryHolder(final T playerInventory, final Function<T, AContainer<T, I, S>> containerSupplier) {
         this.playerInventory = playerInventory;
@@ -43,6 +44,14 @@ public class InventoryHolder<T extends IInventory<I, S>, I, S extends AItemStack
 
     public void setCreativeMode(final boolean creativeMode) {
         this.creativeMode = creativeMode;
+    }
+
+    public int getXpLevel() {
+        return this.xpLevel;
+    }
+
+    public void setXpLevel(final int xpLevel) {
+        this.xpLevel = xpLevel;
     }
 
 }

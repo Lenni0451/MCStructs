@@ -91,6 +91,14 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         return false;
     }
 
+    public int size() {
+        return this.value.size();
+    }
+
+    public boolean isEmpty() {
+        return this.value.isEmpty();
+    }
+
     private void check(final T tag) {
         if (this.type == null || this.value.isEmpty()) {
             this.type = tag.getNbtType();
@@ -98,10 +106,6 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         } else if (!this.type.equals(tag.getNbtType())) {
             throw new IllegalArgumentException("Can't add " + tag.getClass().getSimpleName() + " to a " + this.type.name() + " list");
         }
-    }
-
-    public int size() {
-        return this.value.size();
     }
 
     @Override
