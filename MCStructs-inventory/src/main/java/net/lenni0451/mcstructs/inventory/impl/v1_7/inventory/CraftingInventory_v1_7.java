@@ -57,7 +57,7 @@ public class CraftingInventory_v1_7<I> implements IInventory_v1_7<I>, ICraftingI
         if (this.stacks[slotId] == null) return null;
 
         LegacyItemStack<I> stack = this.stacks[slotId];
-        if (this.stacks[slotId].getCount() <= count) {
+        if (stack.getCount() <= count) {
             this.stacks[slotId] = null;
         } else {
             stack = stack.split(count);

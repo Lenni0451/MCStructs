@@ -12,7 +12,7 @@ public class BeaconInventory_v1_7<I> implements IInventory_v1_7<I> {
         if (slotId != 0 || this.stack == null) return null;
 
         LegacyItemStack<I> stack = this.stack;
-        if (this.stack.getCount() <= count) {
+        if (stack.getCount() <= count) {
             this.stack = null;
         } else {
             stack = stack.split(count);
