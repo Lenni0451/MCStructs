@@ -18,7 +18,11 @@ public abstract class AContainer<T extends IInventory<I, S>, I, S extends AItemS
     public AContainer(final int windowId) {
         this.windowId = windowId;
         this.slots = new ArrayList<>();
+
+        this.initSlots();
     }
+
+    protected abstract void initSlots();
 
     public int getWindowId() {
         return this.windowId;

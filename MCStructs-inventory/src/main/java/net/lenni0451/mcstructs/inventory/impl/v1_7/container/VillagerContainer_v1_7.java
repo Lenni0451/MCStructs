@@ -20,7 +20,10 @@ public class VillagerContainer_v1_7<I> extends AContainer_v1_7<I> {
         this.playerInventory = playerInventory;
         this.recipeRegistry = recipeRegistry;
         this.villagerInventory = new VillagerInventory_v1_7<>(this.recipeRegistry);
+    }
 
+    @Override
+    protected void initSlots() {
         this.addSlot(this.villagerInventory, 0, Slot.acceptAll());
         this.addSlot(this.villagerInventory, 1, Slot.acceptAll());
         this.addSlot(id -> new VillagerResultSlot_v1_7<>(this.villagerInventory, id));

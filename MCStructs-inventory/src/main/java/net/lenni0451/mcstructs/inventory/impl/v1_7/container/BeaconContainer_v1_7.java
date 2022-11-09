@@ -17,7 +17,10 @@ public class BeaconContainer_v1_7<I> extends AContainer_v1_7<I> {
         super(windowId);
         this.playerInventory = playerInventory;
         this.beaconInventory = new BeaconInventory_v1_7<>();
+    }
 
+    @Override
+    protected void initSlots() {
         this.addSlot(this.beaconInventory, 0, Slot.acceptTypes(1, ItemType.IRON_INGOT, ItemType.GOLD_INGOT, ItemType.EMERALD, ItemType.DIAMOND));
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());

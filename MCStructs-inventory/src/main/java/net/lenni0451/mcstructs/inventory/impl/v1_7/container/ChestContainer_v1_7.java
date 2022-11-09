@@ -20,7 +20,10 @@ public class ChestContainer_v1_7<I> extends AContainer_v1_7<I> {
         this.chestInventory = new SimpleInventory_v1_7<>(size);
         this.rowCount = chestInventory.getSize() / 9;
         this.rowSlotCount = this.rowCount * 9;
+    }
 
+    @Override
+    protected void initSlots() {
         for (int i = 0; i < this.rowSlotCount; i++) this.addSlot(chestInventory, i, Slot.acceptAll());
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());

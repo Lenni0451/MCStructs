@@ -20,7 +20,10 @@ public class BrewingStandContainer_v1_7<I> extends AContainer_v1_7<I> {
         super(windowId);
         this.playerInventory = playerInventory;
         this.brewingStandInventory = new BrewingStandInventory_v1_7<>();
+    }
 
+    @Override
+    protected void initSlots() {
         for (int i = 0; i < 3; i++) {
             this.addSlot(this.brewingStandInventory, i, Slot.acceptTypes(1, ItemType.BOTTLE, ItemType.WATER_BOTTLE, ItemType.POTION, ItemType.SPLASH_POTION));
         }

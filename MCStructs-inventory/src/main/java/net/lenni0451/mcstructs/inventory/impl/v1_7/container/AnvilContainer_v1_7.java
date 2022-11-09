@@ -47,7 +47,10 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
             }
         };
         this.outputSlot = new CraftingResultInventory_v1_7<>();
+    }
 
+    @Override
+    protected void initSlots() {
         this.addSlot(this.inputSlots, 0, Slot.acceptAll());
         this.addSlot(this.inputSlots, 1, Slot.acceptAll());
         this.addSlot(id -> new AnvilResultSlot_v1_7<>(this.outputSlot, id, this));

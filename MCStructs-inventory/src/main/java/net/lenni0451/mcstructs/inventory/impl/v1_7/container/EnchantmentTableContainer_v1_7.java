@@ -21,7 +21,10 @@ public class EnchantmentTableContainer_v1_7<I> extends AContainer_v1_7<I> {
                 return 1;
             }
         };
+    }
 
+    @Override
+    protected void initSlots() {
         this.addSlot(this.enchantmentInventory, 0, Slot.acceptAll());
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());

@@ -16,7 +16,10 @@ public class HopperContainer_v1_7<I> extends AContainer_v1_7<I> {
         super(windowId);
         this.playerInventory = playerInventory;
         this.hopperInventory = new HopperInventory_v1_7<>();
+    }
 
+    @Override
+    protected void initSlots() {
         for (int i = 0; i < 5; i++) this.addSlot(this.hopperInventory, i, Slot.acceptAll());
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());

@@ -19,6 +19,10 @@ public class CraftingResultSlot_v1_7<I> extends Slot<PlayerInventory_v1_7<I>, I,
         this.craftingInventory = craftingInventory;
     }
 
+    public CraftingInventory_v1_7<I> getCraftingInventory() {
+        return this.craftingInventory;
+    }
+
     @Override
     public void onTake(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, LegacyItemStack<I> stack) {
         for (int i = 0; i < this.craftingInventory.getSize(); i++) {
@@ -36,7 +40,7 @@ public class CraftingResultSlot_v1_7<I> extends Slot<PlayerInventory_v1_7<I>, I,
         }
     }
 
-    private boolean hasContainer(final List<ItemType> types) {
+    protected boolean hasContainer(final List<ItemType> types) {
         return types.contains(ItemType.WATER_BUCKET) || types.contains(ItemType.LAVA_BUCKET) || types.contains(ItemType.MILK_BUCKET);
     }
 

@@ -25,7 +25,10 @@ public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implement
         this.craftingInventory = new CraftingInventory_v1_7<>(this, 3, 3);
         this.craftingResultInventory = new CraftingResultInventory_v1_7<>();
         this.recipeRegistry = recipeRegistry;
+    }
 
+    @Override
+    protected void initSlots() {
         this.addSlot(id -> new CraftingResultSlot_v1_7<>(this.craftingResultInventory, id, this.craftingInventory));
         for (int i = 0; i < this.craftingInventory.getSize(); i++) this.addSlot(this.craftingInventory, i, Slot.acceptAll());
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());

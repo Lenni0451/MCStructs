@@ -12,21 +12,28 @@ public class HorseContainer_v1_7<I> extends AContainer_v1_7<I> {
 
     private final PlayerInventory_v1_7<I> playerInventory;
     private final SimpleInventory_v1_7<I> horseInventory;
+    private final boolean hasChest;
+    private final boolean isHorse;
 
     public HorseContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final int size, final boolean hasChest, final boolean isHorse) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.horseInventory = new SimpleInventory_v1_7<>(size);
+        this.hasChest = hasChest;
+        this.isHorse = isHorse;
+    }
 
+    @Override
+    protected void initSlots() {
         this.addSlot(this.horseInventory, 0, (slot, stack) -> {
             if (stack.getMeta().types().contains(ItemType.SADDLE) && slot.getStack() == null) return stack.getMeta().maxCount();
             else return 0;
         });
         this.addSlot(this.horseInventory, 1, (slot, stack) -> {
-            if (stack.getMeta().types().contains(ItemType.HORSE_ARMOR) && isHorse) return stack.getMeta().maxCount();
+            if (stack.getMeta().types().contains(ItemType.HORSE_ARMOR) && this.isHorse) return stack.getMeta().maxCount();
             else return 0;
         });
-        if (hasChest) {
+        if (this.hasChest) {
             for (int i = 0; i < 15; i++) this.addSlot(this.horseInventory, 2 + i, Slot.acceptAll());
         }
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
@@ -39,6 +46,14 @@ public class HorseContainer_v1_7<I> extends AContainer_v1_7<I> {
 
     public SimpleInventory_v1_7<I> getHorseInventory() {
         return this.horseInventory;
+    }
+
+    public boolean hasChest() {
+        return this.hasChest;
+    }
+
+    public boolean isHorse() {
+        return this.isHorse;
     }
 
     @Override
