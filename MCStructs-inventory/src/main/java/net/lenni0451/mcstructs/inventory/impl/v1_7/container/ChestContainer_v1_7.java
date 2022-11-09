@@ -3,7 +3,6 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.container;
 import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.Slot;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
-import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.SimpleInventory_v1_7;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
@@ -11,14 +10,14 @@ import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 public class ChestContainer_v1_7<I> extends AContainer_v1_7<I> {
 
     private final PlayerInventory_v1_7<I> playerInventory;
-    private final IInventory_v1_7<I> chestInventory;
+    private final SimpleInventory_v1_7<I> chestInventory;
     private final int rowCount;
     private final int rowSlotCount;
 
-    public ChestContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final int count) {
+    public ChestContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final int size) {
         super(windowId);
         this.playerInventory = playerInventory;
-        this.chestInventory = new SimpleInventory_v1_7<>(count);
+        this.chestInventory = new SimpleInventory_v1_7<>(size);
         this.rowCount = chestInventory.getSize() / 9;
         this.rowSlotCount = this.rowCount * 9;
 
@@ -31,7 +30,7 @@ public class ChestContainer_v1_7<I> extends AContainer_v1_7<I> {
         return this.playerInventory;
     }
 
-    public IInventory_v1_7<I> getChestInventory() {
+    public SimpleInventory_v1_7<I> getChestInventory() {
         return this.chestInventory;
     }
 

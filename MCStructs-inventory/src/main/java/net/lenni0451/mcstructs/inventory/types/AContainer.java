@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.items.AItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.function.IntFunction;
 
 public abstract class AContainer<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
@@ -24,7 +24,7 @@ public abstract class AContainer<T extends IInventory<I, S>, I, S extends AItemS
         return this.windowId;
     }
 
-    protected Slot<T, I, S> addSlot(final IInventory<I, S> inventory, final int inventoryIndex, final Function<S, Integer> acceptor) {
+    protected Slot<T, I, S> addSlot(final IInventory<I, S> inventory, final int inventoryIndex, final BiFunction<Slot<T, I, S>, S, Integer> acceptor) {
         Slot<T, I, S> slot = new Slot<>(inventory, this.slots.size(), inventoryIndex, acceptor);
         this.slots.add(slot);
         return slot;

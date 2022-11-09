@@ -16,7 +16,7 @@ public enum ItemType {
     GLOWSTONE_DUST, DIAMOND, FIRE_CHARGE, FEATHER, GOLD_NUGGET,
     FIREWORK_ROCKET, BOTTLE, WATER_BOTTLE, POTION, SPLASH_POTION,
     FISH, IRON_INGOT, GOLD_INGOT, EMERALD, ENCHANTED_BOOK,
-    LEATHER, PLANKS, COBBLESTONE;
+    LEATHER, PLANKS, COBBLESTONE, SADDLE, HORSE_ARMOR;
 
     public static boolean isArmor(final List<ItemType> types) {
         return types.contains(BOOTS) || types.contains(LEGGINGS) || types.contains(CHESTPLATE) || types.contains(HELMET);

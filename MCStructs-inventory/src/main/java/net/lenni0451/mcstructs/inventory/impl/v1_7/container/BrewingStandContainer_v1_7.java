@@ -24,7 +24,7 @@ public class BrewingStandContainer_v1_7<I> extends AContainer_v1_7<I> {
         for (int i = 0; i < 3; i++) {
             this.addSlot(this.brewingStandInventory, i, Slot.acceptTypes(1, ItemType.BOTTLE, ItemType.WATER_BOTTLE, ItemType.POTION, ItemType.SPLASH_POTION));
         }
-        this.addSlot(this.brewingStandInventory, 3, stack -> this.isIngredient(stack) ? stack.getMeta().maxCount() : 0);
+        this.addSlot(this.brewingStandInventory, 3, (slot, stack) -> this.isIngredient(stack) ? stack.getMeta().maxCount() : 0);
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
