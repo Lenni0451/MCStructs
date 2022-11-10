@@ -15,14 +15,18 @@ public class EnchantmentTableContainer_v1_7<T extends PlayerInventory_v1_7<I, S>
     public EnchantmentTableContainer_v1_7(final int windowId, final T playerInventory) {
         super(windowId);
         this.playerInventory = playerInventory;
-        this.enchantmentInventory = new SimpleInventory_v1_7<I, S>(1) {
+        this.enchantmentInventory = this.createEnchantmentInventory();
+
+        this.initSlots();
+    }
+
+    protected SimpleInventory_v1_7<I, S> createEnchantmentInventory() {
+        return new SimpleInventory_v1_7<I, S>(1) {
             @Override
             public int maxStackCount() {
                 return 1;
             }
         };
-
-        this.initSlots();
     }
 
     @Override

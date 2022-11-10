@@ -135,7 +135,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         this.getSlot(1).setStack(null);
     }
 
-    private void refresh() {
+    protected void refresh() {
         S stack1 = this.inputSlots.getStack(0);
         this.repairCost = 0;
         if (stack1 == null) {
@@ -249,7 +249,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         if (isEnchantedBook) newRepairCost = Math.max(1, newRepairCost / 2);
         this.repairCost = newRepairCost + additionalRepairCost;
         if (additionalRepairCost <= 0) out = null;
-        if (repairCostFactor > 0 && repairCost == additionalRepairCost && this.repairCost >= 40) this.repairCost = 39;
+        if (repairCostFactor > 0 && repairCostFactor == additionalRepairCost && this.repairCost >= 40) this.repairCost = 39;
         if (this.repairCost >= 40 && !this.inventoryHolder.isCreativeMode()) out = null;
 
         if (out != null) {
@@ -264,7 +264,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         this.outputSlot.setStack(0, out);
     }
 
-    private int getRarityFactor(final Enchantment enchantment) {
+    protected int getRarityFactor(final Enchantment enchantment) {
         switch (enchantment.getRarity()) {
             case 1:
                 return 8;
@@ -285,7 +285,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         }
     }
 
-    private Map<Enchantment, Short> getEnchantments(final S stack) {
+    protected Map<Enchantment, Short> getEnchantments(final S stack) {
         Map<Enchantment, Short> enchantments = new HashMap<>();
         if (!stack.hasTag()) return enchantments;
 
@@ -308,7 +308,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         return enchantments;
     }
 
-    private void setEnchantments(final S stack, final Map<Enchantment, Short> enchantments) {
+    protected void setEnchantments(final S stack, final Map<Enchantment, Short> enchantments) {
         boolean isEnchantedBook = stack.getMeta().types().contains(ItemType.ENCHANTED_BOOK);
         ListNbt<CompoundNbt> ench = new ListNbt<>();
         for (Map.Entry<Enchantment, Short> entry : enchantments.entrySet()) {
@@ -326,7 +326,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         }
     }
 
-    private void addBookEnchantment(final S stack, final Enchantment enchantment, final int level) {
+    protected void addBookEnchantment(final S stack, final Enchantment enchantment, final int level) {
         if (!stack.getOrCreateTag().contains("StoredEnchantments", NbtType.LIST)) stack.getTag().addList("StoredEnchantments");
         ListNbt<CompoundNbt> storedEnchantments = stack.getTag().getList("StoredEnchantments", NbtType.COMPOUND);
         boolean hasEnchantment = false;
@@ -346,7 +346,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         }
     }
 
-    private I getRepairItem(final S stack) {
+    protected I getRepairItem(final S stack) {
         ItemMeta meta = stack.getMeta();
         if (!ItemType.isArmor(meta.types())) return null;
         if (!ItemType.isTool(meta.types())) return null;
