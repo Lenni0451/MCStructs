@@ -7,14 +7,14 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.VillagerInventory_v
 import net.lenni0451.mcstructs.inventory.recipes.VillagerRecipe;
 import net.lenni0451.mcstructs.items.AItemStack;
 
-public class VillagerResultSlot_v1_7<I, S extends AItemStack<I, S>> extends Slot<PlayerInventory_v1_7<I, S>, I, S> {
+public class VillagerResultSlot_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends Slot<T, I, S> {
 
     public VillagerResultSlot_v1_7(final VillagerInventory_v1_7<I, S> inventory, final int slotIndex) {
         super(inventory, slotIndex, 2, Slot.acceptNone());
     }
 
     @Override
-    public void onTake(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, S stack) {
+    public void onTake(InventoryHolder<T, I, S> inventoryHolder, S stack) {
         VillagerRecipe<I, S> recipe = ((VillagerInventory_v1_7<I, S>) this.getInventory()).getCurrentRecipe();
         if (recipe == null) return;
 

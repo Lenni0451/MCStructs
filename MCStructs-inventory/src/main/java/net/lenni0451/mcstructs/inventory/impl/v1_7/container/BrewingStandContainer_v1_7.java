@@ -11,12 +11,12 @@ import net.lenni0451.mcstructs.items.info.ItemType;
 
 import java.util.List;
 
-public class BrewingStandContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
+public class BrewingStandContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T,I, S> {
 
-    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final T playerInventory;
     private final BrewingStandInventory_v1_7<I, S> brewingStandInventory;
 
-    public BrewingStandContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory) {
+    public BrewingStandContainer_v1_7(final int windowId, final T playerInventory) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.brewingStandInventory = new BrewingStandInventory_v1_7<>();
@@ -34,7 +34,7 @@ public class BrewingStandContainer_v1_7<I, S extends AItemStack<I, S>> extends A
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
+    public T getPlayerInventory() {
         return this.playerInventory;
     }
 
@@ -43,8 +43,8 @@ public class BrewingStandContainer_v1_7<I, S extends AItemStack<I, S>> extends A
     }
 
     @Override
-    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<T, I, S> inventoryHolder, int slotId) {
+        Slot<T, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
         S slotStack = slot.getStack();

@@ -22,14 +22,14 @@ import java.util.List;
  * 9-35: upper inventory slots<br>
  * 36-44: hotbar slots
  */
-public class PlayerContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> implements ICraftingContainer<I, S> {
+public class PlayerContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T, I, S> implements ICraftingContainer<I, S> {
 
-    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final T playerInventory;
     private final CraftingInventory_v1_7<I, S> craftingInventory;
     private final CraftingResultInventory_v1_7<I, S> craftingResultInventory;
     private final ARecipeRegistry<I, S> recipeRegistry;
 
-    public PlayerContainer_v1_7(final PlayerInventory_v1_7<I, S> playerInventory, final ARecipeRegistry<I, S> recipeRegistry) {
+    public PlayerContainer_v1_7(final T playerInventory, final ARecipeRegistry<I, S> recipeRegistry) {
         super(0);
         this.playerInventory = playerInventory;
         this.craftingInventory = new CraftingInventory_v1_7<>(this, 2, 2);
@@ -52,7 +52,7 @@ public class PlayerContainer_v1_7<I, S extends AItemStack<I, S>> extends AContai
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
+    public T getPlayerInventory() {
         return this.playerInventory;
     }
 
@@ -88,8 +88,8 @@ public class PlayerContainer_v1_7<I, S extends AItemStack<I, S>> extends AContai
     }
 
     @Override
-    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<T, I, S> inventoryHolder, int slotId) {
+        Slot<T, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
         S slotStack = slot.getStack();
@@ -116,7 +116,7 @@ public class PlayerContainer_v1_7<I, S extends AItemStack<I, S>> extends AContai
     }
 
     @Override
-    protected boolean canTakeAll(Slot<PlayerInventory_v1_7<I, S>, I, S> slot, S stack) {
+    protected boolean canTakeAll(Slot<T, I, S> slot, S stack) {
         return !this.craftingResultInventory.equals(slot.getInventory());
     }
 

@@ -7,12 +7,12 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.DispenserInventory_
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.items.AItemStack;
 
-public class DispenserContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
+public class DispenserContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T, I, S> {
 
-    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final T playerInventory;
     private final DispenserInventory_v1_7<I, S> dispenserInventory;
 
-    public DispenserContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory) {
+    public DispenserContainer_v1_7(final int windowId, final T playerInventory) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.dispenserInventory = new DispenserInventory_v1_7<>();
@@ -27,7 +27,7 @@ public class DispenserContainer_v1_7<I, S extends AItemStack<I, S>> extends ACon
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
+    public T getPlayerInventory() {
         return this.playerInventory;
     }
 
@@ -36,8 +36,8 @@ public class DispenserContainer_v1_7<I, S extends AItemStack<I, S>> extends ACon
     }
 
     @Override
-    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<T, I, S> inventoryHolder, int slotId) {
+        Slot<T, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
         S slotStack = slot.getStack();

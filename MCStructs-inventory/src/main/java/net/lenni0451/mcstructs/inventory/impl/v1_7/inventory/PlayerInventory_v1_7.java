@@ -44,7 +44,7 @@ public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
         return -1;
     }
 
-    public boolean addStack(final InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, S stack) {
+    public <T extends PlayerInventory_v1_7<I, S>> boolean addStack(final InventoryHolder<T, I, S> inventoryHolder, S stack) {
         if (stack == null || stack.getCount() == 0 || stack.getItem() == null) return false;
         if (stack.getMeta().tags().contains(ItemTag.DAMAGEABLE) && stack.getDamage() > 0) {
             int emptySlot = this.getEmptySlot();

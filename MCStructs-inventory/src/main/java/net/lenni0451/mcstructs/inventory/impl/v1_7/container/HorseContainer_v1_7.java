@@ -8,14 +8,14 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.SimpleInventory_v1_
 import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.info.ItemType;
 
-public class HorseContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
+public class HorseContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T, I, S> {
 
-    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final T playerInventory;
     private final SimpleInventory_v1_7<I, S> horseInventory;
     private final boolean hasChest;
     private final boolean isHorse;
 
-    public HorseContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory, final int size, final boolean hasChest, final boolean isHorse) {
+    public HorseContainer_v1_7(final int windowId, final T playerInventory, final int size, final boolean hasChest, final boolean isHorse) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.horseInventory = new SimpleInventory_v1_7<>(size);
@@ -42,7 +42,7 @@ public class HorseContainer_v1_7<I, S extends AItemStack<I, S>> extends AContain
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
+    public T getPlayerInventory() {
         return this.playerInventory;
     }
 
@@ -59,8 +59,8 @@ public class HorseContainer_v1_7<I, S extends AItemStack<I, S>> extends AContain
     }
 
     @Override
-    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<T, I, S> inventoryHolder, int slotId) {
+        Slot<T, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
         S slotStack = slot.getStack();

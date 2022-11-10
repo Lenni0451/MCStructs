@@ -10,7 +10,7 @@ import net.lenni0451.mcstructs.items.info.ItemType;
 
 import java.util.List;
 
-public class CraftingResultSlot_v1_7<I, S extends AItemStack<I, S>> extends Slot<PlayerInventory_v1_7<I, S>, I, S> {
+public class CraftingResultSlot_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends Slot<T, I, S> {
 
     private final CraftingInventory_v1_7<I, S> craftingInventory;
 
@@ -24,7 +24,7 @@ public class CraftingResultSlot_v1_7<I, S extends AItemStack<I, S>> extends Slot
     }
 
     @Override
-    public void onTake(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, S stack) {
+    public void onTake(InventoryHolder<T, I, S> inventoryHolder, S stack) {
         for (int i = 0; i < this.craftingInventory.getSize(); i++) {
             S slotStack = this.craftingInventory.getStack(i);
             if (slotStack == null) continue;

@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.container;
 
 import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.Slot;
+import net.lenni0451.mcstructs.inventory.enums.InventoryAction;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingResultInventory_v1_7;
@@ -12,14 +13,14 @@ import net.lenni0451.mcstructs.inventory.types.ICraftingContainer;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.AItemStack;
 
-public class CraftingTableContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> implements ICraftingContainer<I, S> {
+public class CraftingTableContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T, I, S> implements ICraftingContainer<I, S> {
 
-    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final T playerInventory;
     private final CraftingInventory_v1_7<I, S> craftingInventory;
     private final CraftingResultInventory_v1_7<I, S> craftingResultInventory;
     private final ARecipeRegistry<I, S> recipeRegistry;
 
-    public CraftingTableContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory, final ARecipeRegistry<I, S> recipeRegistry) {
+    public CraftingTableContainer_v1_7(final int windowId, final T playerInventory, final ARecipeRegistry<I, S> recipeRegistry) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.craftingInventory = new CraftingInventory_v1_7<>(this, 3, 3);
@@ -38,7 +39,12 @@ public class CraftingTableContainer_v1_7<I, S extends AItemStack<I, S>> extends 
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
+    @Override
+    public S click(InventoryHolder<T, I, S> inventoryHolder, int slotId, int button, InventoryAction action) {
+        return null;
+    }
+
+    public T getPlayerInventory() {
         return this.playerInventory;
     }
 
@@ -66,8 +72,8 @@ public class CraftingTableContainer_v1_7<I, S extends AItemStack<I, S>> extends 
     }
 
     @Override
-    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<T, I, S> inventoryHolder, int slotId) {
+        Slot<T, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
         S slotStack = slot.getStack();
@@ -86,11 +92,6 @@ public class CraftingTableContainer_v1_7<I, S extends AItemStack<I, S>> extends 
         if (slotStack.getCount() == out.getCount()) return null;
         slot.onTake(inventoryHolder, slotStack);
         return out;
-    }
-
-    @Override
-    protected boolean canTakeAll(Slot<PlayerInventory_v1_7<I, S>, I, S> slot, S stack) {
-        return !slot.getInventory().equals(this.craftingResultInventory);
     }
 
 }

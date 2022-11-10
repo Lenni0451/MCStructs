@@ -20,9 +20,9 @@ import net.lenni0451.mcstructs.nbt.tags.ListNbt;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AnvilContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
+public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T, I, S> {
 
-    private final InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder;
+    private final InventoryHolder<T, I, S> inventoryHolder;
     private final EnchantmentRegistry<I, S> enchantmentRegistry;
     private final SimpleInventory_v1_7<I, S> inputSlots;
     private final CraftingResultInventory_v1_7<I, S> outputSlot;
@@ -36,7 +36,7 @@ public class AnvilContainer_v1_7<I, S extends AItemStack<I, S>> extends AContain
     private int repairStackCount;
     private String repairItemName;
 
-    public AnvilContainer_v1_7(final int windowId, final InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, final EnchantmentRegistry<I, S> enchantmentRegistry) {
+    public AnvilContainer_v1_7(final int windowId, final InventoryHolder<T, I, S> inventoryHolder, final EnchantmentRegistry<I, S> enchantmentRegistry) {
         super(windowId);
         this.inventoryHolder = inventoryHolder;
         this.enchantmentRegistry = enchantmentRegistry;
@@ -60,7 +60,7 @@ public class AnvilContainer_v1_7<I, S extends AItemStack<I, S>> extends AContain
         for (int i = 0; i < 9; i++) this.addSlot(this.inventoryHolder.getPlayerInventory(), i, Slot.acceptAll());
     }
 
-    public InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> getInventoryHolder() {
+    public InventoryHolder<T, I, S> getInventoryHolder() {
         return this.inventoryHolder;
     }
 
@@ -107,8 +107,8 @@ public class AnvilContainer_v1_7<I, S extends AItemStack<I, S>> extends AContain
     }
 
     @Override
-    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<T, I, S> inventoryHolder, int slotId) {
+        Slot<T, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
         S slotStack = slot.getStack();
