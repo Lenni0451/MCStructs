@@ -19,8 +19,6 @@ public class CraftingTableContainer_v1_8<T extends PlayerInventory_v1_7<I, S>, I
         for (int i = 0; i < this.getCraftingInventory().getSize(); i++) this.addSlot(this.getCraftingInventory(), i, Slot.acceptAll());
         for (int i = 0; i < 27; i++) this.addSlot(this.getPlayerInventory(), 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.getPlayerInventory(), i, Slot.acceptAll());
-
-        this.craftingUpdate(this.getCraftingInventory());
     }
 
 }
