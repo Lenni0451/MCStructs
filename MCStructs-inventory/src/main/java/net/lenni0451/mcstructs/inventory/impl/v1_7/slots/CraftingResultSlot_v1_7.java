@@ -5,33 +5,33 @@ import net.lenni0451.mcstructs.inventory.Slot;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingResultInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
+import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.info.ItemType;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
 import java.util.List;
 
-public class CraftingResultSlot_v1_7<I> extends Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> {
+public class CraftingResultSlot_v1_7<I, S extends AItemStack<I, S>> extends Slot<PlayerInventory_v1_7<I, S>, I, S> {
 
-    private final CraftingInventory_v1_7<I> craftingInventory;
+    private final CraftingInventory_v1_7<I, S> craftingInventory;
 
-    public CraftingResultSlot_v1_7(final CraftingResultInventory_v1_7<I> craftingResultInventory, final int slotIndex, final CraftingInventory_v1_7<I> craftingInventory) {
+    public CraftingResultSlot_v1_7(final CraftingResultInventory_v1_7<I, S> craftingResultInventory, final int slotIndex, final CraftingInventory_v1_7<I, S> craftingInventory) {
         super(craftingResultInventory, slotIndex, 0, Slot.acceptNone());
         this.craftingInventory = craftingInventory;
     }
 
-    public CraftingInventory_v1_7<I> getCraftingInventory() {
+    public CraftingInventory_v1_7<I, S> getCraftingInventory() {
         return this.craftingInventory;
     }
 
     @Override
-    public void onTake(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, LegacyItemStack<I> stack) {
+    public void onTake(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, S stack) {
         for (int i = 0; i < this.craftingInventory.getSize(); i++) {
-            LegacyItemStack<I> slotStack = this.craftingInventory.getStack(i);
+            S slotStack = this.craftingInventory.getStack(i);
             if (slotStack == null) continue;
 
             this.craftingInventory.split(i, 1);
             if (this.hasContainer(slotStack.getMeta().types())) {
-                LegacyItemStack<I> container = slotStack.getRegistry().create(slotStack.getRegistry().requireByType(ItemType.BUCKET));
+                S container = slotStack.getRegistry().create(slotStack.getRegistry().requireByType(ItemType.BUCKET));
                 if (!inventoryHolder.getPlayerInventory().addStack(inventoryHolder, container)) {
                     if (craftingInventory.getStack(0) == null) craftingInventory.setStack(0, container);
 //                    else //drop item

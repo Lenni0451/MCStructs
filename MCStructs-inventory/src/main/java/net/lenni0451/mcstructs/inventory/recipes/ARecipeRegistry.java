@@ -3,7 +3,6 @@ package net.lenni0451.mcstructs.inventory.recipes;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.ItemRegistry;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +55,7 @@ public abstract class ARecipeRegistry<I, S extends AItemStack<I, S>> {
         this.villagerRecipes.add(new VillagerRecipe<>(input1, input2, output, enabled));
     }
 
-    public abstract LegacyItemStack<I> findCraftingRecipe(final ICraftingInventory<I, LegacyItemStack<I>> craftingInventory);
+    public abstract S findCraftingRecipe(final ICraftingInventory<I, S> craftingInventory);
 
     public abstract S findFurnaceRecipe(final S input);
 

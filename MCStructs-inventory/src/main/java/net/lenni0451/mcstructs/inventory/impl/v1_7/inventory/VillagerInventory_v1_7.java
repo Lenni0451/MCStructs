@@ -3,24 +3,24 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.inventory;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
 import net.lenni0451.mcstructs.inventory.recipes.VillagerRecipe;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
+import net.lenni0451.mcstructs.items.AItemStack;
 
-public class VillagerInventory_v1_7<I> implements IInventory_v1_7<I> {
+public class VillagerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInventory_v1_7<I, S> {
 
-    private final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry;
-    private final LegacyItemStack<I>[] stacks = new LegacyItemStack[3];
+    private final ARecipeRegistry<I, S> recipeRegistry;
+    private final S[] stacks = (S[]) new AItemStack[3];
     private int currentRecipeIndex;
-    private VillagerRecipe<I, LegacyItemStack<I>> currentRecipe;
+    private VillagerRecipe<I, S> currentRecipe;
 
-    public VillagerInventory_v1_7(final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry) {
+    public VillagerInventory_v1_7(final ARecipeRegistry<I, S> recipeRegistry) {
         this.recipeRegistry = recipeRegistry;
     }
 
-    public ARecipeRegistry<I, LegacyItemStack<I>> getRecipeRegistry() {
+    public ARecipeRegistry<I, S> getRecipeRegistry() {
         return this.recipeRegistry;
     }
 
-    public LegacyItemStack<I>[] getStacks() {
+    public S[] getStacks() {
         return this.stacks;
     }
 
@@ -33,15 +33,15 @@ public class VillagerInventory_v1_7<I> implements IInventory_v1_7<I> {
         this.onUpdate();
     }
 
-    public VillagerRecipe<I, LegacyItemStack<I>> getCurrentRecipe() {
+    public VillagerRecipe<I, S> getCurrentRecipe() {
         return this.currentRecipe;
     }
 
     @Override
-    public LegacyItemStack<I> split(int slotId, int count) {
+    public S split(int slotId, int count) {
         if (this.stacks[slotId] == null) return null;
 
-        LegacyItemStack<I> stack = this.stacks[slotId];
+        S stack = this.stacks[slotId];
         if (slotId == 2) {
             this.stacks[slotId] = null;
         } else if (stack.getCount() <= count) {
@@ -61,12 +61,12 @@ public class VillagerInventory_v1_7<I> implements IInventory_v1_7<I> {
     }
 
     @Override
-    public LegacyItemStack<I> getStack(int slotId) {
+    public S getStack(int slotId) {
         return this.stacks[slotId];
     }
 
     @Override
-    public void setStack(int slotId, LegacyItemStack<I> stack) {
+    public void setStack(int slotId, S stack) {
         this.stacks[slotId] = stack;
         if (stack != null && stack.getCount() > 64) stack.setCount(64);
         if (slotId == 0 || slotId == 1) this.onUpdate();
@@ -74,8 +74,8 @@ public class VillagerInventory_v1_7<I> implements IInventory_v1_7<I> {
 
     @Override
     public void onUpdate() {
-        LegacyItemStack<I> stack1 = this.stacks[0];
-        LegacyItemStack<I> stack2 = this.stacks[1];
+        S stack1 = this.stacks[0];
+        S stack2 = this.stacks[1];
         if (stack1 == null) {
             stack1 = stack2;
             stack2 = null;
@@ -85,7 +85,7 @@ public class VillagerInventory_v1_7<I> implements IInventory_v1_7<I> {
             return;
         }
 
-        VillagerRecipe<I, LegacyItemStack<I>> recipe = this.getUsableRecipe(stack1, stack2);
+        VillagerRecipe<I, S> recipe = this.getUsableRecipe(stack1, stack2);
         if (recipe != null && recipe.isEnabled()) {
             this.currentRecipe = recipe;
             this.setStack(2, recipe.getOutput().copy());
@@ -102,19 +102,19 @@ public class VillagerInventory_v1_7<I> implements IInventory_v1_7<I> {
         }
     }
 
-    private VillagerRecipe<I, LegacyItemStack<I>> getUsableRecipe(final LegacyItemStack<I> stack1, final LegacyItemStack<I> stack2) {
+    private VillagerRecipe<I, S> getUsableRecipe(final S stack1, final S stack2) {
         if (this.currentRecipeIndex > 0 && this.currentRecipeIndex < this.recipeRegistry.getVillagerRecipes().size()) {
-            VillagerRecipe<I, LegacyItemStack<I>> recipe = this.recipeRegistry.getVillagerRecipes().get(this.currentRecipeIndex);
+            VillagerRecipe<I, S> recipe = this.recipeRegistry.getVillagerRecipes().get(this.currentRecipeIndex);
             if (this.isUsableRecipe(recipe, stack1, stack2)) return recipe;
             else return null;
         }
-        for (VillagerRecipe<I, LegacyItemStack<I>> recipe : this.recipeRegistry.getVillagerRecipes()) {
+        for (VillagerRecipe<I, S> recipe : this.recipeRegistry.getVillagerRecipes()) {
             if (this.isUsableRecipe(recipe, stack1, stack2)) return recipe;
         }
         return null;
     }
 
-    private boolean isUsableRecipe(final VillagerRecipe<I, LegacyItemStack<I>> recipe, final LegacyItemStack<I> stack1, final LegacyItemStack<I> stack2) {
+    private boolean isUsableRecipe(final VillagerRecipe<I, S> recipe, final S stack1, final S stack2) {
         if (!stack1.getItem().equals(recipe.getInput1().getItem())) return false;
         if (stack1.getCount() < recipe.getInput1().getCount()) return false;
         if (recipe.hasInput2()) {

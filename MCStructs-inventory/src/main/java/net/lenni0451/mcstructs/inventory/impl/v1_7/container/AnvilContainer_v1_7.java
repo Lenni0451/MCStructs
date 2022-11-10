@@ -9,10 +9,10 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingResultInven
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.SimpleInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.slots.AnvilResultSlot_v1_7;
+import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.info.ItemMeta;
 import net.lenni0451.mcstructs.items.info.ItemTag;
 import net.lenni0451.mcstructs.items.info.ItemType;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
 import net.lenni0451.mcstructs.nbt.tags.ListNbt;
@@ -20,12 +20,12 @@ import net.lenni0451.mcstructs.nbt.tags.ListNbt;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
+public class AnvilContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
 
-    private final InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder;
-    private final EnchantmentRegistry<I, LegacyItemStack<I>> enchantmentRegistry;
-    private final SimpleInventory_v1_7<I> inputSlots;
-    private final CraftingResultInventory_v1_7<I> outputSlot;
+    private final InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder;
+    private final EnchantmentRegistry<I, S> enchantmentRegistry;
+    private final SimpleInventory_v1_7<I, S> inputSlots;
+    private final CraftingResultInventory_v1_7<I, S> outputSlot;
     /**
      * The amount of xp needed to repair the item
      */
@@ -36,17 +36,19 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
     private int repairStackCount;
     private String repairItemName;
 
-    public AnvilContainer_v1_7(final int windowId, final InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, final EnchantmentRegistry<I, LegacyItemStack<I>> enchantmentRegistry) {
+    public AnvilContainer_v1_7(final int windowId, final InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, final EnchantmentRegistry<I, S> enchantmentRegistry) {
         super(windowId);
         this.inventoryHolder = inventoryHolder;
         this.enchantmentRegistry = enchantmentRegistry;
-        this.inputSlots = new SimpleInventory_v1_7<I>(2) {
+        this.inputSlots = new SimpleInventory_v1_7<I, S>(2) {
             @Override
             public void onUpdate() {
                 AnvilContainer_v1_7.this.refresh();
             }
         };
         this.outputSlot = new CraftingResultInventory_v1_7<>();
+
+        this.initSlots();
     }
 
     @Override
@@ -58,19 +60,19 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
         for (int i = 0; i < 9; i++) this.addSlot(this.inventoryHolder.getPlayerInventory(), i, Slot.acceptAll());
     }
 
-    public InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> getInventoryHolder() {
+    public InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> getInventoryHolder() {
         return this.inventoryHolder;
     }
 
-    public EnchantmentRegistry<I, LegacyItemStack<I>> getEnchantmentRegistry() {
+    public EnchantmentRegistry<I, S> getEnchantmentRegistry() {
         return this.enchantmentRegistry;
     }
 
-    public SimpleInventory_v1_7<I> getInputSlots() {
+    public SimpleInventory_v1_7<I, S> getInputSlots() {
         return this.inputSlots;
     }
 
-    public CraftingResultInventory_v1_7<I> getOutputSlot() {
+    public CraftingResultInventory_v1_7<I, S> getOutputSlot() {
         return this.outputSlot;
     }
 
@@ -97,7 +99,7 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
     public void setRepairItemName(final String repairItemName) {
         this.repairItemName = repairItemName;
         if (this.getSlot(2).getStack() != null) {
-            LegacyItemStack<I> stack = this.getSlot(2).getStack();
+            S stack = this.getSlot(2).getStack();
             if (repairItemName == null || repairItemName.isEmpty()) stack.removeCustomName();
             else stack.setCustomName(repairItemName);
         }
@@ -105,12 +107,12 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
     }
 
     @Override
-    protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
+        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
-        LegacyItemStack<I> slotStack = slot.getStack();
-        LegacyItemStack<I> out = slotStack.copy();
+        S slotStack = slot.getStack();
+        S out = slotStack.copy();
         if (slotId == 2) {
             if (!this.mergeStack(slotStack, 3, 39, true)) return null;
         } else if (slotId != 0 && slotId != 1) {
@@ -134,15 +136,15 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
     }
 
     private void refresh() {
-        LegacyItemStack<I> stack1 = this.inputSlots.getStack(0);
+        S stack1 = this.inputSlots.getStack(0);
         this.repairCost = 0;
         if (stack1 == null) {
             this.outputSlot.setStack(0, null);
             return;
         }
 
-        LegacyItemStack<I> out = stack1.copy();
-        LegacyItemStack<I> stack2 = this.inputSlots.getStack(1);
+        S out = stack1.copy();
+        S stack2 = this.inputSlots.getStack(1);
         Map<Enchantment, Short> stack1Enchantments = this.getEnchantments(stack1);
         boolean isEnchantedBook = false;
         int additionalRepairCost = 0;
@@ -283,7 +285,7 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
         }
     }
 
-    private Map<Enchantment, Short> getEnchantments(final LegacyItemStack<I> stack) {
+    private Map<Enchantment, Short> getEnchantments(final S stack) {
         Map<Enchantment, Short> enchantments = new HashMap<>();
         if (!stack.hasTag()) return enchantments;
 
@@ -306,7 +308,7 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
         return enchantments;
     }
 
-    private void setEnchantments(final LegacyItemStack<I> stack, final Map<Enchantment, Short> enchantments) {
+    private void setEnchantments(final S stack, final Map<Enchantment, Short> enchantments) {
         boolean isEnchantedBook = stack.getMeta().types().contains(ItemType.ENCHANTED_BOOK);
         ListNbt<CompoundNbt> ench = new ListNbt<>();
         for (Map.Entry<Enchantment, Short> entry : enchantments.entrySet()) {
@@ -324,7 +326,7 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
         }
     }
 
-    private void addBookEnchantment(final LegacyItemStack<I> stack, final Enchantment enchantment, final int level) {
+    private void addBookEnchantment(final S stack, final Enchantment enchantment, final int level) {
         if (!stack.getOrCreateTag().contains("StoredEnchantments", NbtType.LIST)) stack.getTag().addList("StoredEnchantments");
         ListNbt<CompoundNbt> storedEnchantments = stack.getTag().getList("StoredEnchantments", NbtType.COMPOUND);
         boolean hasEnchantment = false;
@@ -344,7 +346,7 @@ public class AnvilContainer_v1_7<I> extends AContainer_v1_7<I> {
         }
     }
 
-    private I getRepairItem(final LegacyItemStack<I> stack) {
+    private I getRepairItem(final S stack) {
         ItemMeta meta = stack.getMeta();
         if (!ItemType.isArmor(meta.types())) return null;
         if (!ItemType.isTool(meta.types())) return null;

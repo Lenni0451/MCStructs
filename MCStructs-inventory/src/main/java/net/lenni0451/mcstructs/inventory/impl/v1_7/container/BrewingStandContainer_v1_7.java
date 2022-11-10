@@ -5,21 +5,23 @@ import net.lenni0451.mcstructs.inventory.Slot;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.BrewingStandInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
+import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.info.ItemTag;
 import net.lenni0451.mcstructs.items.info.ItemType;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
 import java.util.List;
 
-public class BrewingStandContainer_v1_7<I> extends AContainer_v1_7<I> {
+public class BrewingStandContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
 
-    private final PlayerInventory_v1_7<I> playerInventory;
-    private final BrewingStandInventory_v1_7<I> brewingStandInventory;
+    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final BrewingStandInventory_v1_7<I, S> brewingStandInventory;
 
-    public BrewingStandContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory) {
+    public BrewingStandContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.brewingStandInventory = new BrewingStandInventory_v1_7<>();
+
+        this.initSlots();
     }
 
     @Override
@@ -32,21 +34,21 @@ public class BrewingStandContainer_v1_7<I> extends AContainer_v1_7<I> {
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I> getPlayerInventory() {
+    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
         return this.playerInventory;
     }
 
-    public BrewingStandInventory_v1_7<I> getBrewingStandInventory() {
+    public BrewingStandInventory_v1_7<I, S> getBrewingStandInventory() {
         return this.brewingStandInventory;
     }
 
     @Override
-    protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
+        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
-        LegacyItemStack<I> slotStack = slot.getStack();
-        LegacyItemStack<I> out = slotStack.copy();
+        S slotStack = slot.getStack();
+        S out = slotStack.copy();
         if ((slotId < 0 || slotId > 2) && slotId != 3) {
             if (this.getSlot(3).getStack() == null && this.isIngredient(slotStack)) {
                 if (!this.mergeStack(slotStack, 3, 4, false)) return null;
@@ -73,7 +75,7 @@ public class BrewingStandContainer_v1_7<I> extends AContainer_v1_7<I> {
         return types.contains(ItemType.BOTTLE) || types.contains(ItemType.WATER_BUCKET) || types.contains(ItemType.POTION) || types.contains(ItemType.SPLASH_POTION);
     }
 
-    private boolean isIngredient(final LegacyItemStack<I> stack) {
+    private boolean isIngredient(final S stack) {
         if (stack.getMeta().types().contains(ItemType.FISH) && stack.getDamage() == 3) return true;
         return stack.getMeta().tags().contains(ItemTag.POTION_INGREDIENT);
     }

@@ -5,22 +5,24 @@ import net.lenni0451.mcstructs.inventory.Slot;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.SimpleInventory_v1_7;
+import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.info.ItemType;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
-public class HorseContainer_v1_7<I> extends AContainer_v1_7<I> {
+public class HorseContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
 
-    private final PlayerInventory_v1_7<I> playerInventory;
-    private final SimpleInventory_v1_7<I> horseInventory;
+    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final SimpleInventory_v1_7<I, S> horseInventory;
     private final boolean hasChest;
     private final boolean isHorse;
 
-    public HorseContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final int size, final boolean hasChest, final boolean isHorse) {
+    public HorseContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory, final int size, final boolean hasChest, final boolean isHorse) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.horseInventory = new SimpleInventory_v1_7<>(size);
         this.hasChest = hasChest;
         this.isHorse = isHorse;
+
+        this.initSlots();
     }
 
     @Override
@@ -40,11 +42,11 @@ public class HorseContainer_v1_7<I> extends AContainer_v1_7<I> {
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I> getPlayerInventory() {
+    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
         return this.playerInventory;
     }
 
-    public SimpleInventory_v1_7<I> getHorseInventory() {
+    public SimpleInventory_v1_7<I, S> getHorseInventory() {
         return this.horseInventory;
     }
 
@@ -57,12 +59,12 @@ public class HorseContainer_v1_7<I> extends AContainer_v1_7<I> {
     }
 
     @Override
-    protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
+        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
-        LegacyItemStack<I> slotStack = slot.getStack();
-        LegacyItemStack<I> out = slotStack.copy();
+        S slotStack = slot.getStack();
+        S out = slotStack.copy();
         if (slotId < this.horseInventory.getSize()) {
             if (!this.mergeStack(slotStack, this.horseInventory.getSize(), this.getSlotCount(), true)) return null;
         } else if (this.getSlot(1).accepts(slotStack) && this.getSlot(1).getStack() == null) {

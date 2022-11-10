@@ -1,10 +1,10 @@
 package net.lenni0451.mcstructs.inventory.impl.v1_7;
 
 import net.lenni0451.mcstructs.inventory.types.IInventory;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
+import net.lenni0451.mcstructs.items.AItemStack;
 
-public interface IInventory_v1_7<I> extends IInventory<I, LegacyItemStack<I>> {
+public interface IInventory_v1_7<I, S extends AItemStack<I, S>> extends IInventory<I, S> {
 
-    LegacyItemStack<I> split(final int slotId, final int count);
+    S split(final int slotId, final int count);
 
 }

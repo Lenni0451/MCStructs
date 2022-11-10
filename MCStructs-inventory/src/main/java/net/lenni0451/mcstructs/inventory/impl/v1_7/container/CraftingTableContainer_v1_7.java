@@ -10,21 +10,24 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.slots.CraftingResultSlot_v1_7
 import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
 import net.lenni0451.mcstructs.inventory.types.ICraftingContainer;
 import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
+import net.lenni0451.mcstructs.items.AItemStack;
 
-public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implements ICraftingContainer<I, LegacyItemStack<I>> {
+public class CraftingTableContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> implements ICraftingContainer<I, S> {
 
-    private final PlayerInventory_v1_7<I> playerInventory;
-    private final CraftingInventory_v1_7<I> craftingInventory;
-    private final CraftingResultInventory_v1_7<I> craftingResultInventory;
-    private final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry;
+    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final CraftingInventory_v1_7<I, S> craftingInventory;
+    private final CraftingResultInventory_v1_7<I, S> craftingResultInventory;
+    private final ARecipeRegistry<I, S> recipeRegistry;
 
-    public CraftingTableContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry) {
+    public CraftingTableContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory, final ARecipeRegistry<I, S> recipeRegistry) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.craftingInventory = new CraftingInventory_v1_7<>(this, 3, 3);
         this.craftingResultInventory = new CraftingResultInventory_v1_7<>();
         this.recipeRegistry = recipeRegistry;
+
+        this.initSlots();
+        this.craftingUpdate(this.craftingInventory);
     }
 
     @Override
@@ -33,28 +36,26 @@ public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implement
         for (int i = 0; i < this.craftingInventory.getSize(); i++) this.addSlot(this.craftingInventory, i, Slot.acceptAll());
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
-
-        this.craftingUpdate(this.craftingInventory);
     }
 
-    public PlayerInventory_v1_7<I> getPlayerInventory() {
+    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
         return this.playerInventory;
     }
 
-    public CraftingInventory_v1_7<I> getCraftingInventory() {
+    public CraftingInventory_v1_7<I, S> getCraftingInventory() {
         return this.craftingInventory;
     }
 
-    public CraftingResultInventory_v1_7<I> getCraftingResultInventory() {
+    public CraftingResultInventory_v1_7<I, S> getCraftingResultInventory() {
         return this.craftingResultInventory;
     }
 
-    public ARecipeRegistry<I, LegacyItemStack<I>> getRecipeRegistry() {
+    public ARecipeRegistry<I, S> getRecipeRegistry() {
         return this.recipeRegistry;
     }
 
     @Override
-    public void craftingUpdate(ICraftingInventory<I, LegacyItemStack<I>> craftingInventory) {
+    public void craftingUpdate(ICraftingInventory<I, S> craftingInventory) {
         this.craftingResultInventory.setStack(0, this.recipeRegistry.findCraftingRecipe(craftingInventory));
     }
 
@@ -65,12 +66,12 @@ public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implement
     }
 
     @Override
-    protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
+        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
-        LegacyItemStack<I> slotStack = slot.getStack();
-        LegacyItemStack<I> out = slotStack.copy();
+        S slotStack = slot.getStack();
+        S out = slotStack.copy();
         if (slotId == 0) {
             if (!this.mergeStack(slotStack, 10, 46, true)) return null;
         } else if (slotId >= 10 && slotId <= 36) {
@@ -88,7 +89,7 @@ public class CraftingTableContainer_v1_7<I> extends AContainer_v1_7<I> implement
     }
 
     @Override
-    protected boolean canTakeAll(Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot, LegacyItemStack<I> stack) {
+    protected boolean canTakeAll(Slot<PlayerInventory_v1_7<I, S>, I, S> slot, S stack) {
         return !slot.getInventory().equals(this.craftingResultInventory);
     }
 

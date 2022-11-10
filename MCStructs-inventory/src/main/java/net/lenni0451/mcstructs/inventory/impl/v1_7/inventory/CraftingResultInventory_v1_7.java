@@ -1,11 +1,11 @@
 package net.lenni0451.mcstructs.inventory.impl.v1_7.inventory;
 
 import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
+import net.lenni0451.mcstructs.items.AItemStack;
 
-public class CraftingResultInventory_v1_7<I> implements IInventory_v1_7<I> {
+public class CraftingResultInventory_v1_7<I, S extends AItemStack<I, S>> implements IInventory_v1_7<I, S> {
 
-    private LegacyItemStack<I> result;
+    private S result;
 
     @Override
     public int getSize() {
@@ -13,20 +13,20 @@ public class CraftingResultInventory_v1_7<I> implements IInventory_v1_7<I> {
     }
 
     @Override
-    public LegacyItemStack<I> getStack(int slotId) {
+    public S getStack(int slotId) {
         return this.result;
     }
 
     @Override
-    public void setStack(int slotId, LegacyItemStack<I> stack) {
+    public void setStack(int slotId, S stack) {
         this.result = stack;
     }
 
     @Override
-    public LegacyItemStack<I> split(int slotId, int count) {
+    public S split(int slotId, int count) {
         if (this.result == null) return null;
 
-        LegacyItemStack<I> stack = this.result;
+        S stack = this.result;
         this.result = null;
         return stack;
     }

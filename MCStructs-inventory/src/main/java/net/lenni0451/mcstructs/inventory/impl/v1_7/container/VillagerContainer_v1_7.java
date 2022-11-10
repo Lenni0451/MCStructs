@@ -7,19 +7,21 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.VillagerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.slots.VillagerResultSlot_v1_7;
 import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
+import net.lenni0451.mcstructs.items.AItemStack;
 
-public class VillagerContainer_v1_7<I> extends AContainer_v1_7<I> {
+public class VillagerContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
 
-    private final PlayerInventory_v1_7<I> playerInventory;
-    private final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry;
-    private final VillagerInventory_v1_7<I> villagerInventory;
+    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final ARecipeRegistry<I, S> recipeRegistry;
+    private final VillagerInventory_v1_7<I, S> villagerInventory;
 
-    public VillagerContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry) {
+    public VillagerContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory, final ARecipeRegistry<I, S> recipeRegistry) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.recipeRegistry = recipeRegistry;
         this.villagerInventory = new VillagerInventory_v1_7<>(this.recipeRegistry);
+
+        this.initSlots();
     }
 
     @Override
@@ -31,25 +33,25 @@ public class VillagerContainer_v1_7<I> extends AContainer_v1_7<I> {
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I> getPlayerInventory() {
+    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
         return this.playerInventory;
     }
 
-    public ARecipeRegistry<I, LegacyItemStack<I>> getRecipeRegistry() {
+    public ARecipeRegistry<I, S> getRecipeRegistry() {
         return this.recipeRegistry;
     }
 
-    public VillagerInventory_v1_7<I> getVillagerInventory() {
+    public VillagerInventory_v1_7<I, S> getVillagerInventory() {
         return this.villagerInventory;
     }
 
     @Override
-    protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
+        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
-        LegacyItemStack<I> slotStack = slot.getStack();
-        LegacyItemStack<I> out = slotStack.copy();
+        S slotStack = slot.getStack();
+        S out = slotStack.copy();
         if (slotId == 2) {
             if (!this.mergeStack(slotStack, 3, 39, true)) return null;
         } else if (slotId != 0 && slotId != 1) {

@@ -6,20 +6,22 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.FurnaceInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
+import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.info.ItemTag;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
-public class FurnaceContainer_v1_7<I> extends AContainer_v1_7<I> {
+public class FurnaceContainer_v1_7<I, S extends AItemStack<I, S>> extends AContainer_v1_7<I, S> {
 
-    private final PlayerInventory_v1_7<I> playerInventory;
-    private final FurnaceInventory_v1_7<I> furnaceInventory;
-    private final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry;
+    private final PlayerInventory_v1_7<I, S> playerInventory;
+    private final FurnaceInventory_v1_7<I, S> furnaceInventory;
+    private final ARecipeRegistry<I, S> recipeRegistry;
 
-    public FurnaceContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I> playerInventory, final ARecipeRegistry<I, LegacyItemStack<I>> recipeRegistry) {
+    public FurnaceContainer_v1_7(final int windowId, final PlayerInventory_v1_7<I, S> playerInventory, final ARecipeRegistry<I, S> recipeRegistry) {
         super(windowId);
         this.playerInventory = playerInventory;
         this.furnaceInventory = new FurnaceInventory_v1_7<>();
         this.recipeRegistry = recipeRegistry;
+
+        this.initSlots();
     }
 
     @Override
@@ -31,25 +33,25 @@ public class FurnaceContainer_v1_7<I> extends AContainer_v1_7<I> {
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
 
-    public PlayerInventory_v1_7<I> getPlayerInventory() {
+    public PlayerInventory_v1_7<I, S> getPlayerInventory() {
         return this.playerInventory;
     }
 
-    public FurnaceInventory_v1_7<I> getFurnaceInventory() {
+    public FurnaceInventory_v1_7<I, S> getFurnaceInventory() {
         return this.furnaceInventory;
     }
 
-    public ARecipeRegistry<I, LegacyItemStack<I>> getRecipeRegistry() {
+    public ARecipeRegistry<I, S> getRecipeRegistry() {
         return this.recipeRegistry;
     }
 
     @Override
-    protected LegacyItemStack<I> moveStack(InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, int slotId) {
-        Slot<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> slot = this.getSlot(slotId);
+    protected S moveStack(InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, int slotId) {
+        Slot<PlayerInventory_v1_7<I, S>, I, S> slot = this.getSlot(slotId);
         if (slot == null || slot.getStack() == null) return null;
 
-        LegacyItemStack<I> slotStack = slot.getStack();
-        LegacyItemStack<I> out = slotStack.copy();
+        S slotStack = slot.getStack();
+        S out = slotStack.copy();
         if (slotId == 2) {
             if (!this.mergeStack(slotStack, 3, 39, true)) return null;
         } else if (slotId != 0 && slotId != 1) {

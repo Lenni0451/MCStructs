@@ -2,38 +2,38 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.inventory;
 
 import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
+import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.info.ItemTag;
-import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 
-public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
+public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInventory_v1_7<I, S> {
 
     /**
      * Slots 0 - 8: hotbar<br>
      * Slots 9 - 35: upper inventory<br>
      */
-    private final LegacyItemStack<I>[] main = new LegacyItemStack[36];
+    private final S[] main = (S[]) new AItemStack[36];
     /**
      * Slot 0: boots<br>
      * Slot 1: leggings<br>
      * Slot 2: chestplate<br>
      * Slot 3: helmet
      */
-    private final LegacyItemStack<I>[] armor = new LegacyItemStack[4];
-    private LegacyItemStack<I> cursorStack;
+    private final S[] armor = (S[]) new AItemStack[4];
+    private S cursorStack;
 
-    public LegacyItemStack<I>[] getMain() {
+    public S[] getMain() {
         return this.main;
     }
 
-    public LegacyItemStack<I>[] getArmor() {
+    public S[] getArmor() {
         return this.armor;
     }
 
-    public LegacyItemStack<I> getCursorStack() {
+    public S getCursorStack() {
         return this.cursorStack;
     }
 
-    public void setCursorStack(final LegacyItemStack<I> cursorItem) {
+    public void setCursorStack(final S cursorItem) {
         this.cursorStack = cursorItem;
     }
 
@@ -44,7 +44,7 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
         return -1;
     }
 
-    public boolean addStack(final InventoryHolder<PlayerInventory_v1_7<I>, I, LegacyItemStack<I>> inventoryHolder, LegacyItemStack<I> stack) {
+    public boolean addStack(final InventoryHolder<PlayerInventory_v1_7<I, S>, I, S> inventoryHolder, S stack) {
         if (stack == null || stack.getCount() == 0 || stack.getItem() == null) return false;
         if (stack.getMeta().tags().contains(ItemTag.DAMAGEABLE) && stack.getDamage() > 0) {
             int emptySlot = this.getEmptySlot();
@@ -73,7 +73,7 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
         }
     }
 
-    private int addItems(final LegacyItemStack<I> stack) {
+    private int addItems(final S stack) {
         int count = stack.getCount();
         if (stack.getMeta().maxCount() == 1) {
             int emptySlot = this.getEmptySlot();
@@ -97,9 +97,9 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
         }
     }
 
-    private int getMatchingSlot(final LegacyItemStack<I> stack) {
+    private int getMatchingSlot(final S stack) {
         for (int i = 0; i < this.main.length; i++) {
-            LegacyItemStack<I> inventoryStack = this.main[i];
+            S inventoryStack = this.main[i];
             if (inventoryStack != null && inventoryStack.getItem().equals(stack.getItem()) && inventoryStack.getMeta().maxCount() > 1 && inventoryStack.getCount() < inventoryStack.getMeta().maxCount() && (!inventoryStack.getMeta().tags().contains(ItemTag.SUBTYPES) || inventoryStack.getDamage() == stack.getDamage()) && inventoryStack.getTag().equals(stack.getTag())) {
                 return i;
             }
@@ -113,27 +113,27 @@ public class PlayerInventory_v1_7<I> implements IInventory_v1_7<I> {
     }
 
     @Override
-    public LegacyItemStack<I> getStack(int slotId) {
+    public S getStack(int slotId) {
         if (slotId >= this.main.length) return this.armor[slotId - this.main.length];
         else return this.main[slotId];
     }
 
     @Override
-    public void setStack(int slotId, LegacyItemStack<I> stack) {
+    public void setStack(int slotId, S stack) {
         if (slotId >= this.main.length) this.armor[slotId - this.main.length] = stack;
         else this.main[slotId] = stack;
     }
 
     @Override
-    public LegacyItemStack<I> split(int slotId, int count) {
-        LegacyItemStack<I>[] stacks = this.main;
+    public S split(int slotId, int count) {
+        S[] stacks = this.main;
         if (slotId >= this.main.length) {
             stacks = this.armor;
             slotId -= this.main.length;
         }
         if (stacks[slotId] == null) return null;
 
-        LegacyItemStack<I> stack = stacks[slotId];
+        S stack = stacks[slotId];
         if (stacks[slotId].getCount() <= count) {
             stacks[slotId] = null;
         } else {
