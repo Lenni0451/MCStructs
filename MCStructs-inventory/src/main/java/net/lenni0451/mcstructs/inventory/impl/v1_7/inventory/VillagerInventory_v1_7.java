@@ -68,7 +68,7 @@ public class VillagerInventory_v1_7<I, S extends AItemStack<I, S>> implements II
     @Override
     public void setStack(int slotId, S stack) {
         this.stacks[slotId] = stack;
-        if (stack != null && stack.getCount() > 64) stack.setCount(64);
+        if (stack != null && stack.getCount() > this.maxStackCount()) stack.setCount(this.maxStackCount());
         if (slotId == 0 || slotId == 1) this.onUpdate();
     }
 

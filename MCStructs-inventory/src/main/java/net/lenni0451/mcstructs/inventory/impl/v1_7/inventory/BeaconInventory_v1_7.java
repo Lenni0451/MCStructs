@@ -8,6 +8,11 @@ public class BeaconInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
     private S stack;
 
     @Override
+    public int maxStackCount() {
+        return 1;
+    }
+
+    @Override
     public S split(int slotId, int count) {
         if (slotId != 0 || this.stack == null) return null;
 

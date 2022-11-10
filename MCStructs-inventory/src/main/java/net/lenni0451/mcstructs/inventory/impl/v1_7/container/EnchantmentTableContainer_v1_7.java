@@ -17,7 +17,7 @@ public class EnchantmentTableContainer_v1_7<T extends PlayerInventory_v1_7<I, S>
         this.playerInventory = playerInventory;
         this.enchantmentInventory = new SimpleInventory_v1_7<I, S>(1) {
             @Override
-            protected int getMaxCount() {
+            public int maxStackCount() {
                 return 1;
             }
         };

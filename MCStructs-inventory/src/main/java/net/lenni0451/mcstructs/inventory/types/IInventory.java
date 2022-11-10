@@ -10,6 +10,10 @@ public interface IInventory<I, S extends AItemStack<I, S>> {
 
     void setStack(final int slotId, final S stack);
 
+    default int maxStackCount() {
+        return 64;
+    }
+
     default void onUpdate() {
     }
 

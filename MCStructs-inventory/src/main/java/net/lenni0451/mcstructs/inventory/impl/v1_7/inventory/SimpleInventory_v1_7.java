@@ -15,10 +15,6 @@ public class SimpleInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
         return this.stacks;
     }
 
-    protected int getMaxCount() {
-        return 64;
-    }
-
     @Override
     public S split(int slotId, int count) {
         if (this.stacks[slotId] == null) return null;
@@ -49,7 +45,7 @@ public class SimpleInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
     @Override
     public void setStack(int slotId, S stack) {
         this.stacks[slotId] = stack;
-        if (stack != null && stack.getCount() > this.getMaxCount()) stack.setCount(this.getMaxCount());
+        if (stack != null && stack.getCount() > this.maxStackCount()) stack.setCount(this.maxStackCount());
         this.onUpdate();
     }
 

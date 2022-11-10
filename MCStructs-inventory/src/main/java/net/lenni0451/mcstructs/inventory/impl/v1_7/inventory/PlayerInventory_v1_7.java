@@ -89,7 +89,7 @@ public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
                 this.main[matchingSlot].setCount(0);
             }
             int freeSpace = Math.min(count, this.main[matchingSlot].getMeta().maxCount() - this.main[matchingSlot].getCount());
-            if (freeSpace > 64 - this.main[matchingSlot].getCount()) freeSpace = 64 - this.main[matchingSlot].getCount();
+            if (freeSpace > this.maxStackCount() - this.main[matchingSlot].getCount()) freeSpace = this.maxStackCount() - this.main[matchingSlot].getCount();
             if (freeSpace == 0) return count;
             count -= freeSpace;
             this.main[matchingSlot].setCount(this.main[matchingSlot].getCount() + freeSpace);
@@ -100,7 +100,7 @@ public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
     private int getMatchingSlot(final S stack) {
         for (int i = 0; i < this.main.length; i++) {
             S inventoryStack = this.main[i];
-            if (inventoryStack != null && inventoryStack.getItem().equals(stack.getItem()) && inventoryStack.getMeta().maxCount() > 1 && inventoryStack.getCount() < inventoryStack.getMeta().maxCount() && (!inventoryStack.getMeta().tags().contains(ItemTag.SUBTYPES) || inventoryStack.getDamage() == stack.getDamage()) && inventoryStack.getTag().equals(stack.getTag())) {
+            if (inventoryStack != null && inventoryStack.getItem().equals(stack.getItem()) && inventoryStack.getMeta().maxCount() > 1 && inventoryStack.getCount() < this.maxStackCount() && (!inventoryStack.getMeta().tags().contains(ItemTag.SUBTYPES) || inventoryStack.getDamage() == stack.getDamage()) && inventoryStack.getTag().equals(stack.getTag())) {
                 return i;
             }
         }

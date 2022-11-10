@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
 
     public static <T extends IInventory<I, S>, I, S extends AItemStack<I, S>> BiFunction<Slot<T, I, S>, S, Integer> acceptAll() {
-        return accept(64);
+        return null;
     }
 
     public static <T extends IInventory<I, S>, I, S extends AItemStack<I, S>> BiFunction<Slot<T, I, S>, S, Integer> acceptNone() {
@@ -18,7 +18,7 @@ public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
     }
 
     public static <T extends IInventory<I, S>, I, S extends AItemStack<I, S>> BiFunction<Slot<T, I, S>, S, Integer> accept(final int count) {
-        return (slot, stack) -> Math.min(stack.getMeta().maxCount(), count);
+        return (slot, stack) -> count;
     }
 
     public static <T extends IInventory<I, S>, I, S extends AItemStack<I, S>> BiFunction<Slot<T, I, S>, S, Integer> acceptTypes(final ItemType... types) {
@@ -28,7 +28,7 @@ public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
     public static <T extends IInventory<I, S>, I, S extends AItemStack<I, S>> BiFunction<Slot<T, I, S>, S, Integer> acceptTypes(final int maxCount, final ItemType... types) {
         return (slot, stack) -> {
             for (ItemType type : types) {
-                if (stack.getMeta().types().contains(type)) return Math.min(stack.getMeta().maxCount(), maxCount);
+                if (stack.getMeta().types().contains(type)) return maxCount;
             }
             return 0;
         };
@@ -41,7 +41,7 @@ public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
     public static <T extends IInventory<I, S>, I, S extends AItemStack<I, S>> BiFunction<Slot<T, I, S>, S, Integer> acceptTags(final int maxCount, final ItemTag... tags) {
         return (slot, stack) -> {
             for (ItemTag tag : tags) {
-                if (stack.getMeta().tags().contains(tag)) return Math.min(stack.getMeta().maxCount(), maxCount);
+                if (stack.getMeta().tags().contains(tag)) return maxCount;
             }
             return 0;
         };
@@ -86,7 +86,8 @@ public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
     }
 
     public int acceptsCount(final S stack) {
-        return this.acceptor.apply(this, stack);
+        if (this.acceptor == null) return this.inventory.maxStackCount();
+        else return this.acceptor.apply(this, stack);
     }
 
     public boolean canTake(final InventoryHolder<T, I, S> inventoryHolder) {

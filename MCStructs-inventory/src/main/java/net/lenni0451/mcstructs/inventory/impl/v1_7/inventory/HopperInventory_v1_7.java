@@ -38,7 +38,7 @@ public class HopperInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
     @Override
     public void setStack(int slotId, S stack) {
         this.stacks[slotId] = stack;
-        if (stack != null && stack.getCount() > 64) stack.setCount(64);
+        if (stack != null && stack.getCount() > this.maxStackCount()) stack.setCount(this.maxStackCount());
     }
 
 }
