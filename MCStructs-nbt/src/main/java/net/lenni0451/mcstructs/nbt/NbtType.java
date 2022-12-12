@@ -1,27 +1,27 @@
 package net.lenni0451.mcstructs.nbt;
 
-import net.lenni0451.mcstructs.core.UnsafeUtils;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public enum NbtType {
 
-    END(0, null, null),
-    BYTE(1, ByteNbt.class, byte.class),
-    SHORT(2, ShortNbt.class, short.class),
-    INT(3, IntNbt.class, int.class),
-    LONG(4, LongNbt.class, long.class),
-    FLOAT(5, FloatNbt.class, float.class),
-    DOUBLE(6, DoubleNbt.class, double.class),
-    BYTE_ARRAY(7, ByteArrayNbt.class, byte[].class),
-    STRING(8, StringNbt.class, String.class),
-    LIST(9, ListNbt.class, List.class),
-    COMPOUND(10, CompoundNbt.class, Map.class),
-    INT_ARRAY(11, IntArrayNbt.class, int[].class),
-    LONG_ARRAY(12, LongArrayNbt.class, long[].class);
+    END(0, null, () -> null, null),
+    BYTE(1, ByteNbt.class, ByteNbt::new, byte.class),
+    SHORT(2, ShortNbt.class, ShortNbt::new, short.class),
+    INT(3, IntNbt.class, IntNbt::new, int.class),
+    LONG(4, LongNbt.class, LongNbt::new, long.class),
+    FLOAT(5, FloatNbt.class, FloatNbt::new, float.class),
+    DOUBLE(6, DoubleNbt.class, DoubleNbt::new, double.class),
+    BYTE_ARRAY(7, ByteArrayNbt.class, ByteArrayNbt::new, byte[].class),
+    STRING(8, StringNbt.class, StringNbt::new, String.class),
+    LIST(9, ListNbt.class, ListNbt::new, List.class),
+    COMPOUND(10, CompoundNbt.class, CompoundNbt::new, Map.class),
+    INT_ARRAY(11, IntArrayNbt.class, IntArrayNbt::new, int[].class),
+    LONG_ARRAY(12, LongArrayNbt.class, LongArrayNbt::new, long[].class);
 
     public static NbtType byName(final String name) {
         for (NbtType type : NbtType.values()) {
@@ -54,11 +54,13 @@ public enum NbtType {
 
     private final int id;
     private final Class<? extends INbtTag> tagClass;
+    private final Supplier<?> tagSupplier;
     private final Class<?> dataType;
 
-    NbtType(final int id, final Class<? extends INbtTag> tagClass, final Class<?> dataType) {
+    NbtType(final int id, final Class<? extends INbtTag> tagClass, final Supplier<?> tagSupplier, final Class<?> dataType) {
         this.id = id;
         this.tagClass = tagClass;
+        this.tagSupplier = tagSupplier;
         this.dataType = dataType;
     }
 
@@ -72,11 +74,7 @@ public enum NbtType {
 
     public INbtTag newInstance() {
         if (this.tagClass == null) throw new IllegalStateException("Unable to allocate instance of END tag");
-        try {
-            return UnsafeUtils.allocateInstance(this.tagClass);
-        } catch (InstantiationException e) {
-            throw new IllegalStateException("Failed to allocate instance of " + this.tagClass.getSimpleName(), e);
-        }
+        return (INbtTag) this.tagSupplier.get();
     }
 
     public Class<?> getDataType() {
