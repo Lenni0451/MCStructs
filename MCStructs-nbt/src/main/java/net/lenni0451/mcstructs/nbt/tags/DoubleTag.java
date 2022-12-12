@@ -4,56 +4,55 @@ import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 
-public class LongNbt implements INbtNumber {
+public class DoubleTag implements INbtNumber {
 
-    private long value;
+    private double value;
 
-    public LongNbt() {
+    public DoubleTag() {
         this(0);
     }
 
-    public LongNbt(final long value) {
+    public DoubleTag(final double value) {
         this.value = value;
     }
 
-    public long getValue() {
+    public double getValue() {
         return this.value;
     }
 
-    public void setValue(final long value) {
+    public void setValue(final double value) {
         this.value = value;
     }
 
     @Override
     public byte byteValue() {
-        return (byte) (this.value & 0xFF);
+        return (byte) (((int) Math.floor(this.value)) & 0xFF);
     }
 
     @Override
     public short shortValue() {
-        return (byte) (this.value & 0xFFFF);
+        return (byte) (((int) Math.floor(this.value)) & 0xFFFF);
     }
 
     @Override
     public int intValue() {
-        return (int) this.value;
+        return (int) Math.floor(this.value);
     }
 
     @Override
     public long longValue() {
-        return this.value;
+        return (long) Math.floor(this.value);
     }
 
     @Override
     public float floatValue() {
-        return this.value;
+        return (float) this.value;
     }
 
     @Override
@@ -68,31 +67,31 @@ public class LongNbt implements INbtNumber {
 
     @Override
     public NbtType getNbtType() {
-        return NbtType.LONG;
+        return NbtType.DOUBLE;
     }
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
         readTracker.read(128);
-        this.value = in.readLong();
+        this.value = in.readDouble();
     }
 
     @Override
     public void write(DataOutput out) throws IOException {
-        out.writeLong(this.value);
+        out.writeDouble(this.value);
     }
 
     @Override
     public INbtTag copy() {
-        return new LongNbt(this.value);
+        return new DoubleTag(this.value);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LongNbt longNbt = (LongNbt) o;
-        return value == longNbt.value;
+        DoubleTag doubleTag = (DoubleTag) o;
+        return Double.compare(doubleTag.value, value) == 0;
     }
 
     @Override
@@ -102,7 +101,7 @@ public class LongNbt implements INbtNumber {
 
     @Override
     public String toString() {
-        return SNbtSerializer.V1_14.trySerialize(this);
+        return "double(" + this.value + ")";
     }
 
 }

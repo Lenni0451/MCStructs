@@ -3,50 +3,49 @@ package net.lenni0451.mcstructs.nbt.tags;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class IntArrayNbt implements INbtTag {
+public class LongArrayTag implements INbtTag {
 
-    private int[] value;
+    private long[] value;
 
-    public IntArrayNbt() {
-        this(new int[0]);
+    public LongArrayTag() {
+        this(new long[0]);
     }
 
-    public IntArrayNbt(final ListNbt<IntNbt> list) {
-        this.value = new int[list.size()];
+    public LongArrayTag(final ListTag<LongTag> list) {
+        this.value = new long[list.size()];
         for (int i = 0; i < list.size(); i++) this.value[i] = list.get(i).getValue();
     }
 
-    public IntArrayNbt(final int[] value) {
+    public LongArrayTag(final long[] value) {
         this.value = value;
     }
 
-    public int[] getValue() {
+    public long[] getValue() {
         return this.value;
     }
 
-    public void setValue(final int[] value) {
+    public void setValue(long[] value) {
         this.value = value;
     }
 
-    public int get(final int index) {
+    public long get(final int index) {
         return this.value[index];
     }
 
-    public void set(final int index, final int i) {
-        this.value[index] = i;
+    public void set(final int index, final long l) {
+        this.value[index] = l;
     }
 
-    public void add(final int i) {
-        int[] newValue = new int[this.value.length + 1];
+    public void add(final long l) {
+        long[] newValue = new long[this.value.length + 1];
         System.arraycopy(this.value, 0, newValue, 0, this.value.length);
-        newValue[this.value.length] = i;
+        newValue[this.value.length] = l;
         this.value = newValue;
     }
 
@@ -60,34 +59,34 @@ public class IntArrayNbt implements INbtTag {
 
     @Override
     public NbtType getNbtType() {
-        return NbtType.INT_ARRAY;
+        return NbtType.LONG_ARRAY;
     }
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
         readTracker.read(192);
         int length = in.readInt();
-        readTracker.read(32 * length);
-        this.value = new int[length];
-        for (int i = 0; i < this.value.length; i++) this.value[i] = in.readInt();
+        readTracker.read(64 * length);
+        this.value = new long[length];
+        for (int i = 0; i < this.value.length; i++) this.value[i] = in.readLong();
     }
 
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeInt(this.value.length);
-        for (int i : this.value) out.writeInt(i);
+        for (long l : this.value) out.writeLong(l);
     }
 
     @Override
     public INbtTag copy() {
-        return new IntArrayNbt(this.value.clone());
+        return new LongArrayTag(this.value.clone());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IntArrayNbt that = (IntArrayNbt) o;
+        LongArrayTag that = (LongArrayTag) o;
         return Arrays.equals(value, that.value);
     }
 
@@ -98,7 +97,7 @@ public class IntArrayNbt implements INbtTag {
 
     @Override
     public String toString() {
-        return SNbtSerializer.V1_14.trySerialize(this);
+        return "long[" + this.value.length + "](" + this.value + ")";
     }
 
 }

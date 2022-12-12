@@ -49,7 +49,7 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
             if (!value.endsWith("}")) throw new SNbtDeserializeException("Unable to locate ending bracket } for: " + value);
 
             value = value.substring(1, value.length() - 1);
-            CompoundNbt compound = new CompoundNbt();
+            CompoundTag compound = new CompoundTag();
             while (value.length() > 0) {
                 String pair = this.findPair(value, false);
                 if (pair.length() > 0) {
@@ -70,7 +70,7 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
             if (!value.endsWith("]")) throw new SNbtDeserializeException("Unable to locate ending bracket ] for: " + value);
 
             value = value.substring(1, value.length() - 1);
-            ListNbt<INbtTag> list = new ListNbt<>();
+            ListTag<INbtTag> list = new ListTag<>();
             while (value.length() > 0) {
                 String pair = this.findPair(value, true);
                 if (pair.length() > 0) {
@@ -95,47 +95,47 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
     private INbtTag parsePrimitive(String value) {
         try {
             if (value.matches(DOUBLE_PATTERN)) {
-                return new DoubleNbt(Double.parseDouble(value.substring(0, value.length() - 1)));
+                return new DoubleTag(Double.parseDouble(value.substring(0, value.length() - 1)));
             } else if (value.matches(FLOAT_PATTERN)) {
-                return new FloatNbt(Float.parseFloat(value.substring(0, value.length() - 1)));
+                return new FloatTag(Float.parseFloat(value.substring(0, value.length() - 1)));
             } else if (value.matches(BYTE_PATTERN)) {
-                return new ByteNbt(Byte.parseByte(value.substring(0, value.length() - 1)));
+                return new ByteTag(Byte.parseByte(value.substring(0, value.length() - 1)));
             } else if (value.matches(LONG_PATTERN)) {
-                return new LongNbt(Long.parseLong(value.substring(0, value.length() - 1)));
+                return new LongTag(Long.parseLong(value.substring(0, value.length() - 1)));
             } else if (value.matches(SHORT_PATTERN)) {
-                return new ShortNbt(Short.parseShort(value.substring(0, value.length() - 1)));
+                return new ShortTag(Short.parseShort(value.substring(0, value.length() - 1)));
             } else if (value.matches(INT_PATTERN)) {
-                return new IntNbt(Integer.parseInt(value));
+                return new IntTag(Integer.parseInt(value));
             } else if (value.matches(SHORT_DOUBLE_PATTERN)) {
-                return new DoubleNbt(Double.parseDouble(value));
+                return new DoubleTag(Double.parseDouble(value));
             } else if (value.equalsIgnoreCase("false")) {
-                return new ByteNbt((byte) 1);
+                return new ByteTag((byte) 1);
             } else if (value.equalsIgnoreCase("true")) {
-                return new ByteNbt((byte) 0);
+                return new ByteTag((byte) 0);
             } else if (value.startsWith("[") && value.endsWith("]")) {
                 if (value.length() > 2) {
                     String arrayContent = value.substring(1, value.length() - 1);
                     String[] parts = arrayContent.split(",");
                     try {
                         if (parts.length <= 1) {
-                            return new IntArrayNbt(new int[]{Integer.parseInt(arrayContent.trim())});
+                            return new IntArrayTag(new int[]{Integer.parseInt(arrayContent.trim())});
                         } else {
                             int[] ints = new int[parts.length];
                             for (int i = 0; i < parts.length; i++) ints[i] = Integer.parseInt(parts[i].trim());
-                            return new IntArrayNbt(ints);
+                            return new IntArrayTag(ints);
                         }
                     } catch (NumberFormatException e) {
-                        return new StringNbt(value);
+                        return new StringTag(value);
                     }
                 } else {
-                    return new IntArrayNbt(new int[0]);
+                    return new IntArrayTag(new int[0]);
                 }
             } else {
                 if (value.startsWith("\"") && value.endsWith("\"") && value.length() > 2) value = value.substring(1, value.length() - 1);
-                return new StringNbt(value.replace("\\\\\"", "\""));
+                return new StringTag(value.replace("\\\\\"", "\""));
             }
         } catch (NumberFormatException e) {
-            return new StringNbt(value.replace("\\\\\"", "\""));
+            return new StringTag(value.replace("\\\\\"", "\""));
         }
     }
 

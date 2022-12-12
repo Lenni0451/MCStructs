@@ -4,22 +4,21 @@ import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 
-public class FloatNbt implements INbtNumber {
+public class FloatTag implements INbtNumber {
 
     private float value;
 
-    public FloatNbt() {
+    public FloatTag() {
         this(0);
     }
 
-    public FloatNbt(final float value) {
+    public FloatTag(final float value) {
         this.value = value;
     }
 
@@ -84,15 +83,15 @@ public class FloatNbt implements INbtNumber {
 
     @Override
     public INbtTag copy() {
-        return new FloatNbt(this.value);
+        return new FloatTag(this.value);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FloatNbt floatNbt = (FloatNbt) o;
-        return Float.compare(floatNbt.value, value) == 0;
+        FloatTag floatTag = (FloatTag) o;
+        return Float.compare(floatTag.value, value) == 0;
     }
 
     @Override
@@ -102,7 +101,7 @@ public class FloatNbt implements INbtNumber {
 
     @Override
     public String toString() {
-        return SNbtSerializer.V1_14.trySerialize(this);
+        return "float(" + this.value + ")";
     }
 
 }

@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.items.info.ItemTag;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,9 +122,9 @@ public class ArmorColorCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Lega
     private int getColor(final LegacyItemStack<I> stack) {
         if (!ItemType.isArmor(stack.getMeta().types())) return -1;
         if (!stack.getMeta().tags().contains(ItemTag.MATERIAL_LEATHER)) return -1;
-        CompoundNbt tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if (tag == null) return 0xA0_65_40;
-        CompoundNbt display = tag.getCompound("display");
+        CompoundTag display = tag.getCompound("display");
         if (display == null) return 0xA0_65_40;
         if (!display.contains("color", NbtType.INT)) return 0xA0_65_40;
         return display.getInt("color");
@@ -134,9 +134,9 @@ public class ArmorColorCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Lega
         if (!ItemType.isArmor(stack.getMeta().types()) || !stack.getMeta().tags().contains(ItemTag.MATERIAL_LEATHER)) {
             throw new IllegalArgumentException("The given stack is not a leather armor");
         }
-        CompoundNbt tag = stack.getOrCreateTag();
-        if (!tag.contains("display", NbtType.COMPOUND)) tag.add("display", new CompoundNbt());
-        CompoundNbt display = tag.getCompound("display");
+        CompoundTag tag = stack.getOrCreateTag();
+        if (!tag.contains("display", NbtType.COMPOUND)) tag.add("display", new CompoundTag());
+        CompoundTag display = tag.getCompound("display");
         display.addInt("color", color);
     }
 

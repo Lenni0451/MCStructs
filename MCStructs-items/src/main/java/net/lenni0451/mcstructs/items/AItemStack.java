@@ -2,14 +2,14 @@ package net.lenni0451.mcstructs.items;
 
 import net.lenni0451.mcstructs.items.info.ItemMeta;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 
 public abstract class AItemStack<I, S extends AItemStack<I, S>> {
 
     private final ItemRegistry<I, S> registry;
     private final I item;
     private int count = 1;
-    private CompoundNbt tag = null;
+    private CompoundTag tag = null;
 
     public AItemStack(final ItemRegistry<I, S> registry, final I item) {
         this.registry = registry;
@@ -44,21 +44,21 @@ public abstract class AItemStack<I, S extends AItemStack<I, S>> {
 
     public abstract void setDamage(final int damage);
 
-    public CompoundNbt getTag() {
+    public CompoundTag getTag() {
         return this.tag;
     }
 
-    public CompoundNbt copyTag() {
+    public CompoundTag copyTag() {
         if (this.tag == null) return null;
-        return (CompoundNbt) this.tag.copy();
+        return (CompoundTag) this.tag.copy();
     }
 
-    public CompoundNbt getOrCreateTag() {
-        if (this.tag == null) this.tag = new CompoundNbt();
+    public CompoundTag getOrCreateTag() {
+        if (this.tag == null) this.tag = new CompoundTag();
         return this.tag;
     }
 
-    public void setTag(CompoundNbt tag) {
+    public void setTag(CompoundTag tag) {
         this.tag = tag;
     }
 
@@ -102,15 +102,15 @@ public abstract class AItemStack<I, S extends AItemStack<I, S>> {
     }
 
     public void setCustomName(final String name) {
-        if (this.tag == null) this.tag = new CompoundNbt();
-        if (!this.tag.contains("display", NbtType.COMPOUND)) this.tag.addCompound("display", new CompoundNbt());
+        if (this.tag == null) this.tag = new CompoundTag();
+        if (!this.tag.contains("display", NbtType.COMPOUND)) this.tag.addCompound("display", new CompoundTag());
         this.tag.getCompound("display").addString("Name", name);
     }
 
     public void removeCustomName() {
         if (this.tag == null) return;
         if (!this.tag.contains("display", NbtType.COMPOUND)) return;
-        CompoundNbt display = this.tag.getCompound("display");
+        CompoundTag display = this.tag.getCompound("display");
         display.remove("Name");
         if (display.isEmpty()) this.tag.remove("display");
         if (this.tag.isEmpty()) this.tag = null;

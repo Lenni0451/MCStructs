@@ -10,18 +10,18 @@ import java.util.function.Supplier;
 public enum NbtType {
 
     END(0, null, () -> null, null),
-    BYTE(1, ByteNbt.class, ByteNbt::new, byte.class),
-    SHORT(2, ShortNbt.class, ShortNbt::new, short.class),
-    INT(3, IntNbt.class, IntNbt::new, int.class),
-    LONG(4, LongNbt.class, LongNbt::new, long.class),
-    FLOAT(5, FloatNbt.class, FloatNbt::new, float.class),
-    DOUBLE(6, DoubleNbt.class, DoubleNbt::new, double.class),
-    BYTE_ARRAY(7, ByteArrayNbt.class, ByteArrayNbt::new, byte[].class),
-    STRING(8, StringNbt.class, StringNbt::new, String.class),
-    LIST(9, ListNbt.class, ListNbt::new, List.class),
-    COMPOUND(10, CompoundNbt.class, CompoundNbt::new, Map.class),
-    INT_ARRAY(11, IntArrayNbt.class, IntArrayNbt::new, int[].class),
-    LONG_ARRAY(12, LongArrayNbt.class, LongArrayNbt::new, long[].class);
+    BYTE(1, ByteTag.class, ByteTag::new, byte.class),
+    SHORT(2, ShortTag.class, ShortTag::new, short.class),
+    INT(3, IntTag.class, IntTag::new, int.class),
+    LONG(4, LongTag.class, LongTag::new, long.class),
+    FLOAT(5, FloatTag.class, FloatTag::new, float.class),
+    DOUBLE(6, DoubleTag.class, DoubleTag::new, double.class),
+    BYTE_ARRAY(7, ByteArrayTag.class, ByteArrayTag::new, byte[].class),
+    STRING(8, StringTag.class, StringTag::new, String.class),
+    LIST(9, ListTag.class, ListTag::new, List.class),
+    COMPOUND(10, CompoundTag.class, CompoundTag::new, Map.class),
+    INT_ARRAY(11, IntArrayTag.class, IntArrayTag::new, int[].class),
+    LONG_ARRAY(12, LongArrayTag.class, LongArrayTag::new, long[].class);
 
     public static NbtType byName(final String name) {
         for (NbtType type : NbtType.values()) {

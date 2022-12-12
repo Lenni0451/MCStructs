@@ -3,27 +3,26 @@ package net.lenni0451.mcstructs.nbt.tags;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class ByteArrayNbt implements INbtTag {
+public class ByteArrayTag implements INbtTag {
 
     private byte[] value;
 
-    public ByteArrayNbt() {
+    public ByteArrayTag() {
         this(new byte[0]);
     }
 
-    public ByteArrayNbt(final ListNbt<ByteNbt> list) {
+    public ByteArrayTag(final ListTag<ByteTag> list) {
         this.value = new byte[list.size()];
         for (int i = 0; i < list.size(); i++) this.value[i] = list.get(i).getValue();
     }
 
-    public ByteArrayNbt(final byte[] value) {
+    public ByteArrayTag(final byte[] value) {
         this.value = value;
     }
 
@@ -81,14 +80,14 @@ public class ByteArrayNbt implements INbtTag {
 
     @Override
     public INbtTag copy() {
-        return new ByteArrayNbt(this.value.clone());
+        return new ByteArrayTag(this.value.clone());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ByteArrayNbt that = (ByteArrayNbt) o;
+        ByteArrayTag that = (ByteArrayTag) o;
         return Arrays.equals(value, that.value);
     }
 
@@ -99,7 +98,7 @@ public class ByteArrayNbt implements INbtTag {
 
     @Override
     public String toString() {
-        return SNbtSerializer.V1_14.trySerialize(this);
+        return "byte[" + this.value.length + "](" + Arrays.toString(this.value) + ")";
     }
 
 }

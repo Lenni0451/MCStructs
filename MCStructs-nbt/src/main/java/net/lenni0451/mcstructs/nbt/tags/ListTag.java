@@ -4,7 +4,6 @@ import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -13,20 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ListNbt<T extends INbtTag> implements INbtTag {
+public class ListTag<T extends INbtTag> implements INbtTag {
 
     private NbtType type;
     private List<T> value;
 
-    public ListNbt() {
+    public ListTag() {
         this(null, new ArrayList<>());
     }
 
-    public ListNbt(final NbtType type) {
+    public ListTag(final NbtType type) {
         this(type, new ArrayList<>());
     }
 
-    public ListNbt(final List<T> list) {
+    public ListTag(final List<T> list) {
         if (!list.isEmpty()) {
             this.type = NbtType.byClass(list.get(0).getClass());
             if (list.stream().anyMatch(tag -> !tag.getNbtType().equals(this.type))) throw new IllegalArgumentException("Tried to create list with multiple nbt types");
@@ -34,7 +33,7 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
         this.value = list;
     }
 
-    public ListNbt(final NbtType type, final List<T> value) {
+    public ListTag(final NbtType type, final List<T> value) {
         this.type = type;
         this.value = value;
     }
@@ -86,8 +85,8 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
 
     public boolean trim() {
         if (this.value.isEmpty()) return true;
-        if (NbtType.COMPOUND.equals(this.type)) this.value.forEach(tag -> ((CompoundNbt) tag).trim());
-        else if (NbtType.LIST.equals(this.type)) this.value.forEach(tag -> ((ListNbt<?>) tag).trim());
+        if (NbtType.COMPOUND.equals(this.type)) this.value.forEach(tag -> ((CompoundTag) tag).trim());
+        else if (NbtType.LIST.equals(this.type)) this.value.forEach(tag -> ((ListTag<?>) tag).trim());
         return false;
     }
 
@@ -142,15 +141,15 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
     public INbtTag copy() {
         List<INbtTag> value = new ArrayList<>();
         for (T val : this.value) value.add(val.copy());
-        return new ListNbt<>(value);
+        return new ListTag<>(value);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ListNbt<?> listNbt = (ListNbt<?>) o;
-        return Objects.equals(type, listNbt.type) && Objects.equals(value, listNbt.value);
+        ListTag<?> listTag = (ListTag<?>) o;
+        return Objects.equals(type, listTag.type) && Objects.equals(value, listTag.value);
     }
 
     @Override
@@ -160,7 +159,9 @@ public class ListNbt<T extends INbtTag> implements INbtTag {
 
     @Override
     public String toString() {
-        return SNbtSerializer.V1_14.trySerialize(this);
+        String list = this.value.toString();
+        list = list.substring(1, list.length() - 1);
+        return "List[" + this.value.size() + "](" + list + ")";
     }
 
 }

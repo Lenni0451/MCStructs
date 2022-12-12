@@ -3,22 +3,21 @@ package net.lenni0451.mcstructs.nbt.tags;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 
-public class StringNbt implements INbtTag {
+public class StringTag implements INbtTag {
 
     private String value;
 
-    public StringNbt() {
+    public StringTag() {
         this("");
     }
 
-    public StringNbt(final String value) {
+    public StringTag(final String value) {
         this.value = value;
     }
 
@@ -49,15 +48,15 @@ public class StringNbt implements INbtTag {
 
     @Override
     public INbtTag copy() {
-        return new StringNbt(this.value);
+        return new StringTag(this.value);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StringNbt stringNbt = (StringNbt) o;
-        return Objects.equals(value, stringNbt.value);
+        StringTag stringTag = (StringTag) o;
+        return Objects.equals(value, stringTag.value);
     }
 
     @Override
@@ -67,7 +66,7 @@ public class StringNbt implements INbtTag {
 
     @Override
     public String toString() {
-        return SNbtSerializer.V1_14.trySerialize(this);
+        return "String(" + this.value + ")";
     }
 
 }

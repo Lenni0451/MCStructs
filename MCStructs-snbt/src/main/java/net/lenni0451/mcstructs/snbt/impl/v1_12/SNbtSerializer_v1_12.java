@@ -14,65 +14,65 @@ public class SNbtSerializer_v1_12 implements ISNbtSerializer {
 
     @Override
     public String serialize(INbtTag tag) throws SNbtSerializeException {
-        if (tag instanceof ByteNbt) {
-            ByteNbt byteNbt = (ByteNbt) tag;
-            return byteNbt.getValue() + "b";
-        } else if (tag instanceof ShortNbt) {
-            ShortNbt shortNbt = (ShortNbt) tag;
-            return shortNbt.getValue() + "s";
-        } else if (tag instanceof IntNbt) {
-            IntNbt intNbt = (IntNbt) tag;
-            return String.valueOf(intNbt.getValue());
-        } else if (tag instanceof LongNbt) {
-            LongNbt longNbt = (LongNbt) tag;
-            return longNbt.getValue() + "L";
-        } else if (tag instanceof FloatNbt) {
-            FloatNbt floatNbt = (FloatNbt) tag;
-            return floatNbt.getValue() + "f";
-        } else if (tag instanceof DoubleNbt) {
-            DoubleNbt doubleNbt = (DoubleNbt) tag;
-            return doubleNbt.getValue() + "d";
-        } else if (tag instanceof ByteArrayNbt) {
-            ByteArrayNbt byteArrayNbt = (ByteArrayNbt) tag;
+        if (tag instanceof ByteTag) {
+            ByteTag byteTag = (ByteTag) tag;
+            return byteTag.getValue() + "b";
+        } else if (tag instanceof ShortTag) {
+            ShortTag shortTag = (ShortTag) tag;
+            return shortTag.getValue() + "s";
+        } else if (tag instanceof IntTag) {
+            IntTag intTag = (IntTag) tag;
+            return String.valueOf(intTag.getValue());
+        } else if (tag instanceof LongTag) {
+            LongTag longTag = (LongTag) tag;
+            return longTag.getValue() + "L";
+        } else if (tag instanceof FloatTag) {
+            FloatTag floatTag = (FloatTag) tag;
+            return floatTag.getValue() + "f";
+        } else if (tag instanceof DoubleTag) {
+            DoubleTag doubleTag = (DoubleTag) tag;
+            return doubleTag.getValue() + "d";
+        } else if (tag instanceof ByteArrayTag) {
+            ByteArrayTag byteArrayTag = (ByteArrayTag) tag;
             StringBuilder out = new StringBuilder("[B;");
-            for (int i = 0; i < byteArrayNbt.getLength(); i++) {
+            for (int i = 0; i < byteArrayTag.getLength(); i++) {
                 if (i != 0) out.append(",");
-                out.append(byteArrayNbt.get(i)).append("B");
+                out.append(byteArrayTag.get(i)).append("B");
             }
             return out.append("]").toString();
-        } else if (tag instanceof StringNbt) {
-            StringNbt stringNbt = (StringNbt) tag;
-            return this.escape(stringNbt.getValue());
-        } else if (tag instanceof ListNbt) {
-            ListNbt<?> listNbt = (ListNbt<?>) tag;
+        } else if (tag instanceof StringTag) {
+            StringTag stringTag = (StringTag) tag;
+            return this.escape(stringTag.getValue());
+        } else if (tag instanceof ListTag) {
+            ListTag<?> listTag = (ListTag<?>) tag;
             StringBuilder out = new StringBuilder("[");
-            for (int i = 0; i < listNbt.size(); i++) {
+            for (int i = 0; i < listTag.size(); i++) {
                 if (i != 0) out.append(",");
-                out.append(this.serialize(listNbt.get(i)));
+                out.append(this.serialize(listTag.get(i)));
             }
             return out.append("]").toString();
-        } else if (tag instanceof CompoundNbt) {
-            CompoundNbt compoundNbt = (CompoundNbt) tag;
+        } else if (tag instanceof CompoundTag) {
+            CompoundTag compoundTag = (CompoundTag) tag;
             StringBuilder out = new StringBuilder("{");
-            for (Map.Entry<String, INbtTag> entry : compoundNbt.getValue().entrySet()) {
+            for (Map.Entry<String, INbtTag> entry : compoundTag.getValue().entrySet()) {
                 if (out.length() != 1) out.append(",");
                 out.append(this.checkEscape(entry.getKey())).append(":").append(this.serialize(entry.getValue()));
             }
             return out.append("}").toString();
-        } else if (tag instanceof IntArrayNbt) {
-            IntArrayNbt intArrayNbt = (IntArrayNbt) tag;
+        } else if (tag instanceof IntArrayTag) {
+            IntArrayTag intArrayTag = (IntArrayTag) tag;
             StringBuilder out = new StringBuilder("[I;");
-            for (int i = 0; i < intArrayNbt.getLength(); i++) {
+            for (int i = 0; i < intArrayTag.getLength(); i++) {
                 if (i != 0) out.append(",");
-                out.append(intArrayNbt.get(i));
+                out.append(intArrayTag.get(i));
             }
             return out.append("]").toString();
-        } else if (tag instanceof LongArrayNbt) {
-            LongArrayNbt longArrayNbt = (LongArrayNbt) tag;
+        } else if (tag instanceof LongArrayTag) {
+            LongArrayTag longArrayTag = (LongArrayTag) tag;
             StringBuilder out = new StringBuilder("[L;");
-            for (int i = 0; i < longArrayNbt.getLength(); i++) {
+            for (int i = 0; i < longArrayTag.getLength(); i++) {
                 if (i != 0) out.append(",");
-                out.append(longArrayNbt.get(i)).append("L");
+                out.append(longArrayTag.get(i)).append("L");
             }
             return out.append("]").toString();
         }

@@ -5,7 +5,7 @@ import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 
 public class BookCopyCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyItemStack<I>> {
 
@@ -55,7 +55,7 @@ public class BookCopyCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legacy
 
         if (book == null || writableBooks < 1) return null;
         LegacyItemStack<I> result = itemRegistry.create(writtenBook, writableBooks + 1);
-        result.setTag((CompoundNbt) book.getTag().copy());
+        result.setTag((CompoundTag) book.getTag().copy());
         return result;
     }
 

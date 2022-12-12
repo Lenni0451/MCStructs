@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.text.events.hover.impl;
 
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 
@@ -11,9 +11,9 @@ public class ItemHoverEvent extends AHoverEvent {
 
     private final Identifier item;
     private final int count;
-    private final CompoundNbt nbt;
+    private final CompoundTag nbt;
 
-    public ItemHoverEvent(final HoverEventAction action, final Identifier item, final int count, final CompoundNbt nbt) {
+    public ItemHoverEvent(final HoverEventAction action, final Identifier item, final int count, final CompoundTag nbt) {
         super(action);
 
         this.item = item;
@@ -29,7 +29,7 @@ public class ItemHoverEvent extends AHoverEvent {
         return this.count;
     }
 
-    public CompoundNbt getNbt() {
+    public CompoundTag getNbt() {
         return this.nbt;
     }
 

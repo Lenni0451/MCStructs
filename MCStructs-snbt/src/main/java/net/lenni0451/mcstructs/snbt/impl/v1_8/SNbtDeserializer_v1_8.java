@@ -8,7 +8,7 @@ import net.lenni0451.mcstructs.snbt.ISNbtDeserializer;
 import java.util.Arrays;
 import java.util.Stack;
 
-public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundNbt> {
+public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
 
     private static final String ARRAY_PATTERN = "\\[[-+\\d|,\\s]+]";
     private static final String BYTE_PATTERN = "[-+]?[0-9]+[b|B]";
@@ -20,18 +20,18 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundNbt> {
     private static final String SHORT_DOUBLE_PATTERN = "[-+]?[0-9]*\\.?[0-9]+";
 
     @Override
-    public CompoundNbt deserialize(String s) throws SNbtDeserializeException {
+    public CompoundTag deserialize(String s) throws SNbtDeserializeException {
         s = s.trim();
         if (!s.startsWith("{")) throw new SNbtDeserializeException("Invalid tag encountered, expected '{' as first char.");
         else if (this.getTagCount(s) != 1) throw new SNbtDeserializeException("Encountered multiple top tags, only one expected");
-        else return (CompoundNbt) this.parseTag(s);
+        else return (CompoundTag) this.parseTag(s);
     }
 
     private INbtTag parseTag(String value) throws SNbtDeserializeException {
         value = value.trim();
         if (value.startsWith("{")) {
             value = value.substring(1, value.length() - 1);
-            CompoundNbt compound = new CompoundNbt();
+            CompoundTag compound = new CompoundTag();
 
             String pair;
             for (; value.length() > 0; value = value.substring(pair.length() + 1)) {
@@ -50,7 +50,7 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundNbt> {
             return compound;
         } else if (value.startsWith("[") && !value.matches(ARRAY_PATTERN)) {
             value = value.substring(1, value.length() - 1);
-            ListNbt<INbtTag> list = new ListNbt<>();
+            ListTag<INbtTag> list = new ListTag<>();
 
             String pair;
             for (; value.length() > 0; value = value.substring(pair.length() + 1)) {
@@ -73,17 +73,17 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundNbt> {
 
     private INbtTag parsePrimitive(String value) {
         try {
-            if (value.matches(DOUBLE_PATTERN)) return new DoubleNbt(Double.parseDouble(value.substring(0, value.length() - 1)));
-            else if (value.matches(FLOAT_PATTERN)) return new FloatNbt(Float.parseFloat(value.substring(0, value.length() - 1)));
-            else if (value.matches(BYTE_PATTERN)) return new ByteNbt(Byte.parseByte(value.substring(0, value.length() - 1)));
-            else if (value.matches(LONG_PATTERN)) return new LongNbt(Long.parseLong(value.substring(0, value.length() - 1)));
-            else if (value.matches(SHORT_PATTERN)) return new ShortNbt(Short.parseShort(value.substring(0, value.length() - 1)));
-            else if (value.matches(INT_PATTERN)) return new IntNbt(Integer.parseInt(value));
-            else if (value.matches(SHORT_DOUBLE_PATTERN)) return new DoubleNbt(Double.parseDouble(value));
-            else if (value.equalsIgnoreCase("false")) return new ByteNbt((byte) 0);
-            else if (value.equalsIgnoreCase("true")) return new ByteNbt((byte) 1);
+            if (value.matches(DOUBLE_PATTERN)) return new DoubleTag(Double.parseDouble(value.substring(0, value.length() - 1)));
+            else if (value.matches(FLOAT_PATTERN)) return new FloatTag(Float.parseFloat(value.substring(0, value.length() - 1)));
+            else if (value.matches(BYTE_PATTERN)) return new ByteTag(Byte.parseByte(value.substring(0, value.length() - 1)));
+            else if (value.matches(LONG_PATTERN)) return new LongTag(Long.parseLong(value.substring(0, value.length() - 1)));
+            else if (value.matches(SHORT_PATTERN)) return new ShortTag(Short.parseShort(value.substring(0, value.length() - 1)));
+            else if (value.matches(INT_PATTERN)) return new IntTag(Integer.parseInt(value));
+            else if (value.matches(SHORT_DOUBLE_PATTERN)) return new DoubleTag(Double.parseDouble(value));
+            else if (value.equalsIgnoreCase("false")) return new ByteTag((byte) 0);
+            else if (value.equalsIgnoreCase("true")) return new ByteTag((byte) 1);
         } catch (NumberFormatException e) {
-            return new StringNbt(value.replace("\\\\\"", "\""));
+            return new StringTag(value.replace("\\\\\"", "\""));
         }
         if (value.startsWith("[") && value.endsWith("]")) {
             String arrayContent = value.substring(1, value.length() - 1);
@@ -91,9 +91,9 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundNbt> {
             try {
                 int[] ints = new int[parts.length];
                 for (int i = 0; i < parts.length; i++) ints[i] = Integer.parseInt(parts[i].trim());
-                return new IntArrayNbt(ints);
+                return new IntArrayTag(ints);
             } catch (NumberFormatException e) {
-                return new StringNbt(value);
+                return new StringTag(value);
             }
         } else {
             if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length() - 1);
@@ -109,7 +109,7 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundNbt> {
                     out.append(c);
                 }
             }
-            return new StringNbt(out.toString());
+            return new StringTag(out.toString());
         }
     }
 

@@ -4,30 +4,29 @@ import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.snbt.SNbtSerializer;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 
-public class IntNbt implements INbtNumber {
+public class ShortTag implements INbtNumber {
 
-    private int value;
+    private short value;
 
-    public IntNbt() {
-        this(0);
+    public ShortTag() {
+        this((short) 0);
     }
 
-    public IntNbt(final int value) {
+    public ShortTag(final short value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public short getValue() {
         return this.value;
     }
 
-    public void setValue(final int value) {
+    public void setValue(final short value) {
         this.value = value;
     }
 
@@ -38,7 +37,7 @@ public class IntNbt implements INbtNumber {
 
     @Override
     public short shortValue() {
-        return (byte) (this.value & 0xFFFF);
+        return this.value;
     }
 
     @Override
@@ -68,31 +67,31 @@ public class IntNbt implements INbtNumber {
 
     @Override
     public NbtType getNbtType() {
-        return NbtType.INT;
+        return NbtType.SHORT;
     }
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(96);
-        this.value = in.readInt();
+        readTracker.read(80);
+        this.value = in.readShort();
     }
 
     @Override
     public void write(DataOutput out) throws IOException {
-        out.writeInt(this.value);
+        out.writeShort(this.value);
     }
 
     @Override
     public INbtTag copy() {
-        return new IntNbt(this.value);
+        return new ShortTag(this.value);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IntNbt intNbt = (IntNbt) o;
-        return value == intNbt.value;
+        ShortTag shortTag = (ShortTag) o;
+        return value == shortTag.value;
     }
 
     @Override
@@ -102,7 +101,7 @@ public class IntNbt implements INbtNumber {
 
     @Override
     public String toString() {
-        return SNbtSerializer.V1_14.trySerialize(this);
+        return "short(" + this.value + ")";
     }
 
 }

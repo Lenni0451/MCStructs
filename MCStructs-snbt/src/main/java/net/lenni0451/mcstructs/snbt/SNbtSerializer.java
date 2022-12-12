@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.snbt;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.nbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtDeserializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtSerializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_13.SNbtDeserializer_v1_13;
@@ -19,10 +19,10 @@ import java.util.function.Supplier;
 public class SNbtSerializer<T extends INbtTag> {
 
     public static final SNbtSerializer<INbtTag> V1_7 = new SNbtSerializer<>(SNbtSerializer_v1_7::new, SNbtDeserializer_v1_7::new);
-    public static final SNbtSerializer<CompoundNbt> V1_8 = new SNbtSerializer<>(SNbtSerializer_v1_8::new, SNbtDeserializer_v1_8::new);
-    public static final SNbtSerializer<CompoundNbt> V1_12 = new SNbtSerializer<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_12::new);
-    public static final SNbtSerializer<CompoundNbt> V1_13 = new SNbtSerializer<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_13::new);
-    public static final SNbtSerializer<CompoundNbt> V1_14 = new SNbtSerializer<>(SNbtSerializer_v1_14::new, SNbtDeserializer_v1_14::new);
+    public static final SNbtSerializer<CompoundTag> V1_8 = new SNbtSerializer<>(SNbtSerializer_v1_8::new, SNbtDeserializer_v1_8::new);
+    public static final SNbtSerializer<CompoundTag> V1_12 = new SNbtSerializer<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_12::new);
+    public static final SNbtSerializer<CompoundTag> V1_13 = new SNbtSerializer<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_13::new);
+    public static final SNbtSerializer<CompoundTag> V1_14 = new SNbtSerializer<>(SNbtSerializer_v1_14::new, SNbtDeserializer_v1_14::new);
 
 
     private final Supplier<ISNbtSerializer> serializerSupplier;

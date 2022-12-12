@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.items;
 
 import net.lenni0451.mcstructs.items.info.ItemMeta;
 import net.lenni0451.mcstructs.items.info.ItemType;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,13 +60,13 @@ public class ItemRegistry<I, S extends AItemStack<I, S>> {
         return stack;
     }
 
-    public S create(final I item, final int count, final CompoundNbt tag) {
+    public S create(final I item, final int count, final CompoundTag tag) {
         S stack = this.create(item, count);
         stack.setTag(tag);
         return stack;
     }
 
-    public S create(final I item, final int count, final int damage, final CompoundNbt tag) {
+    public S create(final I item, final int count, final int damage, final CompoundTag tag) {
         S stack = this.create(item, count, damage);
         stack.setTag(tag);
         return stack;

@@ -14,8 +14,8 @@ import net.lenni0451.mcstructs.items.info.ItemMeta;
 import net.lenni0451.mcstructs.items.info.ItemTag;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
-import net.lenni0451.mcstructs.nbt.tags.ListNbt;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.nbt.tags.ListTag;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -289,7 +289,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         Map<Enchantment, Short> enchantments = new HashMap<>();
         if (!stack.hasTag()) return enchantments;
 
-        ListNbt<CompoundNbt> enchantmentsTag;
+        ListTag<CompoundTag> enchantmentsTag;
         if (stack.getMeta().types().contains(ItemType.ENCHANTED_BOOK)) {
             if (!stack.getTag().contains("StoredEnchantments", NbtType.LIST)) return enchantments;
             enchantmentsTag = stack.getTag().getList("StoredEnchantments", NbtType.COMPOUND);
@@ -299,7 +299,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         }
 
         for (int i = 0; i < enchantmentsTag.size(); i++) {
-            CompoundNbt enchantmentTag = enchantmentsTag.get(i);
+            CompoundTag enchantmentTag = enchantmentsTag.get(i);
             Enchantment enchantment = this.enchantmentRegistry.get(enchantmentTag.getShort("id"));
             if (enchantment == null) continue;
 
@@ -310,9 +310,9 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
 
     protected void setEnchantments(final S stack, final Map<Enchantment, Short> enchantments) {
         boolean isEnchantedBook = stack.getMeta().types().contains(ItemType.ENCHANTED_BOOK);
-        ListNbt<CompoundNbt> ench = new ListNbt<>();
+        ListTag<CompoundTag> ench = new ListTag<>();
         for (Map.Entry<Enchantment, Short> entry : enchantments.entrySet()) {
-            CompoundNbt enchantmentTag = new CompoundNbt();
+            CompoundTag enchantmentTag = new CompoundTag();
             enchantmentTag.addShort("id", (short) entry.getKey().getId());
             enchantmentTag.addShort("lvl", entry.getValue());
             ench.add(enchantmentTag);
@@ -328,10 +328,10 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
 
     protected void addBookEnchantment(final S stack, final Enchantment enchantment, final int level) {
         if (!stack.getOrCreateTag().contains("StoredEnchantments", NbtType.LIST)) stack.getTag().addList("StoredEnchantments");
-        ListNbt<CompoundNbt> storedEnchantments = stack.getTag().getList("StoredEnchantments", NbtType.COMPOUND);
+        ListTag<CompoundTag> storedEnchantments = stack.getTag().getList("StoredEnchantments", NbtType.COMPOUND);
         boolean hasEnchantment = false;
         for (int i = 0; i < storedEnchantments.size(); i++) {
-            CompoundNbt tag = storedEnchantments.get(i);
+            CompoundTag tag = storedEnchantments.get(i);
             if (tag.getShort("id") != enchantment.getId()) continue;
 
             if (tag.getShort("lvl") < level) tag.addShort("lvl", (short) level);
@@ -339,7 +339,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         }
 
         if (!hasEnchantment) {
-            CompoundNbt tag = new CompoundNbt();
+            CompoundTag tag = new CompoundTag();
             tag.addShort("id", (short) enchantment.getId());
             tag.addShort("lvl", (short) level);
             storedEnchantments.add(tag);

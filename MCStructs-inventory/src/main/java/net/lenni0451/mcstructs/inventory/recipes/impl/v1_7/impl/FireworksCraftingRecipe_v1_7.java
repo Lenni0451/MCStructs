@@ -6,10 +6,10 @@ import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
-import net.lenni0451.mcstructs.nbt.tags.IntArrayNbt;
-import net.lenni0451.mcstructs.nbt.tags.IntNbt;
-import net.lenni0451.mcstructs.nbt.tags.ListNbt;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.nbt.tags.IntArrayTag;
+import net.lenni0451.mcstructs.nbt.tags.IntTag;
+import net.lenni0451.mcstructs.nbt.tags.ListTag;
 
 import java.util.List;
 
@@ -72,7 +72,7 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
         if (flyDuration >= 1 && paper == 1 && effects == 0) {
             result = itemRegistry.create(itemRegistry.requireByType(ItemType.FIREWORK_ROCKET));
             if (fireworkStars > 0) {
-                ListNbt<CompoundNbt> explosions = new ListNbt<>(NbtType.COMPOUND);
+                ListTag<CompoundTag> explosions = new ListTag<>(NbtType.COMPOUND);
 
                 for (int i = 0; i < craftingInventory.getSize(); i++) {
                     LegacyItemStack<I> stack = craftingInventory.getStack(i);
@@ -83,15 +83,15 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
                     }
                 }
 
-                CompoundNbt fireworks = new CompoundNbt();
+                CompoundTag fireworks = new CompoundTag();
                 fireworks.add("Explosions", explosions);
                 fireworks.addByte("Flight", (byte) flyDuration);
                 result.getOrCreateTag().add("Fireworks", fireworks);
             }
         } else if (flyDuration == 1 && paper == 0 && fireworkStars == 0 && colors > 0 && shapes <= 1) {
             result = itemRegistry.create(itemRegistry.requireByType(ItemType.FIREWORK_STAR));
-            ListNbt<IntNbt> colorsTag = new ListNbt<>(NbtType.INT);
-            CompoundNbt explosion = new CompoundNbt();
+            ListTag<IntTag> colorsTag = new ListTag<>(NbtType.INT);
+            CompoundTag explosion = new CompoundTag();
             byte type = 0;
 
             for (int i = 0; i < craftingInventory.getSize(); i++) {
@@ -99,7 +99,7 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
                 if (stack == null) continue;
 
                 List<ItemType> types = stack.getMeta().types();
-                if (types.contains(ItemType.DYE)) colorsTag.add(new IntNbt(DYE_COLORS[stack.getDamage()]));
+                if (types.contains(ItemType.DYE)) colorsTag.add(new IntTag(DYE_COLORS[stack.getDamage()]));
                 else if (types.contains(ItemType.GLOWSTONE_DUST)) explosion.addByte("Flicker", (byte) 1);
                 else if (types.contains(ItemType.DIAMOND)) explosion.addByte("Trail", (byte) 1);
                 else if (types.contains(ItemType.FIRE_CHARGE)) type = 1;
@@ -108,18 +108,18 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
                 else if (types.contains(ItemType.FEATHER)) type = 4;
             }
 
-            explosion.add("Colors", new IntArrayNbt(colorsTag));
+            explosion.add("Colors", new IntArrayTag(colorsTag));
             explosion.addByte("Type", type);
             result.getOrCreateTag().add("Explosion", explosion);
         } else if (flyDuration == 0 && paper == 0 && fireworkStars == 1 && colors > 0 && colors == effects) {
-            ListNbt<IntNbt> fadeColorsTag = new ListNbt<>(NbtType.INT);
+            ListTag<IntTag> fadeColorsTag = new ListTag<>(NbtType.INT);
 
             for (int i = 0; i < craftingInventory.getSize(); i++) {
                 LegacyItemStack<I> stack = craftingInventory.getStack(i);
                 if (stack == null) continue;
 
                 if (stack.getMeta().types().contains(ItemType.DYE)) {
-                    fadeColorsTag.add(new IntNbt(DYE_COLORS[stack.getDamage()]));
+                    fadeColorsTag.add(new IntTag(DYE_COLORS[stack.getDamage()]));
                 } else if (stack.getMeta().types().contains(ItemType.FIREWORK_STAR)) {
                     result = stack.copy();
                     result.setCount(1);
@@ -127,8 +127,8 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
             }
             if (result == null || !result.hasTag()) return null;
 
-            CompoundNbt explosion = result.getTag().getCompound("Explosion");
-            explosion.add("FadeColors", new IntArrayNbt(fadeColorsTag));
+            CompoundTag explosion = result.getTag().getCompound("Explosion");
+            explosion.add("FadeColors", new IntArrayTag(fadeColorsTag));
         }
         return result;
     }
