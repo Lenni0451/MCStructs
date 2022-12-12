@@ -1,10 +1,10 @@
-package net.lenni0451.mcstructs.nbt.snbt.impl.v1_12;
+package net.lenni0451.mcstructs.snbt.impl.v1_12;
 
 import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
-import net.lenni0451.mcstructs.nbt.snbt.ISNbtDeserializer;
 import net.lenni0451.mcstructs.nbt.tags.*;
+import net.lenni0451.mcstructs.snbt.ISNbtDeserializer;
 
 import java.util.regex.Pattern;
 

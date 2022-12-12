@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.nbt.snbt;
+package net.lenni0451.mcstructs.snbt;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;

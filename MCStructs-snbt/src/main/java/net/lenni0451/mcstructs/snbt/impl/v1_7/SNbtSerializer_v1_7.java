@@ -1,13 +1,13 @@
-package net.lenni0451.mcstructs.nbt.snbt.impl.v1_8;
+package net.lenni0451.mcstructs.snbt.impl.v1_7;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.nbt.snbt.ISNbtSerializer;
 import net.lenni0451.mcstructs.nbt.tags.*;
+import net.lenni0451.mcstructs.snbt.ISNbtSerializer;
 
 import java.util.Map;
 
-public class SNbtSerializer_v1_8 implements ISNbtSerializer {
+public class SNbtSerializer_v1_7 implements ISNbtSerializer {
 
     @Override
     public String serialize(INbtTag tag) throws SNbtSerializeException {
@@ -29,27 +29,18 @@ public class SNbtSerializer_v1_8 implements ISNbtSerializer {
         } else if (tag instanceof DoubleNbt) {
             DoubleNbt doubleNbt = (DoubleNbt) tag;
             return doubleNbt.getValue() + "d";
-        } else if (tag instanceof ByteArrayNbt) {
-            ByteArrayNbt byteArrayNbt = (ByteArrayNbt) tag;
-            return "[" + byteArrayNbt.getValue().length + " bytes]";
         } else if (tag instanceof StringNbt) {
             StringNbt stringNbt = (StringNbt) tag;
-            return "\"" + stringNbt.getValue().replace("\"", "\\\"") + "\"";
+            return "\"" + stringNbt.getValue() + "\"";
         } else if (tag instanceof ListNbt) {
             ListNbt<?> listNbt = (ListNbt<?>) tag;
             StringBuilder out = new StringBuilder("[");
-            for (int i = 0; i < listNbt.size(); i++) {
-                if (i != 0) out.append(",");
-                out.append(i).append(":").append(this.serialize(listNbt.get(i)));
-            }
+            for (int i = 0; i < listNbt.size(); i++) out.append(i).append(":").append(this.serialize(listNbt.get(i))).append(",");
             return out.append("]").toString();
         } else if (tag instanceof CompoundNbt) {
             CompoundNbt compoundNbt = (CompoundNbt) tag;
             StringBuilder out = new StringBuilder("{");
-            for (Map.Entry<String, INbtTag> entry : compoundNbt.getValue().entrySet()) {
-                if (out.length() != 1) out.append(",");
-                out.append(entry.getKey()).append(":").append(this.serialize(entry.getValue()));
-            }
+            for (Map.Entry<String, INbtTag> entry : compoundNbt.getValue().entrySet()) out.append(entry.getKey()).append(":").append(this.serialize(entry.getValue())).append(",");
             return out.append("}").toString();
         } else if (tag instanceof IntArrayNbt) {
             IntArrayNbt intArrayNbt = (IntArrayNbt) tag;

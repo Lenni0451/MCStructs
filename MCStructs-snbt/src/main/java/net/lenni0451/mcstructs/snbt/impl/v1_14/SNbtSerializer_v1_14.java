@@ -1,6 +1,6 @@
-package net.lenni0451.mcstructs.nbt.snbt.impl.v1_14;
+package net.lenni0451.mcstructs.snbt.impl.v1_14;
 
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_12.SNbtSerializer_v1_12;
+import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtSerializer_v1_12;
 
 public class SNbtSerializer_v1_14 extends SNbtSerializer_v1_12 {
 

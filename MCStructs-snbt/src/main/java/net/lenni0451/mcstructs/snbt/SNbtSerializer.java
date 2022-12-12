@@ -1,18 +1,18 @@
-package net.lenni0451.mcstructs.nbt.snbt;
+package net.lenni0451.mcstructs.snbt;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.nbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_12.SNbtDeserializer_v1_12;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_12.SNbtSerializer_v1_12;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_13.SNbtDeserializer_v1_13;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_14.SNbtDeserializer_v1_14;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_14.SNbtSerializer_v1_14;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_7.SNbtDeserializer_v1_7;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_7.SNbtSerializer_v1_7;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_8.SNbtDeserializer_v1_8;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_8.SNbtSerializer_v1_8;
 import net.lenni0451.mcstructs.nbt.tags.CompoundNbt;
+import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtDeserializer_v1_12;
+import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtSerializer_v1_12;
+import net.lenni0451.mcstructs.snbt.impl.v1_13.SNbtDeserializer_v1_13;
+import net.lenni0451.mcstructs.snbt.impl.v1_14.SNbtDeserializer_v1_14;
+import net.lenni0451.mcstructs.snbt.impl.v1_14.SNbtSerializer_v1_14;
+import net.lenni0451.mcstructs.snbt.impl.v1_7.SNbtDeserializer_v1_7;
+import net.lenni0451.mcstructs.snbt.impl.v1_7.SNbtSerializer_v1_7;
+import net.lenni0451.mcstructs.snbt.impl.v1_8.SNbtDeserializer_v1_8;
+import net.lenni0451.mcstructs.snbt.impl.v1_8.SNbtSerializer_v1_8;
 
 import java.util.function.Supplier;
 

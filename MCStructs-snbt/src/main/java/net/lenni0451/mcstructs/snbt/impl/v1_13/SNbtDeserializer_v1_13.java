@@ -1,9 +1,9 @@
-package net.lenni0451.mcstructs.nbt.snbt.impl.v1_13;
+package net.lenni0451.mcstructs.snbt.impl.v1_13;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_12.SNbtDeserializer_v1_12;
-import net.lenni0451.mcstructs.nbt.snbt.impl.v1_12.StringReader_v1_12;
+import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtDeserializer_v1_12;
+import net.lenni0451.mcstructs.snbt.impl.v1_12.StringReader_v1_12;
 
 public class SNbtDeserializer_v1_13 extends SNbtDeserializer_v1_12 {
 
