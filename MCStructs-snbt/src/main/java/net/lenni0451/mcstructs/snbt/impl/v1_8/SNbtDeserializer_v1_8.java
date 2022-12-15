@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_8;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.snbt.ISNbtDeserializer;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 
 import java.util.Arrays;
 import java.util.Stack;

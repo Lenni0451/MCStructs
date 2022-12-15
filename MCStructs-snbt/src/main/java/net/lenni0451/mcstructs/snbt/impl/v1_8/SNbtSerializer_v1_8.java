@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_8;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.snbt.ISNbtSerializer;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 
 import java.util.Map;
 

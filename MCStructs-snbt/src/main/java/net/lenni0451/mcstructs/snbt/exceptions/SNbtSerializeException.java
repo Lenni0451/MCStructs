@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.nbt.exceptions;
+package net.lenni0451.mcstructs.snbt.exceptions;
 
 import net.lenni0451.mcstructs.nbt.NbtType;
 

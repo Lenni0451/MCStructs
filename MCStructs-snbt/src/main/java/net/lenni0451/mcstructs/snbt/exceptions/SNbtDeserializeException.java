@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.nbt.exceptions;
+package net.lenni0451.mcstructs.snbt.exceptions;
 
 public class SNbtDeserializeException extends Exception {
 

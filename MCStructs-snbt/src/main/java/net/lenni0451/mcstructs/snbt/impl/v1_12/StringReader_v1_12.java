@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_12;
 
-import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 
 public class StringReader_v1_12 {
 

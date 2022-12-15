@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.snbt;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
-import net.lenni0451.mcstructs.nbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtDeserializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtSerializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_13.SNbtDeserializer_v1_13;

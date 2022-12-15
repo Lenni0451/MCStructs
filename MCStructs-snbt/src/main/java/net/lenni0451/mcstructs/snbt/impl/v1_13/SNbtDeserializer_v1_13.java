@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_13;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.exceptions.SNbtDeserializeException;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtDeserializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.StringReader_v1_12;
 
