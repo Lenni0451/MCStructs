@@ -72,7 +72,7 @@ public class ShortTag implements INbtNumber {
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(80);
+        readTracker.read(10);
         this.value = in.readShort();
     }
 

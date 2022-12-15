@@ -250,18 +250,18 @@ public class CompoundTag implements INbtTag {
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(384);
+        readTracker.read(48);
         this.value = new HashMap<>();
         while (true) {
             NbtHeader header = NbtIO.readNbtHeader(in, readTracker);
             if (header.isEnd()) break;
-            readTracker.read(224 + 16 * header.getName().length());
+            readTracker.read(28 + 2 * header.getName().length());
 
             INbtTag tag = header.getType().newInstance();
             readTracker.pushDepth();
             tag.read(in, readTracker);
             readTracker.popDepth();
-            if (this.value.put(header.getName(), tag) != null) readTracker.read(288);
+            if (this.value.put(header.getName(), tag) != null) readTracker.read(36);
         }
     }
 

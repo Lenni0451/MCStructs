@@ -36,9 +36,9 @@ public class StringTag implements INbtTag {
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(288);
+        readTracker.read(36);
         this.value = in.readUTF();
-        readTracker.read(16 * this.value.length());
+        readTracker.read(2 * this.value.length());
     }
 
     @Override

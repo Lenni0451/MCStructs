@@ -72,7 +72,7 @@ public class LongTag implements INbtNumber {
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(128);
+        readTracker.read(16);
         this.value = in.readLong();
     }
 

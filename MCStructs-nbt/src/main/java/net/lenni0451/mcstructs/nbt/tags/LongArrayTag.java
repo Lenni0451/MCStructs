@@ -64,9 +64,9 @@ public class LongArrayTag implements INbtTag {
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(192);
+        readTracker.read(24);
         int length = in.readInt();
-        readTracker.read(64 * length);
+        readTracker.read(8 * length);
         this.value = new long[length];
         for (int i = 0; i < this.value.length; i++) this.value[i] = in.readLong();
     }

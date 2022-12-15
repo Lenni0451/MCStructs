@@ -64,9 +64,9 @@ public class ByteArrayTag implements INbtTag {
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(192);
+        readTracker.read(24);
         int length = in.readInt();
-        readTracker.read(length * 8);
+        readTracker.read(length);
         byte[] value = new byte[length];
         in.readFully(value);
         this.value = value;

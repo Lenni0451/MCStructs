@@ -114,11 +114,11 @@ public class ListTag<T extends INbtTag> implements INbtTag {
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(296);
+        readTracker.read(37);
         int typeId = in.readByte();
         int count = in.readInt();
         if (typeId == NbtType.END.getId() && count > 0) throw new NbtReadException("ListNbt with type END and count > 0");
-        readTracker.read(32 * count);
+        readTracker.read(4 * count);
         this.type = NbtType.byId(typeId);
         this.value = new ArrayList<>(Math.min(count, 512));
         for (int i = 0; i < count; i++) {

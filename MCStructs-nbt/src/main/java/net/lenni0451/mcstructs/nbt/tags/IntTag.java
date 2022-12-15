@@ -72,7 +72,7 @@ public class IntTag implements INbtNumber {
 
     @Override
     public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(96);
+        readTracker.read(12);
         this.value = in.readInt();
     }
 

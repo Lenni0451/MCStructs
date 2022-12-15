@@ -5,7 +5,7 @@ public class NbtReadTracker {
     public static NbtReadTracker unlimited() {
         return new NbtReadTracker(0) {
             @Override
-            public void read(int bits) {
+            public void read(int bytes) {
             }
         };
     }
@@ -38,8 +38,8 @@ public class NbtReadTracker {
         this.depth--;
     }
 
-    public void read(final int bits) {
-        this.size += bits / 8;
+    public void read(final int bytes) {
+        this.size += bytes;
         if (this.size > this.maxBytes) {
             throw new IllegalStateException("Tried to read larger NBT than allowed. Needed bytes " + this.size + "bytes but max is " + this.maxBytes + "bytes");
         }
