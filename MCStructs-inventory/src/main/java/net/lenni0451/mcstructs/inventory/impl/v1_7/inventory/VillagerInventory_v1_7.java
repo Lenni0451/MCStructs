@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.inventory.impl.v1_7.inventory;
 
 import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
-import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
-import net.lenni0451.mcstructs.inventory.recipes.VillagerRecipe;
 import net.lenni0451.mcstructs.items.AItemStack;
+import net.lenni0451.mcstructs.recipes.ARecipeRegistry;
+import net.lenni0451.mcstructs.recipes.VillagerRecipe;
 
 public class VillagerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInventory_v1_7<I, S> {
 

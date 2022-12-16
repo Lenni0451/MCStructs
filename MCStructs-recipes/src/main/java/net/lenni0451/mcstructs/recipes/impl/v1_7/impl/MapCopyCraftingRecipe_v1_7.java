@@ -1,10 +1,10 @@
-package net.lenni0451.mcstructs.inventory.recipes.impl.v1_7.impl;
+package net.lenni0451.mcstructs.recipes.impl.v1_7.impl;
 
-import net.lenni0451.mcstructs.inventory.recipes.ICraftingRecipe;
-import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
+import net.lenni0451.mcstructs.recipes.ICraftingInventory;
+import net.lenni0451.mcstructs.recipes.ICraftingRecipe;
 
 public class MapCopyCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyItemStack<I>> {
 

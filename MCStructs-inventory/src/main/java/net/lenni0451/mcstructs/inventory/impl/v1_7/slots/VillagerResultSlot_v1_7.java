@@ -4,8 +4,8 @@ import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.Slot;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.VillagerInventory_v1_7;
-import net.lenni0451.mcstructs.inventory.recipes.VillagerRecipe;
 import net.lenni0451.mcstructs.items.AItemStack;
+import net.lenni0451.mcstructs.recipes.VillagerRecipe;
 
 public class VillagerResultSlot_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends Slot<T, I, S> {
 

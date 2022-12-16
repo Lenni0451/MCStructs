@@ -1,8 +1,10 @@
 dependencies {
     api project(":MCStructs-core")
+    api project(":MCStructs-enchantments")
     api project(":MCStructs-inventory")
     api project(":MCStructs-items")
     api project(":MCStructs-nbt")
+    api project(":MCStructs-recipes")
     api project(":MCStructs-snbt")
     api project(":MCStructs-text")
 }

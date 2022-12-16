@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.inventory.enchantments;
+package net.lenni0451.mcstructs.enchantments;
 
 import net.lenni0451.mcstructs.items.AItemStack;
 

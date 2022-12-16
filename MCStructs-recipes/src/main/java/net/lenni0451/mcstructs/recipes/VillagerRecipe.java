@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.inventory.recipes;
+package net.lenni0451.mcstructs.recipes;
 
 import net.lenni0451.mcstructs.items.AItemStack;
 

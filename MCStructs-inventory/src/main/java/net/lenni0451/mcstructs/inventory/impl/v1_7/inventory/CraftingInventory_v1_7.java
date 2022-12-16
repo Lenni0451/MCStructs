@@ -2,8 +2,8 @@ package net.lenni0451.mcstructs.inventory.impl.v1_7.inventory;
 
 import net.lenni0451.mcstructs.inventory.impl.v1_7.IInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.types.ICraftingContainer;
-import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.AItemStack;
+import net.lenni0451.mcstructs.recipes.ICraftingInventory;
 
 public class CraftingInventory_v1_7<I, S extends AItemStack<I, S>> implements IInventory_v1_7<I, S>, ICraftingInventory<I, S> {
 

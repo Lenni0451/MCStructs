@@ -7,11 +7,11 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingInventory_v
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingResultInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.slots.CraftingResultSlot_v1_7;
-import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
 import net.lenni0451.mcstructs.inventory.types.ICraftingContainer;
-import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.AItemStack;
 import net.lenni0451.mcstructs.items.info.ItemType;
+import net.lenni0451.mcstructs.recipes.ARecipeRegistry;
+import net.lenni0451.mcstructs.recipes.ICraftingInventory;
 
 import java.util.List;
 

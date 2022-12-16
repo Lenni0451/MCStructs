@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.inventory.impl.v1_7.container;
 
+import net.lenni0451.mcstructs.enchantments.Enchantment;
+import net.lenni0451.mcstructs.enchantments.EnchantmentRegistry;
 import net.lenni0451.mcstructs.inventory.InventoryHolder;
 import net.lenni0451.mcstructs.inventory.Slot;
-import net.lenni0451.mcstructs.inventory.enchantments.Enchantment;
-import net.lenni0451.mcstructs.inventory.enchantments.EnchantmentRegistry;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.CraftingResultInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;

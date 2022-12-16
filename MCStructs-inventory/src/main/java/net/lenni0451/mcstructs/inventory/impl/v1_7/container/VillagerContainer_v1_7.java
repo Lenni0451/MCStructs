@@ -6,8 +6,8 @@ import net.lenni0451.mcstructs.inventory.impl.v1_7.AContainer_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.PlayerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.inventory.VillagerInventory_v1_7;
 import net.lenni0451.mcstructs.inventory.impl.v1_7.slots.VillagerResultSlot_v1_7;
-import net.lenni0451.mcstructs.inventory.recipes.ARecipeRegistry;
 import net.lenni0451.mcstructs.items.AItemStack;
+import net.lenni0451.mcstructs.recipes.ARecipeRegistry;
 
 public class VillagerContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T, I, S> {
 

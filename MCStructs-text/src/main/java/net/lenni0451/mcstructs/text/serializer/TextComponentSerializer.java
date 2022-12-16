@@ -115,6 +115,14 @@ public class TextComponentSerializer {
         return this.gson;
     }
 
+    public String serialize(final ATextComponent component) {
+        return this.getGson().toJson(component);
+    }
+
+    public JsonElement serializeJson(final ATextComponent component) {
+        return this.getGson().toJsonTree(component);
+    }
+
     public ATextComponent deserialize(final String json) {
         return this.getGson().fromJson(json, ATextComponent.class);
     }
@@ -139,15 +147,6 @@ public class TextComponentSerializer {
         } catch (IOException e) {
             throw new JsonParseException("Failed to parse json", e);
         }
-    }
-
-
-    public String serialize(final ATextComponent component) {
-        return this.getGson().toJson(component);
-    }
-
-    public JsonElement serializeJson(final ATextComponent component) {
-        return this.getGson().toJsonTree(component);
     }
 
 }

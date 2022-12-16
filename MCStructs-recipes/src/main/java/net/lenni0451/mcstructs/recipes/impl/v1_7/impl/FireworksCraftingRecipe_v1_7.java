@@ -1,7 +1,5 @@
-package net.lenni0451.mcstructs.inventory.recipes.impl.v1_7.impl;
+package net.lenni0451.mcstructs.recipes.impl.v1_7.impl;
 
-import net.lenni0451.mcstructs.inventory.recipes.ICraftingRecipe;
-import net.lenni0451.mcstructs.inventory.types.ICraftingInventory;
 import net.lenni0451.mcstructs.items.ItemRegistry;
 import net.lenni0451.mcstructs.items.info.ItemType;
 import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
@@ -10,6 +8,8 @@ import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.IntArrayTag;
 import net.lenni0451.mcstructs.nbt.tags.IntTag;
 import net.lenni0451.mcstructs.nbt.tags.ListTag;
+import net.lenni0451.mcstructs.recipes.ICraftingInventory;
+import net.lenni0451.mcstructs.recipes.ICraftingRecipe;
 
 import java.util.List;
 
