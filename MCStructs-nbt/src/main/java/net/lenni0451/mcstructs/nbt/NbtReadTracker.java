@@ -31,7 +31,7 @@ public class NbtReadTracker {
 
     public void pushDepth() {
         this.depth++;
-        if (this.depth > 512) throw new IllegalStateException("Tried to read NBT with more depth than allowed (" + this.maxDepth + ")");
+        if (this.depth > 512) throw new IllegalStateException("Tried to read Nbt with more depth than allowed (" + this.maxDepth + ")");
     }
 
     public void popDepth() {
@@ -41,7 +41,7 @@ public class NbtReadTracker {
     public void read(final int bytes) {
         this.size += bytes;
         if (this.size > this.maxBytes) {
-            throw new IllegalStateException("Tried to read larger NBT than allowed. Needed bytes " + this.size + "bytes but max is " + this.maxBytes + "bytes");
+            throw new IllegalStateException("Tried to read larger Nbt than allowed. Needed bytes " + this.size + "bytes but max is " + this.maxBytes + "bytes");
         }
     }
 
