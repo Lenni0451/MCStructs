@@ -7,7 +7,6 @@ import java.util.zip.GZIPOutputStream;
 
 public class NbtIO {
 
-
     public static INbtTag readFile(final File f, final NbtReadTracker readTracker) throws IOException {
         return readFile(f, false, readTracker);
     }

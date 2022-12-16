@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.core;
 
+import java.util.Objects;
+
 public class Identifier {
 
     public static final String VALID_KEY_CHARS = "[_\\-a-z.]";
@@ -42,6 +44,27 @@ public class Identifier {
 
     public String getValue() {
         return this.value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Identifier that = (Identifier) o;
+        return Objects.equals(key, that.key) && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, value);
+    }
+
+    @Override
+    public String toString() {
+        return "Identifier{" +
+                "key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 
 }
