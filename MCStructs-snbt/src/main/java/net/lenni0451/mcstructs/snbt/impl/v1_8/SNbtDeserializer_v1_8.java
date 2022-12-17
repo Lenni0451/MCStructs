@@ -57,7 +57,11 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
                 pair = this.findPair(value, true);
                 if (pair.length() > 0) {
                     String subValue = this.find(pair, false, true);
-                    list.add(this.parseTag(subValue));
+                    try {
+                        list.add(this.parseTag(subValue));
+                    } catch (IllegalArgumentException e) {
+                        //1.8 skips invalid list entries
+                    }
                 }
                 if (value.length() < pair.length() + 1) break;
                 char nextChar = value.charAt(pair.length());

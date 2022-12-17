@@ -76,7 +76,11 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
                 if (pair.length() > 0) {
                     String subName = this.find(pair, true, true);
                     String subValue = this.find(pair, false, true);
-                    list.add(this.parse(subName, subValue));
+                    try {
+                        list.add(this.parse(subName, subValue));
+                    } catch (IllegalArgumentException e) {
+                        //1.7 skips invalid list entries
+                    }
 
                     if (value.length() < pair.length() + 1) break;
                     char next = value.charAt(pair.length());
@@ -109,9 +113,9 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
             } else if (value.matches(SHORT_DOUBLE_PATTERN)) {
                 return new DoubleTag(Double.parseDouble(value));
             } else if (value.equalsIgnoreCase("false")) {
-                return new ByteTag((byte) 1);
-            } else if (value.equalsIgnoreCase("true")) {
                 return new ByteTag((byte) 0);
+            } else if (value.equalsIgnoreCase("true")) {
+                return new ByteTag((byte) 1);
             } else if (value.startsWith("[") && value.endsWith("]")) {
                 if (value.length() > 2) {
                     String arrayContent = value.substring(1, value.length() - 1);
