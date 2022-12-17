@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Identifier {
 
-    public static final String VALID_KEY_CHARS = "[_\\-a-z.]";
-    public static final String VALID_VALUE_CHARS = "[_\\-a-z/.]";
+    public static final String VALID_KEY_CHARS = "[_\\-a-z.]+";
+    public static final String VALID_VALUE_CHARS = "[_\\-a-z/.]+";
 
     public static Identifier of(final String value) {
         String[] parts = value.split(":");
@@ -36,6 +36,10 @@ public class Identifier {
 
         this.key = key;
         this.value = value;
+    }
+
+    public String get() {
+        return this.key + ":" + this.value;
     }
 
     public String getKey() {
