@@ -128,7 +128,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         return new byte[0];
     }
 
-    public void addByteArray(final String key, final byte[] bytes) {
+    public void addByteArray(final String key, final byte... bytes) {
         this.add(key, new ByteArrayTag(bytes));
     }
 
@@ -193,7 +193,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         return new int[0];
     }
 
-    public void addIntArray(final String key, final int[] ints) {
+    public void addIntArray(final String key, final int... ints) {
         this.add(key, new IntArrayTag(ints));
     }
 
@@ -202,7 +202,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         return new long[0];
     }
 
-    public void addLongArray(final String key, final long[] longs) {
+    public void addLongArray(final String key, final long... longs) {
         this.add(key, new LongArrayTag(longs));
     }
 
