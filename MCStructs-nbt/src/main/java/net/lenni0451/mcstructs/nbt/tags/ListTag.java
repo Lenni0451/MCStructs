@@ -9,10 +9,11 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-public class ListTag<T extends INbtTag> implements INbtTag {
+public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
 
     private NbtType type;
     private List<T> value;
@@ -142,6 +143,11 @@ public class ListTag<T extends INbtTag> implements INbtTag {
         List<INbtTag> value = new ArrayList<>();
         for (T val : this.value) value.add(val.copy());
         return new ListTag<>(value);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return this.value.iterator();
     }
 
     @Override

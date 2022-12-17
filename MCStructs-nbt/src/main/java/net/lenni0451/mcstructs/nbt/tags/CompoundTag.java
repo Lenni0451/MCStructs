@@ -8,7 +8,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.*;
 
-public class CompoundTag implements INbtTag {
+public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>> {
 
     private Map<String, INbtTag> value;
 
@@ -279,6 +279,11 @@ public class CompoundTag implements INbtTag {
         Map<String, INbtTag> value = new HashMap<>();
         for (Map.Entry<String, INbtTag> entry : this.value.entrySet()) value.put(entry.getKey(), entry.getValue().copy());
         return new CompoundTag(value);
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, INbtTag>> iterator() {
+        return this.value.entrySet().iterator();
     }
 
     @Override
