@@ -87,7 +87,7 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
             else if (value.equalsIgnoreCase("false")) return new ByteTag((byte) 0);
             else if (value.equalsIgnoreCase("true")) return new ByteTag((byte) 1);
         } catch (NumberFormatException e) {
-            return new StringTag(value.replace("\\\\\"", "\""));
+            return new StringTag(value.replace("\\\"", "\""));
         }
         if (value.startsWith("[") && value.endsWith("]")) {
             String arrayContent = value.substring(1, value.length() - 1);
@@ -101,12 +101,12 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
             }
         } else {
             if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length() - 1);
-            value = value.replace("\\\\\"", "\"");
+            value = value.replace("\\\"", "\"");
             StringBuilder out = new StringBuilder();
             char[] chars = value.toCharArray();
             for (int i = 0; i < chars.length; i++) {
                 char c = chars[i];
-                if (i < chars.length - 1 && c == '\\' && chars[i + 1] != '\\') {
+                if (i < chars.length - 1 && c == '\\' && chars[i + 1] == '\\') {
                     out.append("\\");
                     i++;
                 } else {

@@ -136,10 +136,10 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
                 }
             } else {
                 if (value.startsWith("\"") && value.endsWith("\"") && value.length() > 2) value = value.substring(1, value.length() - 1);
-                return new StringTag(value.replace("\\\\\"", "\""));
+                return new StringTag(value.replace("\\\"", "\""));
             }
         } catch (NumberFormatException e) {
-            return new StringTag(value.replace("\\\\\"", "\""));
+            return new StringTag(value.replace("\\\"", "\""));
         }
     }
 
