@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
@@ -15,9 +16,11 @@ import java.lang.reflect.Type;
 public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
 
     private final TextComponentSerializer textComponentSerializer;
+    private final SNbtSerializer<?> sNbtSerializer;
 
-    public HoverEventSerializer_v1_16(final TextComponentSerializer textComponentSerializer) {
+    public HoverEventSerializer_v1_16(final TextComponentSerializer textComponentSerializer, final SNbtSerializer<?> sNbtSerializer) {
         this.textComponentSerializer = textComponentSerializer;
+        this.sNbtSerializer = sNbtSerializer;
     }
 
     @Override
@@ -31,14 +34,14 @@ public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
         } else if (src instanceof ItemHoverEvent) {
             ItemHoverEvent itemHoverEvent = (ItemHoverEvent) src;
             JsonObject serializedItem = new JsonObject();
-            serializedItem.addProperty("id", itemHoverEvent.getItem().toString());
+            serializedItem.addProperty("id", itemHoverEvent.getItem().get());
             if (itemHoverEvent.getCount() != 1) serializedItem.addProperty("count", itemHoverEvent.getCount());
-            if (itemHoverEvent.getNbt() != null) serializedItem.addProperty("tag", itemHoverEvent.getNbt().toString());
+            if (itemHoverEvent.getNbt() != null) serializedItem.addProperty("tag", this.sNbtSerializer.trySerialize(itemHoverEvent.getNbt()));
             serializedHoverEvent.add("contents", serializedItem);
         } else if (src instanceof EntityHoverEvent) {
             EntityHoverEvent entityHoverEvent = (EntityHoverEvent) src;
             JsonObject serializedEntity = new JsonObject();
-            serializedEntity.addProperty("type", entityHoverEvent.getEntityType().toString());
+            serializedEntity.addProperty("type", entityHoverEvent.getEntityType().get());
             serializedEntity.addProperty("id", entityHoverEvent.getUuid().toString());
             if (entityHoverEvent.getName() != null) serializedEntity.add("name", this.textComponentSerializer.serializeJson(entityHoverEvent.getName()));
             serializedHoverEvent.add("contents", serializedEntity);

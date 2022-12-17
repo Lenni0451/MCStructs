@@ -62,7 +62,7 @@ public class TextSerializer_v1_17 implements JsonSerializer<ATextComponent> {
             if (nbtComponent.getSeparator() != null) serializedComponent.add("separator", this.serialize(nbtComponent.getSeparator(), typeOfSrc, context));
             if (nbtComponent instanceof BlockNbtComponent) serializedComponent.addProperty("block", ((BlockNbtComponent) nbtComponent).getPos());
             else if (nbtComponent instanceof EntityNbtComponent) serializedComponent.addProperty("entity", ((EntityNbtComponent) nbtComponent).getSelector());
-            else if (nbtComponent instanceof StorageNbtComponent) serializedComponent.addProperty("storage", ((StorageNbtComponent) nbtComponent).getId().toString());
+            else if (nbtComponent instanceof StorageNbtComponent) serializedComponent.addProperty("storage", ((StorageNbtComponent) nbtComponent).getId().get());
             else throw new JsonParseException("Don't know how to serialize " + src + " as a Component");
         } else {
             throw new JsonParseException("Don't know how to serialize " + src + " as a Component");

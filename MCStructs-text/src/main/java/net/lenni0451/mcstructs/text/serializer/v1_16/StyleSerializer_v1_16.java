@@ -29,7 +29,7 @@ public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
             serializedStyle.add("clickEvent", clickEvent);
         }
         if (src.getHoverEvent() != null) serializedStyle.add("hoverEvent", context.serialize(src.getHoverEvent()));
-        if (src.getFont() != null) serializedStyle.addProperty("font", src.getFont().toString());
+        if (src.getFont() != null) serializedStyle.addProperty("font", src.getFont().get());
 
         return serializedStyle;
     }

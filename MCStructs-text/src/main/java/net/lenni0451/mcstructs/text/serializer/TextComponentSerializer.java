@@ -83,7 +83,7 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
-            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16))
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
             .create());
     public static final TextComponentSerializer V1_17 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_17())
@@ -91,7 +91,7 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
-            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17))
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
             .create());
     public static final TextComponentSerializer V1_18 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_17())
@@ -99,7 +99,7 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
-            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18))
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
             .create());
 
 
