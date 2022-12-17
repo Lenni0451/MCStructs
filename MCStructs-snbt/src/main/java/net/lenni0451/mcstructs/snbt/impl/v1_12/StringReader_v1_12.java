@@ -50,7 +50,7 @@ public class StringReader_v1_12 {
     public String readString() throws SNbtDeserializeException {
         this.skipWhitespaces();
         if (!this.canRead()) return null;
-        else return this.peek() == '"' ? this.readQuotedString() : this.readUnquotedString();
+        else return this.isQuote(this.peek()) ? this.readQuotedString() : this.readUnquotedString();
     }
 
     public String readUnquotedString() {
@@ -60,20 +60,21 @@ public class StringReader_v1_12 {
     }
 
     public String readQuotedString() throws SNbtDeserializeException {
-        int start = ++this.index;
+        char quoteStart = this.read();
+        int start = this.index;
         StringBuilder out = null;
         boolean escaped = false;
         while (this.canRead()) {
             char c = this.read();
             if (escaped) {
-                if (c != '\\' && c != '"') throw new SNbtDeserializeException("Invalid escape of '" + c + "'");
+                if (c != '\\' && c != quoteStart) throw new SNbtDeserializeException("Invalid escape of '" + c + "'");
                 escaped = false;
             } else {
                 if (c == '\\') {
                     escaped = true;
                     if (out == null) out = new StringBuilder(this.s.substring(start, this.index - 1));
                     continue;
-                } else if (c == '"') {
+                } else if (c == quoteStart) {
                     return out == null ? this.s.substring(start, this.index - 1) : out.toString();
                 }
             }
@@ -89,6 +90,10 @@ public class StringReader_v1_12 {
         else throw new SNbtDeserializeException("Expected '" + wanted + "' but got '" + (canRead ? this.peek() : "<EOL>") + "'", this.s, this.index + 1);
     }
 
+
+    protected boolean isQuote(final char c) {
+        return c == '"';
+    }
 
     private boolean isAlphanumeric(final char c) {
         return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '-' || c == '.' || c == '+';

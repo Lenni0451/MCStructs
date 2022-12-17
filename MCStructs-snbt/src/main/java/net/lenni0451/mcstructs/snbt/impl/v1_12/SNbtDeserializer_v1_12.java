@@ -20,7 +20,7 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
 
     @Override
     public CompoundTag deserialize(String s) throws SNbtDeserializeException {
-        StringReader_v1_12 reader = new StringReader_v1_12(s);
+        StringReader_v1_12 reader = this.makeReader(s);
         CompoundTag compoundTag = this.readCompound(reader);
         reader.skipWhitespaces();
         if (reader.canRead()) throw this.makeException(reader, "Trailing data found");
@@ -142,6 +142,10 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
 
     protected SNbtDeserializeException makeException(final StringReader_v1_12 reader, final String message) {
         return new SNbtDeserializeException(message, reader.getString(), reader.getIndex());
+    }
+
+    protected StringReader_v1_12 makeReader(final String string) {
+        return new StringReader_v1_12(string);
     }
 
     protected boolean isQuote(final char c) {
