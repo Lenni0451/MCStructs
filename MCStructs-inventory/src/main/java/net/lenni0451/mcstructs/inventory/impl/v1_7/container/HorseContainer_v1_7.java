@@ -28,11 +28,11 @@ public class HorseContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
     @Override
     protected void initSlots() {
         this.addSlot(this.horseInventory, 0, (slot, stack) -> {
-            if (stack.getMeta().types().contains(ItemType.SADDLE) && slot.getStack() == null) return stack.getMeta().maxCount();
+            if (stack.getMeta().getTypes().contains(ItemType.SADDLE) && slot.getStack() == null) return stack.getMeta().getMaxCount();
             else return 0;
         });
         this.addSlot(this.horseInventory, 1, (slot, stack) -> {
-            if (stack.getMeta().types().contains(ItemType.HORSE_ARMOR) && this.isHorse) return stack.getMeta().maxCount();
+            if (stack.getMeta().getTypes().contains(ItemType.HORSE_ARMOR) && this.isHorse) return stack.getMeta().getMaxCount();
             else return 0;
         });
         if (this.hasChest) {

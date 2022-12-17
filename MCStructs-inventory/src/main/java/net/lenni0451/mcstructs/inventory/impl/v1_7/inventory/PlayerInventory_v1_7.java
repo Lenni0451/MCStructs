@@ -46,7 +46,7 @@ public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
 
     public <T extends PlayerInventory_v1_7<I, S>> boolean addStack(final InventoryHolder<T, I, S> inventoryHolder, S stack) {
         if (stack == null || stack.getCount() == 0 || stack.getItem() == null) return false;
-        if (stack.getMeta().tags().contains(ItemTag.DAMAGEABLE) && stack.getDamage() > 0) {
+        if (stack.getMeta().getTags().contains(ItemTag.DAMAGEABLE) && stack.getDamage() > 0) {
             int emptySlot = this.getEmptySlot();
             if (emptySlot >= 0) {
                 this.main[emptySlot] = stack.copy();
@@ -75,7 +75,7 @@ public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
 
     private int addItems(final S stack) {
         int count = stack.getCount();
-        if (stack.getMeta().maxCount() == 1) {
+        if (stack.getMeta().getMaxCount() == 1) {
             int emptySlot = this.getEmptySlot();
             if (emptySlot < 0) return count;
             if (this.main[emptySlot] == null) this.main[emptySlot] = stack.copy();
@@ -88,7 +88,7 @@ public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
                 this.main[matchingSlot] = stack.copy();
                 this.main[matchingSlot].setCount(0);
             }
-            int freeSpace = Math.min(count, this.main[matchingSlot].getMeta().maxCount() - this.main[matchingSlot].getCount());
+            int freeSpace = Math.min(count, this.main[matchingSlot].getMeta().getMaxCount() - this.main[matchingSlot].getCount());
             if (freeSpace > this.maxStackCount() - this.main[matchingSlot].getCount()) freeSpace = this.maxStackCount() - this.main[matchingSlot].getCount();
             if (freeSpace == 0) return count;
             count -= freeSpace;
@@ -100,7 +100,7 @@ public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInv
     private int getMatchingSlot(final S stack) {
         for (int i = 0; i < this.main.length; i++) {
             S inventoryStack = this.main[i];
-            if (inventoryStack != null && inventoryStack.getItem().equals(stack.getItem()) && inventoryStack.getMeta().maxCount() > 1 && inventoryStack.getCount() < this.maxStackCount() && (!inventoryStack.getMeta().tags().contains(ItemTag.SUBTYPES) || inventoryStack.getDamage() == stack.getDamage()) && inventoryStack.getTag().equals(stack.getTag())) {
+            if (inventoryStack != null && inventoryStack.getItem().equals(stack.getItem()) && inventoryStack.getMeta().getMaxCount() > 1 && inventoryStack.getCount() < this.maxStackCount() && (!inventoryStack.getMeta().getTags().contains(ItemTag.SUBTYPES) || inventoryStack.getDamage() == stack.getDamage()) && inventoryStack.getTag().equals(stack.getTag())) {
                 return i;
             }
         }

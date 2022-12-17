@@ -26,7 +26,7 @@ public class ItemRegistry<I, S extends AItemStack<I, S>> {
     }
 
     public List<I> byType(final ItemType type) {
-        return this.itemMetas.entrySet().stream().filter(entry -> entry.getValue().types().contains(type)).map(Map.Entry::getKey).collect(Collectors.toList());
+        return this.itemMetas.entrySet().stream().filter(entry -> entry.getValue().getTypes().contains(type)).map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     public I requireByType(final ItemType type) {

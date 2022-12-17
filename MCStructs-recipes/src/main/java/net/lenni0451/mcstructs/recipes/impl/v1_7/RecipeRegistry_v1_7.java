@@ -41,11 +41,11 @@ public class RecipeRegistry_v1_7<I> extends ARecipeRegistry<I, LegacyItemStack<I
             stackCount++;
         }
 
-        if (stackCount == 2 && stack1.getItem().equals(stack2.getItem()) && stack1.getCount() == 1 && stack2.getCount() == 1 && stack1.getMeta().tags().contains(ItemTag.DAMAGEABLE)) {
-            int damage1 = stack1.getMeta().maxDamage() - stack1.getDamage();
-            int damage2 = stack2.getMeta().maxDamage() - stack2.getDamage();
-            int totalDamage = damage1 + damage2 + stack1.getMeta().maxDamage() * 5 / 100;
-            int newDamage = Math.max(0, stack1.getMeta().maxDamage() - totalDamage);
+        if (stackCount == 2 && stack1.getItem().equals(stack2.getItem()) && stack1.getCount() == 1 && stack2.getCount() == 1 && stack1.getMeta().getTags().contains(ItemTag.DAMAGEABLE)) {
+            int damage1 = stack1.getMeta().getMaxDamage() - stack1.getDamage();
+            int damage2 = stack2.getMeta().getMaxDamage() - stack2.getDamage();
+            int totalDamage = damage1 + damage2 + stack1.getMeta().getMaxDamage() * 5 / 100;
+            int newDamage = Math.max(0, stack1.getMeta().getMaxDamage() - totalDamage);
 
             return this.getItemRegistry().create(stack1.getItem(), 1, newDamage);
         } else {

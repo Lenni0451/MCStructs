@@ -29,7 +29,7 @@ public class BrewingStandContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I,
         for (int i = 0; i < 3; i++) {
             this.addSlot(this.brewingStandInventory, i, Slot.acceptTypes(1, ItemType.BOTTLE, ItemType.WATER_BOTTLE, ItemType.POTION, ItemType.SPLASH_POTION));
         }
-        this.addSlot(this.brewingStandInventory, 3, (slot, stack) -> this.isIngredient(stack) ? stack.getMeta().maxCount() : 0);
+        this.addSlot(this.brewingStandInventory, 3, (slot, stack) -> this.isIngredient(stack) ? stack.getMeta().getMaxCount() : 0);
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }
@@ -52,7 +52,7 @@ public class BrewingStandContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I,
         if ((slotId < 0 || slotId > 2) && slotId != 3) {
             if (this.getSlot(3).getStack() == null && this.isIngredient(slotStack)) {
                 if (!this.mergeStack(slotStack, 3, 4, false)) return null;
-            } else if (this.isPotion(slotStack.getMeta().types())) {
+            } else if (this.isPotion(slotStack.getMeta().getTypes())) {
                 if (!this.mergeStack(slotStack, 0, 3, false)) return null;
             } else if (slotId >= 4 && slotId <= 30) {
                 if (!this.mergeStack(slotStack, 31, 40, false)) return null;
@@ -76,8 +76,8 @@ public class BrewingStandContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I,
     }
 
     private boolean isIngredient(final S stack) {
-        if (stack.getMeta().types().contains(ItemType.FISH) && stack.getDamage() == 3) return true;
-        return stack.getMeta().tags().contains(ItemTag.POTION_INGREDIENT);
+        if (stack.getMeta().getTypes().contains(ItemType.FISH) && stack.getDamage() == 3) return true;
+        return stack.getMeta().getTags().contains(ItemTag.POTION_INGREDIENT);
     }
 
 }

@@ -11,38 +11,38 @@ public class ItemMeta {
     private int maxCount = 64;
     private int maxDamage = 0;
 
-    public List<ItemType> types() {
+    public List<ItemType> getTypes() {
         return this.types;
     }
 
-    public ItemMeta types(final ItemType... types) {
+    public ItemMeta addTypes(final ItemType... types) {
         Collections.addAll(this.types, types);
         return this;
     }
 
-    public List<ItemTag> tags() {
+    public List<ItemTag> getTags() {
         return this.tags;
     }
 
-    public ItemMeta tags(final ItemTag... tags) {
+    public ItemMeta addTags(final ItemTag... tags) {
         Collections.addAll(this.tags, tags);
         return this;
     }
 
-    public int maxCount() {
+    public int getMaxCount() {
         return this.maxCount;
     }
 
-    public ItemMeta maxCount(final int maxStackSize) {
+    public ItemMeta setMaxCount(final int maxStackSize) {
         this.maxCount = maxStackSize;
         return this;
     }
 
-    public int maxDamage() {
+    public int getMaxDamage() {
         return this.maxDamage;
     }
 
-    public ItemMeta maxDamage(final int maxDamage) {
+    public ItemMeta setMaxDamage(final int maxDamage) {
         this.maxDamage = maxDamage;
         return this;
     }

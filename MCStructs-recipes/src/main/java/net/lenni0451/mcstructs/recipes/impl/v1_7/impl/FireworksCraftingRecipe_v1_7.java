@@ -52,7 +52,7 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
             LegacyItemStack<I> stack = craftingInventory.getStack(i);
             if (stack == null) continue;
 
-            List<ItemType> types = stack.getMeta().types();
+            List<ItemType> types = stack.getMeta().getTypes();
             if (types.contains(ItemType.GUNPOWDER)) flyDuration++;
             else if (types.contains(ItemType.FIREWORK_STAR)) fireworkStars++;
             else if (types.contains(ItemType.DYE)) colors++;
@@ -78,7 +78,7 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
                     LegacyItemStack<I> stack = craftingInventory.getStack(i);
                     if (stack == null) continue;
 
-                    if (stack.getMeta().types().contains(ItemType.FIREWORK_STAR) && stack.hasTag() && stack.getTag().contains("Explosion", NbtType.COMPOUND)) {
+                    if (stack.getMeta().getTypes().contains(ItemType.FIREWORK_STAR) && stack.hasTag() && stack.getTag().contains("Explosion", NbtType.COMPOUND)) {
                         explosions.add(stack.getTag().getCompound("Explosion"));
                     }
                 }
@@ -98,7 +98,7 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
                 LegacyItemStack<I> stack = craftingInventory.getStack(i);
                 if (stack == null) continue;
 
-                List<ItemType> types = stack.getMeta().types();
+                List<ItemType> types = stack.getMeta().getTypes();
                 if (types.contains(ItemType.DYE)) colorsTag.add(new IntTag(DYE_COLORS[stack.getDamage()]));
                 else if (types.contains(ItemType.GLOWSTONE_DUST)) explosion.addByte("Flicker", (byte) 1);
                 else if (types.contains(ItemType.DIAMOND)) explosion.addByte("Trail", (byte) 1);
@@ -118,9 +118,9 @@ public class FireworksCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Legac
                 LegacyItemStack<I> stack = craftingInventory.getStack(i);
                 if (stack == null) continue;
 
-                if (stack.getMeta().types().contains(ItemType.DYE)) {
+                if (stack.getMeta().getTypes().contains(ItemType.DYE)) {
                     fadeColorsTag.add(new IntTag(DYE_COLORS[stack.getDamage()]));
-                } else if (stack.getMeta().types().contains(ItemType.FIREWORK_STAR)) {
+                } else if (stack.getMeta().getTypes().contains(ItemType.FIREWORK_STAR)) {
                     result = stack.copy();
                     result.setCount(1);
                 }

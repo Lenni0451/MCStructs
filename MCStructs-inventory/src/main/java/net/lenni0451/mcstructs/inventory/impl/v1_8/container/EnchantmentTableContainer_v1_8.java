@@ -23,7 +23,7 @@ public class EnchantmentTableContainer_v1_8<T extends PlayerInventory_v1_7<I, S>
     protected void initSlots() {
         this.addSlot(this.getEnchantmentInventory(), 0, Slot.accept(1));
         this.addSlot(this.getEnchantmentInventory(), 1, (slot, stack) -> {
-            if (stack.getMeta().types().contains(ItemType.DYE) && stack.getDamage() == 4) return stack.getMeta().maxCount();
+            if (stack.getMeta().getTypes().contains(ItemType.DYE) && stack.getDamage() == 4) return stack.getMeta().getMaxCount();
             else return 0;
         });
         for (int i = 0; i < 27; i++) this.addSlot(this.getPlayerInventory(), 9 + i, Slot.acceptAll());
@@ -39,7 +39,7 @@ public class EnchantmentTableContainer_v1_8<T extends PlayerInventory_v1_7<I, S>
         S out = slotStack.copy();
         if (slotId == 0 || slotId == 1) {
             if (!this.mergeStack(slotStack, 2, 38, true)) return null;
-        } else if (slotStack.getMeta().types().contains(ItemType.DYE) && slotStack.getDamage() == 4) {
+        } else if (slotStack.getMeta().getTypes().contains(ItemType.DYE) && slotStack.getDamage() == 4) {
             if (!this.mergeStack(slotStack, 1, 2, true)) return null;
         } else {
             if (this.getSlot(0).getStack() != null) return null;

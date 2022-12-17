@@ -57,7 +57,7 @@ public class FurnaceContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S ex
         } else if (slotId != 0 && slotId != 1) {
             if (this.recipeRegistry.findFurnaceRecipe(slotStack) != null) {
                 if (!this.mergeStack(slotStack, 0, 1, false)) return null;
-            } else if (slotStack.getMeta().tags().contains(ItemTag.FURNACE_FUEL)) {
+            } else if (slotStack.getMeta().getTags().contains(ItemTag.FURNACE_FUEL)) {
                 if (!this.mergeStack(slotStack, 1, 2, false)) return null;
             } else if (slotId >= 3 && slotId <= 29) {
                 if (!this.mergeStack(slotStack, 30, 39, false)) return null;

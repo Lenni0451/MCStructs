@@ -41,11 +41,11 @@ public class ArmorColorCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Lega
             LegacyItemStack<I> stack = craftingInventory.getStack(i);
             if (stack == null) continue;
 
-            if (ItemType.isArmor(stack.getMeta().types())) {
+            if (ItemType.isArmor(stack.getMeta().getTypes())) {
                 if (armorStack != null) return false;
-                if (!stack.getMeta().tags().contains(ItemTag.MATERIAL_LEATHER)) return false;
+                if (!stack.getMeta().getTags().contains(ItemTag.MATERIAL_LEATHER)) return false;
                 armorStack = stack;
-            } else if (stack.getMeta().types().contains(ItemType.DYE)) {
+            } else if (stack.getMeta().getTypes().contains(ItemType.DYE)) {
                 colors.add(stack.getItem());
             } else {
                 return false;
@@ -64,9 +64,9 @@ public class ArmorColorCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Lega
             LegacyItemStack<I> stack = craftingInventory.getStack(i);
             if (stack == null) continue;
 
-            if (ItemType.isArmor(stack.getMeta().types())) {
+            if (ItemType.isArmor(stack.getMeta().getTypes())) {
                 if (armorStack != null) return null;
-                if (!stack.getMeta().tags().contains(ItemTag.MATERIAL_LEATHER)) return null;
+                if (!stack.getMeta().getTags().contains(ItemTag.MATERIAL_LEATHER)) return null;
                 armorStack = stack.copy();
                 armorStack.setCount(1);
 
@@ -82,7 +82,7 @@ public class ArmorColorCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Lega
                     armorColor[2] = (int) (armorColor[2] + b * 255F);
                     colorCount++;
                 }
-            } else if (stack.getMeta().types().contains(ItemType.DYE)) {
+            } else if (stack.getMeta().getTypes().contains(ItemType.DYE)) {
                 int[] color = DYE_COLOR[stack.getDamage() & 15];
                 int r = color[0];
                 int g = color[1];
@@ -112,16 +112,16 @@ public class ArmorColorCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Lega
     }
 
     private boolean hasColor(final LegacyItemStack<I> stack) {
-        if (!ItemType.isArmor(stack.getMeta().types())) return false;
-        if (!stack.getMeta().tags().contains(ItemTag.MATERIAL_LEATHER)) return false;
+        if (!ItemType.isArmor(stack.getMeta().getTypes())) return false;
+        if (!stack.getMeta().getTags().contains(ItemTag.MATERIAL_LEATHER)) return false;
         if (!stack.hasTag()) return false;
         if (!stack.getTag().contains("display", NbtType.COMPOUND)) return false;
         return stack.getTag().getCompound("display").contains("color", NbtType.INT);
     }
 
     private int getColor(final LegacyItemStack<I> stack) {
-        if (!ItemType.isArmor(stack.getMeta().types())) return -1;
-        if (!stack.getMeta().tags().contains(ItemTag.MATERIAL_LEATHER)) return -1;
+        if (!ItemType.isArmor(stack.getMeta().getTypes())) return -1;
+        if (!stack.getMeta().getTags().contains(ItemTag.MATERIAL_LEATHER)) return -1;
         CompoundTag tag = stack.getTag();
         if (tag == null) return 0xA0_65_40;
         CompoundTag display = tag.getCompound("display");
@@ -131,7 +131,7 @@ public class ArmorColorCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, Lega
     }
 
     private void setColor(final LegacyItemStack<I> stack, final int color) {
-        if (!ItemType.isArmor(stack.getMeta().types()) || !stack.getMeta().tags().contains(ItemTag.MATERIAL_LEATHER)) {
+        if (!ItemType.isArmor(stack.getMeta().getTypes()) || !stack.getMeta().getTags().contains(ItemTag.MATERIAL_LEATHER)) {
             throw new IllegalArgumentException("The given stack is not a leather armor");
         }
         CompoundTag tag = stack.getOrCreateTag();

@@ -16,10 +16,10 @@ public class MapCopyCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyI
             LegacyItemStack<I> stack = craftingInventory.getStack(i);
             if (stack == null) continue;
 
-            if (stack.getMeta().types().contains(ItemType.FILLED_MAP)) {
+            if (stack.getMeta().getTypes().contains(ItemType.FILLED_MAP)) {
                 if (filledMapStack != null) return false;
                 filledMapStack = stack;
-            } else if (stack.getMeta().types().contains(ItemType.MAP)) {
+            } else if (stack.getMeta().getTypes().contains(ItemType.MAP)) {
                 mapCount++;
             } else {
                 return false;
@@ -36,10 +36,10 @@ public class MapCopyCraftingRecipe_v1_7<I> implements ICraftingRecipe<I, LegacyI
             LegacyItemStack<I> stack = craftingInventory.getStack(i);
             if (stack == null) continue;
 
-            if (stack.getMeta().types().contains(ItemType.FILLED_MAP)) {
+            if (stack.getMeta().getTypes().contains(ItemType.FILLED_MAP)) {
                 if (filledMapStack != null) return null;
                 filledMapStack = stack;
-            } else if (stack.getMeta().types().contains(ItemType.MAP)) {
+            } else if (stack.getMeta().getTypes().contains(ItemType.MAP)) {
                 mapCount++;
             } else {
                 return null;

@@ -28,7 +28,7 @@ public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
     public static <T extends IInventory<I, S>, I, S extends AItemStack<I, S>> BiFunction<Slot<T, I, S>, S, Integer> acceptTypes(final int maxCount, final ItemType... types) {
         return (slot, stack) -> {
             for (ItemType type : types) {
-                if (stack.getMeta().types().contains(type)) return maxCount;
+                if (stack.getMeta().getTypes().contains(type)) return maxCount;
             }
             return 0;
         };
@@ -41,7 +41,7 @@ public class Slot<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
     public static <T extends IInventory<I, S>, I, S extends AItemStack<I, S>> BiFunction<Slot<T, I, S>, S, Integer> acceptTags(final int maxCount, final ItemTag... tags) {
         return (slot, stack) -> {
             for (ItemTag tag : tags) {
-                if (stack.getMeta().tags().contains(tag)) return maxCount;
+                if (stack.getMeta().getTags().contains(tag)) return maxCount;
             }
             return 0;
         };

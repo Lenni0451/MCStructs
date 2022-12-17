@@ -17,8 +17,8 @@ public class FurnaceContainer_v1_8<T extends PlayerInventory_v1_7<I, S>, I, S ex
     protected void initSlots() {
         this.addSlot(this.getFurnaceInventory(), 0, Slot.acceptAll());
         this.addSlot(this.getFurnaceInventory(), 1, (slot, stack) -> {
-            if (stack.getMeta().types().contains(ItemType.BUCKET)) return 1;
-            else return stack.getMeta().maxCount();
+            if (stack.getMeta().getTypes().contains(ItemType.BUCKET)) return 1;
+            else return stack.getMeta().getMaxCount();
         });
         this.addSlot(this.getFurnaceInventory(), 2, Slot.acceptNone());
         for (int i = 0; i < 27; i++) this.addSlot(this.getPlayerInventory(), 9 + i, Slot.acceptAll());

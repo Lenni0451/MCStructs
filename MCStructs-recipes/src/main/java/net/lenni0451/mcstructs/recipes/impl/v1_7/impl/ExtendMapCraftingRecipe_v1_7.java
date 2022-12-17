@@ -35,7 +35,7 @@ public class ExtendMapCraftingRecipe_v1_7<I> extends ShapedCraftingRecipe_v1_7<I
             LegacyItemStack<I> stack = craftingInventory.getStack(i);
             if (stack == null) continue;
 
-            if (stack.getMeta().types().contains(ItemType.FILLED_MAP)) {
+            if (stack.getMeta().getTypes().contains(ItemType.FILLED_MAP)) {
                 mapStack = stack;
                 break;
             }
@@ -52,7 +52,7 @@ public class ExtendMapCraftingRecipe_v1_7<I> extends ShapedCraftingRecipe_v1_7<I
             LegacyItemStack<I> stack = craftingInventory.getStack(i);
             if (stack == null) continue;
 
-            if (stack.getMeta().types().contains(ItemType.FILLED_MAP)) {
+            if (stack.getMeta().getTypes().contains(ItemType.FILLED_MAP)) {
                 mapStack = stack;
                 break;
             }

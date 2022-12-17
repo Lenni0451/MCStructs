@@ -153,10 +153,10 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         this.repairStackCount = 0;
 
         if (stack2 != null) {
-            isEnchantedBook = stack2.getMeta().types().contains(ItemType.ENCHANTED_BOOK) && !this.getEnchantments(stack2).isEmpty();
+            isEnchantedBook = stack2.getMeta().getTypes().contains(ItemType.ENCHANTED_BOOK) && !this.getEnchantments(stack2).isEmpty();
 
-            if (out.getMeta().tags().contains(ItemTag.DAMAGEABLE) && stack2.getItem().equals(this.getRepairItem(stack1))) {
-                int itemRepairAmount = Math.min(out.getDamage(), out.getMeta().maxDamage() / 4);
+            if (out.getMeta().getTags().contains(ItemTag.DAMAGEABLE) && stack2.getItem().equals(this.getRepairItem(stack1))) {
+                int itemRepairAmount = Math.min(out.getDamage(), out.getMeta().getMaxDamage() / 4);
                 if (itemRepairAmount <= 0) {
                     this.outputSlot.setStack(0, null);
                     this.repairCost = 0;
@@ -167,16 +167,16 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
                 for (; itemRepairAmount > 0 && neededItems < stack2.getCount(); neededItems++) {
                     out.setDamage(out.getDamage() - itemRepairAmount);
                     additionalRepairCost += Math.max(1, itemRepairAmount / 100) + stack1Enchantments.size();
-                    itemRepairAmount = Math.min(out.getDamage(), out.getMeta().maxDamage() / 4);
+                    itemRepairAmount = Math.min(out.getDamage(), out.getMeta().getMaxDamage() / 4);
                 }
                 this.repairStackCount = neededItems;
-            } else if (isEnchantedBook || (out.getItem().equals(stack2.getItem()) && out.getMeta().tags().contains(ItemTag.DAMAGEABLE))) {
-                if (!isEnchantedBook && out.getMeta().tags().contains(ItemTag.DAMAGEABLE)) {
-                    int stack1Durability = stack1.getMeta().maxDamage() - stack1.getDamage();
-                    int stack2Durability = stack2.getMeta().maxDamage() - stack2.getDamage();
-                    int repairFactor = stack2Durability + out.getMeta().maxDamage() * 12 / 100;
+            } else if (isEnchantedBook || (out.getItem().equals(stack2.getItem()) && out.getMeta().getTags().contains(ItemTag.DAMAGEABLE))) {
+                if (!isEnchantedBook && out.getMeta().getTags().contains(ItemTag.DAMAGEABLE)) {
+                    int stack1Durability = stack1.getMeta().getMaxDamage() - stack1.getDamage();
+                    int stack2Durability = stack2.getMeta().getMaxDamage() - stack2.getDamage();
+                    int repairFactor = stack2Durability + out.getMeta().getMaxDamage() * 12 / 100;
                     int repairedDurability = stack1Durability + repairFactor;
-                    int repairedDamage = out.getMeta().maxDamage() - repairedDurability;
+                    int repairedDamage = out.getMeta().getMaxDamage() - repairedDurability;
                     if (repairedDamage < 0) repairedDamage = 0;
                     if (repairedDamage < out.getDamage()) {
                         out.setDamage(repairedDamage);
@@ -195,7 +195,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
 
                     int levelDiff = stack2Level - stack1Level;
                     boolean isCompatible = this.enchantmentRegistry.isItemCompatible(enchantment, stack1);
-                    if (this.inventoryHolder.isCreativeMode() || stack1.getMeta().types().contains(ItemType.ENCHANTED_BOOK)) isCompatible = true;
+                    if (this.inventoryHolder.isCreativeMode() || stack1.getMeta().getTypes().contains(ItemType.ENCHANTED_BOOK)) isCompatible = true;
                     for (Enchantment ench : stack1Enchantments.keySet()) {
                         if (ench.equals(enchantment)) continue;
                         if (!this.enchantmentRegistry.isIncompatible(enchantment, ench)) continue;
@@ -220,13 +220,13 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
 
         if (this.repairItemName == null || this.repairItemName.isEmpty()) {
             if (stack1.hasCustomName()) {
-                if (stack1.getMeta().tags().contains(ItemTag.DAMAGEABLE)) repairCostFactor = 7;
+                if (stack1.getMeta().getTags().contains(ItemTag.DAMAGEABLE)) repairCostFactor = 7;
                 else repairCostFactor = stack1.getCount() * 5;
                 additionalRepairCost += repairCostFactor;
                 out.removeCustomName();
             }
         } else if (!this.repairItemName.equals(stack1.getCustomName())) {
-            if (stack1.getMeta().tags().contains(ItemTag.DAMAGEABLE)) repairCostFactor = 7;
+            if (stack1.getMeta().getTags().contains(ItemTag.DAMAGEABLE)) repairCostFactor = 7;
             else repairCostFactor = stack1.getCount() * 5;
             additionalRepairCost += repairCostFactor;
             if (stack1.hasCustomName()) newRepairCost += repairCostFactor / 2;
@@ -290,7 +290,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         if (!stack.hasTag()) return enchantments;
 
         ListTag<CompoundTag> enchantmentsTag;
-        if (stack.getMeta().types().contains(ItemType.ENCHANTED_BOOK)) {
+        if (stack.getMeta().getTypes().contains(ItemType.ENCHANTED_BOOK)) {
             if (!stack.getTag().contains("StoredEnchantments", NbtType.LIST)) return enchantments;
             enchantmentsTag = stack.getTag().getList("StoredEnchantments", NbtType.COMPOUND);
         } else {
@@ -309,7 +309,7 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
     }
 
     protected void setEnchantments(final S stack, final Map<Enchantment, Short> enchantments) {
-        boolean isEnchantedBook = stack.getMeta().types().contains(ItemType.ENCHANTED_BOOK);
+        boolean isEnchantedBook = stack.getMeta().getTypes().contains(ItemType.ENCHANTED_BOOK);
         ListTag<CompoundTag> ench = new ListTag<>();
         for (Map.Entry<Enchantment, Short> entry : enchantments.entrySet()) {
             CompoundTag enchantmentTag = new CompoundTag();
@@ -348,10 +348,10 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
 
     protected I getRepairItem(final S stack) {
         ItemMeta meta = stack.getMeta();
-        if (!ItemType.isArmor(meta.types())) return null;
-        if (!ItemType.isTool(meta.types())) return null;
+        if (!ItemType.isArmor(meta.getTypes())) return null;
+        if (!ItemType.isTool(meta.getTypes())) return null;
 
-        ItemType material = ItemTag.getMaterial(meta.tags());
+        ItemType material = ItemTag.getMaterial(meta.getTags());
         if (material == null) return null;
         return stack.getRegistry().requireByType(material);
     }

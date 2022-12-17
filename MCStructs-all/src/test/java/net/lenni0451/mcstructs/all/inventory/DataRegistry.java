@@ -29,55 +29,55 @@ public class DataRegistry {
     public static void register(final ItemRegistry<Integer, LegacyItemStack<Integer>> itemRegistry) {
         for (Item_v1_7 item : Item_v1_7.ITEM_LIST) {
             ItemMeta meta = itemRegistry.getMeta(item.itemId());
-            if (item.hasSubtypes()) meta.tags(ItemTag.SUBTYPES);
-            if (item.isDamageable()) meta.tags(ItemTag.DAMAGEABLE);
-            if (item.burnTime() > 0) meta.tags(ItemTag.FURNACE_FUEL);
-            if (item.isPotionIngredient()) meta.tags(ItemTag.POTION_INGREDIENT);
-            meta.maxCount(item.maxStackSize());
-            meta.maxDamage(item.maxDamage());
-            if (item.name().contains("boots")) applyMaterial(meta.types(ItemType.BOOTS), item.name());
-            else if (item.name().contains("leggings")) applyMaterial(meta.types(ItemType.LEGGINGS), item.name());
-            else if (item.name().contains("chestplate")) applyMaterial(meta.types(ItemType.CHESTPLATE), item.name());
-            else if (item.name().contains("helmet")) applyMaterial(meta.types(ItemType.HELMET), item.name());
-            else if (item.name().contains("horse_armor")) applyMaterial(meta.types(ItemType.HORSE_ARMOR), item.name());
-            else if (item.name().contains("sword")) applyMaterial(meta.types(ItemType.SWORD), item.name());
-            else if (item.name().contains("pickaxe")) applyMaterial(meta.types(ItemType.PICKAXE), item.name());
-            else if (item.name().contains("axe")) applyMaterial(meta.types(ItemType.AXE), item.name());
-            else if (item.name().contains("shovel")) applyMaterial(meta.types(ItemType.SHOVEL), item.name());
-            else if (item.name().contains("hoe")) applyMaterial(meta.types(ItemType.HOE), item.name());
-            else if (item.equals(Item_v1_7.bucket)) meta.types(ItemType.BUCKET);
-            else if (item.equals(Item_v1_7.water_bucket)) meta.types(ItemType.WATER_BUCKET);
-            else if (item.equals(Item_v1_7.lava_bucket)) meta.types(ItemType.LAVA_BUCKET);
-            else if (item.equals(Item_v1_7.milk_bucket)) meta.types(ItemType.MILK_BUCKET);
-            else if (item.equals(Item_v1_7.skull)) meta.types(ItemType.SKULL);
-            else if (item.equals(Item_v1_7.pumpkin)) meta.types(ItemType.PUMPKIN);
-            else if (item.equals(Item_v1_7.written_book)) meta.types(ItemType.WRITTEN_BOOK);
-            else if (item.equals(Item_v1_7.writable_book)) meta.types(ItemType.WRITABLE_BOOK);
-            else if (item.equals(Item_v1_7.dye)) meta.types(ItemType.DYE);
-            else if (item.equals(Item_v1_7.map)) meta.types(ItemType.MAP);
-            else if (item.equals(Item_v1_7.filled_map)) meta.types(ItemType.FILLED_MAP);
-            else if (item.equals(Item_v1_7.gunpowder)) meta.types(ItemType.GUNPOWDER);
-            else if (item.equals(Item_v1_7.firework_charge)) meta.types(ItemType.FIREWORK_STAR);
-            else if (item.equals(Item_v1_7.paper)) meta.types(ItemType.PAPER);
-            else if (item.equals(Item_v1_7.glowstone_dust)) meta.types(ItemType.GLOWSTONE_DUST);
-            else if (item.equals(Item_v1_7.diamond)) meta.types(ItemType.DIAMOND);
-            else if (item.equals(Item_v1_7.fire_charge)) meta.types(ItemType.FIRE_CHARGE);
-            else if (item.equals(Item_v1_7.feather)) meta.types(ItemType.FEATHER);
-            else if (item.equals(Item_v1_7.gold_nugget)) meta.types(ItemType.GOLD_NUGGET);
-            else if (item.equals(Item_v1_7.fireworks)) meta.types(ItemType.FIREWORK_ROCKET);
-            else if (item.equals(Item_v1_7.glass_bottle)) meta.types(ItemType.BOTTLE);
-            else if (item.equals(Item_v1_7.potion)) meta.types(ItemType.WATER_BOTTLE).types(ItemType.POTION).types(ItemType.SPLASH_POTION);
-            else if (item.equals(Item_v1_7.fish)) meta.types(ItemType.FISH);
-            else if (item.equals(Item_v1_7.iron_ingot)) meta.types(ItemType.IRON_INGOT);
-            else if (item.equals(Item_v1_7.gold_ingot)) meta.types(ItemType.GOLD_INGOT);
-            else if (item.equals(Item_v1_7.emerald)) meta.types(ItemType.EMERALD);
-            else if (item.equals(Item_v1_7.enchanted_book)) meta.types(ItemType.ENCHANTED_BOOK);
-            else if (item.equals(Item_v1_7.leather)) meta.types(ItemType.LEATHER);
-            else if (item.equals(Item_v1_7.planks)) meta.types(ItemType.PLANKS);
-            else if (item.equals(Item_v1_7.cobblestone)) meta.types(ItemType.COBBLESTONE);
-            else if (item.equals(Item_v1_7.bow)) meta.types(ItemType.BOW);
-            else if (item.equals(Item_v1_7.fishing_rod)) meta.types(ItemType.FISHING_ROD);
-            else if (item.equals(Item_v1_7.saddle)) meta.types(ItemType.SADDLE);
+            if (item.hasSubtypes()) meta.addTags(ItemTag.SUBTYPES);
+            if (item.isDamageable()) meta.addTags(ItemTag.DAMAGEABLE);
+            if (item.burnTime() > 0) meta.addTags(ItemTag.FURNACE_FUEL);
+            if (item.isPotionIngredient()) meta.addTags(ItemTag.POTION_INGREDIENT);
+            meta.setMaxCount(item.maxStackSize());
+            meta.setMaxDamage(item.maxDamage());
+            if (item.name().contains("boots")) applyMaterial(meta.addTypes(ItemType.BOOTS), item.name());
+            else if (item.name().contains("leggings")) applyMaterial(meta.addTypes(ItemType.LEGGINGS), item.name());
+            else if (item.name().contains("chestplate")) applyMaterial(meta.addTypes(ItemType.CHESTPLATE), item.name());
+            else if (item.name().contains("helmet")) applyMaterial(meta.addTypes(ItemType.HELMET), item.name());
+            else if (item.name().contains("horse_armor")) applyMaterial(meta.addTypes(ItemType.HORSE_ARMOR), item.name());
+            else if (item.name().contains("sword")) applyMaterial(meta.addTypes(ItemType.SWORD), item.name());
+            else if (item.name().contains("pickaxe")) applyMaterial(meta.addTypes(ItemType.PICKAXE), item.name());
+            else if (item.name().contains("axe")) applyMaterial(meta.addTypes(ItemType.AXE), item.name());
+            else if (item.name().contains("shovel")) applyMaterial(meta.addTypes(ItemType.SHOVEL), item.name());
+            else if (item.name().contains("hoe")) applyMaterial(meta.addTypes(ItemType.HOE), item.name());
+            else if (item.equals(Item_v1_7.bucket)) meta.addTypes(ItemType.BUCKET);
+            else if (item.equals(Item_v1_7.water_bucket)) meta.addTypes(ItemType.WATER_BUCKET);
+            else if (item.equals(Item_v1_7.lava_bucket)) meta.addTypes(ItemType.LAVA_BUCKET);
+            else if (item.equals(Item_v1_7.milk_bucket)) meta.addTypes(ItemType.MILK_BUCKET);
+            else if (item.equals(Item_v1_7.skull)) meta.addTypes(ItemType.SKULL);
+            else if (item.equals(Item_v1_7.pumpkin)) meta.addTypes(ItemType.PUMPKIN);
+            else if (item.equals(Item_v1_7.written_book)) meta.addTypes(ItemType.WRITTEN_BOOK);
+            else if (item.equals(Item_v1_7.writable_book)) meta.addTypes(ItemType.WRITABLE_BOOK);
+            else if (item.equals(Item_v1_7.dye)) meta.addTypes(ItemType.DYE);
+            else if (item.equals(Item_v1_7.map)) meta.addTypes(ItemType.MAP);
+            else if (item.equals(Item_v1_7.filled_map)) meta.addTypes(ItemType.FILLED_MAP);
+            else if (item.equals(Item_v1_7.gunpowder)) meta.addTypes(ItemType.GUNPOWDER);
+            else if (item.equals(Item_v1_7.firework_charge)) meta.addTypes(ItemType.FIREWORK_STAR);
+            else if (item.equals(Item_v1_7.paper)) meta.addTypes(ItemType.PAPER);
+            else if (item.equals(Item_v1_7.glowstone_dust)) meta.addTypes(ItemType.GLOWSTONE_DUST);
+            else if (item.equals(Item_v1_7.diamond)) meta.addTypes(ItemType.DIAMOND);
+            else if (item.equals(Item_v1_7.fire_charge)) meta.addTypes(ItemType.FIRE_CHARGE);
+            else if (item.equals(Item_v1_7.feather)) meta.addTypes(ItemType.FEATHER);
+            else if (item.equals(Item_v1_7.gold_nugget)) meta.addTypes(ItemType.GOLD_NUGGET);
+            else if (item.equals(Item_v1_7.fireworks)) meta.addTypes(ItemType.FIREWORK_ROCKET);
+            else if (item.equals(Item_v1_7.glass_bottle)) meta.addTypes(ItemType.BOTTLE);
+            else if (item.equals(Item_v1_7.potion)) meta.addTypes(ItemType.WATER_BOTTLE).addTypes(ItemType.POTION).addTypes(ItemType.SPLASH_POTION);
+            else if (item.equals(Item_v1_7.fish)) meta.addTypes(ItemType.FISH);
+            else if (item.equals(Item_v1_7.iron_ingot)) meta.addTypes(ItemType.IRON_INGOT);
+            else if (item.equals(Item_v1_7.gold_ingot)) meta.addTypes(ItemType.GOLD_INGOT);
+            else if (item.equals(Item_v1_7.emerald)) meta.addTypes(ItemType.EMERALD);
+            else if (item.equals(Item_v1_7.enchanted_book)) meta.addTypes(ItemType.ENCHANTED_BOOK);
+            else if (item.equals(Item_v1_7.leather)) meta.addTypes(ItemType.LEATHER);
+            else if (item.equals(Item_v1_7.planks)) meta.addTypes(ItemType.PLANKS);
+            else if (item.equals(Item_v1_7.cobblestone)) meta.addTypes(ItemType.COBBLESTONE);
+            else if (item.equals(Item_v1_7.bow)) meta.addTypes(ItemType.BOW);
+            else if (item.equals(Item_v1_7.fishing_rod)) meta.addTypes(ItemType.FISHING_ROD);
+            else if (item.equals(Item_v1_7.saddle)) meta.addTypes(ItemType.SADDLE);
         }
     }
 
@@ -127,25 +127,25 @@ public class DataRegistry {
                     case "all":
                         return true;
                     case "armor":
-                        return ItemType.isArmor(item.getMeta().types());
+                        return ItemType.isArmor(item.getMeta().getTypes());
                     case "armor_feet":
-                        return item.getMeta().types().contains(ItemType.BOOTS);
+                        return item.getMeta().getTypes().contains(ItemType.BOOTS);
                     case "armor_legs":
-                        return item.getMeta().types().contains(ItemType.LEGGINGS);
+                        return item.getMeta().getTypes().contains(ItemType.LEGGINGS);
                     case "armor_torso":
-                        return item.getMeta().types().contains(ItemType.CHESTPLATE);
+                        return item.getMeta().getTypes().contains(ItemType.CHESTPLATE);
                     case "armor_head":
-                        return item.getMeta().types().contains(ItemType.HELMET);
+                        return item.getMeta().getTypes().contains(ItemType.HELMET);
                     case "weapon":
-                        return item.getMeta().types().contains(ItemType.SWORD);
+                        return item.getMeta().getTypes().contains(ItemType.SWORD);
                     case "digger":
-                        return item.getMeta().types().contains(ItemType.PICKAXE) || item.getMeta().types().contains(ItemType.AXE) || item.getMeta().types().contains(ItemType.SHOVEL);
+                        return item.getMeta().getTypes().contains(ItemType.PICKAXE) || item.getMeta().getTypes().contains(ItemType.AXE) || item.getMeta().getTypes().contains(ItemType.SHOVEL);
                     case "fishing_rod":
-                        return item.getMeta().types().contains(ItemType.FISHING_ROD);
+                        return item.getMeta().getTypes().contains(ItemType.FISHING_ROD);
                     case "breakable":
-                        return item.getMeta().tags().contains(ItemTag.DAMAGEABLE);
+                        return item.getMeta().getTags().contains(ItemTag.DAMAGEABLE);
                     case "bow":
-                        return item.getMeta().types().contains(ItemType.BOW);
+                        return item.getMeta().getTypes().contains(ItemType.BOW);
                     default:
                         return null;
                 }
@@ -160,12 +160,12 @@ public class DataRegistry {
      * @param name The item name
      */
     private static void applyMaterial(final ItemMeta meta, final String name) {
-        if (name.startsWith("leather_")) meta.tags(ItemTag.MATERIAL_LEATHER);
-        else if (name.startsWith("wooden_")) meta.tags(ItemTag.MATERIAL_WOOD);
-        else if (name.startsWith("stone_")) meta.tags(ItemTag.MATERIAL_STONE);
-        else if (name.startsWith("iron_")) meta.tags(ItemTag.MATERIAL_IRON);
-        else if (name.startsWith("golden_")) meta.tags(ItemTag.MATERIAL_GOLD);
-        else if (name.startsWith("diamond_")) meta.tags(ItemTag.MATERIAL_DIAMOND);
+        if (name.startsWith("leather_")) meta.addTags(ItemTag.MATERIAL_LEATHER);
+        else if (name.startsWith("wooden_")) meta.addTags(ItemTag.MATERIAL_WOOD);
+        else if (name.startsWith("stone_")) meta.addTags(ItemTag.MATERIAL_STONE);
+        else if (name.startsWith("iron_")) meta.addTags(ItemTag.MATERIAL_IRON);
+        else if (name.startsWith("golden_")) meta.addTags(ItemTag.MATERIAL_GOLD);
+        else if (name.startsWith("diamond_")) meta.addTags(ItemTag.MATERIAL_DIAMOND);
     }
 
     /**

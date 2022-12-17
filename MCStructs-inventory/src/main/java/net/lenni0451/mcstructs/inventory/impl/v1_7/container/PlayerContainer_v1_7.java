@@ -98,8 +98,8 @@ public class PlayerContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S ext
             if (!this.mergeStack(slotStack, 9, 45, true)) return null;
         } else if (slotId >= 1 && slotId <= 8) {
             if (!this.mergeStack(slotStack, 9, 45, false)) return null;
-        } else if (ItemType.isArmor(out.getMeta().types()) && this.getSlot(5 + this.getArmorSlotOffset(out.getMeta().types())).getStack() == null) {
-            int armorSlot = 5 + this.getArmorSlotOffset(out.getMeta().types());
+        } else if (ItemType.isArmor(out.getMeta().getTypes()) && this.getSlot(5 + this.getArmorSlotOffset(out.getMeta().getTypes())).getStack() == null) {
+            int armorSlot = 5 + this.getArmorSlotOffset(out.getMeta().getTypes());
             if (!this.mergeStack(slotStack, armorSlot, armorSlot + 1, false)) return null;
         } else if (slotId >= 9 && slotId <= 35) {
             if (!this.mergeStack(slotStack, 36, 45, false)) return null;

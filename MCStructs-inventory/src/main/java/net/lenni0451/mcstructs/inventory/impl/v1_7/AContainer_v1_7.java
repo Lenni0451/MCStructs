@@ -57,7 +57,7 @@ public abstract class AContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S
                             else if (this.draggingButton == 1) newStack.setCount(1);
                             newStack.setCount(newStack.getCount() + oldSlotCount);
 
-                            if (newStack.getCount() > newStack.getMeta().maxCount()) newStack.setCount(newStack.getMeta().maxCount());
+                            if (newStack.getCount() > newStack.getMeta().getMaxCount()) newStack.setCount(newStack.getMeta().getMaxCount());
                             if (newStack.getCount() > slot.acceptsCount(newStack)) newStack.setCount(slot.acceptsCount(newStack));
                             cursorCount -= newStack.getCount() - oldSlotCount;
                             slot.setStack(newStack);
@@ -119,7 +119,7 @@ public abstract class AContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S
                                 if (this.isSameItem(slotStack, cursorStack) && this.isSameTag(slotStack, cursorStack)) {
                                     int putCount = button == 0 ? cursorStack.getCount() : 1;
                                     if (putCount > slot.acceptsCount(slotStack) - slotStack.getCount()) putCount = slot.acceptsCount(slotStack) - slotStack.getCount();
-                                    if (putCount > cursorStack.getMeta().maxCount() - slotStack.getCount()) putCount = cursorStack.getMeta().maxCount() - slotStack.getCount();
+                                    if (putCount > cursorStack.getMeta().getMaxCount() - slotStack.getCount()) putCount = cursorStack.getMeta().getMaxCount() - slotStack.getCount();
                                     cursorStack.split(putCount);
                                     if (cursorStack.getCount() == 0) playerInventory.setCursorStack(null);
                                     slotStack.setCount(slotStack.getCount() + putCount);
@@ -127,9 +127,9 @@ public abstract class AContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S
                                     slot.setStack(cursorStack);
                                     playerInventory.setCursorStack(slotStack);
                                 }
-                            } else if (this.isSameItem(slotStack, cursorStack) && cursorStack.getMeta().maxCount() > 1 && (!slotStack.getMeta().tags().contains(ItemTag.SUBTYPES) || slotStack.getDamage() == cursorStack.getDamage()) && this.isSameTag(slotStack, cursorStack)) {
+                            } else if (this.isSameItem(slotStack, cursorStack) && cursorStack.getMeta().getMaxCount() > 1 && (!slotStack.getMeta().getTags().contains(ItemTag.SUBTYPES) || slotStack.getDamage() == cursorStack.getDamage()) && this.isSameTag(slotStack, cursorStack)) {
                                 int takeCount = slotStack.getCount();
-                                if (takeCount > 0 && takeCount + cursorStack.getCount() <= cursorStack.getMeta().maxCount()) {
+                                if (takeCount > 0 && takeCount + cursorStack.getCount() <= cursorStack.getMeta().getMaxCount()) {
                                     cursorStack.setCount(cursorStack.getCount() + takeCount);
                                     slotStack = ((IInventory_v1_7<I, S>) slot.getInventory()).split(slot.getInventoryIndex(), takeCount);
                                     if (slotStack.getCount() == 0) slot.setStack(null);
@@ -175,7 +175,7 @@ public abstract class AContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S
             Slot<T, I, S> slot = this.getSlot(slotId);
             if (slot != null && slot.getStack() != null && slot.canTake(inventoryHolder)) {
                 S copiedStack = slot.getStack().copy();
-                copiedStack.setCount(copiedStack.getMeta().maxCount());
+                copiedStack.setCount(copiedStack.getMeta().getMaxCount());
                 playerInventory.setCursorStack(copiedStack);
             }
         } else if (InventoryAction.THROW.equals(action) && playerInventory.getCursorStack() == null && slotId >= 0) {
@@ -192,10 +192,10 @@ public abstract class AContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S
                 int startSlot = button == 0 ? 0 : this.getSlotCount() - 1;
                 int increment = button == 0 ? 1 : -1;
                 for (int i = 0; i < 2; i++) {
-                    for (int id = startSlot; id >= 0 && id < this.getSlotCount() && cursorStack.getCount() < cursorStack.getMeta().maxCount(); id += increment) {
+                    for (int id = startSlot; id >= 0 && id < this.getSlotCount() && cursorStack.getCount() < cursorStack.getMeta().getMaxCount(); id += increment) {
                         Slot<T, I, S> slotAtId = this.getSlot(id);
-                        if (slotAtId.getStack() != null && this.hasSlotSpace(slotAtId, cursorStack) && slotAtId.canTake(inventoryHolder) && this.canTakeAll(slotAtId, cursorStack) && (i != 0 || slotAtId.getStack().getCount() != slotAtId.getStack().getMeta().maxCount())) {
-                            int takeCount = Math.min(cursorStack.getMeta().maxCount() - cursorStack.getCount(), slotAtId.getStack().getCount());
+                        if (slotAtId.getStack() != null && this.hasSlotSpace(slotAtId, cursorStack) && slotAtId.canTake(inventoryHolder) && this.canTakeAll(slotAtId, cursorStack) && (i != 0 || slotAtId.getStack().getCount() != slotAtId.getStack().getMeta().getMaxCount())) {
+                            int takeCount = Math.min(cursorStack.getMeta().getMaxCount() - cursorStack.getCount(), slotAtId.getStack().getCount());
                             S newSlotStack = ((IInventory_v1_7<I, S>) slotAtId.getInventory()).split(slotAtId.getInventoryIndex(), takeCount);
                             cursorStack.setCount(cursorStack.getCount() + takeCount);
                             if (newSlotStack.getCount() <= 0) slotAtId.setStack(null);
@@ -226,16 +226,16 @@ public abstract class AContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S
             while (stack.getCount() > 0 && ((!reverse && currentSlotId < endId) || (reverse && currentSlotId >= startId))) {
                 Slot<T, I, S> slot = this.getSlot(currentSlotId);
                 S slotStack = slot.getStack();
-                if (slotStack != null && this.isSameItem(slotStack, stack) && (!stack.getMeta().tags().contains(ItemTag.SUBTYPES) || stack.getDamage() == slotStack.getDamage()) && this.isSameTag(slotStack, stack)) {
+                if (slotStack != null && this.isSameItem(slotStack, stack) && (!stack.getMeta().getTags().contains(ItemTag.SUBTYPES) || stack.getDamage() == slotStack.getDamage()) && this.isSameTag(slotStack, stack)) {
                     int mergedCount = slotStack.getCount() + stack.getCount();
-                    if (mergedCount <= stack.getMeta().maxCount()) {
+                    if (mergedCount <= stack.getMeta().getMaxCount()) {
                         stack.setCount(0);
                         slotStack.setCount(mergedCount);
                         slot.onUpdate();
                         success = true;
-                    } else if (slotStack.getCount() < stack.getMeta().maxCount()) {
-                        stack.setCount(stack.getCount() - (stack.getMeta().maxCount() - slotStack.getCount()));
-                        slotStack.setCount(stack.getMeta().maxCount());
+                    } else if (slotStack.getCount() < stack.getMeta().getMaxCount()) {
+                        stack.setCount(stack.getCount() - (stack.getMeta().getMaxCount() - slotStack.getCount()));
+                        slotStack.setCount(stack.getMeta().getMaxCount());
                         slot.onUpdate();
                         success = true;
                     }
@@ -276,7 +276,7 @@ public abstract class AContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S
     private boolean hasSlotSpace(final Slot<T, I, S> slot, final S stack) {
         if (slot == null || slot.getStack() == null) return true;
         if (!this.isSameItem(slot.getStack(), stack) || !this.isSameTag(slot.getStack(), stack)) return false;
-        return slot.getStack().getCount() <= stack.getMeta().maxCount();
+        return slot.getStack().getCount() <= stack.getMeta().getMaxCount();
     }
 
     private boolean isSameItem(final S stack1, final S stack2) {
@@ -292,7 +292,7 @@ public abstract class AContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S
     }
 
     private boolean isStackable(final S stack) {
-        return stack.getMeta().maxCount() > 1 && (!stack.getMeta().tags().contains(ItemTag.DAMAGEABLE) || stack.getDamage() <= 0);
+        return stack.getMeta().getMaxCount() > 1 && (!stack.getMeta().getTags().contains(ItemTag.DAMAGEABLE) || stack.getDamage() <= 0);
     }
 
 }
