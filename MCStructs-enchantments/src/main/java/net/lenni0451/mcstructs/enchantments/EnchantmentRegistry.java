@@ -28,7 +28,7 @@ public class EnchantmentRegistry<I, S extends AItemStack<I, S>> {
     }
 
     public boolean isItemCompatible(final Enchantment enchantment, final S itemStack) {
-        return this.itemCompatibilities.getOrDefault(enchantment, stack -> false).apply(itemStack);
+        return this.itemCompatibilities.getOrDefault(enchantment, stack -> true).apply(itemStack);
     }
 
     public void addIncompatibility(final Enchantment enchantment, final Enchantment incompatibility) {
