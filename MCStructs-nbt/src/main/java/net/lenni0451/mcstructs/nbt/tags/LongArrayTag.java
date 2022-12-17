@@ -8,8 +8,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class LongArrayTag implements INbtTag {
+public class LongArrayTag implements INbtTag, Iterable<Long> {
 
     private long[] value;
 
@@ -80,6 +81,23 @@ public class LongArrayTag implements INbtTag {
     @Override
     public INbtTag copy() {
         return new LongArrayTag(this.value.clone());
+    }
+
+    @Override
+    public Iterator<Long> iterator() {
+        return new Iterator<Long>() {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return this.index < LongArrayTag.this.value.length;
+            }
+
+            @Override
+            public Long next() {
+                return LongArrayTag.this.value[this.index++];
+            }
+        };
     }
 
     @Override

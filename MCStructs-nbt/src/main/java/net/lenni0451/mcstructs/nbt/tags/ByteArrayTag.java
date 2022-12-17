@@ -8,8 +8,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class ByteArrayTag implements INbtTag {
+public class ByteArrayTag implements INbtTag, Iterable<Byte> {
 
     private byte[] value;
 
@@ -81,6 +82,23 @@ public class ByteArrayTag implements INbtTag {
     @Override
     public INbtTag copy() {
         return new ByteArrayTag(this.value.clone());
+    }
+
+    @Override
+    public Iterator<Byte> iterator() {
+        return new Iterator<Byte>() {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return this.index < ByteArrayTag.this.value.length;
+            }
+
+            @Override
+            public Byte next() {
+                return ByteArrayTag.this.value[this.index++];
+            }
+        };
     }
 
     @Override
