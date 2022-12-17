@@ -3,8 +3,9 @@ package net.lenni0451.mcstructs.inventory;
 import net.lenni0451.mcstructs.inventory.types.AContainer;
 import net.lenni0451.mcstructs.inventory.types.IInventory;
 import net.lenni0451.mcstructs.items.AItemStack;
+import net.lenni0451.mcstructs.recipes.ARecipeRegistry;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class InventoryHolder<T extends IInventory<I, S>, I, S extends AItemStack<I, S>> {
 
@@ -14,9 +15,13 @@ public class InventoryHolder<T extends IInventory<I, S>, I, S extends AItemStack
     private boolean creativeMode;
     private int xpLevel;
 
-    public InventoryHolder(final T playerInventory, final Function<T, AContainer<T, I, S>> containerSupplier) {
+    public <R extends ARecipeRegistry<I, S>> InventoryHolder(final T playerInventory, final R recipeRegistry, final BiFunction<T, R, AContainer<T, I, S>> playerContainerProvider) {
+        this(playerInventory, playerContainerProvider.apply(playerInventory, recipeRegistry));
+    }
+
+    public InventoryHolder(final T playerInventory, final AContainer<T, I, S> playerContainer) {
         this.playerInventory = playerInventory;
-        this.playerInventoryContainer = containerSupplier.apply(playerInventory);
+        this.playerInventoryContainer = playerContainer;
         this.openContainer = this.playerInventoryContainer;
     }
 
