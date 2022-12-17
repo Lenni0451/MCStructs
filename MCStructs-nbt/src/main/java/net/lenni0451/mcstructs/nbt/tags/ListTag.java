@@ -133,7 +133,8 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
 
     @Override
     public void write(DataOutput out) throws IOException {
-        out.writeByte(this.type.getId());
+        if (this.type == null) out.writeByte(NbtType.END.getId());
+        else out.writeByte(this.type.getId());
         out.writeInt(this.value.size());
         for (T tag : this.value) tag.write(out);
     }
@@ -155,7 +156,12 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListTag<?> listTag = (ListTag<?>) o;
-        return Objects.equals(type, listTag.type) && Objects.equals(value, listTag.value);
+        if (!Objects.equals(type, listTag.type)) {
+            if (Objects.isNull(type) && Objects.equals(NbtType.END, listTag.type)) return true;
+            if (Objects.isNull(listTag.type) && Objects.equals(NbtType.END, type)) return true;
+            return false;
+        }
+        return Objects.equals(value, listTag.value);
     }
 
     @Override

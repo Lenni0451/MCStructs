@@ -115,7 +115,7 @@ public class LongArrayTag implements INbtTag, Iterable<Long> {
 
     @Override
     public String toString() {
-        return "long[" + this.value.length + "](" + this.value + ")";
+        return "long[" + this.value.length + "](" + Arrays.toString(this.value) + ")";
     }
 
 }
