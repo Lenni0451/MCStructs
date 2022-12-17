@@ -7,4 +7,6 @@ dependencies {
     api project(":MCStructs-recipes")
     api project(":MCStructs-snbt")
     api project(":MCStructs-text")
+
+    testImplementation project(":MCStructs-data")
 }
