@@ -23,10 +23,8 @@ public class SelectorComponent extends ATextComponent {
     }
 
     @Override
-    public String asString() {
-        StringBuilder out = new StringBuilder(this.selector);
-        this.appendSiblings(out);
-        return out.toString();
+    public String asSingleString() {
+        return this.selector;
     }
 
     @Override

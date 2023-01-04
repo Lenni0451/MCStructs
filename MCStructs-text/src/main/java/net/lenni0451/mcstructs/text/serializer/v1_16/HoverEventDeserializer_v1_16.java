@@ -78,7 +78,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<AHoverEven
             case SHOW_TEXT:
                 return new TextHoverEvent(action, text);
             case SHOW_ITEM:
-                CompoundTag rawTag = (CompoundTag) this.sNbtSerializer.tryDeserialize(text.asString());
+                CompoundTag rawTag = (CompoundTag) this.sNbtSerializer.tryDeserialize(text.asUnformattedString());
                 if (rawTag == null) return null;
                 Identifier id = Identifier.of(rawTag.getString("id"));
                 int count = rawTag.getByte("count");
@@ -87,7 +87,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<AHoverEven
                 return new ItemHoverEvent(action, id, count, tag);
             case SHOW_ENTITY:
                 try {
-                    CompoundTag rawEntity = (CompoundTag) this.sNbtSerializer.deserialize(text.asString());
+                    CompoundTag rawEntity = (CompoundTag) this.sNbtSerializer.deserialize(text.asUnformattedString());
                     ATextComponent name = this.textComponentSerializer.deserialize(rawEntity.getString("name"));
                     Identifier entityType = Identifier.of(rawEntity.getString("type"));
                     UUID uuid = UUID.fromString(rawEntity.getString("id"));

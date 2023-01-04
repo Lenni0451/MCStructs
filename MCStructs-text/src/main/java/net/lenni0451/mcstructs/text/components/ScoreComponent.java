@@ -33,10 +33,8 @@ public class ScoreComponent extends ATextComponent {
     }
 
     @Override
-    public String asString() {
-        StringBuilder out = new StringBuilder(this.value);
-        this.appendSiblings(out);
-        return out.toString();
+    public String asSingleString() {
+        return this.value;
     }
 
     @Override

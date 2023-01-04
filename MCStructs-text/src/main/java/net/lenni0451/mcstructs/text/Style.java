@@ -9,6 +9,7 @@ import java.util.Objects;
 
 public class Style {
 
+    private Style parent;
     private TextFormatting color;
     private Boolean obfuscated;
     private Boolean bold;
@@ -19,6 +20,15 @@ public class Style {
     private AHoverEvent hoverEvent;
     private String insertion;
     private Identifier font;
+
+    public Style setParent(final Style style) {
+        this.parent = style;
+        return this;
+    }
+
+    public Style getParent() {
+        return this.parent;
+    }
 
     public Style setFormatting(final TextFormatting formatting) {
         if (formatting == null) return this;
@@ -64,6 +74,7 @@ public class Style {
     }
 
     public TextFormatting getColor() {
+        if (this.color == null && this.parent != null) return this.parent.getColor();
         return this.color;
     }
 
@@ -73,11 +84,13 @@ public class Style {
     }
 
     public Boolean getBold() {
+        if (this.bold == null && this.parent != null) return this.parent.getBold();
         return this.bold;
     }
 
     public boolean isBold() {
-        return this.bold != null && this.bold;
+        Boolean bold = this.getBold();
+        return bold != null && bold;
     }
 
     public Style setItalic(final Boolean italic) {
@@ -86,11 +99,13 @@ public class Style {
     }
 
     public Boolean getItalic() {
+        if (this.italic == null && this.parent != null) return this.parent.getItalic();
         return this.italic;
     }
 
     public boolean isItalic() {
-        return this.italic != null && this.italic;
+        Boolean italic = this.getItalic();
+        return italic != null && italic;
     }
 
     public Style setUnderlined(final Boolean underlined) {
@@ -99,11 +114,13 @@ public class Style {
     }
 
     public Boolean getUnderlined() {
+        if (this.underlined == null && this.parent != null) return this.parent.getUnderlined();
         return this.underlined;
     }
 
     public boolean isUnderlined() {
-        return this.underlined != null && this.underlined;
+        Boolean underlined = this.getUnderlined();
+        return underlined != null && underlined;
     }
 
     public Style setStrikethrough(final Boolean strikethrough) {
@@ -112,11 +129,13 @@ public class Style {
     }
 
     public Boolean getStrikethrough() {
+        if (this.strikethrough == null && this.parent != null) return this.parent.getStrikethrough();
         return this.strikethrough;
     }
 
     public boolean isStrikethrough() {
-        return this.strikethrough != null && this.strikethrough;
+        Boolean strikethrough = this.getStrikethrough();
+        return strikethrough != null && strikethrough;
     }
 
     public Style setObfuscated(final Boolean obfuscated) {
@@ -125,11 +144,13 @@ public class Style {
     }
 
     public Boolean getObfuscated() {
+        if (this.obfuscated == null && this.parent != null) return this.parent.getObfuscated();
         return this.obfuscated;
     }
 
     public boolean isObfuscated() {
-        return this.obfuscated != null && this.obfuscated;
+        Boolean obfuscated = this.getObfuscated();
+        return obfuscated != null && obfuscated;
     }
 
     public Style setClickEvent(final ClickEvent clickEvent) {
@@ -138,6 +159,7 @@ public class Style {
     }
 
     public ClickEvent getClickEvent() {
+        if (this.clickEvent == null && this.parent != null) return this.parent.getClickEvent();
         return this.clickEvent;
     }
 
@@ -147,6 +169,7 @@ public class Style {
     }
 
     public AHoverEvent getHoverEvent() {
+        if (this.hoverEvent == null && this.parent != null) return this.parent.getHoverEvent();
         return this.hoverEvent;
     }
 
@@ -156,6 +179,7 @@ public class Style {
     }
 
     public String getInsertion() {
+        if (this.insertion == null && this.parent != null) return this.parent.getInsertion();
         return this.insertion;
     }
 
@@ -165,38 +189,26 @@ public class Style {
     }
 
     public Identifier getFont() {
+        if (this.font == null && this.parent != null) return this.parent.getFont();
         return this.font;
     }
 
-    public Style setParent(final Style style) {
-        if (this.color == null) this.color = style.color;
-        if (this.obfuscated == null) this.obfuscated = style.obfuscated;
-        if (this.bold == null) this.bold = style.bold;
-        if (this.strikethrough == null) this.strikethrough = style.strikethrough;
-        if (this.underlined == null) this.underlined = style.underlined;
-        if (this.italic == null) this.italic = style.italic;
-        if (this.clickEvent == null) this.clickEvent = style.clickEvent;
-        if (this.hoverEvent == null) this.hoverEvent = style.hoverEvent;
-        if (this.insertion == null) this.insertion = style.insertion;
-        if (this.font == null) this.font = style.font;
-        return this;
-    }
-
     public boolean isEmpty() {
-        return this.color == null
-                && this.bold == null
-                && this.italic == null
-                && this.underlined == null
-                && this.strikethrough == null
-                && this.obfuscated == null
-                && this.clickEvent == null
-                && this.hoverEvent == null
-                && this.insertion == null
-                && this.font == null;
+        return this.getColor() == null
+                && this.getBold() == null
+                && this.getItalic() == null
+                && this.getUnderlined() == null
+                && this.getStrikethrough() == null
+                && this.getObfuscated() == null
+                && this.getClickEvent() == null
+                && this.getHoverEvent() == null
+                && this.getInsertion() == null
+                && this.getFont() == null;
     }
 
     public Style copy() {
         Style style = new Style();
+        style.parent = this.parent;
         style.color = this.color;
         style.bold = this.bold;
         style.italic = this.italic;
@@ -215,18 +227,19 @@ public class Style {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Style style = (Style) o;
-        return Objects.equals(color, style.color) && Objects.equals(obfuscated, style.obfuscated) && Objects.equals(bold, style.bold) && Objects.equals(strikethrough, style.strikethrough) && Objects.equals(underlined, style.underlined) && Objects.equals(italic, style.italic) && Objects.equals(clickEvent, style.clickEvent) && Objects.equals(hoverEvent, style.hoverEvent) && Objects.equals(insertion, style.insertion) && Objects.equals(font, style.font);
+        return Objects.equals(parent, style.parent) && Objects.equals(color, style.color) && Objects.equals(obfuscated, style.obfuscated) && Objects.equals(bold, style.bold) && Objects.equals(strikethrough, style.strikethrough) && Objects.equals(underlined, style.underlined) && Objects.equals(italic, style.italic) && Objects.equals(clickEvent, style.clickEvent) && Objects.equals(hoverEvent, style.hoverEvent) && Objects.equals(insertion, style.insertion) && Objects.equals(font, style.font);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, insertion, font);
+        return Objects.hash(parent, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, insertion, font);
     }
 
     @Override
     public String toString() {
         return "Style{" +
-                "color=" + color +
+                "parent=" + parent +
+                ", color=" + color +
                 ", obfuscated=" + obfuscated +
                 ", bold=" + bold +
                 ", strikethrough=" + strikethrough +

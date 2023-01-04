@@ -40,7 +40,7 @@ public class TranslationComponent extends ATextComponent {
     }
 
     @Override
-    public String asString() {
+    public String asSingleString() {
         StringBuilder out = new StringBuilder();
 
         String translated = this.translator.apply(this.key);
@@ -64,14 +64,13 @@ public class TranslationComponent extends ATextComponent {
                 else index = Integer.parseInt(rawIndex);
                 if (index < this.args.length) {
                     Object arg = this.args[index];
-                    if (arg instanceof ATextComponent) out.append(((ATextComponent) arg).asString());
+                    if (arg instanceof ATextComponent) out.append(((ATextComponent) arg).asUnformattedString());
                     else if (arg == null) out.append("null");
                     else out.append(arg.toString());
                 }
             }
         }
         if (start < translated.length()) out.append(String.format(translated.substring(start)));
-        this.appendSiblings(out);
         return out.toString();
     }
 

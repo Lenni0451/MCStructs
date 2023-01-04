@@ -27,7 +27,7 @@ public abstract class NbtComponent extends ATextComponent {
     }
 
     @Override
-    public String asString() {
+    public String asSingleString() {
         return "";
     }
 

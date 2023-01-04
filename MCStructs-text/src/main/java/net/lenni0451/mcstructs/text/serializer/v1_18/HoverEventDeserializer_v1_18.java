@@ -21,7 +21,7 @@ public class HoverEventDeserializer_v1_18 extends HoverEventDeserializer_v1_16 {
     protected AHoverEvent deserializeLegacy(final HoverEventAction action, final ATextComponent text) {
         if (action == HoverEventAction.SHOW_ENTITY) {
             try {
-                CompoundTag rawEntity = (CompoundTag) this.sNbtSerializer.deserialize(text.asString());
+                CompoundTag rawEntity = (CompoundTag) this.sNbtSerializer.deserialize(text.asUnformattedString());
                 ATextComponent name = this.textComponentSerializer.deserialize(rawEntity.getString("name"));
                 Identifier entityType = Identifier.of(rawEntity.getString("type"));
                 UUID uuid = UUID.fromString(rawEntity.getString("id"));

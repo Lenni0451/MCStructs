@@ -23,10 +23,8 @@ public class KeybindComponent extends ATextComponent {
     }
 
     @Override
-    public String asString() {
-        StringBuilder out = new StringBuilder(this.translator.apply(this.keybind));
-        this.appendSiblings(out);
-        return out.toString();
+    public String asSingleString() {
+        return this.translator.apply(this.keybind);
     }
 
     @Override
