@@ -31,6 +31,7 @@ public class TextFormatting {
     public static final TextFormatting UNDERLINE = new TextFormatting("UNDERLINE", 'n');
     public static final TextFormatting ITALIC = new TextFormatting("ITALIC", 'o');
     public static final TextFormatting RESET = new TextFormatting("RESET", 'r', -1);
+    public static final char COLOR_CHAR = '\u00A7';
 
     public static TextFormatting getByName(final String name) {
         for (TextFormatting formatting : ALL) {
@@ -79,6 +80,10 @@ public class TextFormatting {
 
     public boolean isColor() {
         return Type.COLOR.equals(this.type) || Type.RGB.equals(this.type);
+    }
+
+    public boolean isFormattingColor() {
+        return Type.COLOR.equals(this.type);
     }
 
     public boolean isRGBColor() {
