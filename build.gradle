@@ -4,6 +4,7 @@ subprojects {
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(8)
     compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
 
     archivesBaseName = "MCStructs-" + project.maven_name
     group = project.maven_group
@@ -15,6 +16,11 @@ subprojects {
             name = "lenni0451 releases"
             url = "https://maven.lenni0451.net/releases"
         }
+    }
+
+    dependencies {
+        testImplementation platform("org.junit:junit-bom:5.9.0")
+        testImplementation "org.junit.jupiter:junit-jupiter"
     }
 
     java {
@@ -47,4 +53,14 @@ subprojects {
             }
         }
     }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+        maxParallelForks Runtime.runtime.availableProcessors()
+    }
+
+    build.dependsOn(test)
 }
