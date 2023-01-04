@@ -5,6 +5,11 @@ import net.lenni0451.mcstructs.items.ItemRegistry;
 
 import java.util.Objects;
 
+/**
+ * The implementation of {@link AItemStack} which stores the damage value in the Nbt tag.
+ *
+ * @param <I> The type of the item (e.g. Integer)
+ */
 public class ItemStack<I> extends AItemStack<I, ItemStack<I>> {
 
     public ItemStack(final ItemRegistry<I, ItemStack<I>> registry, final I item) {

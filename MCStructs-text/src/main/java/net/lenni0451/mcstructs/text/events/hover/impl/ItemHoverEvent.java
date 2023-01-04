@@ -7,6 +7,9 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 
 import java.util.Objects;
 
+/**
+ * The implementation for item hover events.
+ */
 public class ItemHoverEvent extends AHoverEvent {
 
     private final Identifier item;
@@ -21,14 +24,23 @@ public class ItemHoverEvent extends AHoverEvent {
         this.nbt = nbt;
     }
 
+    /**
+     * @return The item of this hover event
+     */
     public Identifier getItem() {
         return this.item;
     }
 
+    /**
+     * @return The count of this hover event
+     */
     public int getCount() {
         return this.count;
     }
 
+    /**
+     * @return The nbt of this hover event
+     */
     public CompoundTag getNbt() {
         return this.nbt;
     }

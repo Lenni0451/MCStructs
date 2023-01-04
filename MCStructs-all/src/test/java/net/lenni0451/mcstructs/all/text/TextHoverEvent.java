@@ -9,7 +9,7 @@ import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 /**
- * Add a show item hover event to a text component
+ * Add a show item hover event to a text component.
  */
 public class TextHoverEvent {
 

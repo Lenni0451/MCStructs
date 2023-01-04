@@ -14,35 +14,74 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
 
     private int[] value;
 
+    /**
+     * Create an empty int array tag.
+     */
     public IntArrayTag() {
         this(new int[0]);
     }
 
+    /**
+     * Create an int array tag from a {@link IntTag} {@link ListTag}.
+     *
+     * @param list The list tag
+     */
     public IntArrayTag(final ListTag<IntTag> list) {
         this.value = new int[list.size()];
         for (int i = 0; i < list.size(); i++) this.value[i] = list.get(i).getValue();
     }
 
+    /**
+     * Create an int array tag from an int array.
+     *
+     * @param value The int array
+     */
     public IntArrayTag(final int[] value) {
         this.value = value;
     }
 
+    /**
+     * @return The int array value
+     */
     public int[] getValue() {
         return this.value;
     }
 
+    /**
+     * Set the int array value.
+     *
+     * @param value The new value
+     */
     public void setValue(final int[] value) {
         this.value = value;
     }
 
+    /**
+     * Get an int from the array.
+     *
+     * @param index The index
+     * @return The int
+     */
     public int get(final int index) {
         return this.value[index];
     }
 
+    /**
+     * Set an int in the array.
+     *
+     * @param index The index
+     * @param i     The new value
+     */
     public void set(final int index, final int i) {
         this.value[index] = i;
     }
 
+    /**
+     * Add an int to the array.<br>
+     * This will create a new array and copy the old values into it.
+     *
+     * @param i The int
+     */
     public void add(final int i) {
         int[] newValue = new int[this.value.length + 1];
         System.arraycopy(this.value, 0, newValue, 0, this.value.length);
@@ -50,10 +89,16 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
         this.value = newValue;
     }
 
+    /**
+     * @return The length of the array
+     */
     public int getLength() {
         return this.value.length;
     }
 
+    /**
+     * @return If the int array is empty
+     */
     public boolean isEmpty() {
         return this.value.length == 0;
     }

@@ -13,18 +13,34 @@ public class StringTag implements INbtTag {
 
     private String value;
 
+    /**
+     * Create a string tag with the value "".
+     */
     public StringTag() {
         this("");
     }
 
+    /**
+     * Create a string tag with the given value.
+     *
+     * @param value The value
+     */
     public StringTag(final String value) {
         this.value = value;
     }
 
+    /**
+     * @return The string value
+     */
     public String getValue() {
         return this.value;
     }
 
+    /**
+     * Set the string value.
+     *
+     * @param value The new value
+     */
     public void setValue(final String value) {
         this.value = value;
     }

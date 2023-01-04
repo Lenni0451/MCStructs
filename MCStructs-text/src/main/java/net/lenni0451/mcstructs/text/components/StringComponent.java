@@ -12,6 +12,9 @@ public class StringComponent extends ATextComponent {
         this.text = text;
     }
 
+    /**
+     * @return The text of this component
+     */
     public String getText() {
         return this.text;
     }

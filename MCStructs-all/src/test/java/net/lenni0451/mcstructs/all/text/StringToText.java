@@ -4,7 +4,7 @@ import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 /**
- * Convert a string to a text component
+ * Convert a string to a text component.
  */
 public class StringToText {
 

@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.nbt;
 
+import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +18,7 @@ class NbtReadTrackerTest {
         for (int i = 0; i < 1024; i++) {
             try {
                 tracker.pushDepth();
-            } catch (IllegalStateException e) {
+            } catch (NbtReadException e) {
                 assertEquals(512, i);
                 break;
             }
@@ -26,7 +27,7 @@ class NbtReadTrackerTest {
 
     @Test
     void read() {
-        assertThrows(IllegalStateException.class, () -> new NbtReadTracker().read(Integer.MAX_VALUE));
+        assertThrows(NbtReadException.class, () -> new NbtReadTracker().read(Integer.MAX_VALUE));
     }
 
 }

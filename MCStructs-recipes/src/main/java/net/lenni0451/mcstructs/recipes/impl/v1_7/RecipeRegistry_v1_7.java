@@ -27,6 +27,7 @@ public class RecipeRegistry_v1_7<I> extends ARecipeRegistry<I, LegacyItemStack<I
         this.registerCraftingRecipe(new FireworksCraftingRecipe_v1_7<>());
     }
 
+    @Override
     public LegacyItemStack<I> findCraftingRecipe(final ICraftingInventory<I, LegacyItemStack<I>> craftingInventory) {
         LegacyItemStack<I> stack1 = null;
         LegacyItemStack<I> stack2 = null;

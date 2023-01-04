@@ -9,25 +9,25 @@ import net.lenni0451.mcstructs.items.stacks.LegacyItemStack;
 import net.lenni0451.mcstructs.recipes.impl.v1_7.RecipeRegistry_v1_7;
 
 /**
- * The data container is used to store all the data needed for the inventory tracking<br>
- * The 1.7 data is used here. You may have to change some things if you want to use another version
+ * The data container is used to store all the data needed for the inventory tracking.<br>
+ * The 1.7 data is used here. You may have to change some things if you want to use another version.
  */
 public class DataContainer {
 
     /**
-     * The item registry containing all items and their types and tags
+     * The item registry containing all items and their types and tags.
      */
     private final ItemRegistry<Integer, LegacyItemStack<Integer>> itemRegistry;
     /**
-     * The recipe registry containing all crafting recipes, furnace recipes and villager recipes
+     * The recipe registry containing all crafting recipes, furnace recipes and villager recipes.
      */
     private final RecipeRegistry_v1_7<Integer> recipeRegistry;
     /**
-     * The enchantment registry containing all enchantments and item/enchantment incompatibilities
+     * The enchantment registry containing all enchantments and item/enchantment incompatibilities.
      */
     private final EnchantmentRegistry<Integer, LegacyItemStack<Integer>> enchantmentRegistry;
     /**
-     * The inventory holder containing all player/inventory related data
+     * The inventory holder containing all player/inventory related data.
      */
     private final InventoryHolder<PlayerInventory_v1_7<Integer, LegacyItemStack<Integer>>, Integer, LegacyItemStack<Integer>> inventoryHolder;
 

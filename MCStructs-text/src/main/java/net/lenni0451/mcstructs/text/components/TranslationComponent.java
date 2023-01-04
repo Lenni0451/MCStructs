@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.text.ATextComponent;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -27,15 +28,26 @@ public class TranslationComponent extends ATextComponent {
         this.args = args;
     }
 
+    /**
+     * @return The key of this component
+     */
     public String getKey() {
         return this.key;
     }
 
+    /**
+     * @return The arguments of this component
+     */
     public Object[] getArgs() {
         return this.args;
     }
 
-    public void setTranslator(final Function<String, String> translator) {
+    /**
+     * Set the translator function used to translate the key.
+     *
+     * @param translator The translator function
+     */
+    public void setTranslator(@Nonnull final Function<String, String> translator) {
         this.translator = translator;
     }
 

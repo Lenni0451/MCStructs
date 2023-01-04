@@ -1,5 +1,8 @@
 package net.lenni0451.mcstructs.inventory.enums;
 
+/**
+ * The inventory actions when clicking on a slot.
+ */
 public enum InventoryAction {
 
     /**

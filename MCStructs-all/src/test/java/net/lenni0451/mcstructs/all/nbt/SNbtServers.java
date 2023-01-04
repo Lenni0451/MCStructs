@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import java.io.File;
 
 /**
- * Create a new servers.dat file by parsing a string
+ * Create a new servers.dat file by parsing a string.
  */
 public class SNbtServers {
 

@@ -14,6 +14,9 @@ public class BlockNbtComponent extends NbtComponent {
         this.pos = pos;
     }
 
+    /**
+     * @return The position of this component
+     */
     public String getPos() {
         return this.pos;
     }

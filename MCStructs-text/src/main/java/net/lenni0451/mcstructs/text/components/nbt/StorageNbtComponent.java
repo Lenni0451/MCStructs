@@ -15,6 +15,9 @@ public class StorageNbtComponent extends NbtComponent {
         this.id = id;
     }
 
+    /**
+     * @return The id of this component
+     */
     public Identifier getId() {
         return this.id;
     }

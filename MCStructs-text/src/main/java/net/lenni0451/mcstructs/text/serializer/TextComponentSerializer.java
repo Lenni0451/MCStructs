@@ -42,16 +42,16 @@ import java.util.function.Supplier;
 public class TextComponentSerializer {
 
     /**
-     * The text component serializer for 1.6<br>
-     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization
+     * The text component serializer for 1.6.<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_6 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_6())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_6())
             .create());
     /**
-     * The text component serializer for 1.7<br>
-     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization
+     * The text component serializer for 1.7.<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_7 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_7())
@@ -60,8 +60,8 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_7())
             .create());
     /**
-     * The text component serializer for 1.8<br>
-     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization
+     * The text component serializer for 1.8.<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_8 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_8())
@@ -70,8 +70,8 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
     /**
-     * The text component serializer for 1.9 - 1.11<br>
-     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     * The text component serializer for 1.9 - 1.11.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_9 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_9())
@@ -80,8 +80,8 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
     /**
-     * The text component serializer for 1.12 - 1.13<br>
-     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     * The text component serializer for 1.12 - 1.13.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_12 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_12())
@@ -90,8 +90,8 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
     /**
-     * The text component serializer for 1.14<br>
-     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     * The text component serializer for 1.14.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_14 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_14())
@@ -100,8 +100,8 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
     /**
-     * The text component serializer for 1.15<br>
-     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     * The text component serializer for 1.15.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_15 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_15())
@@ -110,8 +110,8 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
     /**
-     * The text component serializer for 1.16<br>
-     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     * The text component serializer for 1.16.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_16 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_16())
@@ -122,8 +122,8 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
             .create());
     /**
-     * The text component serializer for 1.17<br>
-     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     * The text component serializer for 1.17.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_17 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_17())
@@ -134,8 +134,8 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
             .create());
     /**
-     * The text component serializer for 1.18 - 1.19<br>
-     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     * The text component serializer for 1.18 - 1.19.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_18 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_17())
@@ -163,7 +163,7 @@ public class TextComponentSerializer {
     }
 
     /**
-     * Serialize a text component to a json string
+     * Serialize a text component to a json string.
      *
      * @param component The component to serialize
      * @return The json string
@@ -173,7 +173,7 @@ public class TextComponentSerializer {
     }
 
     /**
-     * Serialize a text component to a {@link JsonElement}
+     * Serialize a text component to a {@link JsonElement}.
      *
      * @param component The component to serialize
      * @return The json element

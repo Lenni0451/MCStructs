@@ -14,18 +14,34 @@ public class ShortTag implements INbtNumber {
 
     private short value;
 
+    /**
+     * Create a short tag with the value 0.
+     */
     public ShortTag() {
         this((short) 0);
     }
 
+    /**
+     * Create a short tag with the given value.
+     *
+     * @param value The value
+     */
     public ShortTag(final short value) {
         this.value = value;
     }
 
+    /**
+     * @return The short value
+     */
     public short getValue() {
         return this.value;
     }
 
+    /**
+     * Set the short value.
+     *
+     * @param value The new value
+     */
     public void setValue(final short value) {
         this.value = value;
     }

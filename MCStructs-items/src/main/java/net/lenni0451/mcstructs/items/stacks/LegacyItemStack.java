@@ -5,6 +5,11 @@ import net.lenni0451.mcstructs.items.ItemRegistry;
 
 import java.util.Objects;
 
+/**
+ * The implementation of {@link AItemStack} which has a damage value.
+ *
+ * @param <I> The type of the item (e.g. Integer)
+ */
 public class LegacyItemStack<I> extends AItemStack<I, LegacyItemStack<I>> {
 
     private int damage;

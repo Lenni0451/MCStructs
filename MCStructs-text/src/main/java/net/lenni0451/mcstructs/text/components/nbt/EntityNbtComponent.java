@@ -14,6 +14,9 @@ public class EntityNbtComponent extends NbtComponent {
         this.selector = selector;
     }
 
+    /**
+     * @return The selector of this component
+     */
     public String getSelector() {
         return this.selector;
     }

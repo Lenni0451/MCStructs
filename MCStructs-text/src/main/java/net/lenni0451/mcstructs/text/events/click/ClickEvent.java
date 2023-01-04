@@ -2,6 +2,9 @@ package net.lenni0451.mcstructs.text.events.click;
 
 import java.util.Objects;
 
+/**
+ * The implementation for click events.
+ */
 public class ClickEvent {
 
     private final ClickEventAction action;
@@ -12,10 +15,16 @@ public class ClickEvent {
         this.value = value;
     }
 
+    /**
+     * @return The action of this click event
+     */
     public ClickEventAction getAction() {
         return this.action;
     }
 
+    /**
+     * @return The value of this click event
+     */
     public String getValue() {
         return this.value;
     }

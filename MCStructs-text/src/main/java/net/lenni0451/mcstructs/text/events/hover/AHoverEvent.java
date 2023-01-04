@@ -1,5 +1,9 @@
 package net.lenni0451.mcstructs.text.events.hover;
 
+/**
+ * The abstract class for hover events.<br>
+ * Until minecraft 1.16 hover events always used the {@link net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent} implementation.
+ */
 public abstract class AHoverEvent {
 
     private final HoverEventAction action;

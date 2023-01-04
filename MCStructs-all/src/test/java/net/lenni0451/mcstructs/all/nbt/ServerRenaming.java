@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
- * Read a servers.dat file and rename all servers
+ * Read a servers.dat file and rename all servers.
  */
 public class ServerRenaming {
 

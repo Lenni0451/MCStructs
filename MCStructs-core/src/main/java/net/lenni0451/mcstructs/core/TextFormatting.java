@@ -1,14 +1,33 @@
 package net.lenni0451.mcstructs.core;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Text formattings are used to style texts in minecraft.<br>
+ * Starting with minecraft 1.16 rgb colors have been added which also marked the end of just using § as a formatting character.
+ */
 public class TextFormatting {
 
+    /**
+     * All text formattings and colors.
+     */
     public static final List<TextFormatting> ALL = new ArrayList<>();
+    /**
+     * All basic text colors.
+     */
     public static final List<TextFormatting> COLORS = new ArrayList<>();
+    /**
+     * All text style formattings.
+     */
     public static final List<TextFormatting> FORMATTINGS = new ArrayList<>();
+    /**
+     * The color char used for formatting.<br>
+     * Using it has been deprecated since 1.16.
+     */
+    public static final char COLOR_CHAR = '\u00A7';
     public static final TextFormatting BLACK = new TextFormatting("BLACK", '0', 0x00_00_00);
     public static final TextFormatting DARK_BLUE = new TextFormatting("DARK_BLUE", '1', 0x00_00_AA);
     public static final TextFormatting DARK_GREEN = new TextFormatting("DARK_GREEN", '2', 0x00_AA_00);
@@ -31,8 +50,18 @@ public class TextFormatting {
     public static final TextFormatting UNDERLINE = new TextFormatting("UNDERLINE", 'n');
     public static final TextFormatting ITALIC = new TextFormatting("ITALIC", 'o');
     public static final TextFormatting RESET = new TextFormatting("RESET", 'r', -1);
-    public static final char COLOR_CHAR = '\u00A7';
 
+    /**
+     * Get a formatting by name.<br>
+     * The name is case-insensitive.<br>
+     * <br>
+     * Example:<br>
+     * <code>TextFormatting.getByName("RED")</code> -{@literal >} {@link #RED}
+     *
+     * @param name The name of the formatting
+     * @return The formatting or null if not found
+     */
+    @Nullable
     public static TextFormatting getByName(final String name) {
         for (TextFormatting formatting : ALL) {
             if (formatting.getName().equalsIgnoreCase(name)) return formatting;
@@ -40,6 +69,18 @@ public class TextFormatting {
         return null;
     }
 
+    /**
+     * Get a formatting by name or a rgb color when the name starts with #.<br>
+     * The name is case-insensitive.<br>
+     * <br>
+     * Example:<br>
+     * <code>TextFormatting.parse("RED")</code> -{@literal >} {@link #RED}
+     * <code>TextFormatting.parse("#FF0000")</code> -{@literal >} rgb(255, 0, 0)
+     *
+     * @param s The name of the formatting or a rgb color
+     * @return The formatting or null if not found
+     */
+    @Nullable
     public static TextFormatting parse(final String s) {
         if (s.startsWith("#")) return new TextFormatting(Integer.parseInt(s.substring(1), 16));
         else return getByName(s);
@@ -71,6 +112,12 @@ public class TextFormatting {
         FORMATTINGS.add(this);
     }
 
+    /**
+     * Create a new rgb color.<br>
+     * Alpha values are stripped.
+     *
+     * @param rgbValue The rgb value
+     */
     public TextFormatting(final int rgbValue) {
         this.type = Type.RGB;
         this.name = "RGB_COLOR";
@@ -78,34 +125,58 @@ public class TextFormatting {
         this.rgbValue = rgbValue & 0xFF_FF_FF;
     }
 
+    /**
+     * @return If the formatting is a formatting color or rgb color
+     */
     public boolean isColor() {
         return Type.COLOR.equals(this.type) || Type.RGB.equals(this.type);
     }
 
+    /**
+     * @return If the formatting is a formatting color (e.g. {@link #RED})
+     */
     public boolean isFormattingColor() {
         return Type.COLOR.equals(this.type);
     }
 
+    /**
+     * @return If the formatting is a rgb color
+     */
     public boolean isRGBColor() {
         return Type.RGB.equals(this.type);
     }
 
+    /**
+     * @return If the formatting is a formatting (e.g. {@link #OBFUSCATED}, {@link #BOLD}, ...)
+     */
     public boolean isFormatting() {
         return Type.FORMATTING.equals(this.type);
     }
 
+    /**
+     * @return The name of the formatting (e.g. "RED")
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @return The code of the formatting (e.g. 'c')
+     */
     public char getCode() {
         return this.code;
     }
 
+    /**
+     * @return The rgb value of the formatting or -1 if it's not a color
+     */
     public int getRgbValue() {
         return this.rgbValue;
     }
 
+    /**
+     * @return The lowercase name of the formatting or the rgb value as a hex string if it's a rgb color
+     */
     public String serialize() {
         if (Type.RGB.equals(this.type)) return "#" + String.format("%06X", this.rgbValue);
         else return this.name.toLowerCase();

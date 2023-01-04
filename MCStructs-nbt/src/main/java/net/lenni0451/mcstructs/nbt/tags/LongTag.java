@@ -14,18 +14,34 @@ public class LongTag implements INbtNumber {
 
     private long value;
 
+    /**
+     * Create a long tag with the value 0.
+     */
     public LongTag() {
         this(0);
     }
 
+    /**
+     * Create a long tag with the given value.
+     *
+     * @param value The value
+     */
     public LongTag(final long value) {
         this.value = value;
     }
 
+    /**
+     * @return The long value
+     */
     public long getValue() {
         return this.value;
     }
 
+    /**
+     * Set the long value.
+     *
+     * @param value The new value
+     */
     public void setValue(final long value) {
         this.value = value;
     }

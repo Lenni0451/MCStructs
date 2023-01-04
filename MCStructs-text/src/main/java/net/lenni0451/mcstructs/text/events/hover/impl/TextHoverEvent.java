@@ -6,6 +6,9 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 
 import java.util.Objects;
 
+/**
+ * The implementation for text hover events.
+ */
 public class TextHoverEvent extends AHoverEvent {
 
     private final ATextComponent text;
@@ -16,6 +19,9 @@ public class TextHoverEvent extends AHoverEvent {
         this.text = text;
     }
 
+    /**
+     * @return The text of this hover event
+     */
     public ATextComponent getText() {
         return this.text;
     }

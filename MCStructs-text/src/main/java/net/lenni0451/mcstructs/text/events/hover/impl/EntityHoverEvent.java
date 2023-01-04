@@ -8,6 +8,9 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * The implementation for entity hover events.
+ */
 public class EntityHoverEvent extends AHoverEvent {
 
     private final Identifier entityType;
@@ -22,14 +25,23 @@ public class EntityHoverEvent extends AHoverEvent {
         this.name = name;
     }
 
+    /**
+     * @return The entity type of this hover event
+     */
     public Identifier getEntityType() {
         return this.entityType;
     }
 
+    /**
+     * @return The uuid of this hover event
+     */
     public UUID getUuid() {
         return this.uuid;
     }
 
+    /**
+     * @return The name of this hover event
+     */
     public ATextComponent getName() {
         return this.name;
     }

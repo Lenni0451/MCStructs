@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.text.ATextComponent;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class ScoreComponent extends ATextComponent {
@@ -16,19 +17,34 @@ public class ScoreComponent extends ATextComponent {
         this.objective = objective;
     }
 
+    /**
+     * @return The name of this component
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @return The objective of this component
+     */
     public String getObjective() {
         return this.objective;
     }
 
+    /**
+     * @return The value of this component
+     */
+    @Nullable
     public String getValue() {
         return this.value;
     }
 
-    public void setValue(final String value) {
+    /**
+     * Set the value of this component.
+     *
+     * @param value The new value
+     */
+    public void setValue(@Nullable final String value) {
         this.value = value;
     }
 

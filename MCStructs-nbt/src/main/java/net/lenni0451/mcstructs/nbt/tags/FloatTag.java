@@ -14,18 +14,34 @@ public class FloatTag implements INbtNumber {
 
     private float value;
 
+    /**
+     * Create a float tag with the value 0.
+     */
     public FloatTag() {
         this(0);
     }
 
+    /**
+     * Create a float tag with the given value.
+     *
+     * @param value The value
+     */
     public FloatTag(final float value) {
         this.value = value;
     }
 
+    /**
+     * @return The float value
+     */
     public float getValue() {
         return this.value;
     }
 
+    /**
+     * Set the float value.
+     *
+     * @param value The new value
+     */
     public void setValue(final float value) {
         this.value = value;
     }

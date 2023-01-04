@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.text.ATextComponent;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class SelectorComponent extends ATextComponent {
@@ -9,15 +10,22 @@ public class SelectorComponent extends ATextComponent {
     private final String selector;
     private final ATextComponent separator;
 
-    public SelectorComponent(final String selector, final ATextComponent separator) {
+    public SelectorComponent(final String selector, @Nullable final ATextComponent separator) {
         this.selector = selector;
         this.separator = separator;
     }
 
+    /**
+     * @return The selector of this component
+     */
     public String getSelector() {
         return this.selector;
     }
 
+    /**
+     * @return The separator of this component
+     */
+    @Nullable
     public ATextComponent getSeparator() {
         return this.separator;
     }

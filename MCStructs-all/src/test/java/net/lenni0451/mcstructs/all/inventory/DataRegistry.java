@@ -16,13 +16,13 @@ import net.lenni0451.mcstructs.recipes.impl.v1_7.impl.ShapedCraftingRecipe_v1_7;
 import net.lenni0451.mcstructs.recipes.impl.v1_7.impl.ShapelessCraftingRecipe_v1_7;
 
 /**
- * This data registry uses the v1_7 data classes to register all data<br>
- * If you already have the required data anywhere else you have to do the conversion yourself
+ * This data registry uses the v1_7 data classes to register all data.<br>
+ * If you already have the required data anywhere else you have to do the conversion yourself.
  */
 public class DataRegistry {
 
     /**
-     * Register all items with their types and tags
+     * Register all items with their types and tags.
      *
      * @param itemRegistry The item registry
      */
@@ -82,8 +82,8 @@ public class DataRegistry {
     }
 
     /**
-     * Register all crafting recipes and furnace recipes<br>
-     * Villager recipes are sent by the server, so we can't register them here
+     * Register all crafting recipes and furnace recipes.<br>
+     * Villager recipes are sent by the server, so we can't register them here.
      *
      * @param recipeRegistry The recipe registry
      */
@@ -107,7 +107,7 @@ public class DataRegistry {
     }
 
     /**
-     * Register all enchantments and item/enchantment incompatibilities
+     * Register all enchantments and item/enchantment incompatibilities.
      *
      * @param enchantmentRegistry The enchantment registry
      */
@@ -154,7 +154,7 @@ public class DataRegistry {
     }
 
     /**
-     * Get the armor/tool material from the item name
+     * Get the armor/tool material from the item name.
      *
      * @param meta The item meta
      * @param name The item name
@@ -169,7 +169,7 @@ public class DataRegistry {
     }
 
     /**
-     * Convert the Object[] of the crafting recipe list to a legacy item stack
+     * Convert the Object[] of the crafting recipe list to a legacy item stack.
      *
      * @param itemRegistry The item registry
      * @param stack        The Object[] stack
@@ -181,7 +181,7 @@ public class DataRegistry {
     }
 
     /**
-     * Convert the data enchantment instance to an enchantment instance
+     * Convert the data enchantment instance to an enchantment instance.
      *
      * @param enchantment The data enchantment
      * @return The enchantment

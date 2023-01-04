@@ -14,18 +14,34 @@ public class IntTag implements INbtNumber {
 
     private int value;
 
+    /**
+     * Create a int tag with the value 0.
+     */
     public IntTag() {
         this(0);
     }
 
+    /**
+     * Create a int tag with the given value.
+     *
+     * @param value The value
+     */
     public IntTag(final int value) {
         this.value = value;
     }
 
+    /**
+     * @return The int value
+     */
     public int getValue() {
         return this.value;
     }
 
+    /**
+     * Set the int value.
+     *
+     * @param value The new value
+     */
     public void setValue(final int value) {
         this.value = value;
     }

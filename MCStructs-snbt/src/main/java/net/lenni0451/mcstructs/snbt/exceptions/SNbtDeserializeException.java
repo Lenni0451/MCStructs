@@ -1,5 +1,8 @@
 package net.lenni0451.mcstructs.snbt.exceptions;
 
+/**
+ * This exception is thrown when the SNbt deserializer encounters an invalid SNbt tag.
+ */
 public class SNbtDeserializeException extends Exception {
 
     private static String trim(final String rawTag, final int position) {

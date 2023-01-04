@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 /**
- * Create a string text component with a style and serialize it to a string
+ * Create a string text component with a style and serialize it to a string.
  */
 public class TextToString {
 

@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.nbt.tags;
 import net.lenni0451.mcstructs.nbt.*;
 import net.lenni0451.mcstructs.nbt.exceptions.UnknownTagTypeException;
 
+import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -12,34 +13,70 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
 
     private Map<String, INbtTag> value;
 
+    /**
+     * Create an empty compound tag.
+     */
     public CompoundTag() {
         this.value = new HashMap<>();
     }
 
+    /**
+     * Create a compound tag from a map.
+     *
+     * @param value The map
+     */
     public CompoundTag(final Map<String, INbtTag> value) {
         this.value = value;
     }
 
+    /**
+     * @return The map value
+     */
     public Map<String, INbtTag> getValue() {
         return this.value;
     }
 
+    /**
+     * Set the map value.
+     *
+     * @param value The new value
+     */
     public void setValue(final Map<String, INbtTag> value) {
         this.value = value;
     }
 
+    /**
+     * @return The size of the map
+     */
     public int size() {
         return this.value.size();
     }
 
+    /**
+     * @return If the map is empty
+     */
     public boolean isEmpty() {
         return this.value.isEmpty();
     }
 
+    /**
+     * Get if the map contains a tag with the given name.
+     *
+     * @param key The key
+     * @return If the map contains the given key
+     */
     public boolean contains(final String key) {
         return this.value.containsKey(key);
     }
 
+    /**
+     * Get if the map contains a tag with the given name and type.<br>
+     * If the type is a {@link INbtNumber} any number type will be accepted.
+     *
+     * @param key  The key
+     * @param type The type
+     * @return If the map contains the given key and type
+     */
     public boolean contains(final String key, final NbtType type) {
         INbtTag tag = this.get(key);
         if (tag == null) return false;
@@ -47,105 +84,251 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         return tag.getNbtType().equals(type);
     }
 
+    /**
+     * Get if the map contains a tag with the given name and exact type.
+     *
+     * @param key  The key
+     * @param type The type
+     * @return If the map contains the given key and type
+     */
     public boolean containsExact(final String key, final NbtType type) {
         INbtTag tag = this.get(key);
         if (tag == null) return false;
         return tag.getNbtType().equals(type);
     }
 
+    /**
+     * Get a tag from the map.
+     *
+     * @param key The key
+     * @param <T> The tag type
+     * @return The tag or null if the map does not contain the given key
+     */
+    @Nullable
     public <T extends INbtTag> T get(final String key) {
         return (T) this.value.get(key);
     }
 
+    /**
+     * Add a tag to the map.
+     *
+     * @param key The key
+     * @param tag The tag
+     */
     public void add(final String key, final INbtTag tag) {
         this.value.put(key, tag);
     }
 
+    /**
+     * Add a tag from its raw value to the map.
+     *
+     * @param key The key
+     * @param o   The raw value
+     * @throws UnknownTagTypeException If the raw value can not be converted to a tag
+     */
     public void add(final String key, final Object o) {
         this.add(key, this.wrap(o));
     }
 
+    /**
+     * Remove a tag from the map.
+     *
+     * @param key The key
+     * @return The removed tag or null if the map does not contain the given key
+     */
+    @Nullable
     public INbtTag remove(final String key) {
         return this.value.remove(key);
     }
 
+    /**
+     * Get a byte from the map.
+     *
+     * @param key The key
+     * @return The byte or 0 if the map does not contain the given key or the tag is not a number
+     */
     public byte getByte(final String key) {
         if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue();
         return 0;
     }
 
+    /**
+     * Add a byte to the map.
+     *
+     * @param key The key
+     * @param b   The byte
+     */
     public void addByte(final String key, final byte b) {
         this.add(key, new ByteTag(b));
     }
 
+    /**
+     * Get a short from the map.
+     *
+     * @param key The key
+     * @return The short or 0 if the map does not contain the given key or the tag is not a number
+     */
     public short getShort(final String key) {
         if (this.contains(key, NbtType.SHORT)) return this.<INbtNumber>get(key).shortValue();
         return 0;
     }
 
+    /**
+     * Add a short to the map.
+     *
+     * @param key The key
+     * @param s   The short
+     */
     public void addShort(final String key, final short s) {
         this.add(key, new ShortTag(s));
     }
 
+    /**
+     * Get an int from the map.
+     *
+     * @param key The key
+     * @return The int or 0 if the map does not contain the given key or the tag is not a number
+     */
     public int getInt(final String key) {
         if (this.contains(key, NbtType.INT)) return this.<INbtNumber>get(key).intValue();
         return 0;
     }
 
+    /**
+     * Add an int to the map.
+     *
+     * @param key The key
+     * @param i   The int
+     */
     public void addInt(final String key, final int i) {
         this.add(key, new IntTag(i));
     }
 
+    /**
+     * Get a long from the map.
+     *
+     * @param key The key
+     * @return The long or 0 if the map does not contain the given key or the tag is not a number
+     */
     public long getLong(final String key) {
         if (this.contains(key, NbtType.LONG)) return this.<INbtNumber>get(key).longValue();
         return 0;
     }
 
+    /**
+     * Add a long to the map.
+     *
+     * @param key The key
+     * @param l   The long
+     */
     public void addLong(final String key, final long l) {
         this.add(key, new LongTag(l));
     }
 
+    /**
+     * Get a float from the map.
+     *
+     * @param key The key
+     * @return The float or 0 if the map does not contain the given key or the tag is not a number
+     */
     public float getFloat(final String key) {
         if (this.contains(key, NbtType.FLOAT)) return this.<INbtNumber>get(key).floatValue();
         return 0;
     }
 
+    /**
+     * Add a float to the map.
+     *
+     * @param key The key
+     * @param f   The float
+     */
     public void addFloat(final String key, final float f) {
         this.add(key, new FloatTag(f));
     }
 
+    /**
+     * Get a double from the map.
+     *
+     * @param key The key
+     * @return The double or 0 if the map does not contain the given key or the tag is not a number
+     */
     public double getDouble(final String key) {
         if (this.contains(key, NbtType.DOUBLE)) return this.<INbtNumber>get(key).doubleValue();
         return 0;
     }
 
+    /**
+     * Add a double to the map.
+     *
+     * @param key The key
+     * @param d   The double
+     */
     public void addDouble(final String key, final double d) {
         this.add(key, new DoubleTag(d));
     }
 
+    /**
+     * Get a byte array from the map.
+     *
+     * @param key The key
+     * @return The byte array or <code>new byte[0]</code> if the map does not contain the given key or the tag is not a byte array
+     */
     public byte[] getByteArray(final String key) {
         if (this.contains(key, NbtType.BYTE_ARRAY)) return this.<ByteArrayTag>get(key).getValue();
         return new byte[0];
     }
 
+    /**
+     * Add a byte array to the map.
+     *
+     * @param key   The key
+     * @param bytes The byte array
+     */
     public void addByteArray(final String key, final byte... bytes) {
         this.add(key, new ByteArrayTag(bytes));
     }
 
+    /**
+     * Get a string from the map.
+     *
+     * @param key The key
+     * @return The string or <code>""</code> if the map does not contain the given key or the tag is not a string
+     */
     public String getString(final String key) {
         if (this.contains(key, NbtType.STRING)) return this.<StringTag>get(key).getValue();
         return "";
     }
 
+    /**
+     * Add a string to the map.
+     *
+     * @param key The key
+     * @param s   The string
+     */
     public void addString(final String key, final String s) {
         this.add(key, new StringTag(s));
     }
 
+    /**
+     * Get a list from the map.
+     *
+     * @param key The key
+     * @return The list or <code>new ListTag{@literal <}{@literal >}()</code> if the map does not contain the given key or the tag is not a list
+     */
     public <T extends INbtTag> ListTag<T> getList(final String key) {
         if (this.contains(key, NbtType.LIST)) return this.get(key);
         return new ListTag<>();
     }
 
+    /**
+     * Get a list from the map with the given type.<br>
+     * If the list does not contain the given type, an empty list is returned.
+     *
+     * @param key  The key
+     * @param type The type
+     * @param <T>  The type of the list
+     * @return The list or <code>new ListTag{@literal <}{@literal >}()</code> if the map does not contain the given key or the tag is not a list
+     */
     public <T extends INbtTag> ListTag<T> getList(final String key, final NbtType type) {
         if (this.contains(key, NbtType.LIST)) {
             ListTag<T> list = this.get(key);
@@ -155,10 +338,24 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         return new ListTag<>();
     }
 
+    /**
+     * Add a list to the map.
+     *
+     * @param key  The key
+     * @param list The list
+     */
     public void addList(final String key, final ListTag<?> list) {
         this.add(key, list);
     }
 
+    /**
+     * Add a list to the map.
+     *
+     * @param key   The key
+     * @param items The items
+     * @param <T>   The type of the items
+     * @throws IllegalArgumentException If the type of the items is mixed
+     */
     public <T extends INbtTag> void addList(final String key, final T... items) {
         if (items.length == 0) {
             this.add(key, new ListTag<>());
@@ -169,6 +366,14 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         }
     }
 
+    /**
+     * Add a list to the map.
+     *
+     * @param key   The key
+     * @param items The raw items
+     * @throws UnknownTagTypeException  If the type of the items is unknown
+     * @throws IllegalArgumentException If the type of the items is mixed
+     */
     public void addList(final String key, final Object... items) {
         if (items.length == 0) {
             this.add(key, new ListTag<>());
@@ -179,33 +384,74 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         }
     }
 
+    /**
+     * Get a compound from the map.
+     *
+     * @param key The key
+     * @return The compound or <code>new CompoundTag()</code> if the map does not contain the given key or the tag is not a compound
+     */
     public CompoundTag getCompound(final String key) {
         if (this.contains(key, NbtType.COMPOUND)) return this.get(key);
         return new CompoundTag();
     }
 
+    /**
+     * Add a compound to the map.
+     *
+     * @param key      The key
+     * @param compound The compound
+     */
     public void addCompound(final String key, final CompoundTag compound) {
         this.add(key, compound);
     }
 
+    /**
+     * Get an int array from the map.
+     *
+     * @param key The key
+     * @return The int array or <code>new int[0]</code> if the map does not contain the given key or the tag is not an int array
+     */
     public int[] getIntArray(final String key) {
         if (this.contains(key, NbtType.INT_ARRAY)) return this.<IntArrayTag>get(key).getValue();
         return new int[0];
     }
 
+    /**
+     * Add an int array to the map.
+     *
+     * @param key  The key
+     * @param ints The int array
+     */
     public void addIntArray(final String key, final int... ints) {
         this.add(key, new IntArrayTag(ints));
     }
 
+    /**
+     * Get a long array from the map.
+     *
+     * @param key The key
+     * @return The long array or <code>new long[0]</code> if the map does not contain the given key or the tag is not a long array
+     */
     public long[] getLongArray(final String key) {
         if (this.contains(key, NbtType.LONG_ARRAY)) return this.<LongArrayTag>get(key).getValue();
         return new long[0];
     }
 
+    /**
+     * Add a long array to the map.
+     *
+     * @param key   The key
+     * @param longs The long array
+     */
     public void addLongArray(final String key, final long... longs) {
         this.add(key, new LongArrayTag(longs));
     }
 
+    /**
+     * Trim the map by removing empty tags.
+     *
+     * @return If the trimmed map is empty
+     */
     public boolean trim() {
         if (this.value.isEmpty()) return true;
         this.value.entrySet().removeIf(entry -> {

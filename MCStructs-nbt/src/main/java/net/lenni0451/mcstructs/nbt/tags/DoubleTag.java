@@ -14,18 +14,34 @@ public class DoubleTag implements INbtNumber {
 
     private double value;
 
+    /**
+     * Create a double tag with the value 0.
+     */
     public DoubleTag() {
         this(0);
     }
 
+    /**
+     * Create a double tag with the given value.
+     *
+     * @param value The value
+     */
     public DoubleTag(final double value) {
         this.value = value;
     }
 
+    /**
+     * @return The double value
+     */
     public double getValue() {
         return this.value;
     }
 
+    /**
+     * Set the double value.
+     *
+     * @param value The new value
+     */
     public void setValue(final double value) {
         this.value = value;
     }

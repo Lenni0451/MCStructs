@@ -10,8 +10,8 @@ import net.lenni0451.mcstructs.recipes.impl.v1_7.RecipeRegistry_v1_7;
 import java.nio.charset.StandardCharsets;
 
 /**
- * The inventory tracking example uses the packet data sent by the client/server<br>
- * This is an example implementation for a proxy which has read access to the packets in both directions
+ * The inventory tracking example uses the packet data sent by the client/server.<br>
+ * This is an example implementation for a proxy which has read access to the packets in both directions.
  */
 public class PacketHandler {
 

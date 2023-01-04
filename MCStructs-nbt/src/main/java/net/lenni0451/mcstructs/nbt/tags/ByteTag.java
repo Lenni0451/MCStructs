@@ -14,18 +14,34 @@ public class ByteTag implements INbtNumber {
 
     private byte value;
 
+    /**
+     * Create a byte tag with the value 0.
+     */
     public ByteTag() {
         this((byte) 0);
     }
 
+    /**
+     * Create a byte tag with the given value.
+     *
+     * @param value The value
+     */
     public ByteTag(final byte value) {
         this.value = value;
     }
 
+    /**
+     * @return The byte value
+     */
     public byte getValue() {
         return this.value;
     }
 
+    /**
+     * Set the byte value.
+     *
+     * @param value The new value
+     */
     public void setValue(final byte value) {
         this.value = value;
     }

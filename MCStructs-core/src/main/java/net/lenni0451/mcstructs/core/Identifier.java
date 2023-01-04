@@ -2,11 +2,23 @@ package net.lenni0451.mcstructs.core;
 
 import java.util.Objects;
 
+/**
+ * The identifier used for registries in minecraft.
+ */
 public class Identifier {
 
     public static final String VALID_KEY_CHARS = "[_\\-a-z.]+";
     public static final String VALID_VALUE_CHARS = "[_\\-a-z/.]+";
 
+    /**
+     * Create a new identifier.<br>
+     * If {@code value} contains a colon, it will be split into {@code namespace} and {@code value}.<br>
+     * If {@code value} does not contain a colon, {@code namespace} will be set to {@code "minecraft"}.
+     *
+     * @param value The value of the identifier
+     * @return The created identifier
+     * @throws IllegalArgumentException If the value is not a valid identifier
+     */
     public static Identifier of(final String value) {
         String[] parts = value.split(":");
         if (parts.length == 1) return of("minecraft", parts[0]);
@@ -14,6 +26,14 @@ public class Identifier {
         else throw new IllegalArgumentException("The given value has to be splittable by :");
     }
 
+    /**
+     * Try to create a new identifier.<br>
+     * If {@code value} contains a colon, it will be split into {@code namespace} and {@code value}.<br>
+     * If {@code value} does not contain a colon, {@code namespace} will be set to {@code "minecraft"}.
+     *
+     * @param value The value of the identifier
+     * @return The created identifier or null if the value is not a valid identifier
+     */
     public static Identifier tryOf(final String value) {
         try {
             return of(value);
@@ -22,6 +42,14 @@ public class Identifier {
         }
     }
 
+    /**
+     * Create a new identifier from key and value.
+     *
+     * @param key The key of the identifier
+     * @param value The value of the identifier
+     * @return The created identifier
+     * @throws IllegalArgumentException If the key or value is not valid
+     */
     public static Identifier of(final String key, final String value) {
         return new Identifier(key, value);
     }
@@ -38,14 +66,23 @@ public class Identifier {
         this.value = value;
     }
 
+    /**
+     * @return The {code key:value} of the identifier
+     */
     public String get() {
         return this.key + ":" + this.value;
     }
 
+    /**
+     * @return The key of the identifier
+     */
     public String getKey() {
         return this.key;
     }
 
+    /**
+     * @return The value of the identifier
+     */
     public String getValue() {
         return this.value;
     }
