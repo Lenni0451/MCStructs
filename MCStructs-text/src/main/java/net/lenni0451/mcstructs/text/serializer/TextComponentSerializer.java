@@ -35,48 +35,84 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.function.Supplier;
 
+/**
+ * The text component serializer and deserializer wrapper class.<br>
+ * Use the static default fields for a specific minecraft version or create your own serializer/deserializer.
+ */
 public class TextComponentSerializer {
 
+    /**
+     * The text component serializer for 1.6<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_6 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_6())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_6())
             .create());
+    /**
+     * The text component serializer for 1.7<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_7 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_7())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_7())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_7())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_7())
             .create());
+    /**
+     * The text component serializer for 1.8<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_8 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_8())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
+    /**
+     * The text component serializer for 1.9 - 1.11<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_9 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_9())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
+    /**
+     * The text component serializer for 1.12 - 1.13<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_12 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_12())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_12())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
+    /**
+     * The text component serializer for 1.14<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_14 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_14())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_14())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
+    /**
+     * The text component serializer for 1.15<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_15 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_15())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_15())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
             .create());
+    /**
+     * The text component serializer for 1.16<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_16 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_16())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_16())
@@ -85,6 +121,10 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
             .create());
+    /**
+     * The text component serializer for 1.17<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_17 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_17())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_17())
@@ -93,6 +133,10 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
             .create());
+    /**
+     * The text component serializer for 1.18 - 1.19<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization
+     */
     public static final TextComponentSerializer V1_18 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_17())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_17())
@@ -110,35 +154,96 @@ public class TextComponentSerializer {
         this.gsonSupplier = gsonSupplier;
     }
 
+    /**
+     * @return The used gson instance
+     */
     public Gson getGson() {
         if (this.gson == null) this.gson = this.gsonSupplier.get();
         return this.gson;
     }
 
+    /**
+     * Serialize a text component to a json string
+     *
+     * @param component The component to serialize
+     * @return The json string
+     */
     public String serialize(final ATextComponent component) {
         return this.getGson().toJson(component);
     }
 
+    /**
+     * Serialize a text component to a {@link JsonElement}
+     *
+     * @param component The component to serialize
+     * @return The json element
+     */
     public JsonElement serializeJson(final ATextComponent component) {
         return this.getGson().toJsonTree(component);
     }
 
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is used by minecraft versions 1.6 - 1.8.<br>
+     * It can deserialize components with comments which newer versions did not support.<br>
+     * <br>
+     * <b>Example:</b><br>
+     * <code>{"text":/*comment*{@literal /}"Hello World"}</code>
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
     public ATextComponent deserialize(final String json) {
         return this.getGson().fromJson(json, ATextComponent.class);
     }
 
+    /**
+     * Deserialize a text component from a {@link JsonElement}.<br>
+     * This method is used by minecraft versions 1.6 - 1.8.
+     *
+     * @param element The json element
+     * @return The deserialized text component
+     */
     public ATextComponent deserialize(final JsonElement element) {
         return this.getGson().fromJson(element, ATextComponent.class);
     }
 
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is used by minecraft versions 1.9+.<br>
+     * It can not deserialize components with comments which older versions did support.
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
     public ATextComponent deserializeReader(final String json) {
         return deserializeReader(json, false);
     }
 
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is available in minecraft versions 1.9+ but not used for text components.<br>
+     * It can deserialize components with comments and trailing data.<br>
+     * <br>
+     * <b>Example:</b><br>
+     * <code>{"text":/*comment*{@literal /}"Hello World"}</code><br>
+     * <code>{"text":"Hello World"}trailing data</code>
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
     public ATextComponent deserializeLenientReader(final String json) {
         return deserializeReader(json, true);
     }
 
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is available in minecraft versions 1.9+ but is only used with {@code lenient} being false.
+     *
+     * @param json    The json string
+     * @param lenient Whether to use a lenient json reader
+     * @return The deserialized text component
+     */
     public ATextComponent deserializeReader(final String json, final boolean lenient) {
         try {
             JsonReader reader = new JsonReader(new StringReader(json));
