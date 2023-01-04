@@ -1,10 +1,17 @@
-package net.lenni0451.mcstructs.text.serializer;
+package net.lenni0451.mcstructs.text.utils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-public class TextComponentJsonUtils {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public class JsonUtils {
 
     /**
      * Get a boolean value from a json element.
@@ -153,6 +160,48 @@ public class TextComponentJsonUtils {
     public static JsonObject getJsonObject(final JsonObject object, final String key) {
         if (object.has(key)) return getJsonObject(object.get(key), key);
         else throw new JsonSyntaxException("Missing " + key + ", expected to find a JsonObject");
+    }
+
+
+    /**
+     * Convert a json element to a sorted string.<br>
+     * If the {@code comparator} is null, {@link Comparator#naturalOrder()} will be used.
+     *
+     * @param element    The element to convert
+     * @param comparator The comparator to use
+     * @return The sorted string
+     */
+    public static String toSortedString(@Nullable final JsonElement element, @Nullable final Comparator<String> comparator) {
+        if (element == null) return null;
+        else if (comparator != null) return sort(element, comparator).toString();
+        else return sort(element, Comparator.naturalOrder()).toString();
+    }
+
+
+    /**
+     * Sort a json element.
+     *
+     * @param element    The element to sort
+     * @param comparator The comparator to use
+     * @return The sorted element
+     */
+    public static JsonElement sort(@Nullable final JsonElement element, @Nonnull final Comparator<String> comparator) {
+        if (element == null) {
+            return null;
+        } else if (element.isJsonArray()) {
+            JsonArray array = element.getAsJsonArray();
+            for (int i = 0; i < array.size(); i++) array.set(i, sort(array.get(i), comparator));
+            return array;
+        } else if (element.isJsonObject()) {
+            JsonObject object = element.getAsJsonObject();
+            JsonObject sorted = new JsonObject();
+            List<String> keys = new ArrayList<>(object.keySet());
+            keys.sort(comparator);
+            for (String key : keys) sorted.add(key, sort(object.get(key), comparator));
+            return sorted;
+        } else {
+            return element;
+        }
     }
 
 }

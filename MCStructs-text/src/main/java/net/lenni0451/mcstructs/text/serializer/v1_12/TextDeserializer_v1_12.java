@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.text.components.*;
 
 import java.lang.reflect.Type;
 
-import static net.lenni0451.mcstructs.text.serializer.TextComponentJsonUtils.getString;
+import static net.lenni0451.mcstructs.text.utils.JsonUtils.getString;
 
 public class TextDeserializer_v1_12 implements JsonDeserializer<ATextComponent> {
 

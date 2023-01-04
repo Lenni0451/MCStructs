@@ -12,13 +12,13 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
-import net.lenni0451.mcstructs.text.serializer.TextComponentJsonUtils;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
+import net.lenni0451.mcstructs.text.utils.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-import static net.lenni0451.mcstructs.text.serializer.TextComponentJsonUtils.getString;
+import static net.lenni0451.mcstructs.text.utils.JsonUtils.getString;
 
 public class HoverEventDeserializer_v1_16 implements JsonDeserializer<AHoverEvent> {
 
@@ -53,9 +53,9 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<AHoverEven
                 return new TextHoverEvent(action, this.textComponentSerializer.deserialize(contents));
             case SHOW_ITEM:
                 if (contents.isJsonPrimitive()) return new ItemHoverEvent(action, Identifier.of(contents.getAsString()), 1, null);
-                JsonObject rawItem = TextComponentJsonUtils.getJsonObject(contents, "item");
+                JsonObject rawItem = JsonUtils.getJsonObject(contents, "item");
                 Identifier item = Identifier.of(getString(rawItem, "id"));
-                int count = TextComponentJsonUtils.getInt(rawItem, "count", 1);
+                int count = JsonUtils.getInt(rawItem, "count", 1);
                 if (rawItem.has("tag")) {
                     String rawTag = getString(rawItem, "tag");
                     return new ItemHoverEvent(action, item, count, (CompoundTag) this.sNbtSerializer.tryDeserialize(rawTag));

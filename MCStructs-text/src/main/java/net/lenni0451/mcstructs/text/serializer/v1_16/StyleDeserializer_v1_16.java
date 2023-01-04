@@ -10,8 +10,8 @@ import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 
 import java.lang.reflect.Type;
 
-import static net.lenni0451.mcstructs.text.serializer.TextComponentJsonUtils.getJsonObject;
-import static net.lenni0451.mcstructs.text.serializer.TextComponentJsonUtils.getString;
+import static net.lenni0451.mcstructs.text.utils.JsonUtils.getJsonObject;
+import static net.lenni0451.mcstructs.text.utils.JsonUtils.getString;
 
 public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
 
