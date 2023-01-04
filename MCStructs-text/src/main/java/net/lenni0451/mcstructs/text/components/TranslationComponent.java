@@ -51,6 +51,7 @@ public class TranslationComponent extends ATextComponent {
             int matchStart = matcher.start();
             int matchEnd = matcher.end();
             if (matchStart > start) out.append(String.format(translated.substring(start, matchStart)));
+            start = matchEnd;
 
             String argType = matcher.group(2);
             String match = translated.substring(matchStart, matchEnd);
@@ -82,7 +83,9 @@ public class TranslationComponent extends ATextComponent {
             if (arg instanceof ATextComponent) copyArgs[i] = ((ATextComponent) arg).copy();
             else copyArgs[i] = arg;
         }
-        return this.putMetaCopy(new TranslationComponent(this.key, copyArgs));
+        TranslationComponent copy = new TranslationComponent(this.key, copyArgs);
+        copy.translator = this.translator;
+        return this.putMetaCopy(copy);
     }
 
     @Override
