@@ -28,6 +28,7 @@ class TextSerializer_v1_6Test extends TextSerializerTest {
                 null,
                 DESERIALIZE_FAIL,
                 null,
+                DESERIALIZE_FAIL,
                 DESERIALIZE_FAIL
         );
         this.executeSerializeTests(

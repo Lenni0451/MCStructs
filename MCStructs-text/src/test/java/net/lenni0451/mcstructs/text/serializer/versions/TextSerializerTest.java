@@ -18,6 +18,7 @@ public abstract class TextSerializerTest {
             "123",
             "\n",
             "\0",
+            "te st",
     };
 
     protected static String SERIALIZE_FAIL = "--test fail--";
@@ -42,7 +43,7 @@ public abstract class TextSerializerTest {
                 ATextComponent deserialized = this.deserialize(test);
                 assertEquals(expected, deserialized, "Test " + i + " failed: " + test);
             } catch (JsonSyntaxException e) {
-                assertEquals(DESERIALIZE_FAIL, expected, "Test " + i + " failed: " + test);
+                assertEquals(expected, DESERIALIZE_FAIL, "Test " + i + " failed: " + test);
             }
         }
     }
@@ -56,7 +57,7 @@ public abstract class TextSerializerTest {
                 String serialized = this.serialize(test);
                 assertEquals(expected, serialized, "Test " + i + " failed: " + test);
             } catch (Exception e) {
-                assertEquals(SERIALIZE_FAIL, expected, "Test " + i + " failed: " + test);
+                assertEquals(expected, SERIALIZE_FAIL, "Test " + i + " failed: " + test);
             }
         }
     }

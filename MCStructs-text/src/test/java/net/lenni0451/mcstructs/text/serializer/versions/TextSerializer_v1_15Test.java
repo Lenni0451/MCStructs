@@ -28,6 +28,7 @@ class TextSerializer_v1_15Test extends TextSerializerTest {
                 null,
                 new StringComponent("123"),
                 null,
+                DESERIALIZE_FAIL,
                 DESERIALIZE_FAIL
         );
         this.executeSerializeTests(
