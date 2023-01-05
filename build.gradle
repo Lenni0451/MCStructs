@@ -6,6 +6,7 @@ subprojects {
     java.toolchain.languageVersion = JavaLanguageVersion.of(8)
     compileJava.options.encoding = "UTF-8"
     compileTestJava.options.encoding = "UTF-8"
+    javadoc.options.encoding = "UTF-8"
 
     archivesBaseName = "MCStructs-" + project.maven_name
     group = project.maven_group
@@ -31,19 +32,32 @@ subprojects {
         withJavadocJar()
     }
 
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+        maxParallelForks Runtime.runtime.availableProcessors()
+    }
+
     artifacts {
         archives javadocJar, sourcesJar
     }
 
-    signing {
-        sign configurations.archives
-    }
-
     publishing {
         repositories {
+//            maven {
+//                name = "reposilite"
+//                url = ((project.snapshot == "true") ? "https://maven.lenni0451.net/snapshots" : "https://maven.lenni0451.net/releases")
+//                credentials(PasswordCredentials)
+//                authentication {
+//                    basic(BasicAuthentication)
+//                }
+//            }
             maven {
-                name = "reposilite"
-                url = ((project.snapshot == "true") ? "https://maven.lenni0451.net/snapshots" : "https://maven.lenni0451.net/releases")
+                name = "ossrh"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+//                url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
                 credentials(PasswordCredentials)
                 authentication {
                     basic(BasicAuthentication)
@@ -57,17 +71,37 @@ subprojects {
                 version = project.maven_version
 
                 from components.java
+
+                pom {
+                    name = "MCStructs"
+                    description = "A minecraft data structure library with the goal of being compliant with the vanilla client"
+                    url = "https://github.com/Lenni0451/MCStructs"
+                    licenses {
+                        license {
+                            name = "MIT License"
+                            url = "https://github.com/Lenni0451/MCStructs/blob/main/LICENSE"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "Lenni0451"
+                        }
+                    }
+                    scm {
+                        url = "https://github.com/Lenni0451/MCStructs.git"
+                    }
+                }
             }
         }
     }
 
-    test {
-        useJUnitPlatform()
-        testLogging {
-            events "passed", "skipped", "failed"
-        }
-        maxParallelForks Runtime.runtime.availableProcessors()
+    signing {
+        sign configurations.archives
+        sign publishing.publications.maven
     }
 
+    project.tasks.withType(PublishToMavenRepository).forEach {
+        it.dependsOn(project.tasks.withType(Sign))
+    }
     build.dependsOn(test)
 }
