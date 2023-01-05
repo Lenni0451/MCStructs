@@ -1,6 +1,7 @@
 subprojects {
     apply plugin: "java-library"
     apply plugin: "maven-publish"
+    apply plugin: "signing"
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(8)
     compileJava.options.encoding = "UTF-8"
@@ -30,9 +31,13 @@ subprojects {
         withJavadocJar()
     }
 
-//    javadoc {
-//        failOnError = false
-//    }
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    signing {
+        sign configurations.archives
+    }
 
     publishing {
         repositories {
