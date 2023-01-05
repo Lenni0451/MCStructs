@@ -33,19 +33,22 @@ public abstract class ATextComponent {
      * Append a string to this component.
      *
      * @param s The string to append
+     * @return This component
      */
-    public void append(final String s) {
+    public ATextComponent append(final String s) {
         this.append(new StringComponent(s));
+        return this;
     }
 
     /**
      * Append a component to this component.
      *
      * @param component The component to append
+     * @return This component
      */
-    public void append(final ATextComponent component) {
-        component.getStyle().setParent(this.style);
+    public ATextComponent append(final ATextComponent component) {
         this.siblings.add(component);
+        return this;
     }
 
     /**
@@ -67,10 +70,32 @@ public abstract class ATextComponent {
      * Set the style of this component.
      *
      * @param style The new style
+     * @return This component
      */
-    public void setStyle(@Nonnull final Style style) {
+    public ATextComponent setStyle(@Nonnull final Style style) {
         this.style = style;
+        return this;
+    }
+
+    /**
+     * Set the parent style of this component.
+     *
+     * @param style The new parent style
+     * @return This component
+     */
+    public ATextComponent setParentStyle(@Nonnull final Style style) {
+        this.style.setParent(style);
+        return this;
+    }
+
+    /**
+     * Set the style of this component as the parent style for all siblings.
+     *
+     * @return This component
+     */
+    public ATextComponent copyParentStyle() {
         for (ATextComponent sibling : this.siblings) sibling.getStyle().setParent(this.style);
+        return this;
     }
 
     /**
@@ -107,7 +132,11 @@ public abstract class ATextComponent {
         if (this.style.isUnderlined()) out.append(COLOR_CHAR).append(TextFormatting.UNDERLINE.getCode());
         if (this.style.isItalic()) out.append(COLOR_CHAR).append(TextFormatting.ITALIC.getCode());
         out.append(this.asSingleString());
-        for (ATextComponent sibling : this.siblings) out.append(sibling.asLegacyFormatString());
+        for (ATextComponent sibling : this.siblings) {
+            ATextComponent copy = sibling.copy();
+            copy.getStyle().setParent(this.style);
+            out.append(copy.asLegacyFormatString());
+        }
         return out.toString();
     }
 
