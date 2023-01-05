@@ -313,6 +313,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * Get a list from the map.
      *
      * @param key The key
+     * @param <T> The type of the list
      * @return The list or <code>new ListTag{@literal <}{@literal >}()</code> if the map does not contain the given key or the tag is not a list
      */
     public <T extends INbtTag> ListTag<T> getList(final String key) {
