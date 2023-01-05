@@ -94,7 +94,10 @@ public abstract class ATextComponent {
      * @return This component
      */
     public ATextComponent copyParentStyle() {
-        for (ATextComponent sibling : this.siblings) sibling.getStyle().setParent(this.style);
+        for (ATextComponent sibling : this.siblings) {
+            sibling.getStyle().setParent(this.style);
+            sibling.copyParentStyle();
+        }
         return this;
     }
 

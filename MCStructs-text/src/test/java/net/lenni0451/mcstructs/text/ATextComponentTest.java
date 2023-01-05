@@ -49,7 +49,7 @@ class ATextComponentTest {
 
     @Test
     void parentStyle() {
-        String rawComponent = "{\"bold\":true,\"color\":\"red\",\"extra\":[{\"text\":\"test\"}],\"text\":\"Test\"}";
+        String rawComponent = "{\"bold\":true,\"color\":\"red\",\"extra\":[{\"extra\":[{\"text\":\"test\"}],\"text\":\"test\"}],\"text\":\"Test\"}";
         ATextComponent component = TextComponentSerializer.V1_18.deserialize(rawComponent);
         String serialized = JsonUtils.toSortedString(TextComponentSerializer.V1_18.serializeJson(component), null);
         assertEquals(rawComponent, serialized);
@@ -57,11 +57,11 @@ class ATextComponentTest {
 
     @Test
     void copiedParentStyle() {
-        String rawComponent = "{\"bold\":true,\"color\":\"red\",\"extra\":[{\"text\":\"test\"}],\"text\":\"Test\"}";
+        String rawComponent = "{\"bold\":true,\"color\":\"red\",\"extra\":[{\"extra\":[{\"text\":\"test\"}],\"text\":\"test\"}],\"text\":\"Test\"}";
         ATextComponent component = TextComponentSerializer.V1_18.deserialize(rawComponent);
         component.copyParentStyle();
         String serialized = JsonUtils.toSortedString(TextComponentSerializer.V1_18.serializeJson(component), null);
-        assertEquals("{\"bold\":true,\"color\":\"red\",\"extra\":[{\"bold\":true,\"color\":\"red\",\"text\":\"test\"}],\"text\":\"Test\"}", serialized);
+        assertEquals("{\"bold\":true,\"color\":\"red\",\"extra\":[{\"bold\":true,\"color\":\"red\",\"extra\":[{\"bold\":true,\"color\":\"red\",\"text\":\"test\"}],\"text\":\"test\"}],\"text\":\"Test\"}", serialized);
         assertNotEquals(rawComponent, serialized);
     }
 
