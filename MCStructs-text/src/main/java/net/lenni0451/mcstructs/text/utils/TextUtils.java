@@ -32,6 +32,7 @@ public class TextUtils {
      * Replace all matches of the given pattern in this component and all siblings.<br>
      * This only works for {@link StringComponent} components.
      *
+     * @param component       The component to replace in
      * @param searchRegex     The regex to search for
      * @param replaceFunction The function that will be called for every match
      * @return A new component with the replaced text
