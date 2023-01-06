@@ -46,14 +46,14 @@ subprojects {
 
     publishing {
         repositories {
-//            maven {
-//                name = "reposilite"
-//                url = ((project.snapshot == "true") ? "https://maven.lenni0451.net/snapshots" : "https://maven.lenni0451.net/releases")
-//                credentials(PasswordCredentials)
-//                authentication {
-//                    basic(BasicAuthentication)
-//                }
-//            }
+            maven {
+                name = "reposilite"
+                url = ((project.snapshot == "true") ? "https://maven.lenni0451.net/snapshots" : "https://maven.lenni0451.net/releases")
+                credentials(PasswordCredentials)
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
             maven {
                 name = "ossrh"
                 url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
