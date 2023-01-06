@@ -49,7 +49,7 @@ public class TextFormatting {
     public static final TextFormatting STRIKETHROUGH = new TextFormatting("STRIKETHROUGH", 'm');
     public static final TextFormatting UNDERLINE = new TextFormatting("UNDERLINE", 'n');
     public static final TextFormatting ITALIC = new TextFormatting("ITALIC", 'o');
-    public static final TextFormatting RESET = new TextFormatting("RESET", 'r', -1);
+    public static final TextFormatting RESET = new TextFormatting("RESET", 'r');
 
     /**
      * Get a formatting by name.<br>
