@@ -70,6 +70,23 @@ public class TextFormatting {
     }
 
     /**
+     * Get a formatting by code.<br>
+     * <br>
+     * Example:<br>
+     * <code>TextFormatting.getByCode('c')</code> -{@literal >} {@link #RED}
+     *
+     * @param code The code of the formatting
+     * @return The formatting or null if not found
+     */
+    @Nullable
+    public static TextFormatting getByCode(final char code) {
+        for (TextFormatting formatting : ALL) {
+            if (formatting.getCode() == code) return formatting;
+        }
+        return null;
+    }
+
+    /**
      * Get a formatting by name or a rgb color when the name starts with #.<br>
      * The name is case-insensitive.<br>
      * <br>
