@@ -9,6 +9,7 @@ import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static net.lenni0451.mcstructs.core.TextFormatting.COLOR_CHAR;
 
@@ -56,6 +57,18 @@ public abstract class ATextComponent {
      */
     public List<ATextComponent> getSiblings() {
         return this.siblings;
+    }
+
+    /**
+     * Iterate over all components and their siblings.
+     *
+     * @param consumer The consumer that will be called for every component
+     * @return This component
+     */
+    public ATextComponent forEach(final Consumer<ATextComponent> consumer) {
+        consumer.accept(this);
+        for (ATextComponent sibling : this.siblings) sibling.forEach(consumer);
+        return this;
     }
 
     /**

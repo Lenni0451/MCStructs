@@ -33,6 +33,26 @@ class ATextComponentTest {
     }
 
     @Test
+    void forEach() {
+        ATextComponent component = new StringComponent("A").append(new StringComponent("B").append(new StringComponent("C")));
+        int[] i = {0};
+        component.forEach(comp -> {
+            switch (i[0]) {
+                case 0:
+                    assertEquals("A", comp.asSingleString());
+                    break;
+                case 1:
+                    assertEquals("B", comp.asSingleString());
+                    break;
+                case 2:
+                    assertEquals("C", comp.asSingleString());
+                    break;
+            }
+            i[0]++;
+        });
+    }
+
+    @Test
     void asUnformattedString() {
         assertEquals("Hello World", component.asUnformattedString());
     }
