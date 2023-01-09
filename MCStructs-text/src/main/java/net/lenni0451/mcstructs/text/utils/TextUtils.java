@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.utils;
 
+import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
@@ -71,6 +72,24 @@ public class TextUtils {
             out.append(replace);
         }
 
+        return out;
+    }
+
+    /**
+     * Replace all rgb color codes with the nearest formatting color.<br>
+     * This <b>can not</b> perfectly convert the colors since there is only a limited amount of formatting colors.<br>
+     * Minecraft 1.16 has added support for rgb colors which older versions can't display.
+     *
+     * @param component The component to replace in
+     * @return A new component with the replaced text
+     */
+    public static ATextComponent replaceRGBColors(final ATextComponent component) {
+        ATextComponent out = component.copy();
+        out.forEach(comp -> {
+            if (comp.getStyle().getColor() != null && comp.getStyle().getColor().isRGBColor()) {
+                comp.getStyle().setFormatting(TextFormatting.getClosestFormattingColor(comp.getStyle().getColor().getRgbValue()));
+            }
+        });
         return out;
     }
 
