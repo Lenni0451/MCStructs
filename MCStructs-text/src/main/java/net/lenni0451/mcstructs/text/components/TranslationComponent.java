@@ -18,7 +18,7 @@ public class TranslationComponent extends ATextComponent {
     private final Object[] args;
     private Function<String, String> translator = s -> s;
 
-    public TranslationComponent(final String key, final List<Object> args) {
+    public TranslationComponent(final String key, final List<?> args) {
         this.key = key;
         this.args = args.toArray();
     }
