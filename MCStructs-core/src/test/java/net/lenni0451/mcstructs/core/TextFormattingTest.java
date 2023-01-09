@@ -23,6 +23,11 @@ class TextFormattingTest {
     }
 
     @Test
+    void getClosestFormattingColor() {
+        for (TextFormatting color : TextFormatting.COLORS) assertEquals(color, TextFormatting.getClosestFormattingColor(color.getRgbValue()));
+    }
+
+    @Test
     void isColor() {
         for (TextFormatting color : TextFormatting.COLORS) {
             assertTrue(color.isColor());

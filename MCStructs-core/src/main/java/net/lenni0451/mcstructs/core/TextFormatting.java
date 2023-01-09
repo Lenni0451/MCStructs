@@ -103,6 +103,33 @@ public class TextFormatting {
         else return getByName(s);
     }
 
+    /**
+     * Get the closest formatting color to the given rgb color.
+     *
+     * @param rgb The rgb color
+     * @return The closest formatting color
+     */
+    public static TextFormatting getClosestFormattingColor(final int rgb) {
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+
+        TextFormatting closest = null;
+        int closestDistance = Integer.MAX_VALUE;
+        for (TextFormatting color : COLORS) {
+            int colorR = (color.getRgbValue() >> 16) & 0xFF;
+            int colorG = (color.getRgbValue() >> 8) & 0xFF;
+            int colorB = color.getRgbValue() & 0xFF;
+
+            int distance = (r - colorR) * (r - colorR) + (g - colorG) * (g - colorG) + (b - colorB) * (b - colorB);
+            if (distance < closestDistance) {
+                closest = color;
+                closestDistance = distance;
+            }
+        }
+        return closest;
+    }
+
 
     private final Type type;
     private final String name;
