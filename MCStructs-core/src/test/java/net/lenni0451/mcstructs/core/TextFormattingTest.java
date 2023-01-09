@@ -12,7 +12,7 @@ class TextFormattingTest {
 
     @Test
     void getByName() {
-        for (TextFormatting textFormatting : TextFormatting.ALL) assertEquals(textFormatting, TextFormatting.getByName(randomizeCase(textFormatting)));
+        for (TextFormatting textFormatting : TextFormatting.ALL.values()) assertEquals(textFormatting, TextFormatting.getByName(randomizeCase(textFormatting)));
     }
 
     @Test
@@ -24,12 +24,12 @@ class TextFormattingTest {
 
     @Test
     void getClosestFormattingColor() {
-        for (TextFormatting color : TextFormatting.COLORS) assertEquals(color, TextFormatting.getClosestFormattingColor(color.getRgbValue()));
+        for (TextFormatting color : TextFormatting.COLORS.values()) assertEquals(color, TextFormatting.getClosestFormattingColor(color.getRgbValue()));
     }
 
     @Test
     void isColor() {
-        for (TextFormatting color : TextFormatting.COLORS) {
+        for (TextFormatting color : TextFormatting.COLORS.values()) {
             assertTrue(color.isColor());
             assertFalse(color.isRGBColor());
             assertFalse(color.isFormatting());
@@ -38,13 +38,13 @@ class TextFormattingTest {
 
     @Test
     void isRGBColor() {
-        for (TextFormatting color : TextFormatting.ALL) assertFalse(color.isRGBColor());
+        for (TextFormatting color : TextFormatting.ALL.values()) assertFalse(color.isRGBColor());
         assertTrue(TextFormatting.parse("#FF0000").isRGBColor());
     }
 
     @Test
     void isFormatting() {
-        for (TextFormatting formatting : TextFormatting.FORMATTINGS) {
+        for (TextFormatting formatting : TextFormatting.FORMATTINGS.values()) {
             assertFalse(formatting.isColor());
             assertFalse(formatting.isRGBColor());
             assertTrue(formatting.isFormatting());

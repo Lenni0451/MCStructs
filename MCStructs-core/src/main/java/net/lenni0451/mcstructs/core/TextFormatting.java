@@ -1,8 +1,8 @@
 package net.lenni0451.mcstructs.core;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -14,42 +14,42 @@ public class TextFormatting {
     /**
      * All text formattings and colors.
      */
-    public static final List<TextFormatting> ALL = new ArrayList<>();
+    public static final Map<String, TextFormatting> ALL = new LinkedHashMap<>();
     /**
      * All basic text colors.
      */
-    public static final List<TextFormatting> COLORS = new ArrayList<>();
+    public static final Map<String, TextFormatting> COLORS = new LinkedHashMap<>();
     /**
      * All text style formattings.
      */
-    public static final List<TextFormatting> FORMATTINGS = new ArrayList<>();
+    public static final Map<String, TextFormatting> FORMATTINGS = new LinkedHashMap<>();
     /**
      * The color char used for formatting.<br>
      * Using it has been deprecated since 1.16.
      */
     public static final char COLOR_CHAR = '\u00A7';
-    public static final TextFormatting BLACK = new TextFormatting("BLACK", '0', 0x00_00_00);
-    public static final TextFormatting DARK_BLUE = new TextFormatting("DARK_BLUE", '1', 0x00_00_AA);
-    public static final TextFormatting DARK_GREEN = new TextFormatting("DARK_GREEN", '2', 0x00_AA_00);
-    public static final TextFormatting DARK_AQUA = new TextFormatting("DARK_AQUA", '3', 0x00_AA_AA);
-    public static final TextFormatting DARK_RED = new TextFormatting("DARK_RED", '4', 0xAA_00_00);
-    public static final TextFormatting DARK_PURPLE = new TextFormatting("DARK_PURPLE", '5', 0xAA_00_AA);
-    public static final TextFormatting GOLD = new TextFormatting("GOLD", '6', 0xFF_AA_00);
-    public static final TextFormatting GRAY = new TextFormatting("GRAY", '7', 0xAA_AA_AA);
-    public static final TextFormatting DARK_GRAY = new TextFormatting("DARK_GRAY", '8', 0x55_55_55);
-    public static final TextFormatting BLUE = new TextFormatting("BLUE", '9', 0x55_55_FF);
-    public static final TextFormatting GREEN = new TextFormatting("GREEN", 'a', 0x55_FF_55);
-    public static final TextFormatting AQUA = new TextFormatting("AQUA", 'b', 0x55_FF_FF);
-    public static final TextFormatting RED = new TextFormatting("RED", 'c', 0xFF_55_55);
-    public static final TextFormatting LIGHT_PURPLE = new TextFormatting("LIGHT_PURPLE", 'd', 0xFF_55_FF);
-    public static final TextFormatting YELLOW = new TextFormatting("YELLOW", 'e', 0xFF_FF_55);
-    public static final TextFormatting WHITE = new TextFormatting("WHITE", 'f', 0xFF_FF_FF);
-    public static final TextFormatting OBFUSCATED = new TextFormatting("OBFUSCATED", 'k');
-    public static final TextFormatting BOLD = new TextFormatting("BOLD", 'l');
-    public static final TextFormatting STRIKETHROUGH = new TextFormatting("STRIKETHROUGH", 'm');
-    public static final TextFormatting UNDERLINE = new TextFormatting("UNDERLINE", 'n');
-    public static final TextFormatting ITALIC = new TextFormatting("ITALIC", 'o');
-    public static final TextFormatting RESET = new TextFormatting("RESET", 'r');
+    public static final TextFormatting BLACK = new TextFormatting("black", '0', 0x00_00_00);
+    public static final TextFormatting DARK_BLUE = new TextFormatting("dark_blue", '1', 0x00_00_AA);
+    public static final TextFormatting DARK_GREEN = new TextFormatting("dark_green", '2', 0x00_AA_00);
+    public static final TextFormatting DARK_AQUA = new TextFormatting("dark_aqua", '3', 0x00_AA_AA);
+    public static final TextFormatting DARK_RED = new TextFormatting("dark_red", '4', 0xAA_00_00);
+    public static final TextFormatting DARK_PURPLE = new TextFormatting("dark_purple", '5', 0xAA_00_AA);
+    public static final TextFormatting GOLD = new TextFormatting("gold", '6', 0xFF_AA_00);
+    public static final TextFormatting GRAY = new TextFormatting("gray", '7', 0xAA_AA_AA);
+    public static final TextFormatting DARK_GRAY = new TextFormatting("dark_gray", '8', 0x55_55_55);
+    public static final TextFormatting BLUE = new TextFormatting("blue", '9', 0x55_55_FF);
+    public static final TextFormatting GREEN = new TextFormatting("green", 'a', 0x55_FF_55);
+    public static final TextFormatting AQUA = new TextFormatting("aqua", 'b', 0x55_FF_FF);
+    public static final TextFormatting RED = new TextFormatting("red", 'c', 0xFF_55_55);
+    public static final TextFormatting LIGHT_PURPLE = new TextFormatting("light_purple", 'd', 0xFF_55_FF);
+    public static final TextFormatting YELLOW = new TextFormatting("yellow", 'e', 0xFF_FF_55);
+    public static final TextFormatting WHITE = new TextFormatting("white", 'f', 0xFF_FF_FF);
+    public static final TextFormatting OBFUSCATED = new TextFormatting("obfuscated", 'k');
+    public static final TextFormatting BOLD = new TextFormatting("bold", 'l');
+    public static final TextFormatting STRIKETHROUGH = new TextFormatting("strikethrough", 'm');
+    public static final TextFormatting UNDERLINE = new TextFormatting("underline", 'n');
+    public static final TextFormatting ITALIC = new TextFormatting("italic", 'o');
+    public static final TextFormatting RESET = new TextFormatting("reset", 'r');
 
     /**
      * Get a formatting by name.<br>
@@ -63,10 +63,7 @@ public class TextFormatting {
      */
     @Nullable
     public static TextFormatting getByName(final String name) {
-        for (TextFormatting formatting : ALL) {
-            if (formatting.getName().equalsIgnoreCase(name)) return formatting;
-        }
-        return null;
+        return ALL.get(name.toLowerCase());
     }
 
     /**
@@ -80,7 +77,7 @@ public class TextFormatting {
      */
     @Nullable
     public static TextFormatting getByCode(final char code) {
-        for (TextFormatting formatting : ALL) {
+        for (TextFormatting formatting : ALL.values()) {
             if (formatting.getCode() == code) return formatting;
         }
         return null;
@@ -116,7 +113,7 @@ public class TextFormatting {
 
         TextFormatting closest = null;
         int closestDistance = Integer.MAX_VALUE;
-        for (TextFormatting color : COLORS) {
+        for (TextFormatting color : COLORS.values()) {
             int colorR = (color.getRgbValue() >> 16) & 0xFF;
             int colorG = (color.getRgbValue() >> 8) & 0xFF;
             int colorB = color.getRgbValue() & 0xFF;
@@ -142,8 +139,8 @@ public class TextFormatting {
         this.code = code;
         this.rgbValue = rgbValue;
 
-        ALL.add(this);
-        COLORS.add(this);
+        ALL.put(name, this);
+        COLORS.put(name, this);
     }
 
     private TextFormatting(final String name, final char code) {
@@ -152,8 +149,8 @@ public class TextFormatting {
         this.code = code;
         this.rgbValue = -1;
 
-        ALL.add(this);
-        FORMATTINGS.add(this);
+        ALL.put(name, this);
+        FORMATTINGS.put(name, this);
     }
 
     /**
@@ -223,7 +220,7 @@ public class TextFormatting {
      */
     public String serialize() {
         if (Type.RGB.equals(this.type)) return "#" + String.format("%06X", this.rgbValue);
-        else return this.name.toLowerCase();
+        else return this.name;
     }
 
     @Override
