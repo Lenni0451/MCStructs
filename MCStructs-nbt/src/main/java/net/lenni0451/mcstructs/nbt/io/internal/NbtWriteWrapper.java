@@ -10,6 +10,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * A wrapper class containing methods to write Nbt tags to different sources.
+ */
 public interface NbtWriteWrapper {
 
     INbtWriter getWriter();

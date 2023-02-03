@@ -9,6 +9,9 @@ import net.lenni0451.mcstructs.nbt.io.types.INbtWriter;
 
 public class NbtIO implements NbtReadWrapper, NbtWriteWrapper {
 
+    /**
+     * Implementation of the Java Edition Nbt format.
+     */
     public static final NbtIO JAVA = new NbtIO(new JavaNbtReader(), new JavaNbtWriter());
 
 
@@ -20,10 +23,18 @@ public class NbtIO implements NbtReadWrapper, NbtWriteWrapper {
         this.writer = writer;
     }
 
+    /**
+     * @return The Nbt reader
+     */
+    @Override
     public INbtReader getReader() {
         return this.reader;
     }
 
+    /**
+     * @return The Nbt writer
+     */
+    @Override
     public INbtWriter getWriter() {
         return this.writer;
     }

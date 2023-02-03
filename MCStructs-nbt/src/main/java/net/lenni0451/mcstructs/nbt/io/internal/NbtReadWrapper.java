@@ -9,6 +9,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * A wrapper class containing methods to read Nbt tags from different sources.
+ */
 public interface NbtReadWrapper {
 
     INbtReader getReader();

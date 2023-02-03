@@ -38,7 +38,7 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
     public ListTag(final List<T> list) {
         if (!list.isEmpty()) {
             this.type = NbtType.byClass(list.get(0).getClass());
-            if (list.stream().anyMatch(tag -> !tag.getNbtType().equals(this.type))) throw new IllegalArgumentException("Tried to create list with multiple nbt types");
+            if (list.stream().anyMatch(tag -> !tag.getNbtType().equals(this.type))) throw new IllegalArgumentException("Tried to create list with multiple Nbt types");
         }
         this.value = list;
     }

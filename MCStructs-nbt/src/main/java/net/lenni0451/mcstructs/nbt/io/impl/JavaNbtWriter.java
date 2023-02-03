@@ -10,6 +10,9 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * The Nbt writer implementation for the Java Edition Nbt format.
+ */
 public class JavaNbtWriter implements INbtWriter {
 
     @Override

@@ -11,8 +11,26 @@ import java.io.IOException;
 
 public interface INbtReader {
 
+    /**
+     * Read the header of a Nbt tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The header
+     * @throws IOException If an I/O error occurs
+     */
     NbtHeader readHeader(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a Nbt tag by its type.<br>
+     * Automatically calls the correct method for the tag type.
+     *
+     * @param type        The tag type
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     default INbtTag read(final NbtType type, final DataInput in, final NbtReadTracker readTracker) throws IOException {
         switch (type) {
             case BYTE:
@@ -44,28 +62,124 @@ public interface INbtReader {
         }
     }
 
+    /**
+     * Read a byte tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     ByteTag readByte(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a short tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     ShortTag readShort(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a int tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     IntTag readInt(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a long tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     LongTag readLong(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a float tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     FloatTag readFloat(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a double tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     DoubleTag readDouble(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a byte array tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     ByteArrayTag readByteArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a string tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     StringTag readString(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a list tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     ListTag<?> readList(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a compound tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     CompoundTag readCompound(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a int array tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     IntArrayTag readIntArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
+    /**
+     * Read a long array tag.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The tag
+     * @throws IOException If an I/O error occurs
+     */
     LongArrayTag readLongArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
 }

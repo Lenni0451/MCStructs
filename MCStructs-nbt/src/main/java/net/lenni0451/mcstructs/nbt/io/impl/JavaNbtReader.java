@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The Nbt reader implementation for the Java Edition Nbt format.
+ */
 public class JavaNbtReader implements INbtReader {
 
     @Override

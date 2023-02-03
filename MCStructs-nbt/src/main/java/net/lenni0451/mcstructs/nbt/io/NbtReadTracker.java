@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.nbt.io;
 import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
 
 /**
- * The nbt read tracker is used to limit the size of nbt data that is read.<br>
+ * The Nbt read tracker is used to limit the size of Nbt data that is read.<br>
  * If you do not want any size constraints you can use {@link #unlimited()}.
  */
 public class NbtReadTracker {
