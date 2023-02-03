@@ -1,13 +1,8 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -187,32 +182,6 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
     @Override
     public NbtType getNbtType() {
         return NbtType.LIST;
-    }
-
-    @Override
-    public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(37);
-        int typeId = in.readByte();
-        int count = in.readInt();
-        if (typeId == NbtType.END.getId() && count > 0) throw new NbtReadException("ListNbt with type END and count > 0");
-        readTracker.read(4 * count);
-        this.type = NbtType.byId(typeId);
-        this.value = new ArrayList<>(Math.min(count, 512));
-        for (int i = 0; i < count; i++) {
-            T tag = (T) this.type.newInstance();
-            readTracker.pushDepth();
-            tag.read(in, readTracker);
-            readTracker.popDepth();
-            this.value.add(tag);
-        }
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException {
-        if (this.type == null) out.writeByte(NbtType.END.getId());
-        else out.writeByte(this.type.getId());
-        out.writeInt(this.value.size());
-        for (T tag : this.value) tag.write(out);
     }
 
     @Override

@@ -2,12 +2,8 @@ package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Objects;
 
 public class ShortTag implements INbtNumber {
@@ -84,17 +80,6 @@ public class ShortTag implements INbtNumber {
     @Override
     public NbtType getNbtType() {
         return NbtType.SHORT;
-    }
-
-    @Override
-    public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(10);
-        this.value = in.readShort();
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException {
-        out.writeShort(this.value);
     }
 
     @Override

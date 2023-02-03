@@ -1,12 +1,8 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -108,22 +104,6 @@ public class ByteArrayTag implements INbtTag, Iterable<Byte> {
     @Override
     public NbtType getNbtType() {
         return NbtType.BYTE_ARRAY;
-    }
-
-    @Override
-    public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(24);
-        int length = in.readInt();
-        readTracker.read(length);
-        byte[] value = new byte[length];
-        in.readFully(value);
-        this.value = value;
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException {
-        out.writeInt(this.value.length);
-        out.write(this.value);
     }
 
     @Override

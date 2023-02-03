@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.nbt;
 
+import net.lenni0451.mcstructs.nbt.io.NbtIO;
+import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -60,8 +62,8 @@ class NbtIOTest {
     void write() {
         ByteArrayOutputStream uncompressed = new ByteArrayOutputStream();
         ByteArrayOutputStream compressed = new ByteArrayOutputStream();
-        assertDoesNotThrow(() -> NbtIO.write(uncompressed, "", compoundTag, false));
-        assertDoesNotThrow(() -> NbtIO.write(compressed, "", compoundTag, true));
+        assertDoesNotThrow(() -> NbtIO.JAVA.write(uncompressed, "", compoundTag, false));
+        assertDoesNotThrow(() -> NbtIO.JAVA.write(compressed, "", compoundTag, true));
 
         assertArrayEquals(NbtIOTest.uncompressed, uncompressed.toByteArray());
         assertArrayEquals(NbtIOTest.uncompressed, assertDoesNotThrow(() -> decompress(compressed.toByteArray())));
@@ -69,8 +71,8 @@ class NbtIOTest {
 
     @Test
     void read() {
-        INbtTag uncompressed = assertDoesNotThrow(() -> NbtIO.read(new ByteArrayInputStream(NbtIOTest.uncompressed), false, NbtReadTracker.unlimited()));
-        INbtTag compressed = assertDoesNotThrow(() -> NbtIO.read(new ByteArrayInputStream(NbtIOTest.compressed), true, NbtReadTracker.unlimited()));
+        INbtTag uncompressed = assertDoesNotThrow(() -> NbtIO.JAVA.read(new ByteArrayInputStream(NbtIOTest.uncompressed), false, NbtReadTracker.unlimited()));
+        INbtTag compressed = assertDoesNotThrow(() -> NbtIO.JAVA.read(new ByteArrayInputStream(NbtIOTest.compressed), true, NbtReadTracker.unlimited()));
 
         assertEquals(compoundTag, uncompressed);
         assertEquals(compoundTag, compressed);

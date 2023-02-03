@@ -2,12 +2,8 @@ package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Objects;
 
 public class DoubleTag implements INbtNumber {
@@ -84,17 +80,6 @@ public class DoubleTag implements INbtNumber {
     @Override
     public NbtType getNbtType() {
         return NbtType.DOUBLE;
-    }
-
-    @Override
-    public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(16);
-        this.value = in.readDouble();
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException {
-        out.writeDouble(this.value);
     }
 
     @Override

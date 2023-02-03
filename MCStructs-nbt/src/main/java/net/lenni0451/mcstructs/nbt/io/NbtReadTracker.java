@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.nbt;
+package net.lenni0451.mcstructs.nbt.io;
 
 import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
 

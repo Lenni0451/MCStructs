@@ -1,12 +1,8 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Objects;
 
 public class StringTag implements INbtTag {
@@ -48,18 +44,6 @@ public class StringTag implements INbtTag {
     @Override
     public NbtType getNbtType() {
         return NbtType.STRING;
-    }
-
-    @Override
-    public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(36);
-        this.value = in.readUTF();
-        readTracker.read(2 * this.value.length());
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException {
-        out.writeUTF(this.value);
     }
 
     @Override

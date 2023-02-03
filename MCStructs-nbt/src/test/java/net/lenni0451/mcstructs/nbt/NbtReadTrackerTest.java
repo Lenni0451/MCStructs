@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.nbt;
 
 import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
+import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

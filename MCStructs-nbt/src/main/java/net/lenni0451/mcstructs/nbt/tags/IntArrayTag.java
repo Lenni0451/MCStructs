@@ -1,12 +1,8 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -106,21 +102,6 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
     @Override
     public NbtType getNbtType() {
         return NbtType.INT_ARRAY;
-    }
-
-    @Override
-    public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(24);
-        int length = in.readInt();
-        readTracker.read(4 * length);
-        this.value = new int[length];
-        for (int i = 0; i < this.value.length; i++) this.value[i] = in.readInt();
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException {
-        out.writeInt(this.value.length);
-        for (int i : this.value) out.writeInt(i);
     }
 
     @Override

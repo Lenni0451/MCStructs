@@ -1,12 +1,11 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.*;
+import net.lenni0451.mcstructs.nbt.INbtNumber;
+import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.exceptions.UnknownTagTypeException;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.*;
 
 public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>> {
@@ -493,32 +492,6 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     @Override
     public NbtType getNbtType() {
         return NbtType.COMPOUND;
-    }
-
-    @Override
-    public void read(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(48);
-        this.value = new HashMap<>();
-        while (true) {
-            NbtHeader header = NbtIO.readNbtHeader(in, readTracker);
-            if (header.isEnd()) break;
-            readTracker.read(28 + 2 * header.getName().length());
-
-            INbtTag tag = header.getType().newInstance();
-            readTracker.pushDepth();
-            tag.read(in, readTracker);
-            readTracker.popDepth();
-            if (this.value.put(header.getName(), tag) != null) readTracker.read(36);
-        }
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException {
-        for (Map.Entry<String, INbtTag> entry : this.value.entrySet()) {
-            NbtIO.writeNbtHeader(out, new NbtHeader(entry.getValue().getNbtType(), entry.getKey()));
-            entry.getValue().write(out);
-        }
-        NbtIO.writeNbtHeader(out, NbtHeader.END);
     }
 
     @Override
