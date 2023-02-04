@@ -18,7 +18,7 @@ MCStructs is designed to have an open API, allowing for easy modification of int
 
 ## Releases
 ### Gradle/Maven
-To use MCStructs with Gradle/Maven you can follow the instructions on [maven central](https://central.sonatype.dev/search?q=net.lenni0451.mcstructs).\
+To use MCStructs with Gradle/Maven you can follow the instructions on [maven central](https://central.sonatype.com/search?q=net.lenni0451.mcstructs).\
 Gradle Template:
 `````groovy
 repositories {
@@ -29,7 +29,7 @@ dependencies {
     implementation "net.lenni0451.mcstructs:all:x.x.x"
 }
 `````
-You should check [maven central](https://central.sonatype.dev/search?q=net.lenni0451.mcstructs) for the latest version.
+You should check [maven central](https://central.sonatype.com/search?q=net.lenni0451.mcstructs) for the latest version.
 ### Jar File
 You can download the jar files for all modules from my [Jenkins](https://build.lenni0451.net/job/MCStructs/) server.\
 Module dependencies are not included in the jar files. You have to add them yourself.
