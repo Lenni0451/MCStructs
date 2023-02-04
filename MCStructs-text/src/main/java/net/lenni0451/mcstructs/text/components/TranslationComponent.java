@@ -12,11 +12,12 @@ import java.util.regex.Pattern;
 
 public class TranslationComponent extends ATextComponent {
 
+    private static final Function<String, String> PASSTHROUGH_TRANSLATOR = s -> s;
     private static final Pattern ARG_PATTERN = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
     private final String key;
     private final Object[] args;
-    private Function<String, String> translator = s -> s;
+    private Function<String, String> translator = PASSTHROUGH_TRANSLATOR;
 
     public TranslationComponent(final String key, final List<?> args) {
         this.key = key;
