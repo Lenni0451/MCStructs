@@ -4,12 +4,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
+import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import java.lang.reflect.Type;
 
 public class StyleSerializer_v1_8 implements JsonSerializer<Style> {
+
+    private final TextComponentSerializer textComponentSerializer;
+    private final SNbtSerializer<?> sNbtSerializer;
+
+    public StyleSerializer_v1_8(final TextComponentSerializer textComponentSerializer, final SNbtSerializer<?> sNbtSerializer) {
+        this.textComponentSerializer = textComponentSerializer;
+        this.sNbtSerializer = sNbtSerializer;
+    }
 
     @Override
     public JsonElement serialize(Style src, Type typeOfSrc, JsonSerializationContext context) {
@@ -32,7 +42,7 @@ public class StyleSerializer_v1_8 implements JsonSerializer<Style> {
         if (src.getHoverEvent() instanceof TextHoverEvent) {
             JsonObject hoverEvent = new JsonObject();
             hoverEvent.addProperty("action", src.getHoverEvent().getAction().getName());
-            hoverEvent.add("value", context.serialize(((TextHoverEvent) src.getHoverEvent()).getText()));
+            hoverEvent.add("value", context.serialize(src.getHoverEvent().toLegacy(this.textComponentSerializer, this.sNbtSerializer).getText()));
             serializedStyle.add("hoverEvent", hoverEvent);
         }
 

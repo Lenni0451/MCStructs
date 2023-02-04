@@ -1,8 +1,10 @@
 package net.lenni0451.mcstructs.text.events.hover.impl;
 
+import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
+import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import java.util.Objects;
 
@@ -24,6 +26,11 @@ public class TextHoverEvent extends AHoverEvent {
      */
     public ATextComponent getText() {
         return this.text;
+    }
+
+    @Override
+    public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbtSerializer<?> sNbtSerializer) {
+        return this;
     }
 
     @Override

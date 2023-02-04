@@ -57,7 +57,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_7())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_7())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_7())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_7())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_7(TextComponentSerializer.V1_7, SNbtSerializer.V1_7))
             .create());
     /**
      * The text component serializer for 1.8.<br>
@@ -67,7 +67,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_8())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_8, SNbtSerializer.V1_8))
             .create());
     /**
      * The text component serializer for 1.9 - 1.11.<br>
@@ -77,7 +77,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_9())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_9, SNbtSerializer.V1_8))
             .create());
     /**
      * The text component serializer for 1.12 - 1.13.<br>
@@ -87,7 +87,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_12())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_12())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_12, SNbtSerializer.V1_12))
             .create());
     /**
      * The text component serializer for 1.14.<br>
@@ -97,7 +97,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_14())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_14())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_14, SNbtSerializer.V1_14))
             .create());
     /**
      * The text component serializer for 1.15.<br>
@@ -107,7 +107,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_15())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_15())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_15, SNbtSerializer.V1_14))
             .create());
     /**
      * The text component serializer for 1.16.<br>
