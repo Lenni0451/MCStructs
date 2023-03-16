@@ -47,4 +47,14 @@ class TextUtilsTest {
         });
     }
 
+    @Test
+    void join() {
+        ATextComponent a = new StringComponent("A");
+        ATextComponent b = new StringComponent("B");
+        ATextComponent c = new StringComponent("C");
+
+        ATextComponent joined = TextUtils.join(new StringComponent(" "), a, b, c);
+        assertEquals(new StringComponent("").append(a).append(" ").append(b).append(" ").append(c), joined);
+    }
+
 }

@@ -93,4 +93,26 @@ public class TextUtils {
         return out;
     }
 
+    /**
+     * Join the given components with the given separator.<br>
+     * All components are copied before they are joined.<br>
+     * If there are no components an empty {@link StringComponent} will be returned.<br>
+     * If there is only one component it will be copied and returned.
+     *
+     * @param separator  The separator
+     * @param components The components
+     * @return The joined component
+     */
+    public static ATextComponent join(final ATextComponent separator, final ATextComponent... components) {
+        if (components.length == 0) return new StringComponent("");
+        if (components.length == 1) return components[0].copy();
+
+        ATextComponent out = null;
+        for (ATextComponent component : components) {
+            if (out == null) out = new StringComponent("").append(component.copy());
+            else out.append(separator.copy()).append(component.copy());
+        }
+        return out;
+    }
+
 }
