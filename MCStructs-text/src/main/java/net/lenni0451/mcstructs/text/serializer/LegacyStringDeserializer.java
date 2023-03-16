@@ -57,6 +57,7 @@ public class LegacyStringDeserializer {
             }
         }
         if (currentPart.length() != 0) out.append(new StringComponent(currentPart.toString()).setStyle(style));
+        if (out.getSiblings().size() == 1) return out.getSiblings().get(0);
         return out;
     }
 

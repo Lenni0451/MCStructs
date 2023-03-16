@@ -23,7 +23,7 @@ class LegacyStringDeserializerTest {
     @Test
     void parseWithoutUnknownReset() {
         ATextComponent component = LegacyStringDeserializer.parse("§4A§xB", false);
-        assertEquals(new StringComponent("").append(new StringComponent("AB").setStyle(new Style().setFormatting(TextFormatting.DARK_RED))), component);
+        assertEquals(new StringComponent("AB").setStyle(new Style().setFormatting(TextFormatting.DARK_RED)), component);
     }
 
 }
