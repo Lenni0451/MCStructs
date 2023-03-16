@@ -11,6 +11,11 @@ class TextFormattingTest {
     private static final Random RND = new Random();
 
     @Test
+    void getByOrdinal() {
+        for (TextFormatting formatting : TextFormatting.ALL.values()) assertEquals(formatting, TextFormatting.getByOrdinal(formatting.getOrdinal()));
+    }
+
+    @Test
     void getByName() {
         for (TextFormatting textFormatting : TextFormatting.ALL.values()) assertEquals(textFormatting, TextFormatting.getByName(randomizeCase(textFormatting)));
     }

@@ -52,6 +52,20 @@ public class TextFormatting {
     public static final TextFormatting RESET = new TextFormatting("reset", 'r');
 
     /**
+     * Get a formatting by ordinal.<br>
+     * <br>
+     * Example:<br>
+     * <code>TextFormatting.getByOrdinal(0)</code> -{@literal >} {@link #BLACK}
+     *
+     * @param ordinal The ordinal of the formatting
+     * @return The formatting or null if not found
+     */
+    @Nullable
+    public static TextFormatting getByOrdinal(final int ordinal) {
+        return ALL.values().stream().filter(formatting -> formatting.ordinal == ordinal).findFirst().orElse(null);
+    }
+
+    /**
      * Get a formatting by name.<br>
      * The name is case-insensitive.<br>
      * <br>
@@ -129,12 +143,14 @@ public class TextFormatting {
 
 
     private final Type type;
+    private final int ordinal;
     private final String name;
     private final char code;
     private final int rgbValue;
 
     private TextFormatting(final String name, final char code, final int rgbValue) {
         this.type = Type.COLOR;
+        this.ordinal = ALL.size();
         this.name = name;
         this.code = code;
         this.rgbValue = rgbValue;
@@ -145,6 +161,7 @@ public class TextFormatting {
 
     private TextFormatting(final String name, final char code) {
         this.type = Type.FORMATTING;
+        this.ordinal = ALL.size();
         this.name = name;
         this.code = code;
         this.rgbValue = -1;
@@ -161,6 +178,7 @@ public class TextFormatting {
      */
     public TextFormatting(final int rgbValue) {
         this.type = Type.RGB;
+        this.ordinal = -1;
         this.name = "RGB_COLOR";
         this.code = '\0';
         this.rgbValue = rgbValue & 0xFF_FF_FF;
@@ -192,6 +210,16 @@ public class TextFormatting {
      */
     public boolean isFormatting() {
         return Type.FORMATTING.equals(this.type);
+    }
+
+    /**
+     * Get the ordinal of the formatting.<br>
+     * The ordinal of rgb colors is -1.
+     *
+     * @return The ordinal
+     */
+    public int getOrdinal() {
+        return this.ordinal;
     }
 
     /**
