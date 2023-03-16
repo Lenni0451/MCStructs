@@ -1,20 +1,19 @@
 package net.lenni0451.mcstructs.nbt;
 
+import net.lenni0451.mcstructs.core.ICopyable;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
 /**
  * The base interface for all Nbt tags.
  */
-public interface INbtTag {
+public interface INbtTag extends ICopyable<INbtTag> {
 
     /**
      * @return The type of this tag
      */
     NbtType getNbtType();
 
-    /**
-     * @return A copy of this tag and its value
-     */
+    @Override
     INbtTag copy();
 
     /**

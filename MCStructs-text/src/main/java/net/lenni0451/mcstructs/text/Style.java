@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text;
 
+import net.lenni0451.mcstructs.core.ICopyable;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
@@ -7,7 +8,7 @@ import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 
 import java.util.Objects;
 
-public class Style {
+public class Style implements ICopyable<Style> {
 
     private Style parent;
     private TextFormatting color;
@@ -335,9 +336,7 @@ public class Style {
                 && this.getFont() == null;
     }
 
-    /**
-     * @return A copy of this style
-     */
+    @Override
     public Style copy() {
         Style style = new Style();
         style.parent = this.parent;

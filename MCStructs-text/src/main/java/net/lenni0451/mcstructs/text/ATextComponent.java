@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text;
 
+import net.lenni0451.mcstructs.core.ICopyable;
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.components.*;
 import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
@@ -25,7 +26,7 @@ import static net.lenni0451.mcstructs.core.TextFormatting.COLOR_CHAR;
  * - {@link EntityNbtComponent}<br>
  * - {@link StorageNbtComponent}
  */
-public abstract class ATextComponent {
+public abstract class ATextComponent implements ICopyable<ATextComponent> {
 
     private final List<ATextComponent> siblings = new ArrayList<>();
     private Style style = new Style();
@@ -161,9 +162,7 @@ public abstract class ATextComponent {
      */
     public abstract String asSingleString();
 
-    /**
-     * @return A copy of this component
-     */
+    @Override
     public abstract ATextComponent copy();
 
     public abstract boolean equals(final Object o);

@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.items;
 
+import net.lenni0451.mcstructs.core.ICopyable;
 import net.lenni0451.mcstructs.items.info.ItemMeta;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
@@ -16,7 +17,7 @@ import javax.annotation.Nullable;
  * @param <I> The type of the item (e.g. Integer)
  * @param <S> The type of the item stack (e.g. LegacyItemStack)
  */
-public abstract class AItemStack<I, S extends AItemStack<I, S>> {
+public abstract class AItemStack<I, S extends AItemStack<I, S>> implements ICopyable<S> {
 
     private final ItemRegistry<I, S> registry;
     private final I item;
@@ -129,11 +130,7 @@ public abstract class AItemStack<I, S extends AItemStack<I, S>> {
         return this.tag != null;
     }
 
-    /**
-     * Create a full copy of this item stack.
-     *
-     * @return The copy
-     */
+    @Override
     public S copy() {
         S stack = this.getRegistry().create(this.getItem(), this.getCount(), this.copyTag());
         stack.setDamage(this.getDamage());
