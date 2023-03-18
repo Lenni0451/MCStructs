@@ -47,9 +47,11 @@ public class ByteArrayTag implements INbtTag, Iterable<Byte> {
      * Set the byte array value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final byte[] value) {
+    public ByteArrayTag setValue(final byte[] value) {
         this.value = value;
+        return this;
     }
 
     /**
@@ -68,10 +70,12 @@ public class ByteArrayTag implements INbtTag, Iterable<Byte> {
      *
      * @param index The index
      * @param b     The new value
+     * @return This tag
      * @throws ArrayIndexOutOfBoundsException If the index is out of bounds
      */
-    public void set(final int index, final byte b) {
+    public ByteArrayTag set(final int index, final byte b) {
         this.value[index] = b;
+        return this;
     }
 
     /**
@@ -79,12 +83,14 @@ public class ByteArrayTag implements INbtTag, Iterable<Byte> {
      * This will create a new array and copy the old one into it.
      *
      * @param b The byte
+     * @return This tag
      */
-    public void add(final byte b) {
+    public ByteArrayTag add(final byte b) {
         byte[] newValue = new byte[this.value.length + 1];
         System.arraycopy(this.value, 0, newValue, 0, this.value.length);
         newValue[this.value.length] = b;
         this.value = newValue;
+        return this;
     }
 
     /**

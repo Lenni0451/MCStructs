@@ -72,9 +72,11 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
      * Set the list value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final List<T> value) {
+    public ListTag<T> setValue(final List<T> value) {
         this.value = value;
+        return this;
     }
 
     /**
@@ -91,11 +93,13 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
      * Add a tag to the list.
      *
      * @param tag The tag
+     * @return This tag
      * @throws IllegalArgumentException If the tag is not of the same type as the list
      */
-    public void add(final T tag) {
+    public ListTag<T> add(final T tag) {
         this.check(tag);
         this.value.add(tag);
+        return this;
     }
 
     /**
@@ -103,23 +107,27 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
      *
      * @param index The index
      * @param tag   The tag
+     * @return This tag
      * @throws IndexOutOfBoundsException If the index is out of bounds
      * @throws IllegalArgumentException  If the tag is not of the same type as the list
      */
-    public void set(final int index, final T tag) {
+    public ListTag<T> set(final int index, final T tag) {
         this.check(tag);
         this.value.set(index, tag);
+        return this;
     }
 
     /**
      * Remove a tag from the list.
      *
      * @param tag The tag
+     * @return This tag
      * @throws IllegalArgumentException If the tag is not of the same type as the list
      */
-    public void remove(final T tag) {
+    public ListTag<T> remove(final T tag) {
         this.check(tag);
         this.value.remove(tag);
+        return this;
     }
 
     /**

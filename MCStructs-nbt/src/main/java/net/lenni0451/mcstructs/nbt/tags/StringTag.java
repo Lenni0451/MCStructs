@@ -36,9 +36,11 @@ public class StringTag implements INbtTag {
      * Set the string value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final String value) {
+    public StringTag setValue(final String value) {
         this.value = value;
+        return this;
     }
 
     @Override

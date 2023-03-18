@@ -37,9 +37,11 @@ public class LongTag implements INbtNumber {
      * Set the long value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final long value) {
+    public LongTag setValue(final long value) {
         this.value = value;
+        return this;
     }
 
     @Override

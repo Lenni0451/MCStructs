@@ -47,9 +47,11 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
      * Set the int array value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final int[] value) {
+    public IntArrayTag setValue(final int[] value) {
         this.value = value;
+        return this;
     }
 
     /**
@@ -67,9 +69,11 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
      *
      * @param index The index
      * @param i     The new value
+     * @return This tag
      */
-    public void set(final int index, final int i) {
+    public IntArrayTag set(final int index, final int i) {
         this.value[index] = i;
+        return this;
     }
 
     /**
@@ -77,12 +81,14 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
      * This will create a new array and copy the old values into it.
      *
      * @param i The int
+     * @return This tag
      */
-    public void add(final int i) {
+    public IntArrayTag add(final int i) {
         int[] newValue = new int[this.value.length + 1];
         System.arraycopy(this.value, 0, newValue, 0, this.value.length);
         newValue[this.value.length] = i;
         this.value = newValue;
+        return this;
     }
 
     /**

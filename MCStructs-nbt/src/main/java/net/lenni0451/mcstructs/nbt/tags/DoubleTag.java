@@ -37,9 +37,11 @@ public class DoubleTag implements INbtNumber {
      * Set the double value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final double value) {
+    public DoubleTag setValue(final double value) {
         this.value = value;
+        return this;
     }
 
     @Override

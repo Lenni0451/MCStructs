@@ -37,9 +37,11 @@ public class FloatTag implements INbtNumber {
      * Set the float value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final float value) {
+    public FloatTag setValue(final float value) {
         this.value = value;
+        return this;
     }
 
     @Override

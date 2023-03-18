@@ -37,9 +37,11 @@ public class ShortTag implements INbtNumber {
      * Set the short value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final short value) {
+    public ShortTag setValue(final short value) {
         this.value = value;
+        return this;
     }
 
     @Override

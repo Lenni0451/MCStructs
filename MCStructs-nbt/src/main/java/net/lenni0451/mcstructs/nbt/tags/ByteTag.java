@@ -37,9 +37,11 @@ public class ByteTag implements INbtNumber {
      * Set the byte value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final byte value) {
+    public ByteTag setValue(final byte value) {
         this.value = value;
+        return this;
     }
 
     @Override

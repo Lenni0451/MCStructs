@@ -47,9 +47,11 @@ public class LongArrayTag implements INbtTag, Iterable<Long> {
      * Set the long array value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(long[] value) {
+    public LongArrayTag setValue(long[] value) {
         this.value = value;
+        return this;
     }
 
     /**
@@ -67,9 +69,11 @@ public class LongArrayTag implements INbtTag, Iterable<Long> {
      *
      * @param index The index
      * @param l     The new value
+     * @return This tag
      */
-    public void set(final int index, final long l) {
+    public LongArrayTag set(final int index, final long l) {
         this.value[index] = l;
+        return this;
     }
 
     /**
@@ -77,12 +81,14 @@ public class LongArrayTag implements INbtTag, Iterable<Long> {
      * This will create a new array and copy the old values into it.
      *
      * @param l The long
+     * @return This tag
      */
-    public void add(final long l) {
+    public LongArrayTag add(final long l) {
         long[] newValue = new long[this.value.length + 1];
         System.arraycopy(this.value, 0, newValue, 0, this.value.length);
         newValue[this.value.length] = l;
         this.value = newValue;
+        return this;
     }
 
     /**

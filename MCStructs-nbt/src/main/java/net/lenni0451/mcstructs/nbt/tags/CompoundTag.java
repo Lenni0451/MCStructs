@@ -39,9 +39,11 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * Set the map value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final Map<String, INbtTag> value) {
+    public CompoundTag setValue(final Map<String, INbtTag> value) {
         this.value = value;
+        return this;
     }
 
     /**
@@ -113,9 +115,11 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param tag The tag
+     * @return This tag
      */
-    public void add(final String key, final INbtTag tag) {
+    public CompoundTag add(final String key, final INbtTag tag) {
         this.value.put(key, tag);
+        return this;
     }
 
     /**
@@ -123,10 +127,11 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param o   The raw value
+     * @return This tag
      * @throws UnknownTagTypeException If the raw value can not be converted to a tag
      */
-    public void add(final String key, final Object o) {
-        this.add(key, this.wrap(o));
+    public CompoundTag add(final String key, final Object o) {
+        return this.add(key, this.wrap(o));
     }
 
     /**
@@ -156,9 +161,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param b   The byte
+     * @return This tag
      */
-    public void addByte(final String key, final byte b) {
-        this.add(key, new ByteTag(b));
+    public CompoundTag addByte(final String key, final byte b) {
+        return this.add(key, new ByteTag(b));
     }
 
     /**
@@ -177,9 +183,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param s   The short
+     * @return This tag
      */
-    public void addShort(final String key, final short s) {
-        this.add(key, new ShortTag(s));
+    public CompoundTag addShort(final String key, final short s) {
+        return this.add(key, new ShortTag(s));
     }
 
     /**
@@ -198,9 +205,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param i   The int
+     * @return This tag
      */
-    public void addInt(final String key, final int i) {
-        this.add(key, new IntTag(i));
+    public CompoundTag addInt(final String key, final int i) {
+        return this.add(key, new IntTag(i));
     }
 
     /**
@@ -219,9 +227,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param l   The long
+     * @return This tag
      */
-    public void addLong(final String key, final long l) {
-        this.add(key, new LongTag(l));
+    public CompoundTag addLong(final String key, final long l) {
+        return this.add(key, new LongTag(l));
     }
 
     /**
@@ -240,9 +249,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param f   The float
+     * @return This tag
      */
-    public void addFloat(final String key, final float f) {
-        this.add(key, new FloatTag(f));
+    public CompoundTag addFloat(final String key, final float f) {
+        return this.add(key, new FloatTag(f));
     }
 
     /**
@@ -261,9 +271,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param d   The double
+     * @return This tag
      */
-    public void addDouble(final String key, final double d) {
-        this.add(key, new DoubleTag(d));
+    public CompoundTag addDouble(final String key, final double d) {
+        return this.add(key, new DoubleTag(d));
     }
 
     /**
@@ -282,9 +293,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key   The key
      * @param bytes The byte array
+     * @return This tag
      */
-    public void addByteArray(final String key, final byte... bytes) {
-        this.add(key, new ByteArrayTag(bytes));
+    public CompoundTag addByteArray(final String key, final byte... bytes) {
+        return this.add(key, new ByteArrayTag(bytes));
     }
 
     /**
@@ -303,9 +315,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key The key
      * @param s   The string
+     * @return This tag
      */
-    public void addString(final String key, final String s) {
-        this.add(key, new StringTag(s));
+    public CompoundTag addString(final String key, final String s) {
+        return this.add(key, new StringTag(s));
     }
 
     /**
@@ -343,9 +356,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key  The key
      * @param list The list
+     * @return This tag
      */
-    public void addList(final String key, final ListTag<?> list) {
-        this.add(key, list);
+    public CompoundTag addList(final String key, final ListTag<?> list) {
+        return this.add(key, list);
     }
 
     /**
@@ -371,10 +385,11 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key   The key
      * @param items The raw items
+     * @return This tag
      * @throws UnknownTagTypeException  If the type of the items is unknown
      * @throws IllegalArgumentException If the type of the items is mixed
      */
-    public void addList(final String key, final Object... items) {
+    public CompoundTag addList(final String key, final Object... items) {
         if (items.length == 0) {
             this.add(key, new ListTag<>());
         } else {
@@ -382,6 +397,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
             for (Object item : items) list.add(this.wrap(item));
             this.add(key, new ListTag<>(list));
         }
+        return this;
     }
 
     /**
@@ -400,9 +416,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key      The key
      * @param compound The compound
+     * @return This tag
      */
-    public void addCompound(final String key, final CompoundTag compound) {
-        this.add(key, compound);
+    public CompoundTag addCompound(final String key, final CompoundTag compound) {
+        return this.add(key, compound);
     }
 
     /**
@@ -421,9 +438,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key  The key
      * @param ints The int array
+     * @return This tag
      */
-    public void addIntArray(final String key, final int... ints) {
-        this.add(key, new IntArrayTag(ints));
+    public CompoundTag addIntArray(final String key, final int... ints) {
+        return this.add(key, new IntArrayTag(ints));
     }
 
     /**
@@ -442,9 +460,10 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param key   The key
      * @param longs The long array
+     * @return This tag
      */
-    public void addLongArray(final String key, final long... longs) {
-        this.add(key, new LongArrayTag(longs));
+    public CompoundTag addLongArray(final String key, final long... longs) {
+        return this.add(key, new LongArrayTag(longs));
     }
 
     /**

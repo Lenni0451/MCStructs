@@ -37,9 +37,11 @@ public class IntTag implements INbtNumber {
      * Set the int value.
      *
      * @param value The new value
+     * @return This tag
      */
-    public void setValue(final int value) {
+    public IntTag setValue(final int value) {
         this.value = value;
+        return this;
     }
 
     @Override
