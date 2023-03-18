@@ -23,6 +23,8 @@ public abstract class AHoverEvent {
     /**
      * Converts this hover event to a legacy text hover event.
      *
+     * @param textComponentSerializer The serializer to use for text components
+     * @param sNbtSerializer          The serializer to use for nbt tags
      * @return The converted hover event
      */
     public abstract TextHoverEvent toLegacy(final TextComponentSerializer textComponentSerializer, final SNbtSerializer<?> sNbtSerializer);
