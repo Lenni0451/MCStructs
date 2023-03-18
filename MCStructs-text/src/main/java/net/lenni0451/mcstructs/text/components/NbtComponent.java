@@ -10,6 +10,10 @@ public abstract class NbtComponent extends ATextComponent {
     private final boolean resolve;
     private final ATextComponent separator;
 
+    public NbtComponent(final String component, final boolean resolve) {
+        this(component, resolve, null);
+    }
+
     public NbtComponent(final String component, final boolean resolve, @Nullable final ATextComponent separator) {
         this.component = component;
         this.resolve = resolve;

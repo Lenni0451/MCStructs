@@ -9,6 +9,11 @@ public class EntityNbtComponent extends NbtComponent {
 
     private final String selector;
 
+    public EntityNbtComponent(final String component, final boolean resolve, final String selector) {
+        super(component, resolve);
+        this.selector = selector;
+    }
+
     public EntityNbtComponent(final String component, final boolean resolve, final ATextComponent separator, final String selector) {
         super(component, resolve, separator);
         this.selector = selector;

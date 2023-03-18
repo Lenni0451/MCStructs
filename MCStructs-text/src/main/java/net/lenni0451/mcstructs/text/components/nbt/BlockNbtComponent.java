@@ -9,6 +9,11 @@ public class BlockNbtComponent extends NbtComponent {
 
     private final String pos;
 
+    public BlockNbtComponent(final String rawComponent, final boolean resolve, final String pos) {
+        super(rawComponent, resolve);
+        this.pos = pos;
+    }
+
     public BlockNbtComponent(final String rawComponent, final boolean resolve, final ATextComponent separator, final String pos) {
         super(rawComponent, resolve, separator);
         this.pos = pos;

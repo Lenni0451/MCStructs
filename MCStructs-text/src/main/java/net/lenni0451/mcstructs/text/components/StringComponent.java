@@ -8,6 +8,10 @@ public class StringComponent extends ATextComponent {
 
     private final String text;
 
+    public StringComponent() {
+        this("");
+    }
+
     public StringComponent(final String text) {
         this.text = text;
     }

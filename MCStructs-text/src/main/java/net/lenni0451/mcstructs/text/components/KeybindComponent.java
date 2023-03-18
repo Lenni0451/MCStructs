@@ -15,6 +15,11 @@ public class KeybindComponent extends ATextComponent {
         this.keybind = keybind;
     }
 
+    public KeybindComponent(final String keybind, @Nonnull final Function<String, String> translator) {
+        this.keybind = keybind;
+        this.translator = translator;
+    }
+
     /**
      * @return The keybind of this component
      */

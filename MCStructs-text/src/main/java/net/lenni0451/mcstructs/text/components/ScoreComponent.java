@@ -17,6 +17,12 @@ public class ScoreComponent extends ATextComponent {
         this.objective = objective;
     }
 
+    public ScoreComponent(final String name, final String objective, final String value) {
+        this.name = name;
+        this.objective = objective;
+        this.value = value;
+    }
+
     /**
      * @return The name of this component
      */

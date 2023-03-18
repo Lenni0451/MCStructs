@@ -24,9 +24,19 @@ public class TranslationComponent extends ATextComponent {
         this.args = args.toArray();
     }
 
+    public TranslationComponent(final String key, final List<?> args, @Nonnull final Function<String, String> translator) {
+        this(key, args);
+        this.translator = Objects.requireNonNull(translator);
+    }
+
     public TranslationComponent(final String key, final Object... args) {
         this.key = key;
         this.args = args;
+    }
+
+    public TranslationComponent(final String key, @Nonnull final Function<String, String> translator, final Object... args) {
+        this(key, args);
+        this.translator = Objects.requireNonNull(translator);
     }
 
     /**
@@ -80,7 +90,7 @@ public class TranslationComponent extends ATextComponent {
                     Object arg = this.args[index];
                     if (arg instanceof ATextComponent) out.append(((ATextComponent) arg).asUnformattedString());
                     else if (arg == null) out.append("null");
-                    else out.append(arg.toString());
+                    else out.append(arg);
                 }
             }
         }

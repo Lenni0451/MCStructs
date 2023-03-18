@@ -10,6 +10,10 @@ public class SelectorComponent extends ATextComponent {
     private final String selector;
     private final ATextComponent separator;
 
+    public SelectorComponent(final String selector) {
+        this(selector, null);
+    }
+
     public SelectorComponent(final String selector, @Nullable final ATextComponent separator) {
         this.selector = selector;
         this.separator = separator;

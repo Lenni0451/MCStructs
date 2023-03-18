@@ -10,6 +10,11 @@ public class StorageNbtComponent extends NbtComponent {
 
     private final Identifier id;
 
+    public StorageNbtComponent(final String component, final boolean resolve, final Identifier id) {
+        super(component, resolve);
+        this.id = id;
+    }
+
     public StorageNbtComponent(final String component, final boolean resolve, final ATextComponent separator, final Identifier id) {
         super(component, resolve, separator);
         this.id = id;
