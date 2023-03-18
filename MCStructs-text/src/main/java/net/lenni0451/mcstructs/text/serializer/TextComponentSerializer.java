@@ -19,6 +19,8 @@ import net.lenni0451.mcstructs.text.serializer.v1_16.*;
 import net.lenni0451.mcstructs.text.serializer.v1_17.TextDeserializer_v1_17;
 import net.lenni0451.mcstructs.text.serializer.v1_17.TextSerializer_v1_17;
 import net.lenni0451.mcstructs.text.serializer.v1_18.HoverEventDeserializer_v1_18;
+import net.lenni0451.mcstructs.text.serializer.v1_19_4.TextDeserializer_v1_19_4;
+import net.lenni0451.mcstructs.text.serializer.v1_19_4.TextSerializer_v1_19_4;
 import net.lenni0451.mcstructs.text.serializer.v1_6.TextDeserializer_v1_6;
 import net.lenni0451.mcstructs.text.serializer.v1_6.TextSerializer_v1_6;
 import net.lenni0451.mcstructs.text.serializer.v1_7.StyleDeserializer_v1_7;
@@ -144,6 +146,18 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
+            .create());
+    /**
+     * The text component serializer for 1.19.4.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_19_4 = new TextComponentSerializer(() -> new GsonBuilder()
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_19_4())
+            .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_19_4())
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_19_4, SNbtSerializer.V1_14))
+            .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_19_4, SNbtSerializer.V1_14))
             .create());
 
 

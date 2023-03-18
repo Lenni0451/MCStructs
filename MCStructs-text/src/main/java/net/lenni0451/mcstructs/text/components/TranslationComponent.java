@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.text.components;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -12,31 +13,23 @@ import java.util.regex.Pattern;
 
 public class TranslationComponent extends ATextComponent {
 
-    private static final Function<String, String> PASSTHROUGH_TRANSLATOR = s -> s;
+    private static final Function<String, String> NULL_TRANSLATOR = s -> null;
     private static final Pattern ARG_PATTERN = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
     private final String key;
     private final Object[] args;
-    private Function<String, String> translator = PASSTHROUGH_TRANSLATOR;
+    @Nullable
+    private String fallback;
+    private Function<String, String> translator = NULL_TRANSLATOR;
 
     public TranslationComponent(final String key, final List<?> args) {
         this.key = key;
         this.args = args.toArray();
     }
 
-    public TranslationComponent(final String key, final List<?> args, @Nonnull final Function<String, String> translator) {
-        this(key, args);
-        this.translator = Objects.requireNonNull(translator);
-    }
-
     public TranslationComponent(final String key, final Object... args) {
         this.key = key;
         this.args = args;
-    }
-
-    public TranslationComponent(final String key, @Nonnull final Function<String, String> translator, final Object... args) {
-        this(key, args);
-        this.translator = Objects.requireNonNull(translator);
     }
 
     /**
@@ -54,7 +47,26 @@ public class TranslationComponent extends ATextComponent {
     }
 
     /**
-     * Set the translator function used to translate the key.
+     * @return The fallback of this component
+     */
+    @Nullable
+    public String getFallback() {
+        return this.fallback;
+    }
+
+    /**
+     * Set the fallback of this component.<br>
+     * The fallback is used when the translation of the key was not found.
+     *
+     * @param fallback The fallback
+     */
+    public void setFallback(@Nullable String fallback) {
+        this.fallback = fallback;
+    }
+
+    /**
+     * Set the translator function used to translate the key.<br>
+     * If a key is not found return <code>null</code>. This is required for the fallback to work.
      *
      * @param translator The translator function
      */
@@ -67,6 +79,8 @@ public class TranslationComponent extends ATextComponent {
         StringBuilder out = new StringBuilder();
 
         String translated = this.translator.apply(this.key);
+        if (translated == null) translated = this.fallback;
+        if (translated == null) translated = this.key;
         Matcher matcher = ARG_PATTERN.matcher(translated);
         int argIndex = 0;
         int start = 0;

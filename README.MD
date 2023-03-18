@@ -13,8 +13,8 @@ MCStructs is designed to have an open API, allowing for easy modification of int
 | items        | Wrapper for the minecraft ItemStack class and item types | *                |
 | nbt          | General purpose nbt implementation                       | *                |
 | recipes      | Implementation of dynamic recipes and registry           | 1.7, 1.8 (WIP)   |
-| snbt         | String Nbt parser for every version with snbt            | 1.7 - 1.19       |
-| text         | Implementation of all text components                    | 1.6 - 1.19       |
+| snbt         | String Nbt parser for every version with snbt            | 1.7 - 1.19.4     |
+| text         | Implementation of all text components                    | 1.6 - 1.19.4     |
 
 ## Releases
 ### Gradle/Maven
