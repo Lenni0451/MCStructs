@@ -100,6 +100,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_14())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_14, SNbtSerializer.V1_14))
+            .disableHtmlEscaping()
             .create());
     /**
      * The text component serializer for 1.15.<br>
@@ -110,6 +111,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_15())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_15, SNbtSerializer.V1_14))
+            .disableHtmlEscaping()
             .create());
     /**
      * The text component serializer for 1.16.<br>
@@ -122,6 +124,7 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
+            .disableHtmlEscaping()
             .create());
     /**
      * The text component serializer for 1.17.<br>
@@ -134,6 +137,7 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
+            .disableHtmlEscaping()
             .create());
     /**
      * The text component serializer for 1.18 - 1.19.<br>
@@ -146,6 +150,7 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
+            .disableHtmlEscaping()
             .create());
     /**
      * The text component serializer for 1.19.4.<br>
@@ -158,6 +163,7 @@ public class TextComponentSerializer {
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_19_4, SNbtSerializer.V1_14))
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_19_4, SNbtSerializer.V1_14))
+            .disableHtmlEscaping()
             .create());
 
 
