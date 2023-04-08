@@ -56,7 +56,7 @@ public class TextUtils {
                 last = matcher.end();
             }
             if (last < text.length()) parts.add(new StringComponent(text.substring(last)).setStyle(component.getStyle().copy()));
-            if (!parts.isEmpty()) {
+            if (parts.size() > 1) {
                 out = new StringComponent("");
                 for (ATextComponent part : parts) out.append(part);
             } else {
