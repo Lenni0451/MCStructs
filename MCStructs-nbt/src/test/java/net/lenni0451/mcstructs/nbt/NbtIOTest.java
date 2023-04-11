@@ -1,15 +1,14 @@
 package net.lenni0451.mcstructs.nbt;
 
+import net.lenni0451.mcstructs.nbt.io.NamedTag;
 import net.lenni0451.mcstructs.nbt.io.NbtIO;
 import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.nbt.tags.StringTag;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.zip.GZIPInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +18,7 @@ class NbtIOTest {
     private static final CompoundTag compoundTag = new CompoundTag();
     private static byte[] uncompressed;
     private static byte[] compressed;
+    private static byte[] named;
 
     @BeforeAll
     static void prepare() throws IOException {
@@ -37,6 +37,7 @@ class NbtIOTest {
 
         uncompressed = readResource("uncompressed.nbt");
         compressed = readResource("compressed.nbt");
+        named = readResource("named.nbt");
     }
 
     static byte[] readResource(final String name) throws IOException {
@@ -76,6 +77,15 @@ class NbtIOTest {
 
         assertEquals(compoundTag, uncompressed);
         assertEquals(compoundTag, compressed);
+    }
+
+    @Test
+    void readNamed() {
+        NamedTag namedTag = assertDoesNotThrow(() -> NbtIO.JAVA.readNamed(new DataInputStream(new ByteArrayInputStream(NbtIOTest.named)), NbtReadTracker.unlimited()));
+
+        assertEquals("named", namedTag.getName());
+        assertInstanceOf(StringTag.class, namedTag.getTag());
+        assertEquals("text", namedTag.getTag().asStringTag().getValue());
     }
 
 }
