@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class TextUtils {
 
-    private static final String URL_PATTERN = "(?:https?://)?[\\w._]+\\.\\w{2,}(?:/\\S*)?";
+    private static final String URL_PATTERN = "(?:https?://)?[\\w._-]+\\.\\w{2,}(?:/\\S*)?";
 
     /**
      * Make URLs in the given text component clickable.
