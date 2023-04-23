@@ -60,7 +60,8 @@ public class TextUtils {
                 out = new StringComponent("");
                 for (ATextComponent part : parts) out.append(part);
             } else {
-                out = component.copy();
+                if (parts.size() == 1) out = parts.get(0).copy();
+                else out = component.copy();
                 out.getSiblings().clear();
             }
         } else {
