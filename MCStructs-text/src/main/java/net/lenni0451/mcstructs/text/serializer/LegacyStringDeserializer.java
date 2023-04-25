@@ -5,6 +5,8 @@ import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 
+import java.util.function.Function;
+
 /**
  * Deserialize a legacy formatted string to an {@link ATextComponent}.
  */
@@ -32,6 +34,27 @@ public class LegacyStringDeserializer {
      * @return The parsed string
      */
     public static ATextComponent parse(final String s, final char colorChar, final boolean unknownReset) {
+        return parse(s, colorChar, c -> {
+            TextFormatting formatting = TextFormatting.getByCode(c);
+            if (formatting == null) {
+                if (unknownReset) return TextFormatting.RESET;
+                else return null;
+            }
+            return formatting;
+        });
+    }
+
+    /**
+     * Parse a string with legacy formatting codes into an {@link ATextComponent}.<br>
+     * The {@code formattingResolver} should return a formatting for the given char or null if the previous formatting should be kept.
+     * When returning a color the previous formattings like bold, italic, etc. will be reset.
+     *
+     * @param s                  The string to parse
+     * @param colorChar          The color char to use (e.g. {@link TextFormatting#COLOR_CHAR})
+     * @param formattingResolver The function that resolves the formatting for the given char
+     * @return The parsed string
+     */
+    public static ATextComponent parse(final String s, final char colorChar, final Function<Character, TextFormatting> formattingResolver) {
         StringReader reader = new StringReader(s);
         Style style = new Style();
         StringBuilder currentPart = new StringBuilder();
@@ -42,15 +65,15 @@ public class LegacyStringDeserializer {
             if (c == colorChar) {
                 if (reader.hasNext()) {
                     char format = reader.read();
-                    TextFormatting formatting = TextFormatting.getByCode(format);
-                    if (formatting == null && !unknownReset) continue;
+                    TextFormatting formatting = formattingResolver.apply(format);
+                    if (formatting == null) continue;
 
                     if (currentPart.length() != 0) {
                         out.append(new StringComponent(currentPart.toString()).setStyle(style.copy()));
                         currentPart = new StringBuilder();
-                        if (formatting == null || formatting.isColor()) style = new Style();
+                        if (formatting.isColor() || TextFormatting.RESET.equals(formatting)) style = new Style();
                     }
-                    if (formatting != null) style.setFormatting(formatting);
+                    style.setFormatting(formatting);
                 }
             } else {
                 currentPart.append(c);
