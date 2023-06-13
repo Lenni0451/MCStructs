@@ -46,8 +46,8 @@ public class LegacyStringDeserializer {
 
     /**
      * Parse a string with legacy formatting codes into an {@link ATextComponent}.<br>
-     * The {@code formattingResolver} should return a formatting for the given char or null if the previous formatting should be kept.
-     * When returning a color the previous formattings like bold, italic, etc. will be reset.
+     * The {@code formattingResolver} should return a formatting for the given char or {@code null} if the previous formatting should be kept.<br>
+     * When returning a color the previous formattings like {@code bold, italic, etc.} will be reset.
      *
      * @param s                  The string to parse
      * @param colorChar          The color char to use (e.g. {@link TextFormatting#COLOR_CHAR})

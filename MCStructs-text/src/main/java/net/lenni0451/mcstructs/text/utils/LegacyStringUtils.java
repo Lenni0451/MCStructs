@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class LegacyStringUtils {
@@ -23,6 +24,29 @@ public class LegacyStringUtils {
      * @return The style at the given position
      */
     public static LegacyStyle getStyleAt(final String s, final int position, final boolean unknownReset) {
+        return getStyleAt(s, position, c -> {
+            TextFormatting formatting = TextFormatting.getByCode(c);
+            if (formatting == null) {
+                if (unknownReset) return TextFormatting.RESET;
+                else return null;
+            }
+            return formatting;
+        });
+    }
+
+    /**
+     * Get the legacy style of a string at the given position.<br>
+     * If the position is negative the style will be empty.<br>
+     * If the position is greater than the length of the string the last style will be returned.<br>
+     * The {@code formattingResolver} should return a formatting for the given char or {@code null} if the previous formatting should be kept.<br>
+     * When returning a color the previous formattings like {@code bold, italic, etc.} will be reset.
+     *
+     * @param s                  The string to get the style from
+     * @param position           The position to get the style at
+     * @param formattingResolver The function that resolves the formatting for the given char
+     * @return The style at the given position
+     */
+    public static LegacyStyle getStyleAt(final String s, final int position, final Function<Character, TextFormatting> formattingResolver) {
         char[] chars = s.toCharArray();
         LegacyStyle legacyStyle = new LegacyStyle();
 
@@ -31,17 +55,17 @@ public class LegacyStringUtils {
             if (c == TextFormatting.COLOR_CHAR) {
                 if (i + 1 < chars.length) {
                     char code = chars[++i];
-                    TextFormatting formatting = TextFormatting.getByCode(code);
-                    if (formatting != null) {
-                        if (formatting.isColor()) {
-                            legacyStyle.setColor(formatting);
-                            legacyStyle.getStyles().clear();
-                        } else {
-                            legacyStyle.getStyles().add(formatting);
-                        }
-                    } else if (unknownReset) {
+                    TextFormatting formatting = formattingResolver.apply(code);
+                    if (formatting == null) continue;
+
+                    if (TextFormatting.RESET.equals(formatting)) {
                         legacyStyle.setColor(null);
                         legacyStyle.getStyles().clear();
+                    } else if (formatting.isColor()) {
+                        legacyStyle.setColor(formatting);
+                        legacyStyle.getStyles().clear();
+                    } else {
+                        legacyStyle.getStyles().add(formatting);
                     }
                 }
             }
@@ -59,10 +83,31 @@ public class LegacyStringUtils {
      * @return The split string
      */
     public static String[] split(final String s, final String split, final boolean unknownReset) {
+        return split(s, split, (c) -> {
+            TextFormatting formatting = TextFormatting.getByCode(c);
+            if (formatting == null) {
+                if (unknownReset) return TextFormatting.RESET;
+                else return null;
+            }
+            return formatting;
+        });
+    }
+
+    /**
+     * Split a string by a given split string and keep the legacy style of the previous part.<br>
+     * The {@code formattingResolver} should return a formatting for the given char or {@code null} if the previous formatting should be kept.<br>
+     * When returning a color the previous formattings like {@code bold, italic, etc.} will be reset.
+     *
+     * @param s                  The string to split
+     * @param split              The split string
+     * @param formattingResolver The function that resolves the formatting for the given char
+     * @return The split string
+     */
+    public static String[] split(final String s, final String split, final Function<Character, TextFormatting> formattingResolver) {
         String[] parts = s.split(Pattern.quote(split));
         for (int i = 1; i < parts.length; i++) {
             String prev = parts[i - 1];
-            LegacyStyle style = getStyleAt(prev, prev.length(), unknownReset);
+            LegacyStyle style = getStyleAt(prev, prev.length(), formattingResolver);
             parts[i] = style.toLegacy() + parts[i];
         }
         return parts;
