@@ -244,6 +244,16 @@ public class TextFormatting {
     }
 
     /**
+     * Get the legacy code of the formatting.<br>
+     * The legacy code of rgb colors is an empty string.
+     *
+     * @return The legacy code (e.g. "§c")
+     */
+    public String toLegacy() {
+        return String.valueOf(COLOR_CHAR) + this.code;
+    }
+
+    /**
      * @return The lowercase name of the formatting or the rgb value as a hex string if it's a rgb color
      */
     public String serialize() {
