@@ -116,36 +116,4 @@ public class TextUtils {
         return out;
     }
 
-    /**
-     * Calculate the width of a component using the given widths array.<br>
-     * Minecraft takes the ceil of the width.
-     *
-     * @param component The component to calculate the width of
-     * @param widths    The char widths array
-     * @return The width of the component
-     */
-    public static float getComponentWidth(final ATextComponent component, final float[] widths) {
-        return getComponentWidth(component, widths, 1);
-    }
-
-    /**
-     * Calculate the width of a component using the given widths array.<br>
-     * The bold offset is 1 for the vanilla font and 0.5 for unihex fonts.<br>
-     * Minecraft takes the ceil of the width.
-     *
-     * @param component  The component to calculate the width of
-     * @param widths     The char widths array
-     * @param boldOffset The bold offset
-     * @return The width of the component
-     */
-    public static float getComponentWidth(final ATextComponent component, final float[] widths, final float boldOffset) {
-        float[] width = new float[]{0};
-        component.forEach(comp -> {
-            char[] chars = comp.asSingleString().toCharArray();
-            for (char c : chars) width[0] += c >= widths.length ? 0 : widths[c];
-            if (comp.getStyle().isBold()) width[0] += boldOffset * chars.length;
-        });
-        return width[0];
-    }
-
 }
