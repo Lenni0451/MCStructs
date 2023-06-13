@@ -55,16 +55,16 @@ public class LegacyStringDeserializer {
      * @return The parsed string
      */
     public static ATextComponent parse(final String s, final char colorChar, final Function<Character, TextFormatting> formattingResolver) {
-        StringReader reader = new StringReader(s);
+        char[] chars = s.toCharArray();
         Style style = new Style();
         StringBuilder currentPart = new StringBuilder();
         ATextComponent out = new StringComponent("");
 
-        while (reader.hasNext()) {
-            char c = reader.read();
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
             if (c == colorChar) {
-                if (reader.hasNext()) {
-                    char format = reader.read();
+                if (i + 1 < chars.length) {
+                    char format = chars[++i];
                     TextFormatting formatting = formattingResolver.apply(format);
                     if (formatting == null) continue;
 
@@ -82,24 +82,6 @@ public class LegacyStringDeserializer {
         if (currentPart.length() != 0) out.append(new StringComponent(currentPart.toString()).setStyle(style));
         if (out.getSiblings().size() == 1) return out.getSiblings().get(0);
         return out;
-    }
-
-
-    private static class StringReader {
-        private final String s;
-        private int cursor = 0;
-
-        private StringReader(final String s) {
-            this.s = s;
-        }
-
-        private char read() {
-            return this.s.charAt(this.cursor++);
-        }
-
-        private boolean hasNext() {
-            return this.cursor < this.s.length();
-        }
     }
 
 }
