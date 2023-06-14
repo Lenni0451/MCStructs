@@ -14,30 +14,30 @@ public class LegacyStringDeserializer {
 
     /**
      * Parse a string with legacy formatting codes into an {@link ATextComponent}.<br>
-     * Minecraft 1.13+ ignores unknown formatting codes. Earlier versions will handle them like {@link TextFormatting#RESET}.
+     * Minecraft 1.13+ ignores unknown formatting codes. Earlier versions will handle them like {@link TextFormatting#WHITE}.
      *
      * @param s            The string to parse
-     * @param unknownReset Handle unknown formatting codes as reset
+     * @param unknownWhite Handle unknown formatting codes as reset
      * @return The parsed string
      */
-    public static ATextComponent parse(final String s, final boolean unknownReset) {
-        return parse(s, TextFormatting.COLOR_CHAR, unknownReset);
+    public static ATextComponent parse(final String s, final boolean unknownWhite) {
+        return parse(s, TextFormatting.COLOR_CHAR, unknownWhite);
     }
 
     /**
      * Parse a string with legacy formatting codes into an {@link ATextComponent}.<br>
-     * Minecraft 1.13+ ignores unknown formatting codes. Earlier versions will handle them like {@link TextFormatting#RESET}.
+     * Minecraft 1.13+ ignores unknown formatting codes. Earlier versions will handle them like {@link TextFormatting#WHITE}.
      *
      * @param s            The string to parse
      * @param colorChar    The color char to use (e.g. {@link TextFormatting#COLOR_CHAR})
-     * @param unknownReset Handle unknown formatting codes as reset
+     * @param unknownWhite Handle unknown formatting codes as reset
      * @return The parsed string
      */
-    public static ATextComponent parse(final String s, final char colorChar, final boolean unknownReset) {
+    public static ATextComponent parse(final String s, final char colorChar, final boolean unknownWhite) {
         return parse(s, colorChar, c -> {
             TextFormatting formatting = TextFormatting.getByCode(c);
             if (formatting == null) {
-                if (unknownReset) return TextFormatting.RESET;
+                if (unknownWhite) return TextFormatting.WHITE;
                 else return null;
             }
             return formatting;

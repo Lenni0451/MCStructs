@@ -26,7 +26,7 @@ class LegacyStringUtilsTest {
         assertEquals(style3, style40);
 
         LegacyStringUtils.LegacyStyle resetInvalidStyle4 = LegacyStringUtils.getStyleAt("§4H§zi", 4, true);
-        assertNull(resetInvalidStyle4.getColor());
+        assertEquals(TextFormatting.WHITE, resetInvalidStyle4.getColor());
         assertTrue(resetInvalidStyle4.getStyles().isEmpty());
 
         LegacyStringUtils.LegacyStyle ignoreInvalidStyle6 = LegacyStringUtils.getStyleAt("§4H§zi", 6, false);

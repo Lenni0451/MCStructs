@@ -16,18 +16,18 @@ public class LegacyStringUtils {
      * Get the legacy style of a string at the given position.<br>
      * If the position is negative the style will be empty.<br>
      * If the position is greater than the length of the string the last style will be returned.<br>
-     * Minecraft 1.13+ ignores unknown formatting codes. Earlier versions will handle them like {@link TextFormatting#RESET}.
+     * Minecraft 1.13+ ignores unknown formatting codes. Earlier versions will handle them like {@link TextFormatting#WHITE}.
      *
      * @param s            The string to get the style from
      * @param position     The position to get the style at
-     * @param unknownReset Handle unknown formatting codes as reset
+     * @param unknownWhite Handle unknown formatting codes as reset
      * @return The style at the given position
      */
-    public static LegacyStyle getStyleAt(final String s, final int position, final boolean unknownReset) {
+    public static LegacyStyle getStyleAt(final String s, final int position, final boolean unknownWhite) {
         return getStyleAt(s, position, c -> {
             TextFormatting formatting = TextFormatting.getByCode(c);
             if (formatting == null) {
-                if (unknownReset) return TextFormatting.RESET;
+                if (unknownWhite) return TextFormatting.WHITE;
                 else return null;
             }
             return formatting;
@@ -79,14 +79,14 @@ public class LegacyStringUtils {
      *
      * @param s            The string to split
      * @param split        The split string
-     * @param unknownReset Handle unknown formatting codes as reset
+     * @param unknownWhite Handle unknown formatting codes as reset
      * @return The split string
      */
-    public static String[] split(final String s, final String split, final boolean unknownReset) {
+    public static String[] split(final String s, final String split, final boolean unknownWhite) {
         return split(s, split, (c) -> {
             TextFormatting formatting = TextFormatting.getByCode(c);
             if (formatting == null) {
-                if (unknownReset) return TextFormatting.RESET;
+                if (unknownWhite) return TextFormatting.WHITE;
                 else return null;
             }
             return formatting;
