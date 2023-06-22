@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.nbt.tags;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -55,8 +56,9 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
     }
 
     /**
-     * @return The type of the list
+     * @return The type of the list. <b><u>Can</u> be null if the list is empty</b>.
      */
+    @Nullable
     public NbtType getType() {
         return this.type;
     }
