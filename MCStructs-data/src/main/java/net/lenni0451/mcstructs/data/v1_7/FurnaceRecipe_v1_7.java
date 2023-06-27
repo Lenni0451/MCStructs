@@ -41,7 +41,7 @@ public class FurnaceRecipe_v1_7 {
     }
 
     private FurnaceRecipe_v1_7(final Item_v1_7 input, final Item_v1_7 output, final int outputDamage) {
-        this(input, 32767, output, 0);
+        this(input, 32767, output, outputDamage);
     }
 
     private FurnaceRecipe_v1_7(final Item_v1_7 input, final int inputDamage, final Item_v1_7 output, final int outputDamage) {
