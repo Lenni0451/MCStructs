@@ -206,7 +206,6 @@ public class Block_v1_8 {
     public static final Block_v1_8 acacia_door = new Block_v1_8(196, "acacia_door", true, 3.0F, 15.0F);
     public static final Block_v1_8 dark_oak_door = new Block_v1_8(197, "dark_oak_door", true, 3.0F, 15.0F);
 
-
     public static Block_v1_8 getById(final int blockId) {
         for (Block_v1_8 block : BLOCK_LIST) {
             if (block.blockId() == blockId) return block;

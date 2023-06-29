@@ -345,7 +345,6 @@ public class Item_v1_8 {
     public static final Item_v1_8 record_11 = new Item_v1_8(2266, "record_11", 1, 0, false, 0, false);
     public static final Item_v1_8 record_wait = new Item_v1_8(2267, "record_wait", 1, 0, false, 0, false);
 
-
     public static Item_v1_8 getById(final int itemId) {
         for (Item_v1_8 item : ITEM_LIST) {
             if (item.itemId == itemId) return item;
