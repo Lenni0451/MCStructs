@@ -398,23 +398,14 @@ for (Object rawItem : itemRegistry) {
     Item item = (Item) rawItem;
     int id = itemRegistry.getIDForObject(item);
     String name = itemRegistry.getNameForObject(item).split(":")[1];
-
-    out += "public static final Item_v1_7 ";
-    out += name;
-    out += " = new Item_v1_7(";
-    out += id;
-    out += ", \"";
-    out += name;
-    out += "\", ";
-    out += item.maxStackSize;
-    out += ", ";
-    out += item.maxDamage;
-    out += ", ";
-    out += item.hasSubtypes;
-    out += ", ";
-    out += TileEntityFurnace.func_145952_a(new ItemStack(item));
-    out += ", ";
-    out += item.potionEffect != null;
+    out += "public static final Item_v1_7 " + name;
+    out += " = new Item_v1_7(" + id;
+    out += ", \"" + name + "\"";
+    out += ", " + item.maxStackSize;
+    out += ", " + item.maxDamage;
+    out += ", " + item.hasSubtypes;
+    out += ", " + TileEntityFurnace.func_145952_a(new ItemStack(item));
+    out += ", " + (item.potionEffect != null);
     out += ");\n";
 }
 System.out.println(out);
