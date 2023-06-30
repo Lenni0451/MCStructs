@@ -233,6 +233,8 @@ public class Block_v1_8 {
         this.opaque = opaque;
         this.hardness = hardness;
         this.resistance = resistance;
+
+        BLOCK_LIST.add(this);
     }
 
     public int blockId() {

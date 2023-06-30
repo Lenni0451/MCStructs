@@ -1,13 +1,11 @@
 package net.lenni0451.mcstructs.data.v1_10;
 
-import net.lenni0451.mcstructs.data.v1_9.Block_v1_9;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Block_v1_10 {
 
-    public static final List<Block_v1_9> BLOCK_LIST = new ArrayList<>();
+    public static final List<Block_v1_10> BLOCK_LIST = new ArrayList<>();
 
     public static final Block_v1_10 air = new Block_v1_10(0, "air", false, 0.0F, 0.0F);
     public static final Block_v1_10 stone = new Block_v1_10(1, "stone", true, 1.5F, 30.0F);
@@ -229,15 +227,15 @@ public class Block_v1_10 {
     public static final Block_v1_10 structure_void = new Block_v1_10(217, "structure_void", false, 0.0F, 0.0F);
     public static final Block_v1_10 structure_block = new Block_v1_10(255, "structure_block", true, -1.0F, 1.8E7F);
 
-    public static Block_v1_9 getById(final int blockId) {
-        for (Block_v1_9 block : BLOCK_LIST) {
+    public static Block_v1_10 getById(final int blockId) {
+        for (Block_v1_10 block : BLOCK_LIST) {
             if (block.blockId() == blockId) return block;
         }
         return null;
     }
 
-    public static Block_v1_9 getByName(final String name) {
-        for (Block_v1_9 block : BLOCK_LIST) {
+    public static Block_v1_10 getByName(final String name) {
+        for (Block_v1_10 block : BLOCK_LIST) {
             if (block.name().equals(name)) return block;
         }
         return null;
@@ -256,6 +254,8 @@ public class Block_v1_10 {
         this.opaque = opaque;
         this.hardness = hardness;
         this.resistance = resistance;
+
+        BLOCK_LIST.add(this);
     }
 
     public int blockId() {
