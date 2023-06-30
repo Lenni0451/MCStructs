@@ -443,6 +443,8 @@ public class Item_v1_9 {
 }
 
 /*
+Make sure the PotionHelper is initialized before running this code.
+
 String out = "";
 for (Object rawItem : itemRegistry) {
     Item item = (Item) rawItem;
