@@ -1,9 +1,11 @@
 package net.lenni0451.mcstructs.data.v1_11;
 
+import net.lenni0451.mcstructs.data.Block;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Block_v1_11 {
+public class Block_v1_11 implements Block {
 
     public static final List<Block_v1_11> BLOCK_LIST = new ArrayList<>();
 
@@ -274,22 +276,27 @@ public class Block_v1_11 {
         BLOCK_LIST.add(this);
     }
 
+    @Override
     public int blockId() {
         return this.blockId;
     }
 
+    @Override
     public String name() {
         return this.name;
     }
 
+    @Override
     public boolean opaque() {
         return this.opaque;
     }
 
+    @Override
     public float hardness() {
         return this.hardness;
     }
 
+    @Override
     public float resistance() {
         return this.resistance;
     }

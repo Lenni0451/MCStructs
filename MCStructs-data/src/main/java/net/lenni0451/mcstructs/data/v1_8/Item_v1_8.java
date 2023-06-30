@@ -1,9 +1,11 @@
 package net.lenni0451.mcstructs.data.v1_8;
 
+import net.lenni0451.mcstructs.data.Item;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item_v1_8 {
+public class Item_v1_8 implements Item {
 
     public static final List<Item_v1_8> ITEM_LIST = new ArrayList<>();
 
@@ -380,34 +382,42 @@ public class Item_v1_8 {
         ITEM_LIST.add(this);
     }
 
+    @Override
     public int itemId() {
         return this.itemId;
     }
 
+    @Override
     public String name() {
         return this.name;
     }
 
+    @Override
     public int maxStackSize() {
         return this.maxStackSize;
     }
 
+    @Override
     public int maxDamage() {
         return this.maxDamage;
     }
 
+    @Override
     public boolean hasSubtypes() {
         return this.hasSubTypes;
     }
 
+    @Override
     public int burnTime() {
         return this.burnTime;
     }
 
+    @Override
     public boolean isPotionIngredient() {
         return this.isPotionIngredient;
     }
 
+    @Override
     public boolean isDamageable() {
         return this.maxDamage > 0 && !this.hasSubTypes;
     }
