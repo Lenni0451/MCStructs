@@ -441,3 +441,23 @@ public class Item_v1_9 {
     }
 
 }
+
+/*
+String out = "";
+for (Object rawItem : itemRegistry) {
+    Item item = (Item) rawItem;
+    int id = itemRegistry.getIDForObject(item);
+    String name = itemRegistry.getNameForObject(item).toString().split(":")[1];
+    out += "public static final Item_v1_9 ";
+    out += name;
+    out += " = new Item_v1_9(" + id;
+    out += ", \"" + name + "\"";
+    out += ", " + item.maxStackSize;
+    out += ", " + item.maxDamage;
+    out += ", " + item.hasSubtypes;
+    out += ", " + TileEntityFurnace.getItemBurnTime(new ItemStack(item));
+    out += ", " + PotionHelper.isPotionItem(new ItemStack(item));
+    out += ");\n";
+}
+System.out.println(out);
+ */
