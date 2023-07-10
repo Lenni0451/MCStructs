@@ -10,6 +10,55 @@ public class TextWidthUtils {
 
     private static float[] charWidths = null;
 
+    private static void loadCharWidths() {
+        if (charWidths == null) {
+            InputStream is = TextUtils.class.getResourceAsStream("/mcstructs/text/charwidths.bin");
+            if (is == null) throw new IllegalStateException("Could not find charwidths.bin");
+            try (GZIPInputStream gis = new GZIPInputStream(is)) {
+                charWidths = new float[gis.read() << 24 | gis.read() << 16 | gis.read() << 8 | gis.read()];
+                for (int i = 0; i < charWidths.length; i++) charWidths[i] = gis.read();
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read char widths", e);
+            }
+        }
+    }
+
+    /**
+     * Get the default char widths array.<br>
+     * The widths array will be cached after the first call.<br>
+     * <br>
+     * This method reads the default char widths from the {@code charwidths.bin} resource.<br>
+     * The widths array will be cached after the first call.
+     *
+     * @return The default char widths array
+     * @throws IllegalStateException If the charwidths.bin resource could not be found
+     * @throws RuntimeException      If the charwidths.bin resource could not be read
+     */
+    public static float[] getCharWidths() {
+        loadCharWidths();
+        return charWidths;
+    }
+
+    /**
+     * Get the width of a char using the default widths.<br>
+     * Minecraft takes the ceil of the width.<br>
+     * <br>
+     * This method reads the default char widths from the {@code charwidths.bin} resource.<br>
+     * The widths array will be cached after the first call.
+     *
+     * @param c          The char to calculate the width of
+     * @param boldOffset The bold offset
+     * @param bold       If the char is bold
+     * @return The width of the char
+     * @throws IllegalStateException If the charwidths.bin resource could not be found
+     * @throws RuntimeException      If the charwidths.bin resource could not be read
+     */
+    public static float getCharWidth(final char c, final float boldOffset, final boolean bold) {
+        loadCharWidths();
+        if (c > charWidths.length) return 0;
+        return charWidths[c] + (bold ? boldOffset : 0);
+    }
+
     /**
      * Calculate the width of a component using the default widths.<br>
      * Minecraft takes the ceil of the width.<br>
@@ -23,16 +72,7 @@ public class TextWidthUtils {
      * @throws RuntimeException      If the charwidths.bin resource could not be read
      */
     public static float getComponentWidth(final ATextComponent component) {
-        if (charWidths == null) {
-            InputStream is = TextUtils.class.getResourceAsStream("/mcstructs/text/charwidths.bin");
-            if (is == null) throw new IllegalStateException("Could not find charwidths.bin");
-            try (GZIPInputStream gis = new GZIPInputStream(is)) {
-                charWidths = new float[gis.read() << 24 | gis.read() << 16 | gis.read() << 8 | gis.read()];
-                for (int i = 0; i < charWidths.length; i++) charWidths[i] = gis.read();
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to read char widths", e);
-            }
-        }
+        loadCharWidths();
         return getComponentWidth(component, charWidths, 1);
     }
 
