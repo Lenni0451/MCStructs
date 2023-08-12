@@ -6,10 +6,23 @@ import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.DataInput;
 import java.io.IOException;
 
+@ParametersAreNonnullByDefault
 public interface INbtReader {
+
+    /**
+     * Read a Nbt type.
+     *
+     * @param in          The data input
+     * @param readTracker The read tracker
+     * @return The type
+     */
+    @Nonnull
+    NbtType readType(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
      * Read the header of a Nbt tag.
@@ -19,6 +32,7 @@ public interface INbtReader {
      * @return The header
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     NbtHeader readHeader(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -31,6 +45,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     default INbtTag read(final NbtType type, final DataInput in, final NbtReadTracker readTracker) throws IOException {
         switch (type) {
             case BYTE:
@@ -70,6 +85,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     ByteTag readByte(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -80,6 +96,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     ShortTag readShort(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -90,6 +107,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     IntTag readInt(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -100,6 +118,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     LongTag readLong(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -110,6 +129,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     FloatTag readFloat(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -120,6 +140,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     DoubleTag readDouble(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -130,6 +151,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     ByteArrayTag readByteArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -140,6 +162,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     StringTag readString(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -150,6 +173,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     ListTag<?> readList(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -160,6 +184,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     CompoundTag readCompound(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -170,6 +195,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     IntArrayTag readIntArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
     /**
@@ -180,6 +206,7 @@ public interface INbtReader {
      * @return The tag
      * @throws IOException If an I/O error occurs
      */
+    @Nonnull
     LongArrayTag readLongArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
 
 }

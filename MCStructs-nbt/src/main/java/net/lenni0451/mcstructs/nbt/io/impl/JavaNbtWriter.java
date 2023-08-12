@@ -6,6 +6,7 @@ import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.io.types.INbtWriter;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Map;
@@ -13,14 +14,20 @@ import java.util.Map;
 /**
  * The Nbt writer implementation for the Java Edition Nbt format.
  */
+@ParametersAreNonnullByDefault
 public class JavaNbtWriter implements INbtWriter {
+
+    @Override
+    public void writeType(DataOutput out, NbtType type) throws IOException {
+        out.writeByte(type.getId());
+    }
 
     @Override
     public void writeHeader(DataOutput out, NbtHeader header) throws IOException {
         if (header.isEnd()) {
-            out.writeByte(NbtType.END.getId());
+            this.writeType(out, NbtType.END);
         } else {
-            out.writeByte(header.getType().getId());
+            this.writeType(out, header.getType());
             out.writeUTF(header.getName());
         }
     }

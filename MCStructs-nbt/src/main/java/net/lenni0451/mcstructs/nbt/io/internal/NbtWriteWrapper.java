@@ -4,7 +4,7 @@ import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.io.types.INbtWriter;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.WillClose;
 import javax.annotation.WillNotClose;
 import java.io.*;
@@ -14,6 +14,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * A wrapper class containing methods to write Nbt tags to different sources.
  */
+@ParametersAreNonnullByDefault
 public interface NbtWriteWrapper {
 
     INbtWriter getWriter();
@@ -26,7 +27,7 @@ public interface NbtWriteWrapper {
      * @param tag  The tag to write
      * @throws IOException If an I/O error occurs
      */
-    default void writeFile(final File f, @Nonnull final String name, final INbtTag tag) throws IOException {
+    default void writeFile(final File f, final String name, final INbtTag tag) throws IOException {
         this.writeFile(f, name, tag, false);
     }
 
@@ -38,7 +39,7 @@ public interface NbtWriteWrapper {
      * @param tag  The tag to write
      * @throws IOException If an I/O error occurs
      */
-    default void writeCompressedFile(final File f, @Nonnull final String name, final INbtTag tag) throws IOException {
+    default void writeCompressedFile(final File f, final String name, final INbtTag tag) throws IOException {
         this.writeFile(f, name, tag, true);
     }
 
@@ -51,7 +52,7 @@ public interface NbtWriteWrapper {
      * @param compressed Whether the file should be compressed or not
      * @throws IOException If an I/O error occurs
      */
-    default void writeFile(final File f, @Nonnull final String name, final INbtTag tag, final boolean compressed) throws IOException {
+    default void writeFile(final File f, final String name, final INbtTag tag, final boolean compressed) throws IOException {
         try (OutputStream fos = Files.newOutputStream(f.toPath())) {
             this.write(fos, name, tag, compressed);
         }
@@ -67,7 +68,7 @@ public interface NbtWriteWrapper {
      * @throws IOException If an I/O error occurs
      */
     @WillClose
-    default void write(final OutputStream os, @Nonnull final String name, final INbtTag tag, final boolean compressed) throws IOException {
+    default void write(final OutputStream os, final String name, final INbtTag tag, final boolean compressed) throws IOException {
         if (compressed) {
             try (GZIPOutputStream gos = new GZIPOutputStream(os)) {
                 this.write(new DataOutputStream(gos), name, tag);
@@ -86,8 +87,23 @@ public interface NbtWriteWrapper {
      * @throws IOException If an I/O error occurs
      */
     @WillNotClose
-    default void write(final DataOutput out, @Nonnull final String name, final INbtTag tag) throws IOException {
+    default void write(final DataOutput out, final String name, final INbtTag tag) throws IOException {
         this.getWriter().writeHeader(out, new NbtHeader(tag.getNbtType(), name));
+        this.getWriter().write(out, tag);
+    }
+
+    /**
+     * Write an unnamed Nbt tag to a {@link DataOutput}.<br>
+     * <b>Unnamed tags are a network only feature of Minecraft 1.20.2+!<br>
+     * You probably need to use {@link #write(DataOutput, String, INbtTag)} instead!</b>
+     *
+     * @param out The data output to write to
+     * @param tag The tag to write
+     * @throws IOException If an I/O error occurs
+     */
+    @WillNotClose
+    default void writeUnnamed(final DataOutput out, final INbtTag tag) throws IOException {
+        this.getWriter().writeType(out, tag.getNbtType());
         this.getWriter().write(out, tag);
     }
 

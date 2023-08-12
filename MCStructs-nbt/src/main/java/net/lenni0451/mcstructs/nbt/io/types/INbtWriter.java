@@ -1,13 +1,25 @@
 package net.lenni0451.mcstructs.nbt.io.types;
 
 import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.DataOutput;
 import java.io.IOException;
 
+@ParametersAreNonnullByDefault
 public interface INbtWriter {
+
+    /**
+     * Write a Nbt type.
+     *
+     * @param out  The data output
+     * @param type The type
+     * @throws IOException If an I/O error occurs
+     */
+    void writeType(final DataOutput out, final NbtType type) throws IOException;
 
     /**
      * Write the header of a Nbt tag.
