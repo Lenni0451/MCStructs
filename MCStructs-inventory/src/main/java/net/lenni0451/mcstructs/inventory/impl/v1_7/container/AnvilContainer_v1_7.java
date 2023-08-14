@@ -27,11 +27,11 @@ public class AnvilContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
     private final SimpleInventory_v1_7<I, S> inputSlots;
     private final CraftingResultInventory_v1_7<I, S> outputSlot;
     /**
-     * The amount of xp needed to repair the item
+     * The amount of xp needed to repair the item.
      */
     private int repairCost;
     /**
-     * The amount of material needed to fully repair the item
+     * The amount of material needed to fully repair the item.
      */
     private int repairStackCount;
     private String repairItemName;

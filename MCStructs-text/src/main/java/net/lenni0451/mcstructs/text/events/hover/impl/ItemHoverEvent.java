@@ -69,17 +69,17 @@ public class ItemHoverEvent extends AHoverEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemHoverEvent that = (ItemHoverEvent) o;
-        return count == that.count && getAction() == that.getAction() && Objects.equals(item, that.item) && Objects.equals(nbt, that.nbt);
+        return this.count == that.count && this.getAction() == that.getAction() && Objects.equals(this.item, that.item) && Objects.equals(this.nbt, that.nbt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAction(), item, count, nbt);
+        return Objects.hash(this.getAction(), this.item, this.count, this.nbt);
     }
 
     @Override
     public String toString() {
-        return "ItemHoverEvent{action=" + getAction() + ", item=" + item + ", count=" + count + ", nbt=" + nbt + "}";
+        return "ItemHoverEvent{action=" + this.getAction() + ", item=" + this.item + ", count=" + this.count + ", nbt=" + this.nbt + "}";
     }
 
 }

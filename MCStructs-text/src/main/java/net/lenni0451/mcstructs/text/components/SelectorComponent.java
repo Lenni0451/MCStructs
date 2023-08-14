@@ -50,21 +50,21 @@ public class SelectorComponent extends ATextComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SelectorComponent that = (SelectorComponent) o;
-        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(selector, that.selector) && Objects.equals(separator, that.separator);
+        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.selector, that.selector) && Objects.equals(this.separator, that.separator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSiblings(), getStyle(), selector, separator);
+        return Objects.hash(this.getSiblings(), this.getStyle(), this.selector, this.separator);
     }
 
     @Override
     public String toString() {
         return "SelectorComponent{" +
-                "siblings=" + getSiblings() +
-                ", style=" + getStyle() +
-                ", selector='" + selector + '\'' +
-                ", separator=" + separator +
+                "siblings=" + this.getSiblings() +
+                ", style=" + this.getStyle() +
+                ", selector='" + this.selector + '\'' +
+                ", separator=" + this.separator +
                 '}';
     }
 

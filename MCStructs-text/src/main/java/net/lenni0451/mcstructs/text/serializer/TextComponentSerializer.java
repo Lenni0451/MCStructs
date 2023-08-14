@@ -237,7 +237,7 @@ public class TextComponentSerializer {
      * @return The deserialized text component
      */
     public ATextComponent deserializeReader(final String json) {
-        return deserializeReader(json, false);
+        return this.deserializeReader(json, false);
     }
 
     /**
@@ -253,7 +253,7 @@ public class TextComponentSerializer {
      * @return The deserialized text component
      */
     public ATextComponent deserializeLenientReader(final String json) {
-        return deserializeReader(json, true);
+        return this.deserializeReader(json, true);
     }
 
     /**

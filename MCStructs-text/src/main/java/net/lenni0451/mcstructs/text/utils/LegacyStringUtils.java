@@ -145,8 +145,8 @@ public class LegacyStringUtils {
         @Override
         public String toString() {
             return "LegacyStyle{" +
-                    "color=" + color +
-                    ", styles=" + styles +
+                    "color=" + this.color +
+                    ", styles=" + this.styles +
                     '}';
         }
 
@@ -155,12 +155,12 @@ public class LegacyStringUtils {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             LegacyStyle that = (LegacyStyle) o;
-            return Objects.equals(color, that.color) && Objects.equals(styles, that.styles);
+            return Objects.equals(this.color, that.color) && Objects.equals(this.styles, that.styles);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(color, styles);
+            return Objects.hash(this.color, this.styles);
         }
     }
 

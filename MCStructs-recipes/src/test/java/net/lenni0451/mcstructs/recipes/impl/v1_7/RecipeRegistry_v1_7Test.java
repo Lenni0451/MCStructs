@@ -75,7 +75,7 @@ class RecipeRegistry_v1_7Test {
 
         @Override
         public LegacyItemStack<Integer> getStack(int row, int column) {
-            return getStack(row * 2 + column);
+            return this.getStack(row * 2 + column);
         }
     }
 

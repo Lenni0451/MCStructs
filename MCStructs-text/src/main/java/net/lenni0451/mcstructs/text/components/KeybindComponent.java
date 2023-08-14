@@ -53,21 +53,21 @@ public class KeybindComponent extends ATextComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         KeybindComponent that = (KeybindComponent) o;
-        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(keybind, that.keybind) && Objects.equals(translator, that.translator);
+        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.keybind, that.keybind) && Objects.equals(this.translator, that.translator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSiblings(), getStyle(), keybind, translator);
+        return Objects.hash(this.getSiblings(), this.getStyle(), this.keybind, this.translator);
     }
 
     @Override
     public String toString() {
         return "KeybindComponent{" +
-                "siblings=" + getSiblings() +
-                ", style=" + getStyle() +
-                ", keybind='" + keybind + '\'' +
-                ", translator=" + translator +
+                "siblings=" + this.getSiblings() +
+                ", style=" + this.getStyle() +
+                ", keybind='" + this.keybind + '\'' +
+                ", translator=" + this.translator +
                 '}';
     }
 

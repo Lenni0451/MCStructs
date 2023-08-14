@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.nbt.exceptions;
 
 /**
- * This exception is thrown when a tag type is unknown
+ * This exception is thrown when a tag type is unknown.
  */
 public class UnknownTagTypeException extends IllegalStateException {
 

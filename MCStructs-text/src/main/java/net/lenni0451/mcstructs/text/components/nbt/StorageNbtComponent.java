@@ -38,20 +38,20 @@ public class StorageNbtComponent extends NbtComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StorageNbtComponent that = (StorageNbtComponent) o;
-        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(id, that.id);
+        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSiblings(), getStyle(), id);
+        return Objects.hash(this.getSiblings(), this.getStyle(), this.id);
     }
 
     @Override
     public String toString() {
         return "StorageNbtComponent{" +
-                "siblings=" + getSiblings() +
-                ", style=" + getStyle() +
-                ", id=" + id +
+                "siblings=" + this.getSiblings() +
+                ", style=" + this.getStyle() +
+                ", id=" + this.id +
                 '}';
     }
 

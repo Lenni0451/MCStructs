@@ -266,17 +266,17 @@ public class TextFormatting {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TextFormatting that = (TextFormatting) o;
-        return code == that.code && rgbValue == that.rgbValue && type == that.type && Objects.equals(name, that.name);
+        return this.code == that.code && this.rgbValue == that.rgbValue && this.type == that.type && Objects.equals(this.name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, name, code, rgbValue);
+        return Objects.hash(this.type, this.name, this.code, this.rgbValue);
     }
 
     @Override
     public String toString() {
-        return "TextFormatting{type=" + type + ", name='" + name + '\'' + ", code=" + code + ", rgbValue=" + rgbValue + "}";
+        return "TextFormatting{type=" + this.type + ", name='" + this.name + '\'' + ", code=" + this.code + ", rgbValue=" + this.rgbValue + "}";
     }
 
 

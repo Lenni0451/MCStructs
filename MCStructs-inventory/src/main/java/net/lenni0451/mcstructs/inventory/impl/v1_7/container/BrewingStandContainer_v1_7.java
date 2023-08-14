@@ -11,7 +11,7 @@ import net.lenni0451.mcstructs.items.info.ItemType;
 
 import java.util.List;
 
-public class BrewingStandContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T,I, S> {
+public class BrewingStandContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S extends AItemStack<I, S>> extends AContainer_v1_7<T, I, S> {
 
     private final T playerInventory;
     private final BrewingStandInventory_v1_7<I, S> brewingStandInventory;

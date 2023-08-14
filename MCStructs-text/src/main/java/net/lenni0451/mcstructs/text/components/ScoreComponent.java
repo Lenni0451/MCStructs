@@ -71,22 +71,22 @@ public class ScoreComponent extends ATextComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ScoreComponent that = (ScoreComponent) o;
-        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(name, that.name) && Objects.equals(objective, that.objective) && Objects.equals(value, that.value);
+        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.name, that.name) && Objects.equals(this.objective, that.objective) && Objects.equals(this.value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSiblings(), getStyle(), name, objective, value);
+        return Objects.hash(this.getSiblings(), this.getStyle(), this.name, this.objective, this.value);
     }
 
     @Override
     public String toString() {
         return "ScoreComponent{" +
-                "siblings=" + getSiblings() +
-                ", style=" + getStyle() +
-                ", name='" + name + '\'' +
-                ", objective='" + objective + '\'' +
-                ", value='" + value + '\'' +
+                "siblings=" + this.getSiblings() +
+                ", style=" + this.getStyle() +
+                ", name='" + this.name + '\'' +
+                ", objective='" + this.objective + '\'' +
+                ", value='" + this.value + '\'' +
                 '}';
     }
 

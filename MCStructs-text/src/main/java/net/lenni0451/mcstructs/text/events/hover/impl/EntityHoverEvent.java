@@ -69,17 +69,21 @@ public class EntityHoverEvent extends AHoverEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EntityHoverEvent that = (EntityHoverEvent) o;
-        return getAction() == that.getAction() && Objects.equals(entityType, that.entityType) && Objects.equals(uuid, that.uuid) && Objects.equals(name, that.name);
+        return Objects.equals(this.entityType, that.entityType) && Objects.equals(this.uuid, that.uuid) && Objects.equals(this.name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAction(), entityType, uuid, name);
+        return Objects.hash(this.entityType, this.uuid, this.name);
     }
 
     @Override
     public String toString() {
-        return "EntityHoverEvent{action=" + getAction() + ", entityType=" + entityType + ", uuid=" + uuid + ", name=" + name + "}";
+        return "EntityHoverEvent{" +
+                "entityType=" + this.entityType +
+                ", uuid=" + this.uuid +
+                ", name=" + this.name +
+                '}';
     }
 
 }

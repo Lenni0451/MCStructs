@@ -43,16 +43,16 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
      */
     private INbtTag parse(final String name, String value) throws SNbtDeserializeException {
         value = value.trim();
-        getTagCount(value);
+        this.getTagCount(value);
 
         if (value.startsWith("{")) {
             if (!value.endsWith("}")) throw new SNbtDeserializeException("Unable to locate ending bracket } for: " + value);
 
             value = value.substring(1, value.length() - 1);
             CompoundTag compound = new CompoundTag();
-            while (value.length() > 0) {
+            while (!value.isEmpty()) {
                 String pair = this.findPair(value, false);
-                if (pair.length() > 0) {
+                if (!pair.isEmpty()) {
                     String subName = this.find(pair, true, false);
                     String subValue = this.find(pair, false, false);
                     compound.add(subName, this.parse(subName, subValue));
@@ -71,9 +71,9 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
 
             value = value.substring(1, value.length() - 1);
             ListTag<INbtTag> list = new ListTag<>();
-            while (value.length() > 0) {
+            while (!value.isEmpty()) {
                 String pair = this.findPair(value, true);
-                if (pair.length() > 0) {
+                if (!pair.isEmpty()) {
                     String subName = this.find(pair, true, true);
                     String subValue = this.find(pair, false, true);
                     try {

@@ -58,12 +58,12 @@ public class StringTag implements INbtTag {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StringTag stringTag = (StringTag) o;
-        return Objects.equals(value, stringTag.value);
+        return Objects.equals(this.value, stringTag.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     @Override

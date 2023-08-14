@@ -94,12 +94,12 @@ public class DoubleTag implements INbtNumber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DoubleTag doubleTag = (DoubleTag) o;
-        return Double.compare(doubleTag.value, value) == 0;
+        return Double.compare(doubleTag.value, this.value) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     @Override

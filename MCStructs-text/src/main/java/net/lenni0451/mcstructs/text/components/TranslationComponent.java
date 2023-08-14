@@ -130,24 +130,24 @@ public class TranslationComponent extends ATextComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TranslationComponent that = (TranslationComponent) o;
-        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(key, that.key) && Arrays.equals(args, that.args) && Objects.equals(translator, that.translator);
+        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.key, that.key) && Arrays.equals(this.args, that.args) && Objects.equals(this.translator, that.translator);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getSiblings(), getStyle(), key, translator);
-        result = 31 * result + Arrays.hashCode(args);
+        int result = Objects.hash(this.getSiblings(), this.getStyle(), this.key, this.translator);
+        result = 31 * result + Arrays.hashCode(this.args);
         return result;
     }
 
     @Override
     public String toString() {
         return "TranslationComponent{" +
-                "siblings=" + getSiblings() +
-                ", style=" + getStyle() +
-                ", key='" + key + '\'' +
-                ", args=" + Arrays.toString(args) +
-                ", translator=" + translator +
+                "siblings=" + this.getSiblings() +
+                ", style=" + this.getStyle() +
+                ", key='" + this.key + '\'' +
+                ", args=" + Arrays.toString(this.args) +
+                ", translator=" + this.translator +
                 '}';
     }
 

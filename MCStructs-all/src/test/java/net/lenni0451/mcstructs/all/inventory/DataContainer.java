@@ -71,7 +71,7 @@ public class DataContainer {
         StringBuilder out = new StringBuilder();
         char[] chars = s.toCharArray();
         for (char c : chars) {
-            if (isAllowedCharacter(c)) out.append(c);
+            if (this.isAllowedCharacter(c)) out.append(c);
         }
         return out.toString();
     }

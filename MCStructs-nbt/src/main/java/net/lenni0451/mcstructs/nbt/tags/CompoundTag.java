@@ -530,12 +530,12 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompoundTag that = (CompoundTag) o;
-        return Objects.equals(value, that.value);
+        return Objects.equals(this.value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     @Override

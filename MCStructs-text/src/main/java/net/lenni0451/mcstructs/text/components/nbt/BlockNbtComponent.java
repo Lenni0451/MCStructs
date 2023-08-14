@@ -37,20 +37,20 @@ public class BlockNbtComponent extends NbtComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BlockNbtComponent that = (BlockNbtComponent) o;
-        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(pos, that.pos);
+        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.pos, that.pos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSiblings(), getStyle(), pos);
+        return Objects.hash(this.getSiblings(), this.getStyle(), this.pos);
     }
 
     @Override
     public String toString() {
         return "BlockNbtComponent{" +
-                "siblings=" + getSiblings() +
-                ", style=" + getStyle() +
-                ", pos='" + pos + '\'' +
+                "siblings=" + this.getSiblings() +
+                ", style=" + this.getStyle() +
+                ", pos='" + this.pos + '\'' +
                 '}';
     }
 

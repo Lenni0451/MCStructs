@@ -324,16 +324,16 @@ public class Style implements ICopyable<Style> {
      * @return If the style is empty
      */
     public boolean isEmpty() {
-        return this.getColor() == null
-                && this.getBold() == null
-                && this.getItalic() == null
-                && this.getUnderlined() == null
-                && this.getStrikethrough() == null
-                && this.getObfuscated() == null
-                && this.getClickEvent() == null
-                && this.getHoverEvent() == null
-                && this.getInsertion() == null
-                && this.getFont() == null;
+        return this.getColor() == null &&
+                this.getBold() == null &&
+                this.getItalic() == null &&
+                this.getUnderlined() == null &&
+                this.getStrikethrough() == null &&
+                this.getObfuscated() == null &&
+                this.getClickEvent() == null &&
+                this.getHoverEvent() == null &&
+                this.getInsertion() == null &&
+                this.getFont() == null;
     }
 
     @Override
@@ -358,29 +358,29 @@ public class Style implements ICopyable<Style> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Style style = (Style) o;
-        return Objects.equals(parent, style.parent) && Objects.equals(color, style.color) && Objects.equals(obfuscated, style.obfuscated) && Objects.equals(bold, style.bold) && Objects.equals(strikethrough, style.strikethrough) && Objects.equals(underlined, style.underlined) && Objects.equals(italic, style.italic) && Objects.equals(clickEvent, style.clickEvent) && Objects.equals(hoverEvent, style.hoverEvent) && Objects.equals(insertion, style.insertion) && Objects.equals(font, style.font);
+        return Objects.equals(this.parent, style.parent) && Objects.equals(this.color, style.color) && Objects.equals(this.obfuscated, style.obfuscated) && Objects.equals(this.bold, style.bold) && Objects.equals(this.strikethrough, style.strikethrough) && Objects.equals(this.underlined, style.underlined) && Objects.equals(this.italic, style.italic) && Objects.equals(this.clickEvent, style.clickEvent) && Objects.equals(this.hoverEvent, style.hoverEvent) && Objects.equals(this.insertion, style.insertion) && Objects.equals(this.font, style.font);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(parent, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, insertion, font);
+        return Objects.hash(this.parent, this.color, this.obfuscated, this.bold, this.strikethrough, this.underlined, this.italic, this.clickEvent, this.hoverEvent, this.insertion, this.font);
     }
 
     @Override
     public String toString() {
         return "Style{" +
-                "parent=" + parent +
-                ", color=" + color +
-                ", obfuscated=" + obfuscated +
-                ", bold=" + bold +
-                ", strikethrough=" + strikethrough +
-                ", underlined=" + underlined +
-                ", italic=" + italic +
-                ", clickEvent=" + clickEvent +
-                ", hoverEvent=" + hoverEvent +
-                ", insertion='" + insertion + '\'' +
-                ", font=" + font +
-                "}";
+                "parent=" + this.parent +
+                ", color=" + this.color +
+                ", obfuscated=" + this.obfuscated +
+                ", bold=" + this.bold +
+                ", strikethrough=" + this.strikethrough +
+                ", underlined=" + this.underlined +
+                ", italic=" + this.italic +
+                ", clickEvent=" + this.clickEvent +
+                ", hoverEvent=" + this.hoverEvent +
+                ", insertion='" + this.insertion + '\'' +
+                ", font=" + this.font +
+                '}';
     }
 
 }

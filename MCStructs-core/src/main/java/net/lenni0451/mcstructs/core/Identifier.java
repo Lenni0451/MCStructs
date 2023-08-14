@@ -45,7 +45,7 @@ public class Identifier {
     /**
      * Create a new identifier from key and value.
      *
-     * @param key The key of the identifier
+     * @param key   The key of the identifier
      * @param value The value of the identifier
      * @return The created identifier
      * @throws IllegalArgumentException If the key or value is not valid
@@ -92,19 +92,19 @@ public class Identifier {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Identifier that = (Identifier) o;
-        return Objects.equals(key, that.key) && Objects.equals(value, that.value);
+        return Objects.equals(this.key, that.key) && Objects.equals(this.value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, value);
+        return Objects.hash(this.key, this.value);
     }
 
     @Override
     public String toString() {
         return "Identifier{" +
-                "key='" + key + '\'' +
-                ", value='" + value + '\'' +
+                "key='" + this.key + '\'' +
+                ", value='" + this.value + '\'' +
                 '}';
     }
 

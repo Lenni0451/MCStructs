@@ -21,8 +21,8 @@ class TextUtilsTest {
         assertEquals(new StringComponent("")
                         .append("Check out my website: ")
                         .append(new StringComponent(url).setStyle(new Style().setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL, url))))
-                        .append(" it's awesome!")
-                , component);
+                        .append(" it's awesome!"),
+                component);
     }
 
     @Test

@@ -38,17 +38,19 @@ public class TextHoverEvent extends AHoverEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TextHoverEvent that = (TextHoverEvent) o;
-        return getAction() == that.getAction() && Objects.equals(text, that.text);
+        return Objects.equals(this.text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAction(), text);
+        return Objects.hash(this.text);
     }
 
     @Override
     public String toString() {
-        return "TextHoverEvent{action=" + getAction() + ", text=" + text + "}";
+        return "TextHoverEvent{" +
+                "text=" + this.text +
+                '}';
     }
 
 }

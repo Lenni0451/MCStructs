@@ -211,17 +211,17 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListTag<?> listTag = (ListTag<?>) o;
-        if (!Objects.equals(type, listTag.type)) {
-            if (Objects.isNull(type) && Objects.equals(NbtType.END, listTag.type)) return true;
-            if (Objects.isNull(listTag.type) && Objects.equals(NbtType.END, type)) return true;
+        if (!Objects.equals(this.type, listTag.type)) {
+            if (Objects.isNull(this.type) && Objects.equals(NbtType.END, listTag.type)) return true;
+            if (Objects.isNull(listTag.type) && Objects.equals(NbtType.END, this.type)) return true;
             return false;
         }
-        return Objects.equals(value, listTag.value);
+        return Objects.equals(this.value, listTag.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, value);
+        return Objects.hash(this.type, this.value);
     }
 
     @Override

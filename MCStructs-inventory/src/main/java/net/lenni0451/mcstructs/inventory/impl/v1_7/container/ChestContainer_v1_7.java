@@ -18,7 +18,7 @@ public class ChestContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
         super(windowId);
         this.playerInventory = playerInventory;
         this.chestInventory = new SimpleInventory_v1_7<>(size);
-        this.rowCount = chestInventory.getSize() / 9;
+        this.rowCount = this.chestInventory.getSize() / 9;
         this.rowSlotCount = this.rowCount * 9;
 
         this.initSlots();
@@ -26,7 +26,7 @@ public class ChestContainer_v1_7<T extends PlayerInventory_v1_7<I, S>, I, S exte
 
     @Override
     protected void initSlots() {
-        for (int i = 0; i < this.rowSlotCount; i++) this.addSlot(chestInventory, i, Slot.acceptAll());
+        for (int i = 0; i < this.rowSlotCount; i++) this.addSlot(this.chestInventory, i, Slot.acceptAll());
         for (int i = 0; i < 27; i++) this.addSlot(this.playerInventory, 9 + i, Slot.acceptAll());
         for (int i = 0; i < 9; i++) this.addSlot(this.playerInventory, i, Slot.acceptAll());
     }

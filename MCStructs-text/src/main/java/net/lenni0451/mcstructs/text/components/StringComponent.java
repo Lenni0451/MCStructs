@@ -38,20 +38,20 @@ public class StringComponent extends ATextComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StringComponent that = (StringComponent) o;
-        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(text, that.text);
+        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSiblings(), getStyle(), text);
+        return Objects.hash(this.getSiblings(), this.getStyle(), this.text);
     }
 
     @Override
     public String toString() {
         return "StringComponent{" +
-                "siblings=" + getSiblings() +
-                ", style=" + getStyle() +
-                ", text='" + text + '\'' +
+                "siblings=" + this.getSiblings() +
+                ", style=" + this.getStyle() +
+                ", text='" + this.text + '\'' +
                 '}';
     }
 

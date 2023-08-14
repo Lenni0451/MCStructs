@@ -94,12 +94,12 @@ public class IntTag implements INbtNumber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IntTag intTag = (IntTag) o;
-        return value == intTag.value;
+        return this.value == intTag.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     @Override

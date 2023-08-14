@@ -94,12 +94,12 @@ public class FloatTag implements INbtNumber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FloatTag floatTag = (FloatTag) o;
-        return Float.compare(floatTag.value, value) == 0;
+        return Float.compare(floatTag.value, this.value) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     @Override

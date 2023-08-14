@@ -25,7 +25,9 @@ public class CraftingResultSlot_v1_8<T extends PlayerInventory_v1_7<I, S>, I, S 
                 S container = slotStack.getRegistry().create(slotStack.getRegistry().requireByType(ItemType.BUCKET));
                 if (!inventoryHolder.getPlayerInventory().addStack(inventoryHolder, container)) {
                     if (getCraftingInventory().getStack(0) == null) getCraftingInventory().setStack(0, container);
-                } else if (!inventoryHolder.getPlayerInventory().addStack(inventoryHolder, container)) /*drop item*/ ;
+                } else if (!inventoryHolder.getPlayerInventory().addStack(inventoryHolder, container)) {
+                    //drop item
+                }
             }
         }
     }

@@ -6,32 +6,32 @@ package net.lenni0451.mcstructs.inventory.enums;
 public enum InventoryAction {
 
     /**
-     * Left/Right click with/without item in cursor
+     * Left/Right click with/without item in cursor.
      */
     TAKE,
     /**
-     * Shift left/right click
+     * Shift left/right click.
      */
     QUICK_MOVE,
     /**
-     * Left/Right click with item in cursor<br>
-     * Pressing 1-9 without item in cursor
+     * Left/Right click with item in cursor.<br>
+     * Pressing 1-9 without item in cursor.
      */
     SWAP,
     /**
-     * Middle click in creative
+     * Middle click in creative.
      */
     COPY,
     /**
-     * Q
+     * Dropping a item with Q.
      */
     THROW,
     /**
-     * Left/Right dragging with item in cursor
+     * Left/Right dragging with item in cursor.
      */
     DRAG,
     /**
-     * Double left click without item in cursor
+     * Double left click without item in cursor.
      */
     TAKE_ALL
 

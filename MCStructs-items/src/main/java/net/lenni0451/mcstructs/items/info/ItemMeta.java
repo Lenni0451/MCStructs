@@ -33,7 +33,7 @@ public class ItemMeta {
     }
 
     /**
-     * Get the tags of the item
+     * Get the tags of the item.
      *
      * @return The tags of the item
      */

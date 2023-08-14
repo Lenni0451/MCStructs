@@ -94,12 +94,12 @@ public class ByteTag implements INbtNumber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ByteTag byteTag = (ByteTag) o;
-        return value == byteTag.value;
+        return this.value == byteTag.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     @Override

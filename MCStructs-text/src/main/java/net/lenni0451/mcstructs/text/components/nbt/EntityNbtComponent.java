@@ -37,20 +37,20 @@ public class EntityNbtComponent extends NbtComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EntityNbtComponent that = (EntityNbtComponent) o;
-        return Objects.equals(getSiblings(), that.getSiblings()) && Objects.equals(getStyle(), that.getStyle()) && Objects.equals(selector, that.selector);
+        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.selector, that.selector);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSiblings(), getStyle(), selector);
+        return Objects.hash(this.getSiblings(), this.getStyle(), this.selector);
     }
 
     @Override
     public String toString() {
         return "EntityNbtComponent{" +
-                "siblings=" + getSiblings() +
-                ", style=" + getStyle() +
-                ", selector='" + selector + '\'' +
+                "siblings=" + this.getSiblings() +
+                ", style=" + this.getStyle() +
+                ", selector='" + this.selector + '\'' +
                 '}';
     }
 

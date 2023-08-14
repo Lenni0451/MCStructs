@@ -94,12 +94,12 @@ public class LongTag implements INbtNumber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LongTag longTag = (LongTag) o;
-        return value == longTag.value;
+        return this.value == longTag.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     @Override

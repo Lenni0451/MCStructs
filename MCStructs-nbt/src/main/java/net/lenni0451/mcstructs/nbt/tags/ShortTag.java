@@ -94,17 +94,19 @@ public class ShortTag implements INbtNumber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ShortTag shortTag = (ShortTag) o;
-        return value == shortTag.value;
+        return this.value == shortTag.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(this.value);
     }
 
     @Override
     public String toString() {
-        return "short(" + this.value + ")";
+        return "ShortTag{" +
+                "value=" + this.value +
+                '}';
     }
 
 }

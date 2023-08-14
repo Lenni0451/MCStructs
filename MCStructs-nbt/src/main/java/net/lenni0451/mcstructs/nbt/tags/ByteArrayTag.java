@@ -139,12 +139,12 @@ public class ByteArrayTag implements INbtTag, Iterable<Byte> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ByteArrayTag that = (ByteArrayTag) o;
-        return Arrays.equals(value, that.value);
+        return Arrays.equals(this.value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(value);
+        return Arrays.hashCode(this.value);
     }
 
     @Override

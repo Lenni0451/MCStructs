@@ -33,21 +33,21 @@ public class LegacyItemStack<I> extends AItemStack<I, LegacyItemStack<I>> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LegacyItemStack<?> that = (LegacyItemStack<?>) o;
-        return this.getCount() == that.getCount() && damage == that.damage && Objects.equals(getItem(), that.getItem()) && Objects.equals(getTag(), that.getTag());
+        return this.getCount() == that.getCount() && this.damage == that.damage && Objects.equals(this.getItem(), that.getItem()) && Objects.equals(this.getTag(), that.getTag());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getItem(), getCount(), getTag(), damage);
+        return Objects.hash(this.getItem(), this.getCount(), this.getTag(), this.damage);
     }
 
     @Override
     public String toString() {
         return "LegacyItemStack{" +
-                "item=" + getItem() +
-                ", count=" + getCount() +
-                ", damage=" + damage +
-                ", tag=" + getTag() +
+                "item=" + this.getItem() +
+                ", count=" + this.getCount() +
+                ", damage=" + this.damage +
+                ", tag=" + this.getTag() +
                 '}';
     }
 

@@ -137,12 +137,12 @@ public class LongArrayTag implements INbtTag, Iterable<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LongArrayTag that = (LongArrayTag) o;
-        return Arrays.equals(value, that.value);
+        return Arrays.equals(this.value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(value);
+        return Arrays.hashCode(this.value);
     }
 
     @Override

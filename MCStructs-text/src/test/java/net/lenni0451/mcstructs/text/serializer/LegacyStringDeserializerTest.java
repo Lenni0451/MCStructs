@@ -16,8 +16,8 @@ class LegacyStringDeserializerTest {
         assertEquals(
                 new StringComponent("")
                         .append(new StringComponent("A").setStyle(new Style().setFormatting(TextFormatting.DARK_RED)))
-                        .append(new StringComponent("B").setStyle(new Style().setFormatting(TextFormatting.WHITE)))
-                , component);
+                        .append(new StringComponent("B").setStyle(new Style().setFormatting(TextFormatting.WHITE))),
+                component);
     }
 
     @Test

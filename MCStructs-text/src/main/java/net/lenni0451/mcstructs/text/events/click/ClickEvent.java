@@ -34,17 +34,17 @@ public class ClickEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClickEvent that = (ClickEvent) o;
-        return action == that.action && Objects.equals(value, that.value);
+        return this.action == that.action && Objects.equals(this.value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(action, value);
+        return Objects.hash(this.action, this.value);
     }
 
     @Override
     public String toString() {
-        return "ClickEvent{action=" + action + ", value='" + value + "'}";
+        return "ClickEvent{action=" + this.action + ", value='" + this.value + "'}";
     }
 
 }

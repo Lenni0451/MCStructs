@@ -137,12 +137,12 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IntArrayTag that = (IntArrayTag) o;
-        return Arrays.equals(value, that.value);
+        return Arrays.equals(this.value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(value);
+        return Arrays.hashCode(this.value);
     }
 
     @Override
