@@ -16,6 +16,7 @@ import net.lenni0451.mcstructs.recipes.ICraftingInventory;
 import java.util.List;
 
 /**
+ * The player container containing the main inventory, armor inventory and crafting slots.<br>
  * Slots:<br>
  * 0-4: crafting slots (output, slot 1-1, slot 1-2, slot 2-1, slot 2-2)<br>
  * 5-8: armor slots (boots, leggings, chestplate, helmet)<br>

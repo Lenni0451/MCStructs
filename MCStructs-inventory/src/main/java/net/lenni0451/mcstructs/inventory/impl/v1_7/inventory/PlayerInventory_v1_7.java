@@ -8,11 +8,13 @@ import net.lenni0451.mcstructs.items.info.ItemTag;
 public class PlayerInventory_v1_7<I, S extends AItemStack<I, S>> implements IInventory_v1_7<I, S> {
 
     /**
+     * The main inventory slots of the player.<br>
      * Slots 0 - 8: hotbar<br>
      * Slots 9 - 35: upper inventory<br>
      */
     private final S[] main = (S[]) new AItemStack[36];
     /**
+     * The armor slots of the player.<br>
      * Slot 0: boots<br>
      * Slot 1: leggings<br>
      * Slot 2: chestplate<br>
