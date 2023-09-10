@@ -51,7 +51,7 @@ public class LongTag implements INbtNumber {
 
     @Override
     public short shortValue() {
-        return (byte) (this.value & 0xFFFF);
+        return (short) (this.value & 0xFFFF);
     }
 
     @Override

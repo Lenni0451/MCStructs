@@ -51,7 +51,7 @@ public class FloatTag implements INbtNumber {
 
     @Override
     public short shortValue() {
-        return (byte) (((int) Math.floor(this.value)) & 0xFFFF);
+        return (short) (((int) Math.floor(this.value)) & 0xFFFF);
     }
 
     @Override
