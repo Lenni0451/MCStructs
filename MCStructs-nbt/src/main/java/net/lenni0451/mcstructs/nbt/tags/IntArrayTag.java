@@ -1,12 +1,13 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
+import net.lenni0451.mcstructs.nbt.INbtArray;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class IntArrayTag implements INbtTag, Iterable<Integer> {
+public class IntArrayTag implements INbtTag, INbtArray<IntArrayTag, IntTag, int[], Integer> {
 
     private int[] value;
 
@@ -36,19 +37,12 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
         this.value = value;
     }
 
-    /**
-     * @return The int array value
-     */
+    @Override
     public int[] getValue() {
         return this.value;
     }
 
-    /**
-     * Set the int array value.
-     *
-     * @param value The new value
-     * @return This tag
-     */
+    @Override
     public IntArrayTag setValue(final int[] value) {
         this.value = value;
         return this;
@@ -91,18 +85,21 @@ public class IntArrayTag implements INbtTag, Iterable<Integer> {
         return this;
     }
 
-    /**
-     * @return The length of the array
-     */
+    @Override
     public int getLength() {
         return this.value.length;
     }
 
-    /**
-     * @return If the int array is empty
-     */
+    @Override
     public boolean isEmpty() {
         return this.value.length == 0;
+    }
+
+    @Override
+    public ListTag<IntTag> toListTag() {
+        ListTag<IntTag> listTag = new ListTag<>();
+        for (int i : this.value) listTag.add(new IntTag(i));
+        return listTag;
     }
 
     @Override

@@ -221,6 +221,40 @@ public interface INbtTag extends ICopyable<INbtTag> {
         return (LongArrayTag) this;
     }
 
+    /**
+     * @return If this tag is a number tag
+     */
+    default boolean isNumberTag() {
+        return this instanceof INbtNumber;
+    }
+
+    /**
+     * Get this tag as a number tag.
+     *
+     * @return This tag as a number tag
+     * @throws ClassCastException If this tag is not a number tag
+     */
+    default INbtNumber asNumberTag() {
+        return (INbtNumber) this;
+    }
+
+    /**
+     * @return If this tag is an array tag
+     */
+    default boolean isArrayTag() {
+        return this instanceof INbtArray;
+    }
+
+    /**
+     * Get this tag as an array tag.
+     *
+     * @return This tag as an array tag
+     * @throws ClassCastException If this tag is not an array tag
+     */
+    default INbtArray<?, ?, ?, ?> asArrayTag() {
+        return (INbtArray<?, ?, ?, ?>) this;
+    }
+
     boolean equals(final Object o);
 
     int hashCode();
