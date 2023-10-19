@@ -21,6 +21,17 @@ public enum HoverEventAction {
         return null;
     }
 
+    public static HoverEventAction getByName(final String name, final boolean ignoreCase) {
+        for (HoverEventAction hoverEventAction : values()) {
+            if (ignoreCase) {
+                if (hoverEventAction.getName().equalsIgnoreCase(name)) return hoverEventAction;
+            } else {
+                if (hoverEventAction.getName().equals(name)) return hoverEventAction;
+            }
+        }
+        return null;
+    }
+
 
     private final String name;
     private final boolean userDefinable;

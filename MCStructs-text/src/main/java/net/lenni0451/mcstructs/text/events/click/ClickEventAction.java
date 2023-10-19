@@ -21,8 +21,16 @@ public enum ClickEventAction {
     COPY_TO_CLIPBOARD("copy_to_clipboard", true);
 
     public static ClickEventAction getByName(final String name) {
+        return getByName(name, true);
+    }
+
+    public static ClickEventAction getByName(final String name, final boolean ignoreCase) {
         for (ClickEventAction clickEventAction : values()) {
-            if (clickEventAction.getName().equalsIgnoreCase(name)) return clickEventAction;
+            if (ignoreCase) {
+                if (clickEventAction.getName().equalsIgnoreCase(name)) return clickEventAction;
+            } else {
+                if (clickEventAction.getName().equals(name)) return clickEventAction;
+            }
         }
         return null;
     }
