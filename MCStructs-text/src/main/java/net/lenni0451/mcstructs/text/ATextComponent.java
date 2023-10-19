@@ -9,6 +9,7 @@ import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -50,6 +51,17 @@ public abstract class ATextComponent implements ICopyable<ATextComponent> {
      */
     public ATextComponent append(final ATextComponent component) {
         this.siblings.add(component);
+        return this;
+    }
+
+    /**
+     * Append multiple components to this component.
+     *
+     * @param components The components to append
+     * @return This component
+     */
+    public ATextComponent append(final ATextComponent... components) {
+        this.siblings.addAll(Arrays.asList(components));
         return this;
     }
 
