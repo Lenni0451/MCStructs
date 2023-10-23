@@ -49,9 +49,11 @@ public class ScoreComponent extends ATextComponent {
      * Set the value of this component.
      *
      * @param value The new value
+     * @return This component
      */
-    public void setValue(@Nullable final String value) {
+    public ScoreComponent setValue(@Nullable final String value) {
         this.value = value;
+        return this;
     }
 
     @Override
