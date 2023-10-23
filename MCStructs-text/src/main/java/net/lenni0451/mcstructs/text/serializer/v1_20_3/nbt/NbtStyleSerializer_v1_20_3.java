@@ -24,7 +24,23 @@ public class NbtStyleSerializer_v1_20_3 implements ITypedSerializer<INbtTag, Sty
 
     @Override
     public INbtTag serialize(Style object) {
-        return null;
+        CompoundTag out = new CompoundTag();
+        if (object.getColor() != null) out.addString("color", object.getColor().serialize());
+        if (object.getBold() != null) out.addBoolean("bold", object.isBold());
+        if (object.getItalic() != null) out.addBoolean("italic", object.isItalic());
+        if (object.getUnderlined() != null) out.addBoolean("underlined", object.isUnderlined());
+        if (object.getStrikethrough() != null) out.addBoolean("strikethrough", object.isStrikethrough());
+        if (object.getObfuscated() != null) out.addBoolean("obfuscated", object.isObfuscated());
+        if (object.getClickEvent() != null) {
+            CompoundTag clickEvent = new CompoundTag();
+            clickEvent.addString("action", object.getClickEvent().getAction().getName());
+            clickEvent.addString("value", object.getClickEvent().getValue());
+            out.add("clickEvent", clickEvent);
+        }
+        if (object.getHoverEvent() != null) out.add("hoverEvent", this.hoverEventSerializer.serialize(object.getHoverEvent()));
+        if (object.getInsertion() != null) out.addString("insertion", object.getInsertion());
+        if (object.getFont() != null) out.addString("font", object.getFont().get());
+        return out;
     }
 
     @Override

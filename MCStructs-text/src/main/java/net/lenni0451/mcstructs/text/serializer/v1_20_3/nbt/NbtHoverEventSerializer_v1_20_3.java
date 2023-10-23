@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.nbt.tags.IntArrayTag;
 import net.lenni0451.mcstructs.nbt.tags.ListTag;
 import net.lenni0451.mcstructs.nbt.tags.StringTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
@@ -32,7 +33,38 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
 
     @Override
     public INbtTag serialize(AHoverEvent object) {
-        return null;
+        CompoundTag out = new CompoundTag();
+        out.addString(ACTION, object.getAction().getName());
+        if (object instanceof TextHoverEvent) {
+            TextHoverEvent textHoverEvent = (TextHoverEvent) object;
+            out.add(CONTENTS, this.textSerializer.serialize(textHoverEvent.getText()));
+        } else if (object instanceof ItemHoverEvent) {
+            ItemHoverEvent itemHoverEvent = (ItemHoverEvent) object;
+            CompoundTag contents = new CompoundTag();
+            contents.addString("id", itemHoverEvent.getItem().get());
+            if (itemHoverEvent.getCount() != 1) contents.addInt("count", itemHoverEvent.getCount());
+            if (itemHoverEvent.getNbt() != null) {
+                try {
+                    contents.addString("tag", SNbtSerializer.V1_14.serialize(itemHoverEvent.getNbt()));
+                } catch (SNbtSerializeException e) {
+                    throw new IllegalStateException("Failed to serialize nbt", e);
+                }
+            }
+            out.add(CONTENTS, contents);
+        } else if (object instanceof EntityHoverEvent) {
+            EntityHoverEvent entityHoverEvent = (EntityHoverEvent) object;
+            out.addString("type", entityHoverEvent.getEntityType().get());
+            out.add("id", new IntArrayTag(new int[]{
+                    (int) (entityHoverEvent.getUuid().getMostSignificantBits() >> 32),
+                    (int) (entityHoverEvent.getUuid().getMostSignificantBits() & 0xFFFF_FFFFL),
+                    (int) (entityHoverEvent.getUuid().getLeastSignificantBits() >> 32),
+                    (int) (entityHoverEvent.getUuid().getLeastSignificantBits() & 0xFFFF_FFFFL)
+            }));
+            if (entityHoverEvent.getName() != null) out.add("name", this.textSerializer.serialize(entityHoverEvent.getName()));
+        } else {
+            throw new IllegalArgumentException("Unknown hover event type: " + object.getClass().getName());
+        }
+        return out;
     }
 
     @Override
@@ -72,12 +104,10 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
                         throw new IllegalArgumentException("Expected string or compound tag for '" + CONTENTS + "' tag");
                     }
                 case SHOW_ENTITY:
-                    if (!tag.contains(CONTENTS, NbtType.COMPOUND)) throw new IllegalArgumentException("Expected compound tag for '" + CONTENTS + "' tag");
-                    CompoundTag contents = tag.getCompound(CONTENTS);
-                    if (!contents.contains("type", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'type' tag");
-                    Identifier type = Identifier.of(contents.getString("type"));
+                    if (!tag.contains("type", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'type' tag");
+                    Identifier type = Identifier.of(tag.getString("type"));
                     UUID id = this.getUUID(tag.get("id"));
-                    ATextComponent name = contents.contains("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
+                    ATextComponent name = tag.contains("name") ? this.textSerializer.deserialize(tag.get("name")) : null;
                     return new EntityHoverEvent(action, type, id, name);
 
                 default:

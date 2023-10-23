@@ -3,8 +3,7 @@ package net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.nbt.tags.ListTag;
+import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.components.*;
@@ -12,6 +11,9 @@ import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATextComponent> {
 
@@ -23,55 +25,119 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
 
     @Override
     public INbtTag serialize(ATextComponent object) {
-        return null;
+        CompoundTag out = new CompoundTag();
+        if (object instanceof StringComponent) {
+            StringComponent component = (StringComponent) object;
+            if (component.getSiblings().isEmpty() && component.getStyle().isEmpty()) return new StringTag(component.getText());
+            else out.addString("text", component.getText());
+        } else if (object instanceof TranslationComponent) {
+            TranslationComponent component = (TranslationComponent) object;
+            out.addString("translate", component.getKey());
+            if (component.getFallback() != null) out.addString("fallback", component.getFallback());
+            if (component.getArgs().length > 0) {
+                List<INbtTag> args = new ArrayList<>();
+                for (Object arg : component.getArgs()) args.add(this.convert(arg));
+                out.add("with", this.optimizeAndConvert(args));
+            }
+        } else if (object instanceof KeybindComponent) {
+            KeybindComponent component = (KeybindComponent) object;
+            out.addString("keybind", component.getKeybind());
+        } else if (object instanceof ScoreComponent) {
+            ScoreComponent component = (ScoreComponent) object;
+            CompoundTag score = new CompoundTag();
+            score.addString("name", component.getName());
+            score.addString("objective", component.getObjective());
+            out.add("score", score);
+        } else if (object instanceof SelectorComponent) {
+            SelectorComponent component = (SelectorComponent) object;
+            out.addString("selector", component.getSelector());
+            if (component.getSeparator() != null) out.add("separator", this.serialize(component.getSeparator()));
+        } else if (object instanceof NbtComponent) {
+            NbtComponent component = (NbtComponent) object;
+            out.addString("nbt", component.getComponent());
+            if (component.isResolve()) out.addByte("interpret", (byte) 1);
+            if (component instanceof EntityNbtComponent) {
+                EntityNbtComponent entityComponent = (EntityNbtComponent) component;
+                out.addString("entity", entityComponent.getSelector());
+            } else if (component instanceof BlockNbtComponent) {
+                BlockNbtComponent blockNbtComponent = (BlockNbtComponent) component;
+                out.addString("block", blockNbtComponent.getPos());
+            } else if (component instanceof StorageNbtComponent) {
+                StorageNbtComponent storageNbtComponent = (StorageNbtComponent) component;
+                out.addString("storage", storageNbtComponent.getId().get());
+            } else {
+                throw new IllegalArgumentException("Unknown Nbt component type: " + component.getClass().getName());
+            }
+        } else {
+            throw new IllegalArgumentException("Unknown component type: " + object.getClass().getName());
+        }
+
+        CompoundTag style = this.styleSerializer.serialize(object.getStyle()).asCompoundTag();
+        if (!style.isEmpty()) out.addAll(style);
+
+        if (!object.getSiblings().isEmpty()) {
+            List<INbtTag> siblings = new ArrayList<>();
+            for (ATextComponent sibling : object.getSiblings()) siblings.add(this.serialize(sibling));
+            out.add("extra", this.optimizeAndConvert(siblings));
+        }
+
+        return out;
     }
 
-//    public void serialize(ATextComponent component, IMapData data) {
-//        if (component instanceof StringComponent) {
-//            StringComponent comp = (StringComponent) component;
-//            data.put("text", DataType.STRING, comp.getText());
-//        } else if (component instanceof TranslationComponent) {
-//            TranslationComponent comp = (TranslationComponent) component;
-//            data.put("translate", DataType.STRING, comp.getArgs());
-//            if (comp.getFallback() != null) data.put("fallback", DataType.STRING, comp.getFallback());
-//            if (comp.getArgs().length > 0) {
-//                //TODO: Wait for https://bugs.mojang.com/browse/MC-265733 to be fixed or confirm that it's a "feature"
-//            }
-//        } else if (component instanceof KeybindComponent) {
-//            KeybindComponent comp = (KeybindComponent) component;
-//            data.put("keybind", DataType.STRING, comp.getKeybind());
-//        } else if (component instanceof ScoreComponent) {
-//            ScoreComponent comp = (ScoreComponent) component;
-//            IMapData score = data.createMap();
-//            score.put("name", DataType.STRING, comp.getName());
-//            score.put("objective", DataType.STRING, comp.getObjective());
-//            data.put("score", DataType.MAP, score);
-//        } else if (component instanceof SelectorComponent) {
-//            SelectorComponent comp = (SelectorComponent) component;
-//            data.put("selector", DataType.STRING, comp.getSelector());
-//            if (comp.getSeparator() != null) ;//TODO: Separator is a component
-//        } else if (component instanceof NbtComponent) {
-//            NbtComponent comp = (NbtComponent) component;
-//            data.put("nbt", DataType.STRING, comp.getComponent());
-//            if (comp.isResolve()) data.put("interpret", DataType.BOOLEAN, comp.isResolve());
-//            if (comp.getSeparator() != null) ;//TODO: Separator is a component
-//            if (comp instanceof EntityNbtComponent) {
-//                EntityNbtComponent entityComp = (EntityNbtComponent) comp;
-//                data.put("entity", DataType.STRING, entityComp.getSelector());
-//            } else if (comp instanceof BlockNbtComponent) {
-//                BlockNbtComponent blockComp = (BlockNbtComponent) comp;
-//                data.put("block", DataType.STRING, blockComp.getPos());
-//            } else if (comp instanceof StorageNbtComponent) {
-//                StorageNbtComponent storageComp = (StorageNbtComponent) comp;
-//                data.put("storage", DataType.STRING, storageComp.getId().get());
-//            } else {
-//                throw new IllegalArgumentException("Unknown Nbt component type: " + comp.getClass().getName());
-//            }
-//        } else {
-//            throw new IllegalArgumentException("Unknown component type: " + component.getClass().getName());
-//        }
-//    }
+    private INbtTag convert(final Object object) {
+        if (object instanceof Boolean) return new ByteTag((byte) ((boolean) object ? 1 : 0));
+        else if (object instanceof Byte) return new ByteTag((byte) object);
+        else if (object instanceof Short) return new ShortTag((short) object);
+        else if (object instanceof Integer) return new IntTag((int) object);
+        else if (object instanceof Long) return new LongTag((long) object);
+        else if (object instanceof Float) return new FloatTag((float) object);
+        else if (object instanceof Double) return new DoubleTag((double) object);
+        else if (object instanceof String) return new StringTag((String) object);
+        else if (object instanceof ATextComponent) return this.serialize((ATextComponent) object);
+        else throw new IllegalArgumentException("Unknown object type: " + object.getClass().getName());
+    }
 
+    private INbtTag optimizeAndConvert(final List<INbtTag> tags) {
+        NbtType commonType = this.getCommonType(tags);
+        if (commonType == null) {
+            ListTag<CompoundTag> out = new ListTag<>();
+            for (INbtTag tag : tags) {
+                if (tag instanceof CompoundTag) {
+                    out.add((CompoundTag) tag);
+                } else {
+                    CompoundTag marker = new CompoundTag();
+                    marker.add("", tag);
+                    out.add(marker);
+                }
+            }
+            return out;
+        } else if (NbtType.BYTE.equals(commonType)) {
+            byte[] bytes = new byte[tags.size()];
+            for (int i = 0; i < tags.size(); i++) bytes[i] = tags.get(i).asByteTag().getValue();
+            return new ByteArrayTag(bytes);
+        } else if (NbtType.INT.equals(commonType)) {
+            int[] ints = new int[tags.size()];
+            for (int i = 0; i < tags.size(); i++) ints[i] = tags.get(i).asIntTag().getValue();
+            return new IntArrayTag(ints);
+        } else if (NbtType.LONG.equals(commonType)) {
+            long[] longs = new long[tags.size()];
+            for (int i = 0; i < tags.size(); i++) longs[i] = tags.get(i).asLongTag().getValue();
+            return new LongArrayTag(longs);
+        } else {
+            ListTag<INbtTag> out = new ListTag<>();
+            for (INbtTag tag : tags) out.add(tag);
+            return out;
+        }
+    }
+
+    private NbtType getCommonType(final List<INbtTag> tags) {
+        if (tags.size() == 1) return tags.get(0).getNbtType();
+        NbtType type = tags.get(0).getNbtType();
+        for (int i = 1; i < tags.size(); i++) {
+            if (!type.equals(tags.get(i).getNbtType())) return null;
+        }
+        return type;
+    }
 
     @Override
     public ATextComponent deserialize(INbtTag object) {
@@ -101,8 +167,9 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             if (!tag.contains("extra", NbtType.LIST)) throw new IllegalArgumentException("Expected list tag for 'extra' tag");
             ListTag<INbtTag> extraTag = tag.getList("extra");
             if (extraTag.isEmpty()) throw new IllegalArgumentException("Empty extra list tag");
-            extra = new ATextComponent[extraTag.size()];
-            for (int i = 0; i < extraTag.size(); i++) extra[i] = this.deserialize(extraTag.get(i));
+            List<INbtTag> unwrapped = this.unwrapMarkers(extraTag);
+            extra = new ATextComponent[unwrapped.size()];
+            for (int i = 0; i < unwrapped.size(); i++) extra[i] = this.deserialize(unwrapped.get(i));
         } else {
             extra = new ATextComponent[0];
         }
@@ -114,16 +181,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             String fallback = tag.getString("fallback", null);
             if (tag.contains("with")) {
                 if (!tag.contains("with", NbtType.LIST)) throw new IllegalArgumentException("Expected list tag for 'with' tag");
-                ListTag<INbtTag> with = tag.getList("with");
-                for (int i = 0; i < with.size(); i++) {
-                    //Unwrap marker compound tags (CompoundTag with one empty key)
-                    INbtTag arg = with.get(i);
-                    if (arg.isCompoundTag()) {
-                        CompoundTag argTag = arg.asCompoundTag();
-                        if (argTag.size() == 1 && argTag.contains("")) with.set(i, argTag.get(""));
-                    }
-                }
-
+                List<INbtTag> with = this.unwrapMarkers(tag.getList("with"));
                 Object[] args = new Object[with.size()];
                 for (int i = 0; i < with.size(); i++) {
                     INbtTag arg = with.get(i);
@@ -174,6 +232,26 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
         }
 
         throw new IllegalArgumentException("Unknown component type: " + object.getNbtType().name());
+    }
+
+    /**
+     * Unwrap marker compound tags (CompoundTag with one empty key).
+     *
+     * @param list The list to unwrap
+     * @return The unwrapped list
+     */
+    private List<INbtTag> unwrapMarkers(final ListTag<?> list) {
+        List<INbtTag> out = new ArrayList<>();
+        for (INbtTag tag : list) {
+            if (tag.isCompoundTag()) {
+                CompoundTag compound = tag.asCompoundTag();
+                if (compound.size() == 1 && compound.contains("")) out.add(compound.get(""));
+                else out.add(tag);
+            } else {
+                out.add(tag);
+            }
+        }
+        return out;
     }
 
 }
