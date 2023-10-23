@@ -207,7 +207,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             return new SelectorComponent(selector, separator).setStyle(style).append(extra);
         } else if (tag.contains("nbt", NbtType.STRING) && (type == null || type.equals("nbt"))) {
             String nbt = tag.getString("nbt");
-            boolean interpret = tag.getByte("interpret", (byte) 0) != 0;
+            boolean interpret = tag.getBoolean("interpret");
             ATextComponent separator = null;
             if (tag.contains("separator")) {
                 try {

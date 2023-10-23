@@ -92,7 +92,7 @@ public class NbtStyleSerializer_v1_20_3 implements ITypedSerializer<INbtTag, Sty
     private Boolean optionalBoolean(final CompoundTag tag, final String name) {
         if (tag.contains(name)) {
             if (!tag.contains(name, NbtType.BYTE)) throw new IllegalArgumentException("Expected byte tag for '" + name + "' tag");
-            return tag.getByte(name) != 0;
+            return tag.getBoolean(name);
         }
         return null;
     }
