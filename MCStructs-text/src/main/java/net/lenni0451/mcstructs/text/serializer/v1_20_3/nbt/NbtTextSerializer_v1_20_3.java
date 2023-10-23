@@ -189,9 +189,13 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
                     else if (arg.isStringTag()) args[i] = arg.asStringTag().getValue();
                     else args[i] = this.deserialize(arg);
                 }
-                return new TranslationComponent(key, fallback, args).setStyle(style).append(extra);
+                TranslationComponent component = new TranslationComponent(key, args);
+                component.setFallback(fallback);
+                return component.setStyle(style).append(extra);
             } else {
-                return new TranslationComponent(key, fallback).setStyle(style).append(extra);
+                TranslationComponent component = new TranslationComponent(key);
+                component.setFallback(fallback);
+                return component.setStyle(style).append(extra);
             }
         } else if (tag.contains("keybind", NbtType.STRING) && (type == null || type.equals("keybind"))) {
             return new KeybindComponent(tag.getString("keybind")).setStyle(style).append(extra);
