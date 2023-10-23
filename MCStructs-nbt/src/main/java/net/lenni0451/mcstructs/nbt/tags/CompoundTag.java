@@ -149,6 +149,17 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Add all tags from the given compound tag to the map.
+     *
+     * @param tag The compound tag
+     * @return This tag
+     */
+    public CompoundTag addAll(final CompoundTag tag) {
+        this.value.putAll(tag.getValue());
+        return this;
+    }
+
+    /**
      * Remove a tag from the map.
      *
      * @param key The key
@@ -157,6 +168,43 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     @Nullable
     public INbtTag remove(final String key) {
         return this.value.remove(key);
+    }
+
+    /**
+     * Get a boolean from the map.<br>
+     * Booleans are stored as bytes with 0 being false and everything else being true.
+     *
+     * @param key The key
+     * @return The boolean or false if the map does not contain the given key or the tag is not a number
+     */
+    public boolean getBoolean(final String key) {
+        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue() != 0;
+        return false;
+    }
+
+    /**
+     * Get a boolean from the map or the default value.<br>
+     * Booleans are stored as bytes with 0 being false and everything else being true.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The boolean or the default value if the map does not contain the given key or the tag is not a number
+     */
+    public boolean getBoolean(final String key, final boolean def) {
+        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue() != 0;
+        return def;
+    }
+
+    /**
+     * Add a boolean to the map.<br>
+     * Booleans are stored as bytes with 0 being false and everything else being true.
+     *
+     * @param key The key
+     * @param b   The boolean
+     * @return This tag
+     */
+    public CompoundTag addBoolean(final String key, final boolean b) {
+        return this.add(key, new ByteTag((byte) (b ? 1 : 0)));
     }
 
     /**
