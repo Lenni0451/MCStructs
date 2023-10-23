@@ -159,23 +159,11 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             throw new IllegalArgumentException("Unknown component type: " + object.getNbtType().name());
         }
 
+        ATextComponent component = null;
         CompoundTag tag = object.asCompoundTag();
         String type = tag.getString("type", null);
-        Style style = this.styleSerializer.deserialize(tag);
-        ATextComponent[] extra;
-        if (tag.contains("extra")) {
-            if (!tag.contains("extra", NbtType.LIST)) throw new IllegalArgumentException("Expected list tag for 'extra' tag");
-            ListTag<INbtTag> extraTag = tag.getList("extra");
-            if (extraTag.isEmpty()) throw new IllegalArgumentException("Empty extra list tag");
-            List<INbtTag> unwrapped = this.unwrapMarkers(extraTag);
-            extra = new ATextComponent[unwrapped.size()];
-            for (int i = 0; i < unwrapped.size(); i++) extra[i] = this.deserialize(unwrapped.get(i));
-        } else {
-            extra = new ATextComponent[0];
-        }
-
         if (tag.contains("text", NbtType.STRING) && (type == null || type.equals("text"))) {
-            return new StringComponent(tag.getString("text")).setStyle(style).append(extra);
+            component = new StringComponent(tag.getString("text"));
         } else if (tag.contains("translate", NbtType.STRING) && (type == null || type.equals("translatable"))) {
             String key = tag.getString("translate");
             String fallback = tag.getString("fallback", null);
@@ -189,26 +177,22 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
                     else if (arg.isStringTag()) args[i] = arg.asStringTag().getValue();
                     else args[i] = this.deserialize(arg);
                 }
-                TranslationComponent component = new TranslationComponent(key, args);
-                component.setFallback(fallback);
-                return component.setStyle(style).append(extra);
+                component = new TranslationComponent(key, args).setFallback(fallback);
             } else {
-                TranslationComponent component = new TranslationComponent(key);
-                component.setFallback(fallback);
-                return component.setStyle(style).append(extra);
+                component = new TranslationComponent(key).setFallback(fallback);
             }
         } else if (tag.contains("keybind", NbtType.STRING) && (type == null || type.equals("keybind"))) {
-            return new KeybindComponent(tag.getString("keybind")).setStyle(style).append(extra);
+            component = new KeybindComponent(tag.getString("keybind"));
         } else if (tag.contains("score", NbtType.COMPOUND) && tag.getCompound("score").contains("name", NbtType.STRING) && tag.getCompound("score").contains("objective", NbtType.STRING) && (type == null || type.equals("score"))) {
             CompoundTag score = tag.getCompound("score");
             String name = score.getString("name");
             String objective = score.getString("objective");
-            return new ScoreComponent(name, objective).setStyle(style).append(extra);
+            component = new ScoreComponent(name, objective);
         } else if (tag.contains("selector", NbtType.STRING) && (type == null || type.equals("selector"))) {
             String selector = tag.getString("selector");
             ATextComponent separator = null;
             if (tag.contains("separator")) separator = this.deserialize(tag.get("separator"));
-            return new SelectorComponent(selector, separator).setStyle(style).append(extra);
+            component = new SelectorComponent(selector, separator);
         } else if (tag.contains("nbt", NbtType.STRING) && (type == null || type.equals("nbt"))) {
             String nbt = tag.getString("nbt");
             boolean interpret = tag.getBoolean("interpret");
@@ -221,21 +205,43 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
                 }
             }
             String source = tag.getString("source", null);
+
+            boolean typeFound = false;
             if (tag.contains("entity", NbtType.STRING) && (source == null || source.equals("entity"))) {
-                return new EntityNbtComponent(nbt, interpret, separator, tag.getString("entity")).setStyle(style).append(extra);
+                component = new EntityNbtComponent(nbt, interpret, separator, tag.getString("entity"));
+                typeFound = true;
             } else if (tag.contains("block", NbtType.STRING) && (source == null || source.equals("block"))) {
-                return new BlockNbtComponent(nbt, interpret, separator, tag.getString("block")).setStyle(style).append(extra);
+                component = new BlockNbtComponent(nbt, interpret, separator, tag.getString("block"));
+                typeFound = true;
             } else if (tag.contains("storage", NbtType.STRING) && (source == null || source.equals("storage"))) {
                 try {
-                    return new StorageNbtComponent(nbt, interpret, separator, Identifier.of(tag.getString("storage"))).setStyle(style).append(extra);
+                    component = new StorageNbtComponent(nbt, interpret, separator, Identifier.of(tag.getString("storage")));
+                    typeFound = true;
                 } catch (Throwable ignored) {
                     //If the storage identifier fails to parse we just ignore it
                 }
             }
-            throw new IllegalArgumentException("Unknown Nbt component type: " + tag.getNbtType().name());
+            if (!typeFound) throw new IllegalArgumentException("Unknown Nbt component type: " + tag.getNbtType().name());
+        } else {
+            throw new IllegalArgumentException("Unknown component type: " + tag.getNbtType().name());
         }
 
-        throw new IllegalArgumentException("Unknown component type: " + object.getNbtType().name());
+        Style style = this.styleSerializer.deserialize(tag);
+        if (!style.isEmpty()) component.setStyle(style);
+
+        if (tag.contains("extra")) {
+            if (!tag.contains("extra", NbtType.LIST)) throw new IllegalArgumentException("Expected list tag for 'extra' tag");
+            ListTag<INbtTag> extraTag = tag.getList("extra");
+            if (extraTag.isEmpty()) throw new IllegalArgumentException("Empty extra list tag");
+
+            ATextComponent[] extra;
+            List<INbtTag> unwrapped = this.unwrapMarkers(extraTag);
+            extra = new ATextComponent[unwrapped.size()];
+            for (int i = 0; i < unwrapped.size(); i++) extra[i] = this.deserialize(unwrapped.get(i));
+            component.append(extra);
+        }
+
+        return component;
     }
 
     /**
