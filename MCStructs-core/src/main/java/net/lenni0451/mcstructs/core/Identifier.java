@@ -7,8 +7,8 @@ import java.util.Objects;
  */
 public class Identifier {
 
-    public static final String VALID_KEY_CHARS = "[_\\-a-z.]+";
-    public static final String VALID_VALUE_CHARS = "[_\\-a-z/.]+";
+    public static final String VALID_KEY_CHARS = "[_\\-a-z0-9.]*";
+    public static final String VALID_VALUE_CHARS = "[_\\-a-z0-9/.]*";
 
     /**
      * Create a new identifier.<br>
@@ -20,10 +20,10 @@ public class Identifier {
      * @throws IllegalArgumentException If the value is not a valid identifier
      */
     public static Identifier of(final String value) {
-        String[] parts = value.split(":");
-        if (parts.length == 1) return of("minecraft", parts[0]);
-        else if (parts.length == 2) return of(parts[0], parts[1]);
-        else throw new IllegalArgumentException("The given value has to be splittable by :");
+        int splitIndex = value.indexOf(':');
+        String key = splitIndex <= 0 ? "minecraft" : value.substring(0, splitIndex);
+        String val = splitIndex == -1 ? value : value.substring(splitIndex + 1);
+        return of(key, val);
     }
 
     /**
