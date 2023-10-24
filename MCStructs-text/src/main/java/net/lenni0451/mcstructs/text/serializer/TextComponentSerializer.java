@@ -33,6 +33,7 @@ import net.lenni0451.mcstructs.text.serializer.v1_8.TextDeserializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.TextSerializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_9.TextSerializer_v1_9;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.function.Supplier;
@@ -175,11 +176,32 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer LATEST = V1_20_2;
 
 
+    private final TextComponentCodec parentCodec;
     private final Supplier<Gson> gsonSupplier;
     private Gson gson;
 
     public TextComponentSerializer(final Supplier<Gson> gsonSupplier) {
+        this(null, gsonSupplier);
+    }
+
+    public TextComponentSerializer(final TextComponentCodec parentCodec, final Supplier<Gson> gsonSupplier) {
+        this.parentCodec = parentCodec;
         this.gsonSupplier = gsonSupplier;
+    }
+
+    /**
+     * @return The parent codec of this serializer if it was created using {@link TextComponentCodec#asSerializer()}
+     */
+    @Nullable
+    public TextComponentCodec getParentCodec() {
+        return this.parentCodec;
+    }
+
+    /**
+     * @return If this serializer has a parent codec
+     */
+    public boolean isCodec() {
+        return this.parentCodec != null;
     }
 
     /**

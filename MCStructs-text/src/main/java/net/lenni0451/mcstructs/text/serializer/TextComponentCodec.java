@@ -203,7 +203,7 @@ public class TextComponentCodec {
      * @return A wrapper for this codec to use it as a {@link TextComponentSerializer}.
      */
     public TextComponentSerializer asSerializer() {
-        return new TextComponentSerializer(() -> new GsonBuilder()
+        return new TextComponentSerializer(this, () -> new GsonBuilder()
                 .registerTypeHierarchyAdapter(ATextComponent.class, (JsonSerializer<ATextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
                 .registerTypeHierarchyAdapter(ATextComponent.class, (JsonDeserializer<ATextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
                 .disableHtmlEscaping()
