@@ -165,6 +165,10 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_19_4, SNbtSerializer.V1_14))
             .disableHtmlEscaping()
             .create());
+    /**
+     * The latest text component serializer.
+     */
+    public static final TextComponentSerializer LATEST = V1_19_4;
 
 
     private final Supplier<Gson> gsonSupplier;
