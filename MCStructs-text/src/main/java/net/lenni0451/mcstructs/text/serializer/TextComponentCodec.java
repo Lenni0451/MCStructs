@@ -5,17 +5,27 @@ import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtTextSerializer_v1_20_3;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.StringReader;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+/**
+ * The text component serializer and deserializer wrapper class for multiple types of input and output.<br>
+ * Use the static default fields for a specific minecraft version or create your own serializer/deserializer.<br>
+ * <br>
+ * This class will now be used for implementations of new minecraft versions (1.20.2+) instead of the {@link TextComponentSerializer} class because components can now be serialized to nbt.<br>
+ * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link TextComponentSerializer} will still be updated using this wrapper method.
+ */
+@ParametersAreNonnullByDefault
 public class TextComponentCodec {
 
+    private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
     /**
      * The text codec for 1.20.2.
      */
@@ -29,7 +39,6 @@ public class TextComponentCodec {
      */
     public static TextComponentCodec LATEST = V1_20_2;
 
-    private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
 
     private final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier;
     private final Supplier<ITypedSerializer<JsonElement, ATextComponent>> jsonSerializerSupplier;
@@ -44,62 +53,144 @@ public class TextComponentCodec {
         this.nbtSerializerSupplier = nbtSerializerSupplier;
     }
 
+    /**
+     * @return The used snbt serializer
+     */
     private SNbtSerializer<CompoundTag> getSNbtSerializer() {
         if (this.sNbtSerializer == null) this.sNbtSerializer = this.sNbtSerializerSupplier.get();
         return this.sNbtSerializerSupplier.get();
     }
 
+    /**
+     * @return The used json serializer/deserializer
+     */
     public ITypedSerializer<JsonElement, ATextComponent> getJsonSerializer() {
         if (this.jsonSerializer == null) this.jsonSerializer = this.jsonSerializerSupplier.get();
         return this.jsonSerializer;
     }
 
+    /**
+     * @return The used nbt serializer/deserializer
+     */
     public ITypedSerializer<INbtTag, ATextComponent> getNbtSerializer() {
         if (this.nbtSerializer == null) this.nbtSerializer = this.nbtSerializerSupplier.apply(this, this.getSNbtSerializer());
         return this.nbtSerializer;
     }
 
+    /**
+     * Deserialize a text component from a json string.
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
     public ATextComponent deserializeJson(final String json) {
         return this.deserializeJsonTree(JsonParser.parseString(json));
     }
 
-    public ATextComponent deserializeNbt(final String nbt) throws SNbtDeserializeException {
+    /**
+     * Deserialize a text component from a nbt string.
+     *
+     * @param nbt The nbt string
+     * @return The deserialized text component
+     */
+    public ATextComponent deserializeNbt(final String nbt) {
         //TODO: this.getSNbtSerializer().readValue()
         return null;
 //        return this.deserializeNbt(this.getSNbtSerializer().deserialize(nbt));
     }
 
+    /**
+     * Deserialize a text component from a json string.
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
     public ATextComponent deserializeLenientJson(final String json) {
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(true);
         return this.deserializeJsonTree(JsonParser.parseReader(reader));
     }
 
-    public ATextComponent deserializeJsonTree(final JsonElement element) {
+    /**
+     * Deserialize a text component from a {@link JsonElement}.
+     *
+     * @param element The json element
+     * @return The deserialized text component
+     */
+    public ATextComponent deserializeJsonTree(@Nullable final JsonElement element) {
         if (element == null) return null;
         return this.deserialize(element);
     }
 
+    /**
+     * Deserialize a text component from a {@link INbtTag}.
+     *
+     * @param nbt The nbt tag
+     * @return The deserialized text component
+     */
+    public ATextComponent deserializeNbtTree(@Nullable final INbtTag nbt) {
+        if (nbt == null) return null;
+        return this.deserialize(nbt);
+    }
+
+    /**
+     * Deserialize a text component from a {@link JsonElement}.<br>
+     * This method does not check for null values.
+     *
+     * @param json The json element
+     * @return The deserialized text component
+     */
     public ATextComponent deserialize(final JsonElement json) {
         return this.getJsonSerializer().deserialize(json);
     }
 
+    /**
+     * Deserialize a text component from a {@link INbtTag}.<br>
+     * This method does not check for null values.
+     *
+     * @param nbt The nbt tag
+     * @return The deserialized text component
+     */
     public ATextComponent deserialize(final INbtTag nbt) {
         return this.getNbtSerializer().deserialize(nbt);
     }
 
+    /**
+     * Serialize a text component to a {@link JsonElement}.
+     *
+     * @param component The text component
+     * @return The serialized json element
+     */
     public JsonElement serializeJsonTree(final ATextComponent component) {
         return this.getJsonSerializer().serialize(component);
     }
 
+    /**
+     * Serialize a text component to a {@link INbtTag}.
+     *
+     * @param component The text component
+     * @return The serialized nbt tag
+     */
     public INbtTag serializeNbt(final ATextComponent component) {
         return this.getNbtSerializer().serialize(component);
     }
 
+    /**
+     * Serialize a text component to a json string.
+     *
+     * @param component The text component
+     * @return The serialized json string
+     */
     public String serializeJsonString(final ATextComponent component) {
         return GSON.toJson(this.serializeJsonTree(component));
     }
 
+    /**
+     * Serialize a text component to a nbt string.
+     *
+     * @param component The text component
+     * @return The serialized nbt string
+     */
     public String serializeNbtString(final ATextComponent component) {
         try {
             return this.getSNbtSerializer().serialize(this.serializeNbt(component));
@@ -108,6 +199,9 @@ public class TextComponentCodec {
         }
     }
 
+    /**
+     * @return A wrapper for this codec to use it as a {@link TextComponentSerializer}.
+     */
     public TextComponentSerializer asSerializer() {
         return new TextComponentSerializer(() -> new GsonBuilder()
                 .registerTypeHierarchyAdapter(ATextComponent.class, (JsonSerializer<ATextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
