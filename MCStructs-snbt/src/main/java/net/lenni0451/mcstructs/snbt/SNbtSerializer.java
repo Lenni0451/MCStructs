@@ -45,6 +45,10 @@ public class SNbtSerializer<T extends INbtTag> {
      * The SNbt serializer for minecraft 1.14 - 1.19.
      */
     public static final SNbtSerializer<CompoundTag> V1_14 = new SNbtSerializer<>(SNbtSerializer_v1_14::new, SNbtDeserializer_v1_14::new);
+    /**
+     * The latest SNbt serializer.
+     */
+    public static final SNbtSerializer<CompoundTag> LATEST = V1_14;
 
 
     private final Supplier<ISNbtSerializer> serializerSupplier;
