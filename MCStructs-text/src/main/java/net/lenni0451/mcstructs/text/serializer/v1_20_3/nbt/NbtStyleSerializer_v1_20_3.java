@@ -5,21 +5,21 @@ import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 public class NbtStyleSerializer_v1_20_3 implements ITypedSerializer<INbtTag, Style> {
 
-    private final ITypedSerializer<INbtTag, ATextComponent> textSerializer;
     private final ITypedSerializer<INbtTag, AHoverEvent> hoverEventSerializer;
 
-    public NbtStyleSerializer_v1_20_3(final ITypedSerializer<INbtTag, ATextComponent> textSerializer) {
-        this.textSerializer = textSerializer;
-        this.hoverEventSerializer = new NbtHoverEventSerializer_v1_20_3(textSerializer);
+    public NbtStyleSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<INbtTag, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+        this.hoverEventSerializer = new NbtHoverEventSerializer_v1_20_3(codec, textSerializer, sNbtSerializer);
     }
 
     @Override

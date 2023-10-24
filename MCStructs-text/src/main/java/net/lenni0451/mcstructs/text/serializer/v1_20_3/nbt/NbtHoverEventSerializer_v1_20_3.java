@@ -16,6 +16,7 @@ import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.UUID;
 
@@ -25,10 +26,14 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
     private static final String CONTENTS = "contents";
     private static final String VALUE = "value";
 
+    private final TextComponentCodec codec;
     private final ITypedSerializer<INbtTag, ATextComponent> textSerializer;
+    private final SNbtSerializer<CompoundTag> sNbtSerializer;
 
-    public NbtHoverEventSerializer_v1_20_3(final ITypedSerializer<INbtTag, ATextComponent> textSerializer) {
+    public NbtHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<INbtTag, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+        this.codec = codec;
         this.textSerializer = textSerializer;
+        this.sNbtSerializer = sNbtSerializer;
     }
 
     @Override
@@ -45,7 +50,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
             if (itemHoverEvent.getCount() != 1) contents.addInt("count", itemHoverEvent.getCount());
             if (itemHoverEvent.getNbt() != null) {
                 try {
-                    contents.addString("tag", SNbtSerializer.V1_14.serialize(itemHoverEvent.getNbt()));
+                    contents.addString("tag", this.sNbtSerializer.serialize(itemHoverEvent.getNbt()));
                 } catch (SNbtSerializeException e) {
                     throw new IllegalStateException("Failed to serialize nbt", e);
                 }
@@ -95,7 +100,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
                                     action,
                                     Identifier.of(tag.getString("id")),
                                     tag.getInt("count", 1),
-                                    itemTag == null ? null : SNbtSerializer.V1_14.deserialize(itemTag)
+                                    itemTag == null ? null : this.sNbtSerializer.deserialize(itemTag)
                             );
                         } catch (Throwable t) {
                             this.sneak(t);
@@ -120,14 +125,14 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
                     case SHOW_TEXT:
                         return new TextHoverEvent(action, value);
                     case SHOW_ITEM:
-                        CompoundTag parsed = SNbtSerializer.V1_14.deserialize(value.asUnformattedString());
+                        CompoundTag parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
                         Identifier id = Identifier.of(parsed.getString("id"));
                         int count = parsed.getByte("Count");
                         CompoundTag itemTag = parsed.getCompound("tag", null);
                         return new ItemHoverEvent(action, id, count, itemTag);
                     case SHOW_ENTITY:
-                        parsed = SNbtSerializer.V1_14.deserialize(value.asUnformattedString());
-                        ATextComponent name = null; //TODO: Get the name component from json `jsonComponentParser.parse(parsed.getString("name"))`
+                        parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
+                        ATextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = this.getUUID(parsed.get("id"));
                         return new EntityHoverEvent(action, type, uuid, name);

@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.*;
+import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.components.*;
@@ -11,6 +12,7 @@ import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +21,8 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
 
     private final ITypedSerializer<INbtTag, Style> styleSerializer;
 
-    public NbtTextSerializer_v1_20_3() {
-        this.styleSerializer = new NbtStyleSerializer_v1_20_3(this);
+    public NbtTextSerializer_v1_20_3(final TextComponentCodec codec, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+        this.styleSerializer = new NbtStyleSerializer_v1_20_3(codec, this, sNbtSerializer);
     }
 
     @Override
