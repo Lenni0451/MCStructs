@@ -1,9 +1,6 @@
 package net.lenni0451.mcstructs.text.serializer;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
@@ -91,7 +88,7 @@ public class TextComponentCodec {
         return this.getNbtSerializer().deserialize(nbt);
     }
 
-    public JsonElement serializeJson(final ATextComponent component) {
+    public JsonElement serializeJsonTree(final ATextComponent component) {
         return this.getJsonSerializer().serialize(component);
     }
 
@@ -100,7 +97,7 @@ public class TextComponentCodec {
     }
 
     public String serializeJsonString(final ATextComponent component) {
-        return GSON.toJson(this.serializeJson(component));
+        return GSON.toJson(this.serializeJsonTree(component));
     }
 
     public String serializeNbtString(final ATextComponent component) {
@@ -109,6 +106,14 @@ public class TextComponentCodec {
         } catch (SNbtSerializeException e) {
             throw new RuntimeException("Failed to serialize SNbt", e);
         }
+    }
+
+    public TextComponentSerializer asSerializer() {
+        return new TextComponentSerializer(() -> new GsonBuilder()
+                .registerTypeHierarchyAdapter(ATextComponent.class, (JsonSerializer<ATextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
+                .registerTypeHierarchyAdapter(ATextComponent.class, (JsonDeserializer<ATextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
+                .disableHtmlEscaping()
+                .create());
     }
 
 }
