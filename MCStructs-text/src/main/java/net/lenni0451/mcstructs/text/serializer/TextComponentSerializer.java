@@ -166,9 +166,13 @@ public class TextComponentSerializer {
             .disableHtmlEscaping()
             .create());
     /**
+     * The text component serializer for 1.20.2.
+     */
+    public static final TextComponentSerializer V1_20_2 = TextComponentCodec.V1_20_2.asSerializer();
+    /**
      * The latest text component serializer.
      */
-    public static final TextComponentSerializer LATEST = V1_19_4;
+    public static final TextComponentSerializer LATEST = V1_20_2;
 
 
     private final Supplier<Gson> gsonSupplier;
