@@ -27,6 +27,11 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
         else return (CompoundTag) this.parseTag(s);
     }
 
+    @Override
+    public INbtTag deserializeValue(String s) throws SNbtDeserializeException {
+        return this.parseTag(s);
+    }
+
     private INbtTag parseTag(String value) throws SNbtDeserializeException {
         value = value.trim();
         if (value.startsWith("{")) {

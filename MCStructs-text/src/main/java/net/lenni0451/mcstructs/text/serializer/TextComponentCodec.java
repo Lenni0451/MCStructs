@@ -5,6 +5,7 @@ import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonTextSerializer_v1_20_3;
@@ -89,18 +90,6 @@ public class TextComponentCodec {
     }
 
     /**
-     * Deserialize a text component from a nbt string.
-     *
-     * @param nbt The nbt string
-     * @return The deserialized text component
-     */
-    public ATextComponent deserializeNbt(final String nbt) {
-        //TODO: this.getSNbtSerializer().readValue()
-        return null;
-//        return this.deserializeNbt(this.getSNbtSerializer().deserialize(nbt));
-    }
-
-    /**
      * Deserialize a text component from a json string.
      *
      * @param json The json string
@@ -110,6 +99,20 @@ public class TextComponentCodec {
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(true);
         return this.deserializeJsonTree(JsonParser.parseReader(reader));
+    }
+
+    /**
+     * Deserialize a text component from a nbt string.
+     *
+     * @param nbt The nbt string
+     * @return The deserialized text component
+     */
+    public ATextComponent deserializeNbt(final String nbt) {
+        try {
+            return this.deserialize(this.getSNbtSerializer().getDeserializer().deserializeValue(nbt));
+        } catch (SNbtDeserializeException e) {
+            throw new RuntimeException("Failed to deserialize SNbt", e);
+        }
     }
 
     /**
