@@ -7,6 +7,7 @@ import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonTextSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtTextSerializer_v1_20_3;
 
 import javax.annotation.Nullable;
@@ -31,7 +32,7 @@ public class TextComponentCodec {
      */
     public static TextComponentCodec V1_20_2 = new TextComponentCodec(
             () -> SNbtSerializer.V1_14,
-            () -> null, //TODO
+            JsonTextSerializer_v1_20_3::new,
             NbtTextSerializer_v1_20_3::new
     );
     /**
@@ -41,13 +42,13 @@ public class TextComponentCodec {
 
 
     private final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier;
-    private final Supplier<ITypedSerializer<JsonElement, ATextComponent>> jsonSerializerSupplier;
+    private final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITypedSerializer<JsonElement, ATextComponent>> jsonSerializerSupplier;
     private final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITypedSerializer<INbtTag, ATextComponent>> nbtSerializerSupplier;
     private SNbtSerializer<CompoundTag> sNbtSerializer;
     private ITypedSerializer<JsonElement, ATextComponent> jsonSerializer;
     private ITypedSerializer<INbtTag, ATextComponent> nbtSerializer;
 
-    public TextComponentCodec(final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier, final Supplier<ITypedSerializer<JsonElement, ATextComponent>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITypedSerializer<INbtTag, ATextComponent>> nbtSerializerSupplier) {
+    public TextComponentCodec(final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITypedSerializer<JsonElement, ATextComponent>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITypedSerializer<INbtTag, ATextComponent>> nbtSerializerSupplier) {
         this.sNbtSerializerSupplier = sNbtSerializerSupplier;
         this.jsonSerializerSupplier = jsonSerializerSupplier;
         this.nbtSerializerSupplier = nbtSerializerSupplier;
@@ -65,7 +66,7 @@ public class TextComponentCodec {
      * @return The used json serializer/deserializer
      */
     public ITypedSerializer<JsonElement, ATextComponent> getJsonSerializer() {
-        if (this.jsonSerializer == null) this.jsonSerializer = this.jsonSerializerSupplier.get();
+        if (this.jsonSerializer == null) this.jsonSerializer = this.jsonSerializerSupplier.apply(this, this.getSNbtSerializer());
         return this.jsonSerializer;
     }
 
