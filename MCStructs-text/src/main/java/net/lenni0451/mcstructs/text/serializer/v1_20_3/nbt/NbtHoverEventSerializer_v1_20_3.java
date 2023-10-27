@@ -20,6 +20,9 @@ import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.UUID;
 
+import static net.lenni0451.mcstructs.text.utils.CodecUtils.optionalString;
+import static net.lenni0451.mcstructs.text.utils.CodecUtils.requiredString;
+
 public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag, AHoverEvent> {
 
     private static final String ACTION = "action";
@@ -77,8 +80,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
         if (!object.isCompoundTag()) throw new IllegalArgumentException("Nbt tag is not a compound tag");
         CompoundTag tag = object.asCompoundTag();
 
-        if (!tag.contains(ACTION, NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for '" + ACTION + "' tag");
-        HoverEventAction action = HoverEventAction.getByName(tag.getString(ACTION), false);
+        HoverEventAction action = HoverEventAction.getByName(requiredString(tag, ACTION), false);
         if (action == null) throw new IllegalArgumentException("Unknown hover event action: " + tag.getString(ACTION));
         if (!action.isUserDefinable()) throw new IllegalArgumentException("Hover event action is not user definable: " + action);
 
@@ -91,14 +93,13 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
                     if (tag.contains(CONTENTS, NbtType.STRING)) {
                         return new ItemHoverEvent(action, Identifier.of(tag.getString(CONTENTS)), 1, null);
                     } else if (tag.contains(CONTENTS, NbtType.COMPOUND)) {
-                        if (!tag.contains("id", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'id' tag");
+                        String id = requiredString(tag, "id");
                         if (tag.contains("count") && !tag.get("count", new StringTag("")).isNumberTag()) throw new IllegalArgumentException("Expected int tag for 'count' tag");
-                        if (tag.contains("tag") && !tag.contains("tag", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'tag' tag");
+                        String itemTag = optionalString(tag, "tag");
                         try {
-                            String itemTag = tag.getString("tag", null);
                             return new ItemHoverEvent(
                                     action,
-                                    Identifier.of(tag.getString("id")),
+                                    Identifier.of(id),
                                     tag.getInt("count", 1),
                                     itemTag == null ? null : this.sNbtSerializer.deserialize(itemTag)
                             );
@@ -109,8 +110,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
                         throw new IllegalArgumentException("Expected string or compound tag for '" + CONTENTS + "' tag");
                     }
                 case SHOW_ENTITY:
-                    if (!tag.contains("type", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'type' tag");
-                    Identifier type = Identifier.of(tag.getString("type"));
+                    Identifier type = Identifier.of(requiredString(tag, "type"));
                     UUID id = this.getUUID(tag.get("id"));
                     ATextComponent name = tag.contains("name") ? this.textSerializer.deserialize(tag.get("name")) : null;
                     return new EntityHoverEvent(action, type, id, name);
