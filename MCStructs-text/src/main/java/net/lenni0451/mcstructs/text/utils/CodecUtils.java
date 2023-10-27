@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Basic utils methods for text component codecs.
+ * Basic util methods for text component codecs.
  */
 @ParametersAreNonnullByDefault
 public class CodecUtils {
@@ -43,6 +43,40 @@ public class CodecUtils {
      */
     public static boolean isObject(@Nullable final JsonElement element) {
         return element != null && element.isJsonObject();
+    }
+
+
+    /**
+     * Check if the given json object contains a boolean.
+     *
+     * @param obj  The object to check
+     * @param name The name of the boolean
+     * @return If the object contains the boolean
+     */
+    public static boolean containsString(final JsonObject obj, final String name) {
+        return obj.has(name) && isString(obj.get(name));
+    }
+
+    /**
+     * Check if the given json object contains a json array.
+     *
+     * @param obj  The object to check
+     * @param name The name of the array
+     * @return If the object contains the array
+     */
+    public static boolean containsArray(final JsonObject obj, final String name) {
+        return obj.has(name) && obj.get(name).isJsonArray();
+    }
+
+    /**
+     * Check if the given json object contains a json object.
+     *
+     * @param obj  The object to check
+     * @param name The name of the object
+     * @return If the object contains the object
+     */
+    public static boolean containsObject(final JsonObject obj, final String name) {
+        return obj.has(name) && isObject(obj.get(name));
     }
 
 

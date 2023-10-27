@@ -105,7 +105,7 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                             this.sneak(t);
                         }
                     } else {
-                        throw new IllegalArgumentException("Expected string or compound tag for '" + CONTENTS + "' tag");
+                        throw new IllegalArgumentException("Expected string or json array for '" + CONTENTS + "' tag");
                     }
                 case SHOW_ENTITY:
                     Identifier type = Identifier.of(requiredString(obj, "type"));
