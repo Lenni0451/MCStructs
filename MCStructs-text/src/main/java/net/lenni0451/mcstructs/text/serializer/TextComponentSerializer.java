@@ -1,9 +1,6 @@
 package net.lenni0451.mcstructs.text.serializer;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
@@ -260,7 +257,7 @@ public class TextComponentSerializer {
 
     /**
      * Deserialize a text component from a json string.<br>
-     * This method is used by minecraft versions 1.9+.<br>
+     * This method is used by minecraft versions 1.9-1.20.2.<br>
      * It can not deserialize components with comments which older versions did support.
      *
      * @param json The json string
@@ -268,6 +265,18 @@ public class TextComponentSerializer {
      */
     public ATextComponent deserializeReader(final String json) {
         return this.deserializeReader(json, false);
+    }
+
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is used by minecraft versions 1.20.3+.
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
+    public ATextComponent deserializeParser(final String json) {
+        if (this.parentCodec != null) return this.parentCodec.deserializeJson(json);
+        else return this.getGson().fromJson(JsonParser.parseString(json), ATextComponent.class);
     }
 
     /**
@@ -283,7 +292,8 @@ public class TextComponentSerializer {
      * @return The deserialized text component
      */
     public ATextComponent deserializeLenientReader(final String json) {
-        return this.deserializeReader(json, true);
+        if (this.parentCodec != null) return this.parentCodec.deserializeLenientJson(json);
+        else return this.deserializeReader(json, true);
     }
 
     /**
@@ -295,6 +305,7 @@ public class TextComponentSerializer {
      * @return The deserialized text component
      */
     public ATextComponent deserializeReader(final String json, final boolean lenient) {
+        if (this.parentCodec != null && lenient) return this.parentCodec.deserializeLenientJson(json);
         try {
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(lenient);
