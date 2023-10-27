@@ -3,7 +3,6 @@ package net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
@@ -13,6 +12,8 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
+
+import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
 
 public class NbtStyleSerializer_v1_20_3 implements ITypedSerializer<INbtTag, Style> {
 
@@ -50,51 +51,31 @@ public class NbtStyleSerializer_v1_20_3 implements ITypedSerializer<INbtTag, Sty
 
         Style style = new Style();
         if (tag.contains("color")) {
-            if (!tag.contains("color", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'color' tag");
-            TextFormatting formatting = TextFormatting.parse(tag.getString("color"));
-            if (formatting == null) throw new IllegalArgumentException("Unknown color: " + tag.getString("color"));
+            String color = requiredString(tag, "color");
+            TextFormatting formatting = TextFormatting.parse(color);
+            if (formatting == null) throw new IllegalArgumentException("Unknown color: " + color);
             if (formatting.isRGBColor() && (formatting.getRgbValue() < 0 || formatting.getRgbValue() > 0xFFFFFF)) {
                 throw new IllegalArgumentException("Out of bounds RGB color: " + formatting.getRgbValue());
             }
         }
-        style.setBold(this.optionalBoolean(tag, "bold"));
-        style.setItalic(this.optionalBoolean(tag, "italic"));
-        style.setUnderlined(this.optionalBoolean(tag, "underlined"));
-        style.setStrikethrough(this.optionalBoolean(tag, "strikethrough"));
-        style.setObfuscated(this.optionalBoolean(tag, "obfuscated"));
+        style.setBold(optionalBoolean(tag, "bold"));
+        style.setItalic(optionalBoolean(tag, "italic"));
+        style.setUnderlined(optionalBoolean(tag, "underlined"));
+        style.setStrikethrough(optionalBoolean(tag, "strikethrough"));
+        style.setObfuscated(optionalBoolean(tag, "obfuscated"));
         if (tag.contains("clickEvent")) {
-            if (!tag.contains("clickEvent", NbtType.COMPOUND)) throw new IllegalArgumentException("Expected compound tag for 'clickEvent' tag");
-            CompoundTag clickEvent = tag.getCompound("clickEvent");
-            if (!clickEvent.contains("action", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'action' tag");
-            ClickEventAction action = ClickEventAction.getByName(clickEvent.getString("action"), false);
+            CompoundTag clickEvent = requiredCompound(tag, "clickEvent");
+            ClickEventAction action = ClickEventAction.getByName(requiredString(clickEvent, "action"), false);
             if (action == null || ClickEventAction.TWITCH_USER_INFO.equals(action)) {
                 throw new IllegalArgumentException("Unknown click event action: " + clickEvent.getString("action"));
             }
             if (!action.isUserDefinable()) throw new IllegalArgumentException("Click event action is not user definable: " + action);
-            if (!clickEvent.contains("value", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'value' tag");
-            style.setClickEvent(new ClickEvent(action, clickEvent.getString("value")));
+            style.setClickEvent(new ClickEvent(action, requiredString(clickEvent, "value")));
         }
-        if (tag.contains("hoverEvent")) {
-            if (!tag.contains("hoverEvent", NbtType.COMPOUND)) throw new IllegalArgumentException("Expected compound tag for 'hoverEvent' tag");
-            style.setHoverEvent(this.hoverEventSerializer.deserialize(tag.getCompound("hoverEvent")));
-        }
-        if (tag.contains("insertion")) {
-            if (!tag.contains("insertion", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'insertion' tag");
-            style.setInsertion(tag.getString("insertion"));
-        }
-        if (tag.contains("font")) {
-            if (!tag.contains("font", NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for 'font' tag");
-            style.setFont(Identifier.of(tag.getString("font")));
-        }
+        if (tag.contains("hoverEvent")) style.setHoverEvent(this.hoverEventSerializer.deserialize(requiredCompound(tag, "hoverEvent")));
+        style.setInsertion(optionalString(tag, "insertion"));
+        if (tag.contains("font")) style.setFont(Identifier.of(requiredString(tag, "font")));
         return style;
-    }
-
-    private Boolean optionalBoolean(final CompoundTag tag, final String name) {
-        if (tag.contains(name)) {
-            if (!tag.contains(name, NbtType.BYTE)) throw new IllegalArgumentException("Expected byte tag for '" + name + "' tag");
-            return tag.getBoolean(name);
-        }
-        return null;
     }
 
 }
