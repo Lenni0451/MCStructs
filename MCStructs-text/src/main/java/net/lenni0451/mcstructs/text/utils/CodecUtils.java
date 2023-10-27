@@ -16,6 +16,37 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class CodecUtils {
 
     /**
+     * Check if the given element is a string.
+     *
+     * @param element The element to check
+     * @return If the element is a string
+     */
+    public static boolean isString(@Nullable final JsonElement element) {
+        return element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isString();
+    }
+
+    /**
+     * Check if the given element is a number.
+     *
+     * @param element The element to check
+     * @return If the element is a number
+     */
+    public static boolean isNumber(@Nullable final JsonElement element) {
+        return element != null && element.isJsonPrimitive() && (element.getAsJsonPrimitive().isNumber() || element.getAsJsonPrimitive().isBoolean());
+    }
+
+    /**
+     * Check if the given element is an array.
+     *
+     * @param element The element to check
+     * @return If the element is an array
+     */
+    public static boolean isObject(@Nullable final JsonElement element) {
+        return element != null && element.isJsonObject();
+    }
+
+
+    /**
      * Get an optional boolean or null if not present.
      *
      * @param tag  The tag to get the boolean from
@@ -39,6 +70,32 @@ public class CodecUtils {
     public static Boolean optionalBoolean(final JsonObject obj, final String name) {
         if (!obj.has(name)) return null;
         return requiredBoolean(obj, name);
+    }
+
+    /**
+     * Get an optional int or null if not present.
+     *
+     * @param tag  The tag to get the int from
+     * @param name The name of the int
+     * @return The int or null if not present
+     */
+    @Nullable
+    public static Integer optionalInt(final CompoundTag tag, final String name) {
+        if (!tag.contains(name)) return null;
+        return requiredInt(tag, name);
+    }
+
+    /**
+     * Get an optional int or null if not present.
+     *
+     * @param obj  The object to get the int from
+     * @param name The name of the int
+     * @return The int or null if not present
+     */
+    @Nullable
+    public static Integer optionalInt(final JsonObject obj, final String name) {
+        if (!obj.has(name)) return null;
+        return requiredInt(obj, name);
     }
 
     /**
@@ -97,6 +154,36 @@ public class CodecUtils {
         if (primitive.isBoolean()) return primitive.getAsBoolean();
         else if (primitive.isNumber()) return primitive.getAsInt() != 0;
         else throw new IllegalArgumentException("Expected boolean for '" + name + "' tag");
+    }
+
+    /**
+     * Get a required int or throw an exception if not present.
+     *
+     * @param tag  The tag to get the int from
+     * @param name The name of the int
+     * @return The int
+     */
+    public static int requiredInt(final CompoundTag tag, final String name) {
+        if (!tag.contains(name, NbtType.INT)) throw new IllegalArgumentException("Expected int tag for '" + name + "' tag");
+        return tag.getInt(name);
+    }
+
+    /**
+     * Get a required int or throw an exception if not present.
+     *
+     * @param obj  The object to get the int from
+     * @param name The name of the int
+     * @return The int
+     */
+    public static int requiredInt(final JsonObject obj, final String name) {
+        if (!obj.has(name)) throw new IllegalArgumentException("Missing int for '" + name + "' tag");
+        JsonElement element = obj.get(name);
+        if (!element.isJsonPrimitive()) throw new IllegalArgumentException("Expected int for '" + name + "' tag");
+
+        JsonPrimitive primitive = element.getAsJsonPrimitive();
+        if (primitive.isNumber()) return primitive.getAsInt();
+        else if (primitive.isBoolean()) return primitive.getAsBoolean() ? 1 : 0;
+        else throw new IllegalArgumentException("Expected int for '" + name + "' tag");
     }
 
     /**

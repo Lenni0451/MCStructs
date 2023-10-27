@@ -20,8 +20,7 @@ import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.UUID;
 
-import static net.lenni0451.mcstructs.text.utils.CodecUtils.optionalString;
-import static net.lenni0451.mcstructs.text.utils.CodecUtils.requiredString;
+import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
 
 public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag, AHoverEvent> {
 
@@ -94,13 +93,13 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
                         return new ItemHoverEvent(action, Identifier.of(tag.getString(CONTENTS)), 1, null);
                     } else if (tag.contains(CONTENTS, NbtType.COMPOUND)) {
                         String id = requiredString(tag, "id");
-                        if (tag.contains("count") && !tag.get("count", new StringTag("")).isNumberTag()) throw new IllegalArgumentException("Expected int tag for 'count' tag");
+                        Integer count = optionalInt(tag, "count");
                         String itemTag = optionalString(tag, "tag");
                         try {
                             return new ItemHoverEvent(
                                     action,
                                     Identifier.of(id),
-                                    tag.getInt("count", 1),
+                                    count == null ? 1 : count,
                                     itemTag == null ? null : this.sNbtSerializer.deserialize(itemTag)
                             );
                         } catch (Throwable t) {
