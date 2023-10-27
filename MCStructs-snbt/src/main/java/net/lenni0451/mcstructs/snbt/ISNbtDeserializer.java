@@ -12,4 +12,6 @@ public interface ISNbtDeserializer<T extends INbtTag> {
 
     T deserialize(final String s) throws SNbtDeserializeException;
 
+    INbtTag deserializeValue(final String s) throws SNbtDeserializeException;
+
 }

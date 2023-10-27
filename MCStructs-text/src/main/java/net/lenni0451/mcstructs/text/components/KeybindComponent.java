@@ -31,9 +31,11 @@ public class KeybindComponent extends ATextComponent {
      * Set the translator function used to translate the key.
      *
      * @param translator The translator function
+     * @return This component
      */
-    public void setTranslator(@Nonnull final Function<String, String> translator) {
+    public KeybindComponent setTranslator(@Nonnull final Function<String, String> translator) {
         this.translator = translator;
+        return this;
     }
 
     @Override

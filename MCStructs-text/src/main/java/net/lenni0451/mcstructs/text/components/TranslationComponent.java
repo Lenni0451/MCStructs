@@ -59,9 +59,11 @@ public class TranslationComponent extends ATextComponent {
      * The fallback is used when the translation of the key was not found.
      *
      * @param fallback The fallback
+     * @return This component
      */
-    public void setFallback(@Nullable String fallback) {
+    public TranslationComponent setFallback(@Nullable String fallback) {
         this.fallback = fallback;
+        return this;
     }
 
     /**
@@ -69,9 +71,11 @@ public class TranslationComponent extends ATextComponent {
      * If a key is not found return <code>null</code>. This is required for the fallback to work.
      *
      * @param translator The translator function
+     * @return This component
      */
-    public void setTranslator(@Nonnull final Function<String, String> translator) {
+    public TranslationComponent setTranslator(@Nonnull final Function<String, String> translator) {
         this.translator = translator;
+        return this;
     }
 
     @Override

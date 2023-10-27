@@ -29,6 +29,11 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
         return tag;
     }
 
+    @Override
+    public INbtTag deserializeValue(String s) throws SNbtDeserializeException {
+        return this.parse("tag", s);
+    }
+
     /**
      * This method infinite loops if the input is a specifically crafted string which causes the {@link SNbtDeserializer_v1_7#findPair(String, boolean)} to always return false.<br>
      * This can actually crash the 1.7 server when sending the payload in a /give command.<br>
@@ -60,7 +65,7 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
                     if (value.length() < pair.length() + 1) break;
                     char next = value.charAt(pair.length());
                     if (next != ',' && next != '{' && next != '}' && next != '[' && next != ']') {
-                        throw new SNbtDeserializeException("Unexpected troken '" + name + "' at: " + value.substring(pair.length()));
+                        throw new SNbtDeserializeException("Unexpected token '" + name + "' at: " + value.substring(pair.length()));
                     }
                     value = value.substring(pair.length() + 1);
                 }
@@ -85,7 +90,7 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
                     if (value.length() < pair.length() + 1) break;
                     char next = value.charAt(pair.length());
                     if (next != ',' && next != '{' && next != '}' && next != '[' && next != ']') {
-                        throw new SNbtDeserializeException("Unexpected troken '" + name + "' at: " + value.substring(pair.length()));
+                        throw new SNbtDeserializeException("Unexpected token '" + name + "' at: " + value.substring(pair.length()));
                     }
                     value = value.substring(pair.length() + 1);
                 }

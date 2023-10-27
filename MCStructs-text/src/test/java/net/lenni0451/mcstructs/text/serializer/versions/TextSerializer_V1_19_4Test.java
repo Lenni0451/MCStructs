@@ -4,18 +4,18 @@ import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import org.junit.jupiter.api.Test;
 
-import static net.lenni0451.mcstructs.text.serializer.TextComponentSerializer.V1_8;
+import static net.lenni0451.mcstructs.text.serializer.TextComponentSerializer.V1_19_4;
 
-class TextSerializer_v1_8Test extends TextSerializerTest {
+public class TextSerializer_V1_19_4Test extends TextSerializerTest {
 
     @Override
     protected ATextComponent deserialize(String json) {
-        return V1_8.deserialize(json);
+        return V1_19_4.deserializeReader(json);
     }
 
     @Override
     protected String serialize(ATextComponent component) {
-        return V1_8.serialize(component);
+        return V1_19_4.serialize(component);
     }
 
     @Test
@@ -23,19 +23,19 @@ class TextSerializer_v1_8Test extends TextSerializerTest {
     protected void runTests() {
         this.executeDeserializeTests(
                 new StringComponent("test"),
-                new StringComponent("test"),
+                DESERIALIZE_FAIL,
                 null,
                 null,
                 new StringComponent("123"),
                 null,
-                new StringComponent("\0"),
+                DESERIALIZE_FAIL,
                 DESERIALIZE_FAIL,
                 DESERIALIZE_FAIL,
                 new StringComponent("test1"),
                 new StringComponent("test1")
         );
         this.executeSerializeTests(
-                "\"test\""
+                "{\"text\":\"test\"}"
         );
     }
 

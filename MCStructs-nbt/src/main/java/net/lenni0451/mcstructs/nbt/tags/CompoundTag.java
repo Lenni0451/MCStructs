@@ -111,6 +111,20 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get a tag from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @param <T> The tag type
+     * @return The tag or the default value if the map does not contain the given key
+     */
+    public <T extends INbtTag> T get(final String key, final T def) {
+        T t = this.get(key);
+        if (t == null) return def;
+        return t;
+    }
+
+    /**
      * Add a tag to the map.
      *
      * @param key The key
@@ -135,6 +149,17 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Add all tags from the given compound tag to the map.
+     *
+     * @param tag The compound tag
+     * @return This tag
+     */
+    public CompoundTag addAll(final CompoundTag tag) {
+        this.value.putAll(tag.getValue());
+        return this;
+    }
+
+    /**
      * Remove a tag from the map.
      *
      * @param key The key
@@ -146,6 +171,43 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get a boolean from the map.<br>
+     * Booleans are stored as bytes with 0 being false and everything else being true.
+     *
+     * @param key The key
+     * @return The boolean or false if the map does not contain the given key or the tag is not a number
+     */
+    public boolean getBoolean(final String key) {
+        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue() != 0;
+        return false;
+    }
+
+    /**
+     * Get a boolean from the map or the default value.<br>
+     * Booleans are stored as bytes with 0 being false and everything else being true.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The boolean or the default value if the map does not contain the given key or the tag is not a number
+     */
+    public boolean getBoolean(final String key, final boolean def) {
+        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue() != 0;
+        return def;
+    }
+
+    /**
+     * Add a boolean to the map.<br>
+     * Booleans are stored as bytes with 0 being false and everything else being true.
+     *
+     * @param key The key
+     * @param b   The boolean
+     * @return This tag
+     */
+    public CompoundTag addBoolean(final String key, final boolean b) {
+        return this.add(key, new ByteTag((byte) (b ? 1 : 0)));
+    }
+
+    /**
      * Get a byte from the map.
      *
      * @param key The key
@@ -154,6 +216,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     public byte getByte(final String key) {
         if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue();
         return 0;
+    }
+
+    /**
+     * Get a byte from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The byte or the default value if the map does not contain the given key or the tag is not a number
+     */
+    public byte getByte(final String key, final byte def) {
+        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue();
+        return def;
     }
 
     /**
@@ -179,6 +253,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get a short from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The short or the default value if the map does not contain the given key or the tag is not a number
+     */
+    public short getShort(final String key, final short def) {
+        if (this.contains(key, NbtType.SHORT)) return this.<INbtNumber>get(key).shortValue();
+        return def;
+    }
+
+    /**
      * Add a short to the map.
      *
      * @param key The key
@@ -198,6 +284,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     public int getInt(final String key) {
         if (this.contains(key, NbtType.INT)) return this.<INbtNumber>get(key).intValue();
         return 0;
+    }
+
+    /**
+     * Get an int from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The int or the default value if the map does not contain the given key or the tag is not a number
+     */
+    public int getInt(final String key, final int def) {
+        if (this.contains(key, NbtType.INT)) return this.<INbtNumber>get(key).intValue();
+        return def;
     }
 
     /**
@@ -223,6 +321,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get a long from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The long or the default value if the map does not contain the given key or the tag is not a number
+     */
+    public long getLong(final String key, final long def) {
+        if (this.contains(key, NbtType.LONG)) return this.<INbtNumber>get(key).longValue();
+        return def;
+    }
+
+    /**
      * Add a long to the map.
      *
      * @param key The key
@@ -242,6 +352,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     public float getFloat(final String key) {
         if (this.contains(key, NbtType.FLOAT)) return this.<INbtNumber>get(key).floatValue();
         return 0;
+    }
+
+    /**
+     * Get a float from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The float or the default value if the map does not contain the given key or the tag is not a number
+     */
+    public float getFloat(final String key, final float def) {
+        if (this.contains(key, NbtType.FLOAT)) return this.<INbtNumber>get(key).floatValue();
+        return def;
     }
 
     /**
@@ -267,6 +389,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get a double from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The double or the default value if the map does not contain the given key or the tag is not a number
+     */
+    public double getDouble(final String key, final double def) {
+        if (this.contains(key, NbtType.DOUBLE)) return this.<INbtNumber>get(key).doubleValue();
+        return def;
+    }
+
+    /**
      * Add a double to the map.
      *
      * @param key The key
@@ -289,6 +423,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get a byte array from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The byte array or the default value if the map does not contain the given key or the tag is not a byte array
+     */
+    public byte[] getByteArray(final String key, final byte[] def) {
+        if (this.contains(key, NbtType.BYTE_ARRAY)) return this.<ByteArrayTag>get(key).getValue();
+        return def;
+    }
+
+    /**
      * Add a byte array to the map.
      *
      * @param key   The key
@@ -308,6 +454,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     public String getString(final String key) {
         if (this.contains(key, NbtType.STRING)) return this.<StringTag>get(key).getValue();
         return "";
+    }
+
+    /**
+     * Get a string from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The string or the default value if the map does not contain the given key or the tag is not a string
+     */
+    public String getString(final String key, final String def) {
+        if (this.contains(key, NbtType.STRING)) return this.<StringTag>get(key).getValue();
+        return def;
     }
 
     /**
@@ -334,6 +492,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get a list from the map or the default value.
+     *
+     * @param key The key
+     * @param <T> The type of the list
+     * @return The list or the default value if the map does not contain the given key or the tag is not a list
+     */
+    public <T extends INbtTag> ListTag<T> getList(final String key, final ListTag<T> def) {
+        if (this.contains(key, NbtType.LIST)) return this.get(key);
+        return def;
+    }
+
+    /**
      * Get a list from the map with the given type.<br>
      * If the list does not contain the given type, an empty list is returned.
      *
@@ -348,7 +518,26 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
             if (!list.canAdd(type)) return new ListTag<>(type);
             else return list;
         }
-        return new ListTag<>();
+        return new ListTag<>(type);
+    }
+
+    /**
+     * Get a list from the map with the given type or the default value.<br>
+     * If the list does not contain the given type, the default value is returned.
+     *
+     * @param key  The key
+     * @param type The type
+     * @param def  The default value
+     * @param <T>  The type of the list
+     * @return The list or the default value if the map does not contain the given key or the tag is not a list
+     */
+    public <T extends INbtTag> ListTag<T> getList(final String key, final NbtType type, final ListTag<T> def) {
+        if (this.contains(key, NbtType.LIST)) {
+            ListTag<T> list = this.get(key);
+            if (!list.canAdd(type)) return def;
+            else return list;
+        }
+        return def;
     }
 
     /**
@@ -412,6 +601,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get a compound from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The compound or the default value if the map does not contain the given key or the tag is not a compound
+     */
+    public CompoundTag getCompound(final String key, final CompoundTag def) {
+        if (this.contains(key, NbtType.COMPOUND)) return this.get(key);
+        return def;
+    }
+
+    /**
      * Add a compound to the map.
      *
      * @param key      The key
@@ -434,6 +635,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     /**
+     * Get an int array from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The int array or the default value if the map does not contain the given key or the tag is not an int array
+     */
+    public int[] getIntArray(final String key, final int[] def) {
+        if (this.contains(key, NbtType.INT_ARRAY)) return this.<IntArrayTag>get(key).getValue();
+        return def;
+    }
+
+    /**
      * Add an int array to the map.
      *
      * @param key  The key
@@ -453,6 +666,18 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     public long[] getLongArray(final String key) {
         if (this.contains(key, NbtType.LONG_ARRAY)) return this.<LongArrayTag>get(key).getValue();
         return new long[0];
+    }
+
+    /**
+     * Get a long array from the map or the default value.
+     *
+     * @param key The key
+     * @param def The default value
+     * @return The long array or the default value if the map does not contain the given key or the tag is not a long array
+     */
+    public long[] getLongArray(final String key, final long[] def) {
+        if (this.contains(key, NbtType.LONG_ARRAY)) return this.<LongArrayTag>get(key).getValue();
+        return def;
     }
 
     /**

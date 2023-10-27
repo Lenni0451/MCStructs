@@ -1,12 +1,13 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
+import net.lenni0451.mcstructs.nbt.INbtArray;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class LongArrayTag implements INbtTag, Iterable<Long> {
+public class LongArrayTag implements INbtTag, INbtArray<LongArrayTag, LongTag, long[], Long> {
 
     private long[] value;
 
@@ -36,19 +37,12 @@ public class LongArrayTag implements INbtTag, Iterable<Long> {
         this.value = value;
     }
 
-    /**
-     * @return The long array value
-     */
+    @Override
     public long[] getValue() {
         return this.value;
     }
 
-    /**
-     * Set the long array value.
-     *
-     * @param value The new value
-     * @return This tag
-     */
+    @Override
     public LongArrayTag setValue(long[] value) {
         this.value = value;
         return this;
@@ -91,18 +85,21 @@ public class LongArrayTag implements INbtTag, Iterable<Long> {
         return this;
     }
 
-    /**
-     * @return The length of the array
-     */
+    @Override
     public int getLength() {
         return this.value.length;
     }
 
-    /**
-     * @return If the array is empty
-     */
+    @Override
     public boolean isEmpty() {
         return this.value.length == 0;
+    }
+
+    @Override
+    public ListTag<LongTag> toListTag() {
+        ListTag<LongTag> listTag = new ListTag<>();
+        for (long l : this.value) listTag.add(new LongTag(l));
+        return listTag;
     }
 
     @Override

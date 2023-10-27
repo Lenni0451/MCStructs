@@ -27,6 +27,11 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
         else return compoundTag;
     }
 
+    @Override
+    public INbtTag deserializeValue(String s) throws SNbtDeserializeException {
+        return this.readValue(this.makeReader(s));
+    }
+
     protected CompoundTag readCompound(final StringReader_v1_12 reader) throws SNbtDeserializeException {
         reader.jumpTo('{');
         CompoundTag compound = new CompoundTag();

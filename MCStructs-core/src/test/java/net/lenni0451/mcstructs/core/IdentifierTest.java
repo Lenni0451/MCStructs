@@ -12,6 +12,9 @@ class IdentifierTest {
         assertThrows(IllegalArgumentException.class, () -> Identifier.of("a\0:b"));
         assertThrows(IllegalArgumentException.class, () -> Identifier.of("a", "b:c"));
         assertEquals(Identifier.of("a", "b"), Identifier.of("a:b"));
+        assertEquals(Identifier.of(":"), Identifier.of("minecraft", ""));
+        assertEquals(Identifier.of(":test"), Identifier.of("minecraft", "test"));
+        assertEquals(Identifier.of("test:"), Identifier.of("test", ""));
     }
 
     @Test

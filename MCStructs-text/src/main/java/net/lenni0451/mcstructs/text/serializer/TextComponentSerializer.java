@@ -1,9 +1,6 @@
 package net.lenni0451.mcstructs.text.serializer;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
@@ -33,6 +30,7 @@ import net.lenni0451.mcstructs.text.serializer.v1_8.TextDeserializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.TextSerializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_9.TextSerializer_v1_9;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.function.Supplier;
@@ -165,13 +163,42 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(AHoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_19_4, SNbtSerializer.V1_14))
             .disableHtmlEscaping()
             .create());
+    /**
+     * The text component serializer for 1.20.3.
+     */
+    public static final TextComponentSerializer V1_20_3 = TextComponentCodec.V1_20_3.asSerializer();
+    /**
+     * The latest text component serializer.
+     */
+    public static final TextComponentSerializer LATEST = V1_20_3;
 
 
+    private final TextComponentCodec parentCodec;
     private final Supplier<Gson> gsonSupplier;
     private Gson gson;
 
     public TextComponentSerializer(final Supplier<Gson> gsonSupplier) {
+        this(null, gsonSupplier);
+    }
+
+    public TextComponentSerializer(final TextComponentCodec parentCodec, final Supplier<Gson> gsonSupplier) {
+        this.parentCodec = parentCodec;
         this.gsonSupplier = gsonSupplier;
+    }
+
+    /**
+     * @return The parent codec of this serializer if it was created using {@link TextComponentCodec#asSerializer()}
+     */
+    @Nullable
+    public TextComponentCodec getParentCodec() {
+        return this.parentCodec;
+    }
+
+    /**
+     * @return If this serializer has a parent codec
+     */
+    public boolean isCodec() {
+        return this.parentCodec != null;
     }
 
     /**
@@ -230,7 +257,7 @@ public class TextComponentSerializer {
 
     /**
      * Deserialize a text component from a json string.<br>
-     * This method is used by minecraft versions 1.9+.<br>
+     * This method is used by minecraft versions 1.9-1.20.2.<br>
      * It can not deserialize components with comments which older versions did support.
      *
      * @param json The json string
@@ -238,6 +265,18 @@ public class TextComponentSerializer {
      */
     public ATextComponent deserializeReader(final String json) {
         return this.deserializeReader(json, false);
+    }
+
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is used by minecraft versions 1.20.3+.
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
+    public ATextComponent deserializeParser(final String json) {
+        if (this.parentCodec != null) return this.parentCodec.deserializeJson(json);
+        else return this.getGson().fromJson(JsonParser.parseString(json), ATextComponent.class);
     }
 
     /**
@@ -253,7 +292,8 @@ public class TextComponentSerializer {
      * @return The deserialized text component
      */
     public ATextComponent deserializeLenientReader(final String json) {
-        return this.deserializeReader(json, true);
+        if (this.parentCodec != null) return this.parentCodec.deserializeLenientJson(json);
+        else return this.deserializeReader(json, true);
     }
 
     /**
@@ -265,6 +305,7 @@ public class TextComponentSerializer {
      * @return The deserialized text component
      */
     public ATextComponent deserializeReader(final String json, final boolean lenient) {
+        if (this.parentCodec != null && lenient) return this.parentCodec.deserializeLenientJson(json);
         try {
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(lenient);
