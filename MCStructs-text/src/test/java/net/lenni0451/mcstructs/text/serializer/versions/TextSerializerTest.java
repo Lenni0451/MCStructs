@@ -1,6 +1,5 @@
 package net.lenni0451.mcstructs.text.serializer.versions;
 
-import com.google.gson.JsonSyntaxException;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ public abstract class TextSerializerTest {
             try {
                 ATextComponent deserialized = this.deserialize(test);
                 assertEquals(expected, deserialized, "Test " + i + " failed: " + test);
-            } catch (JsonSyntaxException e) {
+            } catch (Exception e) {
                 assertEquals(expected, DESERIALIZE_FAIL, "Test " + i + " failed: " + test);
             }
         }
