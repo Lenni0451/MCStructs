@@ -167,13 +167,13 @@ public class TextComponentSerializer {
             .disableHtmlEscaping()
             .create());
     /**
-     * The text component serializer for 1.20.2.
+     * The text component serializer for 1.20.3.
      */
-    public static final TextComponentSerializer V1_20_2 = TextComponentCodec.V1_20_2.asSerializer();
+    public static final TextComponentSerializer V1_20_3 = TextComponentCodec.V1_20_3.asSerializer();
     /**
      * The latest text component serializer.
      */
-    public static final TextComponentSerializer LATEST = V1_20_2;
+    public static final TextComponentSerializer LATEST = V1_20_3;
 
 
     private final TextComponentCodec parentCodec;

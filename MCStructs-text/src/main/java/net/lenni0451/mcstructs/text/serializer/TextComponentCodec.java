@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * The text component serializer and deserializer wrapper class for multiple types of input and output.<br>
  * Use the static default fields for a specific minecraft version or create your own serializer/deserializer.<br>
  * <br>
- * This class will now be used for implementations of new minecraft versions (1.20.2+) instead of the {@link TextComponentSerializer} class because components can now be serialized to nbt.<br>
+ * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link TextComponentSerializer} class because components can now be serialized to nbt.<br>
  * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link TextComponentSerializer} will still be updated using this wrapper method.
  */
 @ParametersAreNonnullByDefault
@@ -29,9 +29,9 @@ public class TextComponentCodec {
 
     private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
     /**
-     * The text codec for 1.20.2.
+     * The text codec for 1.20.3.
      */
-    public static TextComponentCodec V1_20_2 = new TextComponentCodec(
+    public static TextComponentCodec V1_20_3 = new TextComponentCodec(
             () -> SNbtSerializer.V1_14,
             JsonTextSerializer_v1_20_3::new,
             NbtTextSerializer_v1_20_3::new
@@ -39,7 +39,7 @@ public class TextComponentCodec {
     /**
      * The latest text codec.
      */
-    public static TextComponentCodec LATEST = V1_20_2;
+    public static TextComponentCodec LATEST = V1_20_3;
 
 
     private final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier;
