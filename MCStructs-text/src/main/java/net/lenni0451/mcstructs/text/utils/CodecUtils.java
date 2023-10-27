@@ -182,7 +182,7 @@ public class CodecUtils {
     public static boolean requiredBoolean(final JsonObject obj, final String name) {
         if (!obj.has(name)) throw new IllegalArgumentException("Missing boolean for '" + name + "' tag");
         JsonElement element = obj.get(name);
-        if (element.isJsonPrimitive()) throw new IllegalArgumentException("Expected boolean for '" + name + "' tag");
+        if (!element.isJsonPrimitive()) throw new IllegalArgumentException("Expected boolean for '" + name + "' tag");
 
         JsonPrimitive primitive = element.getAsJsonPrimitive();
         if (primitive.isBoolean()) return primitive.getAsBoolean();
