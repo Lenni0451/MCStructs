@@ -29,7 +29,10 @@ class TextSerializer_v1_8Test extends TextSerializerTest {
                 new StringComponent("123"),
                 null,
                 new StringComponent("\0"),
-                DESERIALIZE_FAIL
+                DESERIALIZE_FAIL,
+                DESERIALIZE_FAIL,
+                new StringComponent("test1"),
+                new StringComponent("test1")
         );
         this.executeSerializeTests(
                 "\"test\""

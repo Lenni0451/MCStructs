@@ -18,6 +18,9 @@ public abstract class TextSerializerTest {
             "\n",
             "\0",
             "te st",
+            "{\"text\":[],\"translate\":\"test\"}",
+            "{\"text\":\"test1\",\"translate\":\"test2\"}",
+            "{\"text\":\"test1\",\"translate\":\"test2\",\"type\":\"translatable\"}",
     };
 
     protected static String SERIALIZE_FAIL = "--test fail--";
