@@ -90,7 +90,21 @@ public class TextComponentCodec {
     }
 
     /**
-     * Deserialize a text component from a json string.
+     * Deserialize a text component from a json string.<br>
+     * A {@link JsonReader} will be used to parse the json string.
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
+    public ATextComponent deserializeJsonReader(final String json) {
+        JsonReader reader = new JsonReader(new StringReader(json));
+        reader.setLenient(false);
+        return this.deserialize(JsonParser.parseReader(reader));
+    }
+
+    /**
+     * Deserialize a text component from a json string.<br>
+     * A {@link JsonReader} will be used to parse the json string.
      *
      * @param json The json string
      * @return The deserialized text component

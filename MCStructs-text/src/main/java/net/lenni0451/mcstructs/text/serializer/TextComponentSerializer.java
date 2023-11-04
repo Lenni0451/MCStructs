@@ -305,7 +305,10 @@ public class TextComponentSerializer {
      * @return The deserialized text component
      */
     public ATextComponent deserializeReader(final String json, final boolean lenient) {
-        if (this.parentCodec != null && lenient) return this.parentCodec.deserializeLenientJson(json);
+        if (this.parentCodec != null) {
+            if (lenient) return this.parentCodec.deserializeLenientJson(json);
+            else return this.parentCodec.deserializeJsonReader(json);
+        }
         try {
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(lenient);
