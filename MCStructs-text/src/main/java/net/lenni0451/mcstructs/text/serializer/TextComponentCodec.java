@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.text.serializer;
 
 import com.google.gson.*;
+import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
@@ -99,7 +100,11 @@ public class TextComponentCodec {
     public ATextComponent deserializeJsonReader(final String json) {
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(false);
-        return this.deserialize(JsonParser.parseReader(reader));
+        try {
+            return this.deserialize(Streams.parse(reader));
+        } catch (StackOverflowError e) {
+            throw new JsonParseException("Failed parsing JSON source: " + reader + " to Json", e);
+        }
     }
 
     /**
