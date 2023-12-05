@@ -20,6 +20,7 @@ public interface INbtReader {
      * @param in          The data input
      * @param readTracker The read tracker
      * @return The type
+     * @throws IOException If an I/O error occurs
      */
     @Nonnull
     NbtType readType(final DataInput in, final NbtReadTracker readTracker) throws IOException;

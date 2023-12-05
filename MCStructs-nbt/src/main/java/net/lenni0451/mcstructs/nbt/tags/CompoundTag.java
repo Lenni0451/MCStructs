@@ -495,6 +495,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * Get a list from the map or the default value.
      *
      * @param key The key
+     * @param def The default value
      * @param <T> The type of the list
      * @return The list or the default value if the map does not contain the given key or the tag is not a list
      */
