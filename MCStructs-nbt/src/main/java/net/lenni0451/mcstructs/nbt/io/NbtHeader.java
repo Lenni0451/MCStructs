@@ -14,7 +14,7 @@ public class NbtHeader {
     /**
      * The header of an {@link NbtType#END} tag.
      */
-    public static NbtHeader END = new NbtHeader(NbtType.END, null);
+    public static final NbtHeader END = new NbtHeader(NbtType.END, null);
 
 
     private final NbtType type;

@@ -32,7 +32,7 @@ public class TextComponentCodec {
     /**
      * The text codec for 1.20.3.
      */
-    public static TextComponentCodec V1_20_3 = new TextComponentCodec(
+    public static final TextComponentCodec V1_20_3 = new TextComponentCodec(
             () -> SNbtSerializer.V1_14,
             JsonTextSerializer_v1_20_3::new,
             NbtTextSerializer_v1_20_3::new
@@ -40,7 +40,7 @@ public class TextComponentCodec {
     /**
      * The latest text codec.
      */
-    public static TextComponentCodec LATEST = V1_20_3;
+    public static final TextComponentCodec LATEST = V1_20_3;
 
 
     private final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier;
