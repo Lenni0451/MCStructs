@@ -39,7 +39,7 @@ public class TextDeserializer_v1_19_4 implements JsonDeserializer<ATextComponent
                 component = new StringComponent(getString(rawComponent, "text"));
             } else if (rawComponent.has("translate")) {
                 String translate = getString(rawComponent, "translate");
-                String fallback = getString(rawComponent, "fallback");
+                String fallback = getString(rawComponent, "fallback", null);
                 if (rawComponent.has("with")) {
                     JsonArray with = rawComponent.getAsJsonArray("with");
                     Object[] args = new Object[with.size()];
