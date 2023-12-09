@@ -59,14 +59,16 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
             out.add(CONTENTS, contents);
         } else if (object instanceof EntityHoverEvent) {
             EntityHoverEvent entityHoverEvent = (EntityHoverEvent) object;
-            out.addProperty("type", entityHoverEvent.getEntityType().get());
+            JsonObject contents = new JsonObject();
+            contents.addProperty("type", entityHoverEvent.getEntityType().get());
             JsonArray id = new JsonArray();
             id.add((int) (entityHoverEvent.getUuid().getMostSignificantBits() >> 32));
             id.add((int) (entityHoverEvent.getUuid().getMostSignificantBits() & 0xFFFF_FFFFL));
             id.add((int) (entityHoverEvent.getUuid().getLeastSignificantBits() >> 32));
             id.add((int) (entityHoverEvent.getUuid().getLeastSignificantBits() & 0xFFFF_FFFFL));
-            out.add("id", id);
-            if (entityHoverEvent.getName() != null) out.add("name", this.textSerializer.serialize(entityHoverEvent.getName()));
+            contents.add("id", id);
+            if (entityHoverEvent.getName() != null) contents.add("name", this.textSerializer.serialize(entityHoverEvent.getName()));
+            out.add(CONTENTS, contents);
         } else {
             throw new IllegalArgumentException("Unknown hover event type: " + object.getClass().getName());
         }
@@ -91,9 +93,10 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                     if (obj.has(CONTENTS) && isString(obj.get(CONTENTS))) {
                         return new ItemHoverEvent(action, Identifier.of(obj.get(CONTENTS).getAsString()), 1, null);
                     } else if (obj.has(CONTENTS) && isObject(obj.get(CONTENTS))) {
-                        String id = requiredString(obj, "id");
-                        Integer count = optionalInt(obj, "count");
-                        String itemTag = optionalString(obj, "tag");
+                        JsonObject contents = obj.getAsJsonObject(CONTENTS);
+                        String id = requiredString(contents, "id");
+                        Integer count = optionalInt(contents, "count");
+                        String itemTag = optionalString(contents, "tag");
                         try {
                             return new ItemHoverEvent(
                                     action,
@@ -108,9 +111,10 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                         throw new IllegalArgumentException("Expected string or json array for '" + CONTENTS + "' tag");
                     }
                 case SHOW_ENTITY:
-                    Identifier type = Identifier.of(requiredString(obj, "type"));
-                    UUID id = this.getUUID(obj.get("id"));
-                    ATextComponent name = obj.has("name") ? this.textSerializer.deserialize(obj.get("name")) : null;
+                    JsonObject contents = requiredObject(obj, CONTENTS);
+                    Identifier type = Identifier.of(requiredString(contents, "type"));
+                    UUID id = this.getUUID(contents.get("id"));
+                    ATextComponent name = contents.has("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
                     return new EntityHoverEvent(action, type, id, name);
 
                 default:
