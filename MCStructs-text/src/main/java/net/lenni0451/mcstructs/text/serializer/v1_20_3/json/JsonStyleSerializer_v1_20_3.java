@@ -58,6 +58,7 @@ public class JsonStyleSerializer_v1_20_3 implements ITypedSerializer<JsonElement
             if (formatting.isRGBColor() && (formatting.getRgbValue() < 0 || formatting.getRgbValue() > 0xFFFFFF)) {
                 throw new IllegalArgumentException("Out of bounds RGB color: " + formatting.getRgbValue());
             }
+            style.setFormatting(formatting);
         }
         style.setBold(optionalBoolean(obj, "bold"));
         style.setItalic(optionalBoolean(obj, "italic"));

@@ -57,6 +57,7 @@ public class NbtStyleSerializer_v1_20_3 implements ITypedSerializer<INbtTag, Sty
             if (formatting.isRGBColor() && (formatting.getRgbValue() < 0 || formatting.getRgbValue() > 0xFFFFFF)) {
                 throw new IllegalArgumentException("Out of bounds RGB color: " + formatting.getRgbValue());
             }
+            style.setFormatting(formatting);
         }
         style.setBold(optionalBoolean(tag, "bold"));
         style.setItalic(optionalBoolean(tag, "italic"));
