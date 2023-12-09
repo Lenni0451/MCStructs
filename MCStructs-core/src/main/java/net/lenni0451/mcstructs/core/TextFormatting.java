@@ -110,8 +110,15 @@ public class TextFormatting {
      */
     @Nullable
     public static TextFormatting parse(final String s) {
-        if (s.startsWith("#")) return new TextFormatting(Integer.parseInt(s.substring(1), 16));
-        else return getByName(s);
+        if (s.startsWith("#")) {
+            try {
+                return new TextFormatting(Integer.parseInt(s.substring(1), 16));
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        } else {
+            return getByName(s);
+        }
     }
 
     /**
