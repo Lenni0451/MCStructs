@@ -51,9 +51,9 @@ public class TextDeserializer_v1_19_4 implements JsonDeserializer<ATextComponent
                             if (stringComponent.getStyle().isEmpty() && stringComponent.getSiblings().isEmpty()) args[i] = stringComponent.getText();
                         }
                     }
-                    component = new TranslationComponent(translate, fallback, args);
+                    component = new TranslationComponent(translate, args).setFallback(fallback);
                 } else {
-                    component = new TranslationComponent(translate, fallback);
+                    component = new TranslationComponent(translate).setFallback(fallback);
                 }
             } else if (rawComponent.has("score")) {
                 JsonObject score = rawComponent.getAsJsonObject("score");
