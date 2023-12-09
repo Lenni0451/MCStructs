@@ -21,6 +21,9 @@ public abstract class TextSerializerTest {
             "{\"text\":[],\"translate\":\"test\"}",
             "{\"text\":\"test1\",\"translate\":\"test2\"}",
             "{\"text\":\"test1\",\"translate\":\"test2\",\"type\":\"translatable\"}",
+            "{\"translate\":\"%s %s\",\"with\":[\"abc\",123]}",
+            "{\"text\":\"test\",\"color\":\"#-FFF\"}",
+            "{\"text\":\"test\",\"color\":\"#FFFFFFFF\"}"
     };
 
     protected static String SERIALIZE_FAIL = "--test fail--";

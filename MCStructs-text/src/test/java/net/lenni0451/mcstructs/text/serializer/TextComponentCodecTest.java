@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.text.serializer;
 
 import com.google.gson.JsonElement;
 import net.lenni0451.mcstructs.core.Identifier;
+import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
@@ -13,6 +14,8 @@ import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
+import net.lenni0451.mcstructs.text.events.click.ClickEvent;
+import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
@@ -33,7 +36,8 @@ class TextComponentCodecTest {
             .append(new StorageNbtComponent("raw", true, new StringComponent("separator"), Identifier.of("namespace", "id")))
             .append(new StringComponent("hover text").setStyle(new Style().setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_TEXT, new StringComponent("text")))))
             .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(HoverEventAction.SHOW_ITEM, Identifier.of("stone"), 64, new CompoundTag()))))
-            .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(HoverEventAction.SHOW_ENTITY, Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))));
+            .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(HoverEventAction.SHOW_ENTITY, Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))))
+            .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL, "https://example.com")).setFont(Identifier.of("font")).setInsertion("insertion")));
 
     @Test
     void serializeDeserializeJson() {

@@ -1,7 +1,9 @@
 package net.lenni0451.mcstructs.text.serializer.versions;
 
 import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.components.StringComponent;
+import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import org.junit.jupiter.api.Test;
 
 import static net.lenni0451.mcstructs.text.serializer.TextComponentSerializer.V1_18;
@@ -32,7 +34,10 @@ class TextSerializer_v1_18Test extends TextSerializerTest {
                 DESERIALIZE_FAIL,
                 DESERIALIZE_FAIL,
                 new StringComponent("test1"),
-                new StringComponent("test1")
+                new StringComponent("test1"),
+                new TranslationComponent("%s %s", "abc", "123"),
+                new StringComponent("test").setStyle(new Style().setColor(0xFFF001)),
+                new StringComponent("test")
         );
         this.executeSerializeTests(
                 "{\"text\":\"test\"}"
