@@ -8,7 +8,7 @@ subprojects {
         java.toolchain.languageVersion = JavaLanguageVersion.of(8)
         compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = "UTF-8"
 
-        archivesBaseName = "MCStructs-" + project.maven_name
+        archivesName = "MCStructs-" + project.maven_name
         group = project.maven_group
         version = project.maven_version
     }
