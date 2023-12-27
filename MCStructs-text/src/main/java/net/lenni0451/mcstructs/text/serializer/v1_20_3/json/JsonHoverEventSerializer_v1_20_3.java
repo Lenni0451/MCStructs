@@ -136,7 +136,7 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                         parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
                         ATextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
-                        UUID uuid = this.getUUID(parsed.get("id"));
+                        UUID uuid = UUID.fromString(parsed.getString("id"));
                         return new EntityHoverEvent(action, type, uuid, name);
 
                     default:
