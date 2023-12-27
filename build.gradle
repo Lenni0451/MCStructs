@@ -4,18 +4,20 @@ subprojects {
     apply plugin: "signing"
     apply plugin: "checkstyle"
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-    compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = "UTF-8"
+    base {
+        java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+        compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = "UTF-8"
 
-    archivesBaseName = "MCStructs-" + project.maven_name
-    group = project.maven_group
-    version = project.maven_version
+        archivesBaseName = "MCStructs-" + project.maven_name
+        group = project.maven_group
+        version = project.maven_version
+    }
 
     repositories {
         mavenCentral()
         maven {
-            name = "lenni0451 releases"
-            url = "https://maven.lenni0451.net/releases"
+            name = "lenni0451"
+            url = "https://maven.lenni0451.net/everything"
         }
     }
 
@@ -101,10 +103,11 @@ subprojects {
 
     checkstyle {
         toolVersion = "9.3" //Latest version for Java 8
-        configFile = rootProject.file("config/checkstyle.xml")
+        configFile = rootProject.file("config/checkstyle/checkstyle.xml")
     }
 
     signing {
+        setRequired false
         sign configurations.archives
         sign publishing.publications.maven
     }
