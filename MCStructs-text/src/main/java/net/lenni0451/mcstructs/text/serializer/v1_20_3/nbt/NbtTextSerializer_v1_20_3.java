@@ -170,8 +170,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             String key = tag.getString("translate");
             String fallback = tag.getString("fallback", null);
             if (tag.contains("with")) {
-                if (!tag.contains("with", NbtType.LIST)) throw new IllegalArgumentException("Expected list tag for 'with' tag");
-                List<INbtTag> with = this.unwrapMarkers(tag.getList("with"));
+                List<INbtTag> with = this.unwrapMarkers(this.getArrayOrList(tag, "with"));
                 Object[] args = new Object[with.size()];
                 for (int i = 0; i < with.size(); i++) {
                     INbtTag arg = with.get(i);
@@ -244,6 +243,14 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
         }
 
         return component;
+    }
+
+    private ListTag<?> getArrayOrList(final CompoundTag tag, final String key) {
+        if (tag.contains(key, NbtType.LIST)) return tag.getList(key);
+        else if (tag.contains(key, NbtType.BYTE_ARRAY)) return tag.get(key).asByteArrayTag().toListTag();
+        else if (tag.contains(key, NbtType.INT_ARRAY)) return tag.get(key).asIntArrayTag().toListTag();
+        else if (tag.contains(key, NbtType.LONG_ARRAY)) return tag.get(key).asLongArrayTag().toListTag();
+        else throw new IllegalArgumentException("Expected array or list tag for '" + key + "' tag");
     }
 
     /**

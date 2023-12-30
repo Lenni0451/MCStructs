@@ -5,6 +5,7 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.nbt.tags.ListTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.ATextComponent;
@@ -95,6 +96,30 @@ class TextComponentCodecTest {
         assertEquals(entityHoverEvent.getName(), new StringComponent("test"));
         assertEquals(entityHoverEvent.getEntityType(), Identifier.of("cow"));
         assertEquals(entityHoverEvent.getUuid(), randomUUID);
+    }
+
+    @Test
+    void arrayWithTag() {
+        ListTag<INbtTag> tags = new ListTag<>()
+                .add(new CompoundTag()
+                        .addString("translate", "test")
+                        .addByteArray("with", (byte) 1, (byte) 2, (byte) 3))
+                .add(new CompoundTag()
+                        .addString("translate", "test")
+                        .addIntArray("with", 1, 2, 3))
+                .add(new CompoundTag()
+                        .addString("translate", "test")
+                        .addLongArray("with", 1, 2, 3))
+                .add(new CompoundTag()
+                        .addString("translate", "test")
+                        .addList("with", 1, 2, 3));
+        ATextComponent component = new TranslationComponent("test", (byte) 1, (byte) 2, (byte) 3)
+                .append(new TranslationComponent("test", 1, 2, 3))
+                .append(new TranslationComponent("test", 1L, 2L, 3L))
+                .append(new TranslationComponent("test", 1, 2, 3));
+
+        ATextComponent nbtComponent = TextComponentCodec.LATEST.deserializeNbtTree(tags);
+        assertEquals(component, nbtComponent);
     }
 
 }
