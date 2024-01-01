@@ -6,7 +6,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.Style;
-import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import java.lang.reflect.Type;
@@ -39,7 +38,7 @@ public class StyleSerializer_v1_8 implements JsonSerializer<Style> {
             clickEvent.addProperty("value", src.getClickEvent().getValue());
             serializedStyle.add("clickEvent", clickEvent);
         }
-        if (src.getHoverEvent() instanceof TextHoverEvent) {
+        if (src.getHoverEvent() != null) {
             JsonObject hoverEvent = new JsonObject();
             hoverEvent.addProperty("action", src.getHoverEvent().getAction().getName());
             hoverEvent.add("value", context.serialize(src.getHoverEvent().toLegacy(this.textComponentSerializer, this.sNbtSerializer).getText()));
