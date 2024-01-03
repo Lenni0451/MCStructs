@@ -104,6 +104,17 @@ public abstract class ATextComponent implements ICopyable<ATextComponent> {
     }
 
     /**
+     * Modify the style of this component.
+     *
+     * @param styleConsumer The consumer that will be called with the current style
+     * @return This component
+     */
+    public ATextComponent modifyStyle(final Consumer<Style> styleConsumer) {
+        styleConsumer.accept(this.style);
+        return this;
+    }
+
+    /**
      * Set the parent style of this component.
      *
      * @param style The new parent style
