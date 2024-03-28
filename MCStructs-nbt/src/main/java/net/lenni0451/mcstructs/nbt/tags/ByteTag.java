@@ -27,6 +27,17 @@ public class ByteTag implements INbtNumber {
     }
 
     /**
+     * Create a byte tag with the given boolean value.<br>
+     * {@code true} {@literal ->} {@code 1}<br>
+     * {@code false} {@literal ->} {@code 0}
+     *
+     * @param value The value
+     */
+    public ByteTag(final boolean value) {
+        this((byte) (value ? 1 : 0));
+    }
+
+    /**
      * @return The byte value
      */
     public byte getValue() {
@@ -42,6 +53,28 @@ public class ByteTag implements INbtNumber {
     public ByteTag setValue(final byte value) {
         this.value = value;
         return this;
+    }
+
+    /**
+     * Set the value to the given boolean value.<br>
+     * {@code true} {@literal ->} {@code 1}<br>
+     * {@code false} {@literal ->} {@code 0}
+     *
+     * @param value The new value
+     */
+    public void setValue(final boolean value) {
+        this.value = (byte) (value ? 1 : 0);
+    }
+
+    /**
+     * Get the value as a boolean.<br>
+     * {@code 0} {@literal ->} {@code false}<br>
+     * {@code != 0} {@literal ->} {@code true}
+     *
+     * @return The value as a boolean
+     */
+    public boolean booleanValue() {
+        return this.value != 0;
     }
 
     @Override
