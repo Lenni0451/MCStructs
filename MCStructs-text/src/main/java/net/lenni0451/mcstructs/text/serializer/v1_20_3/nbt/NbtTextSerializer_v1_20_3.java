@@ -57,7 +57,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
         } else if (object instanceof NbtComponent) {
             NbtComponent component = (NbtComponent) object;
             out.addString("nbt", component.getComponent());
-            if (component.isResolve()) out.addByte("interpret", (byte) 1);
+            if (component.isResolve()) out.addBoolean("interpret", true);
             if (component instanceof EntityNbtComponent) {
                 EntityNbtComponent entityComponent = (EntityNbtComponent) component;
                 out.addString("entity", entityComponent.getSelector());
