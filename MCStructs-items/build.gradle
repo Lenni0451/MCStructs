@@ -1,4 +1,0 @@
-dependencies {
-    api project(":MCStructs-core")
-    api project(":MCStructs-nbt")
-}

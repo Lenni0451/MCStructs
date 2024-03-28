@@ -1,5 +1,0 @@
-dependencies {
-    api project(":MCStructs-enchantments")
-    api project(":MCStructs-items")
-    api project(":MCStructs-recipes")
-}
