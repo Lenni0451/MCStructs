@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public class KeybindComponent extends ATextComponent {
 
-    private final String keybind;
+    private String keybind;
     private Function<String, String> translator = s -> s;
 
     public KeybindComponent(final String keybind) {
@@ -25,6 +25,17 @@ public class KeybindComponent extends ATextComponent {
      */
     public String getKeybind() {
         return this.keybind;
+    }
+
+    /**
+     * Set the keybind of this component.
+     *
+     * @param keybind The keybind
+     * @return This component
+     */
+    public KeybindComponent setKeybind(final String keybind) {
+        this.keybind = keybind;
+        return this;
     }
 
     /**

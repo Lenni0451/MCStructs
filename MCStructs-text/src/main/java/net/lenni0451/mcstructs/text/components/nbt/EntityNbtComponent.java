@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class EntityNbtComponent extends NbtComponent {
 
-    private final String selector;
+    private String selector;
 
     public EntityNbtComponent(final String component, final boolean resolve, final String selector) {
         super(component, resolve);
@@ -24,6 +24,17 @@ public class EntityNbtComponent extends NbtComponent {
      */
     public String getSelector() {
         return this.selector;
+    }
+
+    /**
+     * Set the selector of this component.
+     *
+     * @param selector The selector
+     * @return This component
+     */
+    public EntityNbtComponent setSelector(final String selector) {
+        this.selector = selector;
+        return this;
     }
 
     @Override

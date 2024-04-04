@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class StringComponent extends ATextComponent {
 
-    private final String text;
+    private String text;
 
     public StringComponent() {
         this("");
@@ -21,6 +21,17 @@ public class StringComponent extends ATextComponent {
      */
     public String getText() {
         return this.text;
+    }
+
+    /**
+     * Set the text of this component.
+     *
+     * @param text The text
+     * @return This component
+     */
+    public StringComponent setText(final String text) {
+        this.text = text;
+        return this;
     }
 
     @Override

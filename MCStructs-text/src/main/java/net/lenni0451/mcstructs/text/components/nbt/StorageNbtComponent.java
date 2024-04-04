@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class StorageNbtComponent extends NbtComponent {
 
-    private final Identifier id;
+    private Identifier id;
 
     public StorageNbtComponent(final String component, final boolean resolve, final Identifier id) {
         super(component, resolve);
@@ -25,6 +25,17 @@ public class StorageNbtComponent extends NbtComponent {
      */
     public Identifier getId() {
         return this.id;
+    }
+
+    /**
+     * Set the id of this component.
+     *
+     * @param id The id
+     * @return This component
+     */
+    public StorageNbtComponent setId(final Identifier id) {
+        this.id = id;
+        return this;
     }
 
     @Override

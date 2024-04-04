@@ -16,8 +16,8 @@ public class TranslationComponent extends ATextComponent {
     private static final Function<String, String> NULL_TRANSLATOR = s -> null;
     private static final Pattern ARG_PATTERN = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
-    private final String key;
-    private final Object[] args;
+    private String key;
+    private Object[] args;
     @Nullable
     private String fallback;
     private Function<String, String> translator = NULL_TRANSLATOR;
@@ -40,10 +40,32 @@ public class TranslationComponent extends ATextComponent {
     }
 
     /**
+     * Set the key of this component.
+     *
+     * @param key The key
+     * @return This component
+     */
+    public TranslationComponent setKey(final String key) {
+        this.key = key;
+        return this;
+    }
+
+    /**
      * @return The arguments of this component
      */
     public Object[] getArgs() {
         return this.args;
+    }
+
+    /**
+     * Set the arguments of this component.
+     *
+     * @param args The arguments
+     * @return This component
+     */
+    public TranslationComponent setArgs(final Object[] args) {
+        this.args = args;
+        return this;
     }
 
     /**

@@ -6,9 +6,9 @@ import javax.annotation.Nullable;
 
 public abstract class NbtComponent extends ATextComponent {
 
-    private final String component;
-    private final boolean resolve;
-    private final ATextComponent separator;
+    private String component;
+    private boolean resolve;
+    private ATextComponent separator;
 
     public NbtComponent(final String component, final boolean resolve) {
         this(component, resolve, null);
@@ -28,10 +28,32 @@ public abstract class NbtComponent extends ATextComponent {
     }
 
     /**
+     * Set the component of this component.
+     *
+     * @param component The component
+     * @return This component
+     */
+    public NbtComponent setComponent(final String component) {
+        this.component = component;
+        return this;
+    }
+
+    /**
      * @return Whether this component should be resolved
      */
     public boolean isResolve() {
         return this.resolve;
+    }
+
+    /**
+     * Set whether this component should be resolved.
+     *
+     * @param resolve Whether this component should be resolved
+     * @return This component
+     */
+    public NbtComponent setResolve(final boolean resolve) {
+        this.resolve = resolve;
+        return this;
     }
 
     /**
@@ -40,6 +62,17 @@ public abstract class NbtComponent extends ATextComponent {
     @Nullable
     public ATextComponent getSeparator() {
         return this.separator;
+    }
+
+    /**
+     * Set the separator of this component.
+     *
+     * @param separator The separator
+     * @return This component
+     */
+    public NbtComponent setSeparator(final ATextComponent separator) {
+        this.separator = separator;
+        return this;
     }
 
     @Override

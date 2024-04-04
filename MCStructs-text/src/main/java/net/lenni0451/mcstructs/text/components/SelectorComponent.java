@@ -7,8 +7,8 @@ import java.util.Objects;
 
 public class SelectorComponent extends ATextComponent {
 
-    private final String selector;
-    private final ATextComponent separator;
+    private String selector;
+    private ATextComponent separator;
 
     public SelectorComponent(final String selector) {
         this(selector, null);
@@ -27,11 +27,33 @@ public class SelectorComponent extends ATextComponent {
     }
 
     /**
+     * Set the selector of this component.
+     *
+     * @param selector The selector
+     * @return This component
+     */
+    public SelectorComponent setSelector(final String selector) {
+        this.selector = selector;
+        return this;
+    }
+
+    /**
      * @return The separator of this component
      */
     @Nullable
     public ATextComponent getSeparator() {
         return this.separator;
+    }
+
+    /**
+     * Set the separator of this component.
+     *
+     * @param separator The separator
+     * @return This component
+     */
+    public SelectorComponent setSeparator(@Nullable final ATextComponent separator) {
+        this.separator = separator;
+        return this;
     }
 
     @Override

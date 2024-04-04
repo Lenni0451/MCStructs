@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class BlockNbtComponent extends NbtComponent {
 
-    private final String pos;
+    private String pos;
 
     public BlockNbtComponent(final String rawComponent, final boolean resolve, final String pos) {
         super(rawComponent, resolve);
@@ -24,6 +24,17 @@ public class BlockNbtComponent extends NbtComponent {
      */
     public String getPos() {
         return this.pos;
+    }
+
+    /**
+     * Set the position of this component.
+     *
+     * @param pos The position
+     * @return This component
+     */
+    public BlockNbtComponent setPos(final String pos) {
+        this.pos = pos;
+        return this;
     }
 
     @Override

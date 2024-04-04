@@ -7,9 +7,8 @@ import java.util.Objects;
 
 public class ScoreComponent extends ATextComponent {
 
-    private final String name;
-    private final String objective;
-
+    private String name;
+    private String objective;
     private String value;
 
     public ScoreComponent(final String name, final String objective) {
@@ -31,10 +30,32 @@ public class ScoreComponent extends ATextComponent {
     }
 
     /**
+     * Set the name of this component.
+     *
+     * @param name The name
+     * @return This component
+     */
+    public ScoreComponent setName(final String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
      * @return The objective of this component
      */
     public String getObjective() {
         return this.objective;
+    }
+
+    /**
+     * Set the objective of this component.
+     *
+     * @param objective The objective
+     * @return This component
+     */
+    public ScoreComponent setObjective(@Nullable final String objective) {
+        this.objective = objective;
+        return this;
     }
 
     /**
