@@ -3,11 +3,13 @@ package net.lenni0451.mcstructs.text.utils;
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
+import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +29,34 @@ public class TextUtils {
             comp.getStyle().setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL, comp.asSingleString()));
             return comp;
         });
+    }
+
+    /**
+     * Replace components in the given component and all siblings with the given function.<br>
+     * This includes all arguments of translation components.
+     *
+     * @param component       The component to replace in
+     * @param replaceFunction The function that will be called for every component
+     * @return A new component with the replaced components
+     */
+    public static ATextComponent replace(final ATextComponent component, final Function<ATextComponent, ATextComponent> replaceFunction) {
+        ATextComponent out = component.copy();
+        out.getSiblings().clear();
+        out = replaceFunction.apply(out);
+        for (ATextComponent sibling : component.getSiblings()) {
+            ATextComponent replace = replace(sibling, replaceFunction);
+            if (replace instanceof TranslationComponent) {
+                TranslationComponent translationComponent = (TranslationComponent) replace;
+                Object[] args = translationComponent.getArgs();
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i] instanceof ATextComponent) {
+                        args[i] = replace((ATextComponent) args[i], replaceFunction);
+                    }
+                }
+            }
+            out.append(replace);
+        }
+        return out;
     }
 
     /**
@@ -114,6 +144,27 @@ public class TextUtils {
             else out.append(separator.copy()).append(component.copy());
         }
         return out;
+    }
+
+    /**
+     * Iterate over all siblings of the given component.<br>
+     * This includes all arguments of translation components.
+     *
+     * @param component The component to iterate over
+     * @param consumer  The consumer that will be called for every component
+     * @see ATextComponent#forEach(Consumer)
+     */
+    public static void iterateAll(final ATextComponent component, final Consumer<ATextComponent> consumer) {
+        consumer.accept(component);
+        for (ATextComponent sibling : component.getSiblings()) {
+            iterateAll(sibling, consumer);
+            if (sibling instanceof TranslationComponent) {
+                TranslationComponent translationComponent = (TranslationComponent) sibling;
+                for (Object arg : translationComponent.getArgs()) {
+                    if (arg instanceof ATextComponent) iterateAll((ATextComponent) arg, consumer);
+                }
+            }
+        }
     }
 
 }

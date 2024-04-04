@@ -6,6 +6,7 @@ import net.lenni0451.mcstructs.text.components.*;
 import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
+import net.lenni0451.mcstructs.text.utils.TextUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ public abstract class ATextComponent implements ICopyable<ATextComponent> {
      *
      * @param consumer The consumer that will be called for every component
      * @return This component
+     * @see TextUtils#iterateAll(ATextComponent, Consumer)
      */
     public ATextComponent forEach(final Consumer<ATextComponent> consumer) {
         consumer.accept(this);
