@@ -3,13 +3,16 @@ package net.lenni0451.mcstructs.text.components;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Function;
 
 public class KeybindComponent extends ATextComponent {
 
+    private static final Function<String, String> DEFAULT_TRANSLATOR = s -> s;
+
     private String keybind;
-    private Function<String, String> translator = s -> s;
+    private Function<String, String> translator = DEFAULT_TRANSLATOR;
 
     public KeybindComponent(final String keybind) {
         this.keybind = keybind;
@@ -44,8 +47,9 @@ public class KeybindComponent extends ATextComponent {
      * @param translator The translator function
      * @return This component
      */
-    public KeybindComponent setTranslator(@Nonnull final Function<String, String> translator) {
-        this.translator = translator;
+    public KeybindComponent setTranslator(@Nullable final Function<String, String> translator) {
+        if (translator == null) this.translator = DEFAULT_TRANSLATOR;
+        else this.translator = translator;
         return this;
     }
 

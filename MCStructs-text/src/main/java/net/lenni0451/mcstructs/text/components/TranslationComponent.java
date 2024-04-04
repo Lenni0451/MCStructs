@@ -2,7 +2,6 @@ package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.text.ATextComponent;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
@@ -95,8 +94,9 @@ public class TranslationComponent extends ATextComponent {
      * @param translator The translator function
      * @return This component
      */
-    public TranslationComponent setTranslator(@Nonnull final Function<String, String> translator) {
-        this.translator = translator;
+    public TranslationComponent setTranslator(@Nullable final Function<String, String> translator) {
+        if (translator == null) this.translator = NULL_TRANSLATOR;
+        else this.translator = translator;
         return this;
     }
 

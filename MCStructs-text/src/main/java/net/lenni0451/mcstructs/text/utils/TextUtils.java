@@ -2,11 +2,13 @@ package net.lenni0451.mcstructs.text.utils;
 
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.components.KeybindComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -165,6 +167,37 @@ public class TextUtils {
                 }
             }
         }
+    }
+
+    /**
+     * Recursively set the translator for all translation and keybind components in the given component.<br>
+     * This includes all arguments of translation components.
+     *
+     * @param component  The component to set the translator for
+     * @param translator The translator function
+     */
+    public static void setTranslator(final ATextComponent component, @Nullable final Function<String, String> translator) {
+        setTranslator(component, translator, translator);
+    }
+
+    /**
+     * Recursively set the translators for all translation and keybind components in the given component.<br>
+     * This includes all arguments of translation components.
+     *
+     * @param component      The component to set the translators for
+     * @param textTranslator The translator function for text components
+     * @param keyTranslator  The translator function for keybind components
+     */
+    public static void setTranslator(final ATextComponent component, @Nullable final Function<String, String> textTranslator, @Nullable final Function<String, String> keyTranslator) {
+        iterateAll(component, comp -> {
+            if (comp instanceof TranslationComponent) {
+                TranslationComponent translationComponent = (TranslationComponent) comp;
+                translationComponent.setTranslator(textTranslator);
+            } else if (comp instanceof KeybindComponent) {
+                KeybindComponent keybindComponent = (KeybindComponent) comp;
+                keybindComponent.setTranslator(keyTranslator);
+            }
+        });
     }
 
 }
