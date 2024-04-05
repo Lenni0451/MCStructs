@@ -45,19 +45,15 @@ public class TextUtils {
         ATextComponent out = component.copy();
         out.getSiblings().clear();
         out = replaceFunction.apply(out);
-        for (ATextComponent sibling : component.getSiblings()) {
-            ATextComponent replace = replace(sibling, replaceFunction);
-            if (replace instanceof TranslationComponent) {
-                TranslationComponent translationComponent = (TranslationComponent) replace;
-                Object[] args = translationComponent.getArgs();
-                for (int i = 0; i < args.length; i++) {
-                    if (args[i] instanceof ATextComponent) {
-                        args[i] = replace((ATextComponent) args[i], replaceFunction);
-                    }
+        if (out instanceof TranslationComponent) {
+            Object[] args = ((TranslationComponent) out).getArgs();
+            for (int i = 0; i < args.length; i++) {
+                if (args[i] instanceof ATextComponent) {
+                    args[i] = replace((ATextComponent) args[i], replaceFunction);
                 }
             }
-            out.append(replace);
         }
+        for (ATextComponent sibling : component.getSiblings()) out.append(replace(sibling, replaceFunction));
         return out;
     }
 
