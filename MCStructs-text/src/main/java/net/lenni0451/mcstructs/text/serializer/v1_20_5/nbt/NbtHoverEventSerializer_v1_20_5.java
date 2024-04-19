@@ -98,7 +98,16 @@ public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag
                     CompoundTag contents = requiredCompound(tag, CONTENTS);
                     Identifier type = Identifier.of(requiredString(contents, "type"));
                     UUID id = this.getUUID(contents.get("id"));
-                    ATextComponent name = contents.contains("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
+                    ATextComponent name;
+                    if (contents.contains("name")) {
+                        try {
+                            name = this.textSerializer.deserialize(contents.get("name"));
+                        } catch (Throwable t) {
+                            name = null;
+                        }
+                    } else {
+                        name = null;
+                    }
                     return new EntityHoverEvent(action, type, id, name);
 
                 default:
