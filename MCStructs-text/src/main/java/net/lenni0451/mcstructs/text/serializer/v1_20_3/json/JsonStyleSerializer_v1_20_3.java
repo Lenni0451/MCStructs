@@ -4,15 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.TextFormatting;
-import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
-import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
+
+import java.util.function.Function;
 
 import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
 
@@ -20,8 +18,8 @@ public class JsonStyleSerializer_v1_20_3 implements ITypedSerializer<JsonElement
 
     private final ITypedSerializer<JsonElement, AHoverEvent> hoverEventSerializer;
 
-    public JsonStyleSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<JsonElement, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
-        this.hoverEventSerializer = new JsonHoverEventSerializer_v1_20_3(codec, textSerializer, sNbtSerializer);
+    public JsonStyleSerializer_v1_20_3(final Function<JsonStyleSerializer_v1_20_3, ITypedSerializer<JsonElement, AHoverEvent>> hoverEventSerializer) {
+        this.hoverEventSerializer = hoverEventSerializer.apply(this);
     }
 
     @Override

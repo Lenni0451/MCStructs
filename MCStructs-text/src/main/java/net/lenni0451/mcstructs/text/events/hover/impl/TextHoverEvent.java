@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class TextHoverEvent extends AHoverEvent {
 
-    private final ATextComponent text;
+    private ATextComponent text;
 
     public TextHoverEvent(final HoverEventAction action, final ATextComponent text) {
         super(action);
@@ -22,10 +22,33 @@ public class TextHoverEvent extends AHoverEvent {
     }
 
     /**
+     * Set the action of the hover event.<br>
+     * Other actions than {@link HoverEventAction#SHOW_TEXT} will result in legacy hover events.
+     *
+     * @param action The new action
+     * @return This instance for chaining
+     */
+    public TextHoverEvent setAction(final HoverEventAction action) {
+        this.action = action;
+        return this;
+    }
+
+    /**
      * @return The text of this hover event
      */
     public ATextComponent getText() {
         return this.text;
+    }
+
+    /**
+     * Set the text of this hover event.
+     *
+     * @param text The new text
+     * @return This instance for chaining
+     */
+    public TextHoverEvent setText(final ATextComponent text) {
+        this.text = text;
+        return this;
     }
 
     @Override

@@ -158,6 +158,19 @@ public class CodecUtils {
         return requiredString(obj, name);
     }
 
+    /**
+     * Get an optional compound tag or null if not present.
+     *
+     * @param tag  The tag to get the compound from
+     * @param name The name of the compound
+     * @return The compound or null if not present
+     */
+    @Nullable
+    public static CompoundTag optionalCompound(final CompoundTag tag, final String name) {
+        if (!tag.contains(name)) return null;
+        return requiredCompound(tag, name);
+    }
+
 
     /**
      * Get a required boolean or throw an exception if not present.

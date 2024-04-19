@@ -9,8 +9,13 @@ import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonHoverEventSerializer_v1_20_3;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonStyleSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonTextSerializer_v1_20_3;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtHoverEventSerializer_v1_20_3;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtStyleSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtTextSerializer_v1_20_3;
+import net.lenni0451.mcstructs.text.serializer.v1_20_5.nbt.NbtHoverEventSerializer_v1_20_5;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,13 +39,22 @@ public class TextComponentCodec {
      */
     public static final TextComponentCodec V1_20_3 = new TextComponentCodec(
             () -> SNbtSerializer.V1_14,
-            JsonTextSerializer_v1_20_3::new,
-            NbtTextSerializer_v1_20_3::new
+            (codec, sNbtSerializer) -> new JsonTextSerializer_v1_20_3(textSerializer -> new JsonStyleSerializer_v1_20_3(styleSerializer -> new JsonHoverEventSerializer_v1_20_3(codec, textSerializer, sNbtSerializer))),
+            (codec, sNbtSerializer) -> new NbtTextSerializer_v1_20_3(textSerializer -> new NbtStyleSerializer_v1_20_3(styleSerializer -> new NbtHoverEventSerializer_v1_20_3(codec, textSerializer, sNbtSerializer)))
+    );
+    /**
+     * The text codec for 1.20.5.
+     */
+    public static final TextComponentCodec V1_20_5 = new TextComponentCodec(
+            () -> SNbtSerializer.V1_14,
+            (codec, sNbtSerializer) -> null, //TODO: Implement JsonTextSerializer_v1_20_5 after item components are working
+//            (codec, sNbtSerializer) -> new JsonTextSerializer_v1_20_3(textSerializer -> new JsonStyleSerializer_v1_20_3(styleSerializer -> new JsonHoverEventSerializer_v1_20_5(codec, textSerializer, sNbtSerializer))),
+            (codec, sNbtSerializer) -> new NbtTextSerializer_v1_20_3(textSerializer -> new NbtStyleSerializer_v1_20_3(styleSerializer -> new NbtHoverEventSerializer_v1_20_5(codec, textSerializer, sNbtSerializer)))
     );
     /**
      * The latest text codec.
      */
-    public static final TextComponentCodec LATEST = V1_20_3;
+    public static final TextComponentCodec LATEST = V1_20_5;
 
 
     private final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier;

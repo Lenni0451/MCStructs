@@ -18,9 +18,9 @@ import java.util.UUID;
  */
 public class EntityHoverEvent extends AHoverEvent {
 
-    private final Identifier entityType;
-    private final UUID uuid;
-    private final ATextComponent name;
+    private Identifier entityType;
+    private UUID uuid;
+    private ATextComponent name;
 
     public EntityHoverEvent(final HoverEventAction action, final Identifier entityType, final UUID uuid, final ATextComponent name) {
         super(action);
@@ -38,6 +38,17 @@ public class EntityHoverEvent extends AHoverEvent {
     }
 
     /**
+     * Set the entity type of this hover event.
+     *
+     * @param entityType The new entity type
+     * @return This instance for chaining
+     */
+    public EntityHoverEvent setEntityType(final Identifier entityType) {
+        this.entityType = entityType;
+        return this;
+    }
+
+    /**
      * @return The uuid of this hover event
      */
     public UUID getUuid() {
@@ -45,10 +56,32 @@ public class EntityHoverEvent extends AHoverEvent {
     }
 
     /**
+     * Set the uuid of this hover event.
+     *
+     * @param uuid The new uuid
+     * @return This instance for chaining
+     */
+    public EntityHoverEvent setUuid(final UUID uuid) {
+        this.uuid = uuid;
+        return this;
+    }
+
+    /**
      * @return The name of this hover event
      */
     public ATextComponent getName() {
         return this.name;
+    }
+
+    /**
+     * Set the name of this hover event.
+     *
+     * @param name The new name
+     * @return This instance for chaining
+     */
+    public EntityHoverEvent setName(final ATextComponent name) {
+        this.name = name;
+        return this;
     }
 
     @Override

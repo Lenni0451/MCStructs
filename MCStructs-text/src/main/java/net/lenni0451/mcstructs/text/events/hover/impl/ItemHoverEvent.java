@@ -17,9 +17,13 @@ import java.util.Objects;
  */
 public class ItemHoverEvent extends AHoverEvent {
 
-    private final Identifier item;
-    private final int count;
-    private final CompoundTag nbt;
+    private Identifier item;
+    private int count;
+    private CompoundTag nbt;
+
+    public ItemHoverEvent(final Identifier item, final int count, final CompoundTag nbt) {
+        this(HoverEventAction.SHOW_ITEM, item, count, nbt);
+    }
 
     public ItemHoverEvent(final HoverEventAction action, final Identifier item, final int count, final CompoundTag nbt) {
         super(action);
@@ -37,10 +41,32 @@ public class ItemHoverEvent extends AHoverEvent {
     }
 
     /**
+     * Set the item of this hover event.
+     *
+     * @param item The new item
+     * @return This instance for chaining
+     */
+    public ItemHoverEvent setItem(final Identifier item) {
+        this.item = item;
+        return this;
+    }
+
+    /**
      * @return The count of this hover event
      */
     public int getCount() {
         return this.count;
+    }
+
+    /**
+     * Set the count of this hover event.
+     *
+     * @param count The new count
+     * @return This instance for chaining
+     */
+    public ItemHoverEvent setCount(final int count) {
+        this.count = count;
+        return this;
     }
 
     /**
@@ -49,6 +75,17 @@ public class ItemHoverEvent extends AHoverEvent {
     @Nullable
     public CompoundTag getNbt() {
         return this.nbt;
+    }
+
+    /**
+     * Set the nbt of this hover event.
+     *
+     * @param nbt The new nbt
+     * @return This instance for chaining
+     */
+    public ItemHoverEvent setNbt(@Nullable final CompoundTag nbt) {
+        this.nbt = nbt;
+        return this;
     }
 
     @Override

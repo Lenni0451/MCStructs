@@ -7,8 +7,8 @@ import java.util.Objects;
  */
 public class ClickEvent {
 
-    private final ClickEventAction action;
-    private final String value;
+    private ClickEventAction action;
+    private String value;
 
     public ClickEvent(final ClickEventAction action, final String value) {
         this.action = action;
@@ -23,10 +23,32 @@ public class ClickEvent {
     }
 
     /**
+     * Set the action of this click event.
+     *
+     * @param action The new action
+     * @return This instance for chaining
+     */
+    public ClickEvent setAction(final ClickEventAction action) {
+        this.action = action;
+        return this;
+    }
+
+    /**
      * @return The value of this click event
      */
     public String getValue() {
         return this.value;
+    }
+
+    /**
+     * Set the value of this click event.
+     *
+     * @param value The new value
+     * @return This instance for chaining
+     */
+    public ClickEvent setValue(final String value) {
+        this.value = value;
+        return this;
     }
 
     @Override

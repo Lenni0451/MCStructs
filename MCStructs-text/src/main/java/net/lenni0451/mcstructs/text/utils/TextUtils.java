@@ -7,6 +7,9 @@ import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
+import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -154,6 +157,15 @@ public class TextUtils {
      */
     public static void iterateAll(final ATextComponent component, final Consumer<ATextComponent> consumer) {
         consumer.accept(component);
+        if (component.getStyle().getHoverEvent() != null) {
+            AHoverEvent hoverEvent = component.getStyle().getHoverEvent();
+            if (hoverEvent instanceof TextHoverEvent) {
+                iterateAll(((TextHoverEvent) hoverEvent).getText(), consumer);
+            } else if (hoverEvent instanceof EntityHoverEvent) {
+                ATextComponent name = ((EntityHoverEvent) hoverEvent).getName();
+                if (name != null) iterateAll(name, consumer);
+            }
+        }
         for (ATextComponent sibling : component.getSiblings()) {
             iterateAll(sibling, consumer);
             if (sibling instanceof TranslationComponent) {

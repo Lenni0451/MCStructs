@@ -10,12 +10,15 @@ import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
  */
 public abstract class AHoverEvent {
 
-    private final HoverEventAction action;
+    protected HoverEventAction action;
 
     public AHoverEvent(final HoverEventAction action) {
         this.action = action;
     }
 
+    /**
+     * @return The action of this hover event
+     */
     public HoverEventAction getAction() {
         return this.action;
     }

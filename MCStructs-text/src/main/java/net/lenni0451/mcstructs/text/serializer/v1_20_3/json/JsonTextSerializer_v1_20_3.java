@@ -5,8 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.components.*;
@@ -14,9 +12,9 @@ import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
-import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
 
@@ -24,8 +22,8 @@ public class JsonTextSerializer_v1_20_3 implements ITypedSerializer<JsonElement,
 
     private final ITypedSerializer<JsonElement, Style> styleSerializer;
 
-    public JsonTextSerializer_v1_20_3(final TextComponentCodec codec, final SNbtSerializer<CompoundTag> sNbtSerializer) {
-        this.styleSerializer = new JsonStyleSerializer_v1_20_3(codec, this, sNbtSerializer);
+    public JsonTextSerializer_v1_20_3(final Function<JsonTextSerializer_v1_20_3, ITypedSerializer<JsonElement, Style>> styleSerializer) {
+        this.styleSerializer = styleSerializer.apply(this);
     }
 
     @Override
