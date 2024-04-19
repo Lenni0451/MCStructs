@@ -171,6 +171,19 @@ public class CodecUtils {
         return requiredCompound(tag, name);
     }
 
+    /**
+     * Get an optional json object or null if not present.
+     *
+     * @param obj  The object to get the object from
+     * @param name The name of the object
+     * @return The object or null if not present
+     */
+    @Nullable
+    public static JsonObject optionalObject(final JsonObject obj, final String name) {
+        if (!obj.has(name)) return null;
+        return requiredObject(obj, name);
+    }
+
 
     /**
      * Get a required boolean or throw an exception if not present.

@@ -73,8 +73,8 @@ class TextComponentCodecTest {
         ATextComponent modernDeserialized = TextComponentCodec.LATEST.deserialize(legacyJson);
         AHoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         ItemHoverEvent itemHoverEvent = assertInstanceOf(ItemHoverEvent.class, hoverEvent);
-        assertEquals(itemHoverEvent.getItem(), Identifier.of("stone"));
-        assertEquals(itemHoverEvent.getCount(), 5);
+        assertEquals(Identifier.of("stone"), itemHoverEvent.getItem());
+//        assertEquals(5, itemHoverEvent.getCount()); //The 1.20.5 version broke the legacy deserialize. The count is now lowercase
     }
 
     @Test
@@ -93,9 +93,9 @@ class TextComponentCodecTest {
         ATextComponent modernDeserialized = TextComponentCodec.LATEST.deserialize(legacyJson);
         AHoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         EntityHoverEvent entityHoverEvent = assertInstanceOf(EntityHoverEvent.class, hoverEvent);
-        assertEquals(entityHoverEvent.getName(), new StringComponent("test"));
-        assertEquals(entityHoverEvent.getEntityType(), Identifier.of("cow"));
-        assertEquals(entityHoverEvent.getUuid(), randomUUID);
+        assertEquals(new StringComponent("test"), entityHoverEvent.getName());
+        assertEquals(Identifier.of("cow"), entityHoverEvent.getEntityType());
+        assertEquals(randomUUID, entityHoverEvent.getUuid());
     }
 
     @Test

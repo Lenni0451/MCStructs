@@ -15,7 +15,7 @@ import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
-import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
+import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_5;
 
 import java.util.UUID;
 
@@ -27,11 +27,11 @@ public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag
     private static final String CONTENTS = "contents";
     private static final String VALUE = "value";
 
-    private final TextComponentCodec codec;
+    private final TextComponentCodec_v1_20_5 codec;
     private final ITypedSerializer<INbtTag, ATextComponent> textSerializer;
     private final SNbtSerializer<CompoundTag> sNbtSerializer;
 
-    public NbtHoverEventSerializer_v1_20_5(final TextComponentCodec codec, final ITypedSerializer<INbtTag, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+    public NbtHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<INbtTag, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
         this.codec = codec;
         this.textSerializer = textSerializer;
         this.sNbtSerializer = sNbtSerializer;
@@ -83,10 +83,10 @@ public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag
                 case SHOW_TEXT:
                     return new TextHoverEvent(action, this.textSerializer.deserialize(tag.get(CONTENTS)));
                 case SHOW_ITEM:
-                    //TODO: If the item is not valid an exception will be thrown
+                    //If the item is not valid or air an exception will be thrown
                     if (tag.contains(CONTENTS, NbtType.STRING)) {
                         Identifier id = Identifier.of(tag.getString(CONTENTS));
-                        if (id.equals(Identifier.of("minecraft:air"))) throw new IllegalArgumentException("Item hover component id is 'minecraft:air'");
+                        this.verifyItem(id);
                         return new ItemHoverEvent(action, id, 1, null);
                     } else if (tag.contains(CONTENTS, NbtType.COMPOUND)) {
                         return this.parseItemHoverEvent(action, tag.getCompound(CONTENTS));
@@ -94,9 +94,10 @@ public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag
                         throw new IllegalArgumentException("Expected string or compound tag for '" + CONTENTS + "' tag");
                     }
                 case SHOW_ENTITY:
-                    //TODO: If the entity is not valid an exception will be thrown
+                    //If the entity is not valid an exception will be thrown
                     CompoundTag contents = requiredCompound(tag, CONTENTS);
                     Identifier type = Identifier.of(requiredString(contents, "type"));
+                    this.codec.verifyEntity(type);
                     UUID id = this.getUUID(contents.get("id"));
                     ATextComponent name;
                     if (contents.contains("name")) {
@@ -141,16 +142,21 @@ public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag
 
     private ItemHoverEvent parseItemHoverEvent(final HoverEventAction action, final CompoundTag tag) {
         Identifier id = Identifier.of(requiredString(tag, "id"));
-        if (id.equals(Identifier.of("minecraft:air"))) throw new IllegalArgumentException("Item hover component id is 'minecraft:air'");
+        this.verifyItem(id);
         Integer count = optionalInt(tag, "count");
-        //TODO: Parse/Verify components
         CompoundTag components = optionalCompound(tag, "components");
+        if (components != null) this.codec.verifyItemComponents(components);
         return new ItemHoverEvent(
                 action,
                 id,
                 count == null ? 1 : count,
                 components
         );
+    }
+
+    private void verifyItem(final Identifier id) {
+        this.codec.verifyItem(id);
+        if (id.equals(Identifier.of("minecraft:air"))) throw new IllegalArgumentException("Item hover component id is 'minecraft:air'");
     }
 
     private <T extends Throwable> void sneak(final Throwable t) throws T {
