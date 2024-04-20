@@ -89,7 +89,7 @@ public class JsonTextSerializer_v1_20_3 implements ITypedSerializer<JsonElement,
         return out;
     }
 
-    private JsonElement convert(final Object object) {
+    protected JsonElement convert(final Object object) {
         if (object instanceof Boolean) return new JsonPrimitive((Boolean) object);
         else if (object instanceof Number) return new JsonPrimitive((Number) object);
         else if (object instanceof String) return new JsonPrimitive((String) object);

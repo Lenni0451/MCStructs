@@ -86,7 +86,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
         return out;
     }
 
-    private INbtTag convert(final Object object) {
+    protected INbtTag convert(final Object object) {
         if (object instanceof Boolean) return new ByteTag((byte) ((boolean) object ? 1 : 0));
         else if (object instanceof Byte) return new ByteTag((byte) object);
         else if (object instanceof Short) return new ShortTag((short) object);
@@ -99,7 +99,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
         else throw new IllegalArgumentException("Unknown object type: " + object.getClass().getName());
     }
 
-    private INbtTag optimizeAndConvert(final List<INbtTag> tags) {
+    protected INbtTag optimizeAndConvert(final List<INbtTag> tags) {
         NbtType commonType = this.getCommonType(tags);
         if (commonType == null) {
             ListTag<CompoundTag> out = new ListTag<>();
@@ -132,7 +132,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
         }
     }
 
-    private NbtType getCommonType(final List<INbtTag> tags) {
+    protected NbtType getCommonType(final List<INbtTag> tags) {
         if (tags.size() == 1) return tags.get(0).getNbtType();
         NbtType type = tags.get(0).getNbtType();
         for (int i = 1; i < tags.size(); i++) {
@@ -245,7 +245,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
         return component;
     }
 
-    private ListTag<?> getArrayOrList(final CompoundTag tag, final String key) {
+    protected ListTag<?> getArrayOrList(final CompoundTag tag, final String key) {
         if (tag.contains(key, NbtType.LIST)) return tag.getList(key);
         else if (tag.contains(key, NbtType.BYTE_ARRAY)) return tag.get(key).asByteArrayTag().toListTag();
         else if (tag.contains(key, NbtType.INT_ARRAY)) return tag.get(key).asIntArrayTag().toListTag();
