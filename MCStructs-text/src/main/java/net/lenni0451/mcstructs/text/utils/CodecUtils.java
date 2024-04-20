@@ -3,15 +3,11 @@ package net.lenni0451.mcstructs.text.utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.nbt.tags.ListTag;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Basic util methods for text component codecs.
@@ -19,30 +15,6 @@ import java.util.List;
 @Deprecated //Removed at 2024-10-20
 @ParametersAreNonnullByDefault
 public class CodecUtils {
-
-    /**
-     * Unwrap all marker tags from the given list.<br>
-     * A marker tag is a compound tag with only one entry with an empty key (e.g. {@code {"":123}}).
-     *
-     * @param list The list to unwrap
-     * @return The unwrapped list
-     */
-    public static List<INbtTag> unwrapMarkers(final ListTag<?> list) {
-        List<INbtTag> out = new ArrayList<>();
-        if (NbtType.COMPOUND.equals(list.getType())) {
-            for (INbtTag tag : list) {
-                CompoundTag compound = (CompoundTag) tag;
-                if (compound.size() == 1) {
-                    INbtTag wrappedTag = compound.get("");
-                    if (wrappedTag != null) out.add(wrappedTag);
-                    else out.add(tag);
-                }
-            }
-        } else {
-            for (INbtTag tag : list) out.add(tag);
-        }
-        return out;
-    }
 
     /**
      * Check if the given element is a string.
