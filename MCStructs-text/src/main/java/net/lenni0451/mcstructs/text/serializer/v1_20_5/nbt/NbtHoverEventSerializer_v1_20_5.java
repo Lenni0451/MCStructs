@@ -5,8 +5,6 @@ import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.IntArrayTag;
-import net.lenni0451.mcstructs.nbt.tags.ListTag;
-import net.lenni0451.mcstructs.nbt.tags.StringTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
@@ -15,13 +13,14 @@ import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtHoverEventSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_5;
 
 import java.util.UUID;
 
 import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
 
-public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag, AHoverEvent> {
+public class NbtHoverEventSerializer_v1_20_5 extends NbtHoverEventSerializer_v1_20_3 {
 
     private static final String ACTION = "action";
     private static final String CONTENTS = "contents";
@@ -32,6 +31,7 @@ public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag
     private final SNbtSerializer<CompoundTag> sNbtSerializer;
 
     public NbtHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<INbtTag, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+        super(codec, textSerializer, sNbtSerializer);
         this.codec = codec;
         this.textSerializer = textSerializer;
         this.sNbtSerializer = sNbtSerializer;
@@ -140,7 +140,7 @@ public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag
         throw new IllegalArgumentException("Missing '" + CONTENTS + "' or '" + VALUE + "' tag");
     }
 
-    private ItemHoverEvent parseItemHoverEvent(final HoverEventAction action, final CompoundTag tag) {
+    protected ItemHoverEvent parseItemHoverEvent(final HoverEventAction action, final CompoundTag tag) {
         Identifier id = Identifier.of(requiredString(tag, "id"));
         this.verifyItem(id);
         Integer count = optionalInt(tag, "count");
@@ -154,31 +154,9 @@ public class NbtHoverEventSerializer_v1_20_5 implements ITypedSerializer<INbtTag
         );
     }
 
-    private void verifyItem(final Identifier id) {
+    protected void verifyItem(final Identifier id) {
         this.codec.verifyItem(id);
         if (id.equals(Identifier.of("minecraft:air"))) throw new IllegalArgumentException("Item hover component id is 'minecraft:air'");
-    }
-
-    private <T extends Throwable> void sneak(final Throwable t) throws T {
-        throw (T) t;
-    }
-
-    private UUID getUUID(final INbtTag tag) {
-        if (!(tag instanceof IntArrayTag) && !(tag instanceof ListTag) && !(tag instanceof StringTag)) {
-            throw new IllegalArgumentException("Expected int array, list or string tag for 'id' tag");
-        }
-        int[] value = null;
-        if (tag instanceof StringTag) {
-            return UUID.fromString(tag.asStringTag().getValue());
-        } else if (tag instanceof IntArrayTag) {
-            value = tag.asIntArrayTag().getValue();
-            if (value.length != 4) throw new IllegalArgumentException("Expected int array with 4 values for 'id' tag");
-        } else {
-            ListTag<?> list = tag.asListTag();
-            if (list.size() != 4) throw new IllegalArgumentException("Expected list with 4 values for 'id' tag");
-            if (!list.getType().isNumber()) throw new IllegalArgumentException("Expected list with number values for 'id' tag");
-        }
-        return new UUID((long) value[0] << 32 | (long) value[1] & 0xFFFF_FFFFL, (long) value[2] << 32 | (long) value[3] & 0xFFFF_FFFFL);
     }
 
 }

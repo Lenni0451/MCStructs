@@ -150,11 +150,11 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
         throw new IllegalArgumentException("Missing '" + CONTENTS + "' or '" + VALUE + "' tag");
     }
 
-    private <T extends Throwable> void sneak(final Throwable t) throws T {
+    protected <T extends Throwable> void sneak(final Throwable t) throws T {
         throw (T) t;
     }
 
-    private UUID getUUID(final JsonElement element) {
+    protected UUID getUUID(final JsonElement element) {
         if (element == null || (!element.isJsonArray() && (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()))) {
             throw new IllegalArgumentException("Expected json array or string for 'id' tag");
         }

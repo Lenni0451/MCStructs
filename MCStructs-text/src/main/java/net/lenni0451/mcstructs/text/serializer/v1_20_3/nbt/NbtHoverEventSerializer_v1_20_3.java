@@ -17,7 +17,9 @@ import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
+import net.lenni0451.mcstructs.text.utils.CodecUtils;
 
+import java.util.List;
 import java.util.UUID;
 
 import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
@@ -151,15 +153,15 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
         throw new IllegalArgumentException("Missing '" + CONTENTS + "' or '" + VALUE + "' tag");
     }
 
-    private <T extends Throwable> void sneak(final Throwable t) throws T {
+    protected <T extends Throwable> void sneak(final Throwable t) throws T {
         throw (T) t;
     }
 
-    private UUID getUUID(final INbtTag tag) {
+    protected UUID getUUID(final INbtTag tag) {
         if (!(tag instanceof IntArrayTag) && !(tag instanceof ListTag) && !(tag instanceof StringTag)) {
             throw new IllegalArgumentException("Expected int array, list or string tag for 'id' tag");
         }
-        int[] value = null;
+        int[] value;
         if (tag instanceof StringTag) {
             return UUID.fromString(tag.asStringTag().getValue());
         } else if (tag instanceof IntArrayTag) {
@@ -169,6 +171,11 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
             ListTag<?> list = tag.asListTag();
             if (list.size() != 4) throw new IllegalArgumentException("Expected list with 4 values for 'id' tag");
             if (!list.getType().isNumber()) throw new IllegalArgumentException("Expected list with number values for 'id' tag");
+            List<INbtTag> values = CodecUtils.unwrapMarkers(list);
+            value = new int[4];
+            for (int i = 0; i < 4; i++) {
+                value[i] = values.get(i).asNumberTag().intValue();
+            }
         }
         return new UUID((long) value[0] << 32 | (long) value[1] & 0xFFFF_FFFFL, (long) value[2] << 32 | (long) value[3] & 0xFFFF_FFFFL);
     }

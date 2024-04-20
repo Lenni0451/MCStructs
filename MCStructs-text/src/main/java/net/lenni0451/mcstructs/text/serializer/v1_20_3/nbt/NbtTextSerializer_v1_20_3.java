@@ -11,6 +11,7 @@ import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.utils.CodecUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,7 +170,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             String key = tag.getString("translate");
             String fallback = tag.getString("fallback", null);
             if (tag.contains("with")) {
-                List<INbtTag> with = this.unwrapMarkers(this.getArrayOrList(tag, "with"));
+                List<INbtTag> with = CodecUtils.unwrapMarkers(this.getArrayOrList(tag, "with"));
                 Object[] args = new Object[with.size()];
                 for (int i = 0; i < with.size(); i++) {
                     INbtTag arg = with.get(i);
@@ -235,7 +236,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             if (extraTag.isEmpty()) throw new IllegalArgumentException("Empty extra list tag");
 
             ATextComponent[] extra;
-            List<INbtTag> unwrapped = this.unwrapMarkers(extraTag);
+            List<INbtTag> unwrapped = CodecUtils.unwrapMarkers(extraTag);
             extra = new ATextComponent[unwrapped.size()];
             for (int i = 0; i < unwrapped.size(); i++) extra[i] = this.deserialize(unwrapped.get(i));
             component.append(extra);
@@ -250,26 +251,6 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
         else if (tag.contains(key, NbtType.INT_ARRAY)) return tag.get(key).asIntArrayTag().toListTag();
         else if (tag.contains(key, NbtType.LONG_ARRAY)) return tag.get(key).asLongArrayTag().toListTag();
         else throw new IllegalArgumentException("Expected array or list tag for '" + key + "' tag");
-    }
-
-    /**
-     * Unwrap marker compound tags (CompoundTag with one empty key).
-     *
-     * @param list The list to unwrap
-     * @return The unwrapped list
-     */
-    private List<INbtTag> unwrapMarkers(final ListTag<?> list) {
-        List<INbtTag> out = new ArrayList<>();
-        for (INbtTag tag : list) {
-            if (tag.isCompoundTag()) {
-                CompoundTag compound = tag.asCompoundTag();
-                if (compound.size() == 1 && compound.contains("")) out.add(compound.get(""));
-                else out.add(tag);
-            } else {
-                out.add(tag);
-            }
-        }
-        return out;
     }
 
 }

@@ -3,7 +3,6 @@ package net.lenni0451.mcstructs.text.serializer.v1_20_5.json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
@@ -14,13 +13,14 @@ import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonHoverEventSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_5;
 
 import java.util.UUID;
 
 import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
 
-public class JsonHoverEventSerializer_v1_20_5 implements ITypedSerializer<JsonElement, AHoverEvent> {
+public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v1_20_3 {
 
     private static final String ACTION = "action";
     private static final String CONTENTS = "contents";
@@ -31,6 +31,7 @@ public class JsonHoverEventSerializer_v1_20_5 implements ITypedSerializer<JsonEl
     private final SNbtSerializer<CompoundTag> sNbtSerializer;
 
     public JsonHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<JsonElement, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+        super(codec, textSerializer, sNbtSerializer);
         this.codec = codec;
         this.textSerializer = textSerializer;
         this.sNbtSerializer = sNbtSerializer;
@@ -160,35 +161,9 @@ public class JsonHoverEventSerializer_v1_20_5 implements ITypedSerializer<JsonEl
         throw new IllegalArgumentException("Missing '" + CONTENTS + "' or '" + VALUE + "' tag");
     }
 
-    private void verifyItem(final Identifier id) {
+    protected void verifyItem(final Identifier id) {
         this.codec.verifyItem(id);
         if (id.equals(Identifier.of("minecraft:air"))) throw new IllegalArgumentException("Item hover component id is 'minecraft:air'");
-    }
-
-    private <T extends Throwable> void sneak(final Throwable t) throws T {
-        throw (T) t;
-    }
-
-    private UUID getUUID(final JsonElement element) {
-        if (element == null || (!element.isJsonArray() && (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()))) {
-            throw new IllegalArgumentException("Expected json array or string for 'id' tag");
-        }
-        if (element.isJsonPrimitive()) {
-            return UUID.fromString(element.getAsString());
-        } else {
-            JsonArray array = element.getAsJsonArray();
-            if (array.size() != 4) throw new IllegalArgumentException("Expected json array with 4 elements for 'id' tag");
-            int[] ints = new int[4];
-            for (int i = 0; i < ints.length; i++) {
-                JsonElement e = array.get(i);
-                if (!e.isJsonPrimitive()) throw new IllegalArgumentException("Expected json primitive for array element " + i + " of 'id' tag");
-                JsonPrimitive primitive = e.getAsJsonPrimitive();
-                if (primitive.isNumber()) ints[i] = primitive.getAsInt();
-                else if (primitive.isBoolean()) ints[i] = primitive.getAsBoolean() ? 1 : 0;
-                else throw new IllegalArgumentException("Expected int for array element " + i + " of 'id' tag");
-            }
-            return new UUID((long) ints[0] << 32 | (long) ints[1] & 0xFFFF_FFFFL, (long) ints[2] << 32 | (long) ints[3] & 0xFFFF_FFFFL);
-        }
     }
 
 }
