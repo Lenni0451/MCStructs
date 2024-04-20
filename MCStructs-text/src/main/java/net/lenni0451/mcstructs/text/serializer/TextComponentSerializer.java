@@ -29,6 +29,7 @@ import net.lenni0451.mcstructs.text.serializer.v1_8.StyleSerializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.TextDeserializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.TextSerializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_9.TextSerializer_v1_9;
+import net.lenni0451.mcstructs.text.utils.LegacyGsonCheck;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_6 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextSerializer_v1_6())
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_6())
-            .create());
+            .create(), true);
     /**
      * The text component serializer for 1.7.<br>
      * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
@@ -58,7 +59,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_7())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_7())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_7(TextComponentSerializer.V1_7, SNbtSerializer.V1_7))
-            .create());
+            .create(), true);
     /**
      * The text component serializer for 1.8.<br>
      * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
@@ -68,7 +69,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_8, SNbtSerializer.V1_8))
-            .create());
+            .create(), true);
     /**
      * The text component serializer for 1.9 - 1.11.<br>
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
@@ -78,7 +79,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(ATextComponent.class, new TextDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_9, SNbtSerializer.V1_8))
-            .create());
+            .create(), true);
     /**
      * The text component serializer for 1.12 - 1.13.<br>
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
@@ -179,15 +180,23 @@ public class TextComponentSerializer {
 
     private final TextComponentCodec parentCodec;
     private final Supplier<Gson> gsonSupplier;
+    private final boolean legacyGsonCheck;
     private Gson gson;
 
     public TextComponentSerializer(final Supplier<Gson> gsonSupplier) {
-        this(null, gsonSupplier);
+        this(gsonSupplier, false);
+    }
+
+    public TextComponentSerializer(final Supplier<Gson> gsonSupplier, final boolean legacyGsonCheck) {
+        this.parentCodec = null;
+        this.gsonSupplier = gsonSupplier;
+        this.legacyGsonCheck = legacyGsonCheck;
     }
 
     public TextComponentSerializer(final TextComponentCodec parentCodec, final Supplier<Gson> gsonSupplier) {
         this.parentCodec = parentCodec;
         this.gsonSupplier = gsonSupplier;
+        this.legacyGsonCheck = false;
     }
 
     /**
@@ -261,7 +270,7 @@ public class TextComponentSerializer {
 
     /**
      * Deserialize a text component from a json string.<br>
-     * This method is used by minecraft versions 1.9-1.20.2.<br>
+     * This method is used by minecraft versions 1.9 - 1.20.2.<br>
      * It can not deserialize components with comments which older versions did support.
      *
      * @param json The json string
@@ -309,6 +318,7 @@ public class TextComponentSerializer {
      * @return The deserialized text component
      */
     public ATextComponent deserializeReader(final String json, final boolean lenient) {
+        if (this.legacyGsonCheck) LegacyGsonCheck.check(json, lenient);
         if (this.parentCodec != null) {
             if (lenient) return this.parentCodec.deserializeLenientJson(json);
             else return this.parentCodec.deserializeJsonReader(json);
