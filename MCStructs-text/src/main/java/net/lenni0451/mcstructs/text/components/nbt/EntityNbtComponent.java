@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.components.nbt;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.NbtComponent;
 
@@ -58,11 +59,11 @@ public class EntityNbtComponent extends NbtComponent {
 
     @Override
     public String toString() {
-        return "EntityNbtComponent{" +
-                "siblings=" + this.getSiblings() +
-                ", style=" + this.getStyle() +
-                ", selector='" + this.selector + '\'' +
-                '}';
+        return ToString.of(this)
+                .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
+                .add("style", this.getStyle(), style -> !style.isEmpty())
+                .add("selector", this.selector)
+                .toString();
     }
 
 }

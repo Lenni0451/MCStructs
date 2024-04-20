@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.text.events.click;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
+
 import java.util.Objects;
 
 /**
@@ -66,7 +68,10 @@ public class ClickEvent {
 
     @Override
     public String toString() {
-        return "ClickEvent{action=" + this.action + ", value='" + this.value + "'}";
+        return ToString.of(this)
+                .add("action", this.action)
+                .add("value", this.value)
+                .toString();
     }
 
 }

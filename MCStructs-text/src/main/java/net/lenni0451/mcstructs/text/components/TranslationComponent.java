@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.components;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
 import javax.annotation.Nullable;
@@ -168,13 +169,13 @@ public class TranslationComponent extends ATextComponent {
 
     @Override
     public String toString() {
-        return "TranslationComponent{" +
-                "siblings=" + this.getSiblings() +
-                ", style=" + this.getStyle() +
-                ", key='" + this.key + '\'' +
-                ", args=" + Arrays.toString(this.args) +
-                ", translator=" + this.translator +
-                '}';
+        return ToString.of(this)
+                .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
+                .add("style", this.getStyle(), style -> !style.isEmpty())
+                .add("key", this.key)
+                .add("args", this.args, args -> args.length > 0, Arrays::toString)
+                .add("translator", this.translator, translator -> translator != NULL_TRANSLATOR)
+                .toString();
     }
 
 }

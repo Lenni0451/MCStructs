@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.text;
 import net.lenni0451.mcstructs.core.ICopyable;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.TextFormatting;
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 
@@ -368,19 +369,19 @@ public class Style implements ICopyable<Style> {
 
     @Override
     public String toString() {
-        return "Style{" +
-                "parent=" + this.parent +
-                ", color=" + this.color +
-                ", obfuscated=" + this.obfuscated +
-                ", bold=" + this.bold +
-                ", strikethrough=" + this.strikethrough +
-                ", underlined=" + this.underlined +
-                ", italic=" + this.italic +
-                ", clickEvent=" + this.clickEvent +
-                ", hoverEvent=" + this.hoverEvent +
-                ", insertion='" + this.insertion + '\'' +
-                ", font=" + this.font +
-                '}';
+        return ToString.of(this)
+                .add("parent", this.parent, Objects::nonNull)
+                .add("color", this.color, Objects::nonNull)
+                .add("obfuscated", this.obfuscated, Objects::nonNull)
+                .add("bold", this.bold, Objects::nonNull)
+                .add("strikethrough", this.strikethrough, Objects::nonNull)
+                .add("underlined", this.underlined, Objects::nonNull)
+                .add("italic", this.italic, Objects::nonNull)
+                .add("clickEvent", this.clickEvent, Objects::nonNull)
+                .add("hoverEvent", this.hoverEvent, Objects::nonNull)
+                .add("insertion", this.insertion, Objects::nonNull)
+                .add("font", this.font, Objects::nonNull)
+                .toString();
     }
 
 }

@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.text.components.nbt;
 
 import net.lenni0451.mcstructs.core.Identifier;
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.components.NbtComponent;
 
@@ -59,11 +60,11 @@ public class StorageNbtComponent extends NbtComponent {
 
     @Override
     public String toString() {
-        return "StorageNbtComponent{" +
-                "siblings=" + this.getSiblings() +
-                ", style=" + this.getStyle() +
-                ", id=" + this.id +
-                '}';
+        return ToString.of(this)
+                .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
+                .add("style", this.getStyle(), style -> !style.isEmpty())
+                .add("id", this.id)
+                .toString();
     }
 
 }

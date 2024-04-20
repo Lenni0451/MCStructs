@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.events.hover.impl;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
@@ -71,9 +72,9 @@ public class TextHoverEvent extends AHoverEvent {
 
     @Override
     public String toString() {
-        return "TextHoverEvent{" +
-                "text=" + this.text +
-                '}';
+        return ToString.of(this)
+                .add("text", this.text)
+                .toString();
     }
 
 }

@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.text.events.hover.impl;
 
 import net.lenni0451.mcstructs.core.Identifier;
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
@@ -19,13 +20,14 @@ public class ItemHoverEvent extends AHoverEvent {
 
     private Identifier item;
     private int count;
+    @Nullable
     private CompoundTag nbt;
 
     public ItemHoverEvent(final Identifier item, final int count, final CompoundTag nbt) {
         this(HoverEventAction.SHOW_ITEM, item, count, nbt);
     }
 
-    public ItemHoverEvent(final HoverEventAction action, final Identifier item, final int count, final CompoundTag nbt) {
+    public ItemHoverEvent(final HoverEventAction action, final Identifier item, final int count, @Nullable final CompoundTag nbt) {
         super(action);
 
         this.item = item;
@@ -116,7 +118,12 @@ public class ItemHoverEvent extends AHoverEvent {
 
     @Override
     public String toString() {
-        return "ItemHoverEvent{action=" + this.getAction() + ", item=" + this.item + ", count=" + this.count + ", nbt=" + this.nbt + "}";
+        return ToString.of(this)
+                .add("action", this.action)
+                .add("item", this.item)
+                .add("count", this.count, count -> count != 1)
+                .add("nbt", this.nbt, Objects::nonNull)
+                .toString();
     }
 
 }

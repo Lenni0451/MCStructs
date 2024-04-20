@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.components;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
 import java.util.Objects;
@@ -59,11 +60,11 @@ public class StringComponent extends ATextComponent {
 
     @Override
     public String toString() {
-        return "StringComponent{" +
-                "siblings=" + this.getSiblings() +
-                ", style=" + this.getStyle() +
-                ", text='" + this.text + '\'' +
-                '}';
+        return ToString.of(this)
+                .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
+                .add("style", this.getStyle(), style -> !style.isEmpty())
+                .add("text", this.text)
+                .toString();
     }
 
 }

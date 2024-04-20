@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.components;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
 import javax.annotation.Nonnull;
@@ -80,12 +81,12 @@ public class KeybindComponent extends ATextComponent {
 
     @Override
     public String toString() {
-        return "KeybindComponent{" +
-                "siblings=" + this.getSiblings() +
-                ", style=" + this.getStyle() +
-                ", keybind='" + this.keybind + '\'' +
-                ", translator=" + this.translator +
-                '}';
+        return ToString.of(this)
+                .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
+                .add("style", this.getStyle(), style -> !style.isEmpty())
+                .add("keybind", this.keybind)
+                .add("translator", this.translator, translator -> translator != DEFAULT_TRANSLATOR)
+                .toString();
     }
 
 }

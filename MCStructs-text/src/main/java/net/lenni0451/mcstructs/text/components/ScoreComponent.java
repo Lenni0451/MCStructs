@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.components;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
 import javax.annotation.Nullable;
@@ -9,14 +10,14 @@ public class ScoreComponent extends ATextComponent {
 
     private String name;
     private String objective;
+    @Nullable
     private String value;
 
     public ScoreComponent(final String name, final String objective) {
-        this.name = name;
-        this.objective = objective;
+        this(name, objective, null);
     }
 
-    public ScoreComponent(final String name, final String objective, final String value) {
+    public ScoreComponent(final String name, final String objective, @Nullable final String value) {
         this.name = name;
         this.objective = objective;
         this.value = value;
@@ -104,13 +105,13 @@ public class ScoreComponent extends ATextComponent {
 
     @Override
     public String toString() {
-        return "ScoreComponent{" +
-                "siblings=" + this.getSiblings() +
-                ", style=" + this.getStyle() +
-                ", name='" + this.name + '\'' +
-                ", objective='" + this.objective + '\'' +
-                ", value='" + this.value + '\'' +
-                '}';
+        return ToString.of(this)
+                .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
+                .add("style", this.getStyle(), style -> !style.isEmpty())
+                .add("name", this.name)
+                .add("objective", this.objective)
+                .add("value", this.value, Objects::nonNull)
+                .toString();
     }
 
 }
