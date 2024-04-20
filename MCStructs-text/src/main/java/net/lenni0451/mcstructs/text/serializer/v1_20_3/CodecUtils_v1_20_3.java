@@ -27,20 +27,17 @@ public interface CodecUtils_v1_20_3 {
      * @return The unwrapped list
      */
     default List<INbtTag> unwrapMarkers(final ListTag<?> list) {
-        List<INbtTag> out = new ArrayList<>();
+        List<INbtTag> tags = new ArrayList<>(list.getValue());
         if (NbtType.COMPOUND.equals(list.getType())) {
-            for (INbtTag tag : list) {
-                CompoundTag compound = (CompoundTag) tag;
+            for (int i = 0; i < tags.size(); i++) {
+                CompoundTag compound = (CompoundTag) tags.get(i);
                 if (compound.size() == 1) {
-                    INbtTag wrappedTag = compound.get("");
-                    if (wrappedTag != null) out.add(wrappedTag);
-                    else out.add(tag);
+                    INbtTag wrapped = compound.get("");
+                    if (wrapped != null) tags.set(i, wrapped);
                 }
             }
-        } else {
-            for (INbtTag tag : list) out.add(tag);
         }
-        return out;
+        return tags;
     }
 
     /**
