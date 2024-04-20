@@ -53,7 +53,7 @@ class TextComponentCodecTest {
     }
 
     @Test
-    void serializeDeserializeNbt() throws SNbtSerializeException {
+    void serializeDeserializeNbt() {
         INbtTag nbt = TextComponentCodec.LATEST.serializeNbt(this.text);
         ATextComponent deserialized = TextComponentCodec.LATEST.deserializeNbtTree(nbt);
         assertEquals(this.text, deserialized);
