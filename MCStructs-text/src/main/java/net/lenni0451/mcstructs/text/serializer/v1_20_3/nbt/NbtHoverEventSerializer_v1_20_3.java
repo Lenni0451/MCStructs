@@ -17,14 +17,12 @@ import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
-import net.lenni0451.mcstructs.text.utils.CodecUtils;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
 import java.util.List;
 import java.util.UUID;
 
-import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
-
-public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag, AHoverEvent> {
+public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag, AHoverEvent>, CodecUtils_v1_20_3 {
 
     private static final String ACTION = "action";
     private static final String CONTENTS = "contents";
@@ -171,7 +169,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
             ListTag<?> list = tag.asListTag();
             if (list.size() != 4) throw new IllegalArgumentException("Expected list with 4 values for 'id' tag");
             if (!list.getType().isNumber()) throw new IllegalArgumentException("Expected list with number values for 'id' tag");
-            List<INbtTag> values = CodecUtils.unwrapMarkers(list);
+            List<INbtTag> values = unwrapMarkers(list);
             value = new int[4];
             for (int i = 0; i < 4; i++) {
                 value[i] = values.get(i).asNumberTag().intValue();

@@ -11,13 +11,13 @@ import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
-import net.lenni0451.mcstructs.text.utils.CodecUtils;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATextComponent> {
+public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATextComponent>, CodecUtils_v1_20_3 {
 
     private final ITypedSerializer<INbtTag, Style> styleSerializer;
 
@@ -170,7 +170,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             String key = tag.getString("translate");
             String fallback = tag.getString("fallback", null);
             if (tag.contains("with")) {
-                List<INbtTag> with = CodecUtils.unwrapMarkers(this.getArrayOrList(tag, "with"));
+                List<INbtTag> with = unwrapMarkers(this.getArrayOrList(tag, "with"));
                 Object[] args = new Object[with.size()];
                 for (int i = 0; i < with.size(); i++) {
                     INbtTag arg = with.get(i);
@@ -236,7 +236,7 @@ public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATex
             if (extraTag.isEmpty()) throw new IllegalArgumentException("Empty extra list tag");
 
             ATextComponent[] extra;
-            List<INbtTag> unwrapped = CodecUtils.unwrapMarkers(extraTag);
+            List<INbtTag> unwrapped = unwrapMarkers(extraTag);
             extra = new ATextComponent[unwrapped.size()];
             for (int i = 0; i < unwrapped.size(); i++) extra[i] = this.deserialize(unwrapped.get(i));
             component.append(extra);

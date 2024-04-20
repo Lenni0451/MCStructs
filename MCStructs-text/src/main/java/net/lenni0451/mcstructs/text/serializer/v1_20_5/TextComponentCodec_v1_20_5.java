@@ -6,11 +6,11 @@ import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonStyleSerializer_v1_20_3;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonTextSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtStyleSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtTextSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.json.JsonHoverEventSerializer_v1_20_5;
+import net.lenni0451.mcstructs.text.serializer.v1_20_5.json.JsonStyleSerializer_v1_20_5;
+import net.lenni0451.mcstructs.text.serializer.v1_20_5.json.JsonTextSerializer_v1_20_5;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.nbt.NbtHoverEventSerializer_v1_20_5;
 import net.lenni0451.mcstructs.text.utils.JsonNbtConverter;
 
@@ -19,7 +19,7 @@ public class TextComponentCodec_v1_20_5 extends TextComponentCodec {
     public TextComponentCodec_v1_20_5() {
         super(
                 () -> SNbtSerializer.V1_14,
-                (codec, sNbtSerializer) -> new JsonTextSerializer_v1_20_3(textSerializer -> new JsonStyleSerializer_v1_20_3(styleSerializer -> new JsonHoverEventSerializer_v1_20_5((TextComponentCodec_v1_20_5) codec, textSerializer, sNbtSerializer))),
+                (codec, sNbtSerializer) -> new JsonTextSerializer_v1_20_5(textSerializer -> new JsonStyleSerializer_v1_20_5(styleSerializer -> new JsonHoverEventSerializer_v1_20_5((TextComponentCodec_v1_20_5) codec, textSerializer, sNbtSerializer))),
                 (codec, sNbtSerializer) -> new NbtTextSerializer_v1_20_3(textSerializer -> new NbtStyleSerializer_v1_20_3(styleSerializer -> new NbtHoverEventSerializer_v1_20_5((TextComponentCodec_v1_20_5) codec, textSerializer, sNbtSerializer)))
         );
     }

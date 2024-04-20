@@ -9,12 +9,11 @@ import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
 import java.util.function.Function;
 
-import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
-
-public class NbtStyleSerializer_v1_20_3 implements ITypedSerializer<INbtTag, Style> {
+public class NbtStyleSerializer_v1_20_3 implements ITypedSerializer<INbtTag, Style>, CodecUtils_v1_20_3 {
 
     private final ITypedSerializer<INbtTag, AHoverEvent> hoverEventSerializer;
 

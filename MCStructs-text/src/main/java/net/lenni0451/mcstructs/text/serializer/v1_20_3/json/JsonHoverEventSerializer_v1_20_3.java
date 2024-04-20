@@ -16,12 +16,11 @@ import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
 import java.util.UUID;
 
-import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
-
-public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonElement, AHoverEvent> {
+public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonElement, AHoverEvent>, CodecUtils_v1_20_3 {
 
     private static final String ACTION = "action";
     private static final String CONTENTS = "contents";

@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.text.utils;
+package net.lenni0451.mcstructs.text.serializer.v1_20_3;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,11 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Basic util methods for text component codecs.
+ * Basic util methods for text component codecs based on Minecraft 1.20.3.
  */
-@Deprecated //Removed at 2024-10-20
 @ParametersAreNonnullByDefault
-public class CodecUtils {
+public interface CodecUtils_v1_20_3 {
 
     /**
      * Unwrap all marker tags from the given list.<br>
@@ -27,7 +26,7 @@ public class CodecUtils {
      * @param list The list to unwrap
      * @return The unwrapped list
      */
-    public static List<INbtTag> unwrapMarkers(final ListTag<?> list) {
+    default List<INbtTag> unwrapMarkers(final ListTag<?> list) {
         List<INbtTag> out = new ArrayList<>();
         if (NbtType.COMPOUND.equals(list.getType())) {
             for (INbtTag tag : list) {
@@ -50,7 +49,7 @@ public class CodecUtils {
      * @param element The element to check
      * @return If the element is a string
      */
-    public static boolean isString(@Nullable final JsonElement element) {
+    default boolean isString(@Nullable final JsonElement element) {
         return element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isString();
     }
 
@@ -60,7 +59,7 @@ public class CodecUtils {
      * @param element The element to check
      * @return If the element is a number
      */
-    public static boolean isNumber(@Nullable final JsonElement element) {
+    default boolean isNumber(@Nullable final JsonElement element) {
         return element != null && element.isJsonPrimitive() && (element.getAsJsonPrimitive().isNumber() || element.getAsJsonPrimitive().isBoolean());
     }
 
@@ -70,7 +69,7 @@ public class CodecUtils {
      * @param element The element to check
      * @return If the element is an array
      */
-    public static boolean isObject(@Nullable final JsonElement element) {
+    default boolean isObject(@Nullable final JsonElement element) {
         return element != null && element.isJsonObject();
     }
 
@@ -82,8 +81,8 @@ public class CodecUtils {
      * @param name The name of the boolean
      * @return If the object contains the boolean
      */
-    public static boolean containsString(final JsonObject obj, final String name) {
-        return obj.has(name) && isString(obj.get(name));
+    default boolean containsString(final JsonObject obj, final String name) {
+        return obj.has(name) && this.isString(obj.get(name));
     }
 
     /**
@@ -93,7 +92,7 @@ public class CodecUtils {
      * @param name The name of the array
      * @return If the object contains the array
      */
-    public static boolean containsArray(final JsonObject obj, final String name) {
+    default boolean containsArray(final JsonObject obj, final String name) {
         return obj.has(name) && obj.get(name).isJsonArray();
     }
 
@@ -104,8 +103,8 @@ public class CodecUtils {
      * @param name The name of the object
      * @return If the object contains the object
      */
-    public static boolean containsObject(final JsonObject obj, final String name) {
-        return obj.has(name) && isObject(obj.get(name));
+    default boolean containsObject(final JsonObject obj, final String name) {
+        return obj.has(name) && this.isObject(obj.get(name));
     }
 
 
@@ -117,9 +116,9 @@ public class CodecUtils {
      * @return The boolean or null if not present
      */
     @Nullable
-    public static Boolean optionalBoolean(final CompoundTag tag, final String name) {
+    default Boolean optionalBoolean(final CompoundTag tag, final String name) {
         if (!tag.contains(name)) return null;
-        return requiredBoolean(tag, name);
+        return this.requiredBoolean(tag, name);
     }
 
     /**
@@ -130,9 +129,9 @@ public class CodecUtils {
      * @return The boolean or null if not present
      */
     @Nullable
-    public static Boolean optionalBoolean(final JsonObject obj, final String name) {
+    default Boolean optionalBoolean(final JsonObject obj, final String name) {
         if (!obj.has(name)) return null;
-        return requiredBoolean(obj, name);
+        return this.requiredBoolean(obj, name);
     }
 
     /**
@@ -143,9 +142,9 @@ public class CodecUtils {
      * @return The int or null if not present
      */
     @Nullable
-    public static Integer optionalInt(final CompoundTag tag, final String name) {
+    default Integer optionalInt(final CompoundTag tag, final String name) {
         if (!tag.contains(name)) return null;
-        return requiredInt(tag, name);
+        return this.requiredInt(tag, name);
     }
 
     /**
@@ -156,9 +155,9 @@ public class CodecUtils {
      * @return The int or null if not present
      */
     @Nullable
-    public static Integer optionalInt(final JsonObject obj, final String name) {
+    default Integer optionalInt(final JsonObject obj, final String name) {
         if (!obj.has(name)) return null;
-        return requiredInt(obj, name);
+        return this.requiredInt(obj, name);
     }
 
     /**
@@ -169,9 +168,9 @@ public class CodecUtils {
      * @return The string or null if not present
      */
     @Nullable
-    public static String optionalString(final CompoundTag tag, final String name) {
+    default String optionalString(final CompoundTag tag, final String name) {
         if (!tag.contains(name)) return null;
-        return requiredString(tag, name);
+        return this.requiredString(tag, name);
     }
 
     /**
@@ -182,9 +181,9 @@ public class CodecUtils {
      * @return The string or null if not present
      */
     @Nullable
-    public static String optionalString(final JsonObject obj, final String name) {
+    default String optionalString(final JsonObject obj, final String name) {
         if (!obj.has(name)) return null;
-        return requiredString(obj, name);
+        return this.requiredString(obj, name);
     }
 
     /**
@@ -195,9 +194,9 @@ public class CodecUtils {
      * @return The compound or null if not present
      */
     @Nullable
-    public static CompoundTag optionalCompound(final CompoundTag tag, final String name) {
+    default CompoundTag optionalCompound(final CompoundTag tag, final String name) {
         if (!tag.contains(name)) return null;
-        return requiredCompound(tag, name);
+        return this.requiredCompound(tag, name);
     }
 
     /**
@@ -208,9 +207,9 @@ public class CodecUtils {
      * @return The object or null if not present
      */
     @Nullable
-    public static JsonObject optionalObject(final JsonObject obj, final String name) {
+    default JsonObject optionalObject(final JsonObject obj, final String name) {
         if (!obj.has(name)) return null;
-        return requiredObject(obj, name);
+        return this.requiredObject(obj, name);
     }
 
 
@@ -222,7 +221,7 @@ public class CodecUtils {
      * @return The boolean
      * @throws IllegalArgumentException If the boolean is not present
      */
-    public static boolean requiredBoolean(final CompoundTag tag, final String name) {
+    default boolean requiredBoolean(final CompoundTag tag, final String name) {
         if (!tag.contains(name, NbtType.BYTE)) throw new IllegalArgumentException("Expected byte tag for '" + name + "' tag");
         return tag.getBoolean(name);
     }
@@ -234,7 +233,7 @@ public class CodecUtils {
      * @param name The name of the boolean
      * @return The boolean
      */
-    public static boolean requiredBoolean(final JsonObject obj, final String name) {
+    default boolean requiredBoolean(final JsonObject obj, final String name) {
         if (!obj.has(name)) throw new IllegalArgumentException("Missing boolean for '" + name + "' tag");
         JsonElement element = obj.get(name);
         if (!element.isJsonPrimitive()) throw new IllegalArgumentException("Expected boolean for '" + name + "' tag");
@@ -252,7 +251,7 @@ public class CodecUtils {
      * @param name The name of the int
      * @return The int
      */
-    public static int requiredInt(final CompoundTag tag, final String name) {
+    default int requiredInt(final CompoundTag tag, final String name) {
         if (!tag.contains(name, NbtType.INT)) throw new IllegalArgumentException("Expected int tag for '" + name + "' tag");
         return tag.getInt(name);
     }
@@ -264,7 +263,7 @@ public class CodecUtils {
      * @param name The name of the int
      * @return The int
      */
-    public static int requiredInt(final JsonObject obj, final String name) {
+    default int requiredInt(final JsonObject obj, final String name) {
         if (!obj.has(name)) throw new IllegalArgumentException("Missing int for '" + name + "' tag");
         JsonElement element = obj.get(name);
         if (!element.isJsonPrimitive()) throw new IllegalArgumentException("Expected int for '" + name + "' tag");
@@ -282,7 +281,7 @@ public class CodecUtils {
      * @param name The name of the string
      * @return The string
      */
-    public static String requiredString(final CompoundTag tag, final String name) {
+    default String requiredString(final CompoundTag tag, final String name) {
         if (!tag.contains(name, NbtType.STRING)) throw new IllegalArgumentException("Expected string tag for '" + name + "' tag");
         return tag.getString(name);
     }
@@ -294,7 +293,7 @@ public class CodecUtils {
      * @param name The name of the string
      * @return The string
      */
-    public static String requiredString(final JsonObject obj, final String name) {
+    default String requiredString(final JsonObject obj, final String name) {
         if (!obj.has(name)) throw new IllegalArgumentException("Missing string for '" + name + "' tag");
         JsonElement element = obj.get(name);
         if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) throw new IllegalArgumentException("Expected string for '" + name + "' tag");
@@ -308,7 +307,7 @@ public class CodecUtils {
      * @param name The name of the compound
      * @return The compound
      */
-    public static CompoundTag requiredCompound(final CompoundTag tag, final String name) {
+    default CompoundTag requiredCompound(final CompoundTag tag, final String name) {
         if (!tag.contains(name, NbtType.COMPOUND)) throw new IllegalArgumentException("Expected compound tag for '" + name + "' tag");
         return tag.getCompound(name);
     }
@@ -320,7 +319,7 @@ public class CodecUtils {
      * @param name The name of the object
      * @return The object
      */
-    public static JsonObject requiredObject(final JsonObject obj, final String name) {
+    default JsonObject requiredObject(final JsonObject obj, final String name) {
         if (!obj.has(name)) throw new IllegalArgumentException("Missing object for '" + name + "' tag");
         JsonElement element = obj.get(name);
         if (!element.isJsonObject()) throw new IllegalArgumentException("Expected object for '" + name + "' tag");

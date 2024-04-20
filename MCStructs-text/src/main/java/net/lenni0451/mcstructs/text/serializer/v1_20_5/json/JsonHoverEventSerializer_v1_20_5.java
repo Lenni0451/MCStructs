@@ -18,8 +18,6 @@ import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_
 
 import java.util.UUID;
 
-import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
-
 public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v1_20_3 {
 
     private static final String ACTION = "action";

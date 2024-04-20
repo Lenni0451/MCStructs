@@ -12,13 +12,12 @@ import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
 import java.util.Map;
 import java.util.function.Function;
 
-import static net.lenni0451.mcstructs.text.utils.CodecUtils.*;
-
-public class JsonTextSerializer_v1_20_3 implements ITypedSerializer<JsonElement, ATextComponent> {
+public class JsonTextSerializer_v1_20_3 implements ITypedSerializer<JsonElement, ATextComponent>, CodecUtils_v1_20_3 {
 
     private final ITypedSerializer<JsonElement, Style> styleSerializer;
 
