@@ -57,7 +57,7 @@ public class JsonTextSerializer_v1_20_3 implements ITypedSerializer<JsonElement,
         } else if (object instanceof NbtComponent) {
             NbtComponent component = (NbtComponent) object;
             out.addProperty("nbt", component.getComponent());
-            if (component.isResolve()) out.addProperty("interpret", 1);
+            if (component.isResolve()) out.addProperty("interpret", true);
             if (component instanceof EntityNbtComponent) {
                 EntityNbtComponent entityComponent = (EntityNbtComponent) component;
                 out.addProperty("entity", entityComponent.getSelector());
