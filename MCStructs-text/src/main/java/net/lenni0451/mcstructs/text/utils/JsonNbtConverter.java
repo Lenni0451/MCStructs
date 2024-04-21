@@ -5,13 +5,14 @@ import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * A {@literal json <-> nbt} converter which is based on Minecraft's Codecs.
+ * A {@literal json <-> nbt} converter which is based on Minecraft's Codecs from 1.20.5.
  */
 public class JsonNbtConverter {
 
@@ -21,7 +22,9 @@ public class JsonNbtConverter {
      * @param tag The tag to convert
      * @return The converted json element
      */
-    public static JsonElement toJson(final INbtTag tag) {
+    @Nullable
+    public static JsonElement toJson(@Nullable final INbtTag tag) {
+        if (tag == null) return null;
         switch (tag.getNbtType()) {
             case END:
                 return null;
@@ -75,7 +78,9 @@ public class JsonNbtConverter {
      * @param element The element to convert
      * @return The converted nbt tag
      */
-    public static INbtTag toNbt(final JsonElement element) {
+    @Nullable
+    public static INbtTag toNbt(@Nullable final JsonElement element) {
+        if (element == null) return null;
         if (element instanceof JsonObject) {
             JsonObject object = element.getAsJsonObject();
             CompoundTag compound = new CompoundTag();
