@@ -9,6 +9,7 @@ rootProject.name = "MCStructs"
 
 include(":MCStructs-all")
 include(":MCStructs-data")
+include(":MCStructs-itemcomponents")
 include(":MCStructs-core")
 include(":MCStructs-nbt")
 include(":MCStructs-snbt")
