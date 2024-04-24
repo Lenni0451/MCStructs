@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,6 +125,79 @@ public class Types_v1_20_5 {
         private Identifier id;
         private int count;
         private ItemComponentMap components;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class WritableBook {
+        public static final String PAGES = "pages";
+        public static final int MAX_PAGES = 100;
+
+        private List<Page> pages;
+
+        public void addPage(final String raw) {
+            this.addPage(new Page(raw));
+        }
+
+        public void addPage(final String raw, final String filtered) {
+            this.addPage(new Page(raw, filtered));
+        }
+
+        public void addPage(final Page page) {
+            if (this.pages.size() >= MAX_PAGES) throw new IllegalArgumentException("Book can only have " + MAX_PAGES + " pages");
+            this.pages.add(page);
+        }
+
+        public void removePage(final int index) {
+            this.pages.remove(index);
+        }
+
+        public void removePage(final String raw) {
+            this.pages.removeIf(page -> page.getRaw().equals(raw));
+        }
+
+        public void removePage(final Page page) {
+            this.pages.remove(page);
+        }
+
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class Page {
+            private String raw;
+            @Nullable
+            private String filtered;
+
+            public Page(final String raw) {
+                this(raw, null);
+            }
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BeeData {
+        public static final String ENTITY_DATA = "entity_data";
+        public static final String TICKS_IN_HIVE = "ticks_in_hive";
+        public static final String MIN_TICKS_IN_HIVE = "min_ticks_in_hive";
+
+        private CompoundTag entityData;
+        private int ticksInHive;
+        private int minTicksInHive;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ContainerLoot {
+        public static final String LOOT_TABLE = "loot_table";
+        public static final String SEED = "seed";
+
+        private Identifier lootTable;
+        private long seed;
     }
 
 }

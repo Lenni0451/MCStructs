@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
+import net.lenni0451.mcstructs.itemcomponents.exceptions.InvalidTypeException;
 import net.lenni0451.mcstructs.itemcomponents.serialization.TypeValidator;
 import net.lenni0451.mcstructs.itemcomponents.serialization.Verifier;
 import net.lenni0451.mcstructs.nbt.INbtNumber;
@@ -71,9 +72,9 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         lore.getLines().forEach(line -> list.add(new StringTag(TextComponentCodec.V1_20_5.serializeJsonString(line))));
         return list;
     }, tag -> {
-        ListTag<StringTag> list = requireListTag(tag);
+        List<INbtTag> list = requireListTag(tag);
         List<ATextComponent> lines = new ArrayList<>();
-        list.getValue().forEach(line -> lines.add(TextComponentCodec.V1_20_5.deserializeJson(requireString(line))));
+        list.forEach(line -> lines.add(TextComponentCodec.V1_20_5.deserializeJson(requireString(line))));
         return new Lore(lines);
     });
     public final ItemComponent<Rarity> RARITY = this.register("rarity", rarity -> new JsonPrimitive(rarity.getName()), element -> Rarity.byName(requireString(element)), rarity -> new StringTag(rarity.getName()), tag -> Rarity.byName(requireString(tag)));
@@ -233,15 +234,79 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         for (ItemStack itemStack : list) listTag.add(ItemStackSerializer.toNbt(this, itemStack));
         return listTag;
     }, tag -> {
-        ListTag<?> listTag = requireListTag(tag);
+        List<INbtTag> listTag = requireListTag(tag);
         List<ItemStack> list = new ArrayList<>();
-        for (INbtTag element : listTag.getValue()) list.add(ItemStackSerializer.fromNbt(this, this.itemVerifier, element));
+        for (INbtTag element : listTag) list.add(ItemStackSerializer.fromNbt(this, this.itemVerifier, element));
         return list;
     });
     public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = copy("bundle_contents", this.CHARGED_PROJECTILES);
     //TODO: potion_contents
     //TODO: suspicious_stew_effects
-    //TODO: writable_book_content
+    public final ItemComponent<WritableBook> WRITABLE_BOOK_CONTENT = register("writable_book_content", writableBook -> {
+        JsonObject object = new JsonObject();
+        if (!writableBook.getPages().isEmpty()) {
+            JsonArray pages = new JsonArray();
+            for (WritableBook.Page page : writableBook.getPages()) {
+                JsonObject pageObject = new JsonObject();
+                pageObject.addProperty("raw", page.getRaw());
+                if (page.getFiltered() != null) pageObject.addProperty("filtered", page.getFiltered());
+                pages.add(pageObject);
+            }
+            object.add("pages", pages);
+        }
+        return object;
+    }, element -> {
+        JsonObject object = requireJsonObject(element);
+        WritableBook writableBook = new WritableBook();
+        if (object.has("pages")) {
+            JsonArray pages = requireJsonArray(object.get("pages"));
+            for (JsonElement page : pages) {
+                if (page.isJsonPrimitive()) {
+                    writableBook.addPage(requireString(page));
+                } else if (page.isJsonObject()) {
+                    JsonObject pageObject = requireJsonObject(page);
+                    String raw = requireString(pageObject.get("raw"));
+                    String filtered = pageObject.has("filtered") ? requireString(pageObject.get("filtered")) : null;
+                    writableBook.addPage(new WritableBook.Page(raw, filtered));
+                } else {
+                    throw InvalidTypeException.of(page, "String or Object");
+                }
+            }
+        }
+        return writableBook;
+    }, writableBook -> {
+        CompoundTag tag = new CompoundTag();
+        if (!writableBook.getPages().isEmpty()) {
+            ListTag<CompoundTag> pages = new ListTag<>();
+            for (WritableBook.Page page : writableBook.getPages()) {
+                CompoundTag pageTag = new CompoundTag();
+                pageTag.addString("raw", page.getRaw());
+                if (page.getFiltered() != null) pageTag.addString("filtered", page.getFiltered());
+                pages.add(pageTag);
+            }
+            tag.add("pages", pages);
+        }
+        return tag;
+    }, tag -> {
+        CompoundTag compound = requireCompoundTag(tag);
+        WritableBook writableBook = new WritableBook();
+        if (compound.contains("pages")) {
+            List<INbtTag> pages = requireListTag(compound.get("pages"));
+            for (INbtTag page : pages) {
+                if (page.isStringTag()) {
+                    writableBook.addPage(requireString(page));
+                } else if (page.isCompoundTag()) {
+                    CompoundTag pageCompound = requireCompoundTag(page);
+                    String raw = requireString(pageCompound.<INbtTag>get("raw"));
+                    String filtered = pageCompound.contains("filtered") ? requireString(pageCompound.<INbtTag>get("filtered")) : null;
+                    writableBook.addPage(new WritableBook.Page(raw, filtered));
+                } else {
+                    throw InvalidTypeException.of(page, "String or Compound");
+                }
+            }
+        }
+        return writableBook;
+    });
     //TODO: written_book_content
     //TODO: trim
     //TODO: debug_stick_state
@@ -249,8 +314,29 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     //TODO: bucket_entity_data
     //TODO: block_entity_data
     //TODO: instrument
-    //TODO: ominous_bottle_amplifier
-    //TODO: recipes
+    public final ItemComponent<Integer> OMINOUS_BOTTLE_AMPLIFIER = register("ominous_bottle_amplifier", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt, amplifier -> {
+        if (amplifier < 0) throw new IllegalArgumentException("Ominous bottle amplifier must be at least 0");
+        if (amplifier > 4) throw new IllegalArgumentException("Ominous bottle amplifier must be at most 4");
+    });
+    public final ItemComponent<List<Identifier>> RECIPES = register("recipes", recipes -> {
+        JsonArray array = new JsonArray();
+        for (Identifier recipe : recipes) array.add(new JsonPrimitive(recipe.get()));
+        return array;
+    }, element -> {
+        JsonArray array = requireJsonArray(element);
+        List<Identifier> recipes = new ArrayList<>();
+        for (JsonElement arrayElement : array) recipes.add(Identifier.of(requireString(arrayElement)));
+        return recipes;
+    }, recipes -> {
+        ListTag<StringTag> list = new ListTag<>();
+        recipes.forEach(recipe -> list.add(new StringTag(recipe.get())));
+        return list;
+    }, tag -> {
+        List<INbtTag> list = requireListTag(tag);
+        List<Identifier> recipes = new ArrayList<>();
+        for (INbtTag arrayElement : list) recipes.add(Identifier.of(requireString(arrayElement)));
+        return recipes;
+    });
     //TODO: lodestone_tracker
     //TODO: firework_explosion
     //TODO: fireworks
@@ -258,12 +344,124 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     //TODO: note_block_sound
     //TODO: banner_patterns
     //TODO: base_color
-    //TODO: pot_decorations
+    public final ItemComponent<List<Identifier>> POT_DECORATIONS = register("pot_decorations", potDecorations -> {
+        JsonArray array = new JsonArray();
+        potDecorations.forEach(decoration -> array.add(new JsonPrimitive(decoration.get())));
+        return array;
+    }, element -> {
+        JsonArray array = requireJsonArray(element);
+        List<Identifier> potDecorations = new ArrayList<>();
+        for (JsonElement arrayElement : array) {
+            Identifier item = Identifier.of(requireString(arrayElement));
+            this.itemVerifier.check("pot decoration", item);
+            potDecorations.add(item);
+        }
+        return potDecorations;
+    }, potDecorations -> {
+        ListTag<StringTag> list = new ListTag<>();
+        potDecorations.forEach(decoration -> list.add(new StringTag(decoration.get())));
+        return list;
+    }, tag -> {
+        List<INbtTag> list = requireListTag(tag);
+        List<Identifier> potDecorations = new ArrayList<>();
+        for (INbtTag arrayElement : list) {
+            Identifier item = Identifier.of(requireString(arrayElement));
+            this.itemVerifier.check("pot decoration", item);
+            potDecorations.add(item);
+        }
+        return potDecorations;
+    }, potDecorations -> {
+        if (potDecorations.size() > 4) throw new IllegalArgumentException("Pot decorations can only have at most 4 elements");
+    });
     //TODO: container
-    //TODO: block_state
-    //TODO: bees
-    //TODO: lock
-    //TODO: container_loot
+    public final ItemComponent<Map<String, String>> BLOCK_STATE = register("block_state", blockSate -> {
+        JsonObject object = new JsonObject();
+        blockSate.forEach(object::addProperty);
+        return object;
+    }, element -> {
+        Map<String, String> blockState = new HashMap<>();
+        JsonObject object = requireJsonObject(element);
+        object.entrySet().forEach(entry -> blockState.put(entry.getKey(), requireString(entry.getValue())));
+        return blockState;
+    }, blockState -> {
+        CompoundTag compound = new CompoundTag();
+        blockState.forEach(compound::addString);
+        return compound;
+    }, tag -> {
+        Map<String, String> blockState = new HashMap<>();
+        CompoundTag compound = requireCompoundTag(tag);
+        for (Map.Entry<String, INbtTag> entry : compound) blockState.put(entry.getKey(), requireString(entry.getValue()));
+        return blockState;
+    });
+    public final ItemComponent<List<BeeData>> BEES = register("bees", bees -> {
+        JsonArray array = new JsonArray();
+        for (BeeData bee : bees) {
+            JsonObject object = new JsonObject();
+            if (!bee.getEntityData().isEmpty()) object.add(BeeData.ENTITY_DATA, JsonNbtConverter.toJson(bee.getEntityData()));
+            object.addProperty(BeeData.TICKS_IN_HIVE, bee.getTicksInHive());
+            object.addProperty(BeeData.MIN_TICKS_IN_HIVE, bee.getMinTicksInHive());
+            array.add(object);
+        }
+        return array;
+    }, element -> {
+        JsonArray array = requireJsonArray(element);
+        List<BeeData> bees = new ArrayList<>();
+        for (JsonElement arrayElement : array) {
+            JsonObject bee = requireJsonObject(arrayElement);
+            bees.add(new BeeData(
+                    bee.has(BeeData.ENTITY_DATA) ? requireCompoundTag(JsonNbtConverter.toNbt(requireJsonObject(bee.get(BeeData.ENTITY_DATA)))) : new CompoundTag(),
+                    requireInt(bee.get(BeeData.TICKS_IN_HIVE)),
+                    requireInt(bee.get(BeeData.MIN_TICKS_IN_HIVE))
+            ));
+        }
+        return bees;
+    }, bees -> {
+        ListTag<CompoundTag> list = new ListTag<>();
+        for (BeeData bee : bees) {
+            CompoundTag compound = new CompoundTag();
+            if (!bee.getEntityData().isEmpty()) compound.add(BeeData.ENTITY_DATA, bee.getEntityData());
+            compound.addInt(BeeData.TICKS_IN_HIVE, bee.getTicksInHive());
+            compound.addInt(BeeData.MIN_TICKS_IN_HIVE, bee.getMinTicksInHive());
+            list.add(compound);
+        }
+        return list;
+    }, tag -> {
+        List<INbtTag> list = requireListTag(tag);
+        List<BeeData> bees = new ArrayList<>();
+        for (INbtTag arrayElement : list) {
+            CompoundTag bee = requireCompoundTag(arrayElement);
+            bees.add(new BeeData(
+                    bee.contains(BeeData.ENTITY_DATA) ? requireCompoundTag(bee.get(BeeData.ENTITY_DATA)) : new CompoundTag(),
+                    requireInt(bee.<INbtTag>get(BeeData.TICKS_IN_HIVE)),
+                    requireInt(bee.<INbtTag>get(BeeData.MIN_TICKS_IN_HIVE))
+            ));
+        }
+        return bees;
+    });
+    public final ItemComponent<String> LOCK = register("lock", JsonPrimitive::new, TypeValidator::requireString, StringTag::new, TypeValidator::requireString);
+    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = register("container_loot", containerLoot -> {
+        JsonObject object = new JsonObject();
+        object.addProperty(ContainerLoot.LOOT_TABLE, containerLoot.getLootTable().get());
+        if (containerLoot.getSeed() != 0) object.addProperty(ContainerLoot.SEED, containerLoot.getSeed());
+        return object;
+    }, element -> {
+        JsonObject object = requireJsonObject(element);
+        return new ContainerLoot(
+                Identifier.of(requireString(object.get(ContainerLoot.LOOT_TABLE))),
+                object.has(ContainerLoot.SEED) ? requireLong(object.get(ContainerLoot.SEED)) : 0
+        );
+    }, containerLoot -> {
+        CompoundTag compound = new CompoundTag();
+        compound.addString(ContainerLoot.LOOT_TABLE, containerLoot.getLootTable().get());
+        if (containerLoot.getSeed() != 0) compound.addLong(ContainerLoot.SEED, containerLoot.getSeed());
+        return compound;
+    }, tag -> {
+        CompoundTag compound = requireCompoundTag(tag);
+        return new ContainerLoot(
+                Identifier.of(requireString(compound.<INbtTag>get(ContainerLoot.LOOT_TABLE))),
+                compound.contains(ContainerLoot.SEED) ? requireLong(compound.<INbtTag>get(ContainerLoot.SEED)) : 0
+        );
+    });
 
 
     private Verifier<Identifier> itemVerifier = item -> true;
@@ -271,6 +469,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     private Verifier<Identifier> potionVerifier = potion -> true;
     private Verifier<Identifier> statusEffectVerifier = statusEffect -> true;
     private Verifier<Identifier> mapDecorationTypeVerifier = type -> true;
+    private Verifier<Identifier> recipeVerifier = recipe -> true;
 
     @Override
     public JsonElement mapToJson(ItemComponentMap map) {
@@ -366,6 +565,12 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         return itemComponents;
     }
 
+    public ItemComponents_v1_20_5 withRecipeVerifier(final Verifier<Identifier> verifier) {
+        ItemComponents_v1_20_5 itemComponents = this.copy();
+        itemComponents.recipeVerifier = verifier;
+        return itemComponents;
+    }
+
     private ItemComponents_v1_20_5 copy() {
         ItemComponents_v1_20_5 itemComponents = new ItemComponents_v1_20_5();
         itemComponents.itemVerifier = this.itemVerifier;
@@ -373,6 +578,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         itemComponents.potionVerifier = this.potionVerifier;
         itemComponents.statusEffectVerifier = this.statusEffectVerifier;
         itemComponents.mapDecorationTypeVerifier = this.mapDecorationTypeVerifier;
+        itemComponents.recipeVerifier = this.recipeVerifier;
         return itemComponents;
     }
 

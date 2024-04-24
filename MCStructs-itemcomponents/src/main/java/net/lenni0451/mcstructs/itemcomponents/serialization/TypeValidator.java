@@ -7,6 +7,9 @@ import com.google.gson.JsonPrimitive;
 import net.lenni0451.mcstructs.itemcomponents.exceptions.InvalidTypeException;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
+import net.lenni0451.mcstructs.nbt.utils.NbtCodecUtils;
+
+import java.util.List;
 
 public class TypeValidator {
 
@@ -34,6 +37,19 @@ public class TypeValidator {
         if (tag == null) throw InvalidTypeException.of(null, IntTag.class);
         if (!tag.isNumberTag()) throw InvalidTypeException.of(tag, IntTag.class);
         return tag.asNumberTag().intValue();
+    }
+
+    public static long requireLong(final JsonElement element) {
+        if (element == null) throw InvalidTypeException.of(null, JsonPrimitive.class);
+        if (!element.isJsonPrimitive()) throw InvalidTypeException.of(element, JsonPrimitive.class);
+        if (!element.getAsJsonPrimitive().isNumber()) throw InvalidTypeException.of(element, "long");
+        return element.getAsJsonPrimitive().getAsLong();
+    }
+
+    public static long requireLong(final INbtTag tag) {
+        if (tag == null) throw InvalidTypeException.of(null, LongTag.class);
+        if (!tag.isNumberTag()) throw InvalidTypeException.of(tag, LongTag.class);
+        return tag.asNumberTag().longValue();
     }
 
     public static float requireFloat(final JsonElement element) {
@@ -81,10 +97,10 @@ public class TypeValidator {
         return element.getAsJsonArray();
     }
 
-    public static <T extends INbtTag> ListTag<T> requireListTag(final INbtTag tag) {
+    public static List<INbtTag> requireListTag(final INbtTag tag) {
         if (tag == null) throw InvalidTypeException.of(null, ListTag.class);
         if (!tag.isListTag()) throw InvalidTypeException.of(tag, ListTag.class);
-        return tag.asListTag();
+        return NbtCodecUtils.unwrapMarkers(tag.asListTag());
     }
 
     public static JsonObject requireJsonObject(final JsonElement element) {

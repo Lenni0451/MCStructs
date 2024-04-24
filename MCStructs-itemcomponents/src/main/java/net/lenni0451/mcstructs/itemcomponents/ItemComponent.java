@@ -32,6 +32,7 @@ public class ItemComponent<T> {
     }
 
     public JsonElement toJson(final T value) {
+        if (this.verifier != null) this.verifier.accept(value);
         return this.toJson.apply(value);
     }
 
@@ -42,6 +43,7 @@ public class ItemComponent<T> {
     }
 
     public INbtTag toNbt(final T value) {
+        if (this.verifier != null) this.verifier.accept(value);
         return this.toNbt.apply(value);
     }
 
