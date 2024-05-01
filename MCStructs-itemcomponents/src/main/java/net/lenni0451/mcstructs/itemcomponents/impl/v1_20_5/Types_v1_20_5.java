@@ -179,6 +179,109 @@ public class Types_v1_20_5 {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class FireworkExplosions {
+        public static final String SHAPE = "shape";
+        public static final String COLORS = "colors";
+        public static final String FADE_COLORS = "fade_colors";
+        public static final String HAS_TRAIL = "has_trail";
+        public static final String HAS_TWINKLE = "has_twinkle";
+
+        private ExplosionShape shape;
+        private int[] colors;
+        private int[] fadeColors;
+        private boolean hasTrail;
+        private boolean hasTwinkle;
+
+
+        @Getter
+        @AllArgsConstructor
+        public enum ExplosionShape {
+            SMALL_BALL("small_ball"),
+            LARGE_BALL("large_ball"),
+            STAR("star"),
+            CREEPER("creeper"),
+            BURST("burst");
+
+            private final String name;
+
+            public static ExplosionShape byName(final String name) {
+                for (ExplosionShape shape : values()) {
+                    if (shape.getName().equalsIgnoreCase(name)) return shape;
+                }
+                throw new IllegalArgumentException("Unknown explosion shape: " + name);
+            }
+
+            public static ExplosionShape byOrdinal(final int ordinal) {
+                if (ordinal < 0 || ordinal >= values().length) throw new IllegalArgumentException("Unknown explosion shape ordinal: " + ordinal);
+                return values()[ordinal];
+            }
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BannerPattern {
+        public static final String PATTERN = "pattern";
+        public static final String COLOR = "color";
+
+        private Pattern pattern;
+        private DyeColor color;
+
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class Pattern {
+            public static final String ASSET_ID = "asset_id";
+            public static final String TRANSLATION_KEY = "translation_key";
+
+            private Identifier assetId;
+            private String translationKey;
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum DyeColor {
+        WHITE("white", 0xF9_FF_FE),
+        ORANGE("orange", 0xF9_80_1D),
+        MAGENTA("magenta", 0xC7_4E_BD),
+        LIGHT_BLUE("light_blue", 0x3A_B3_DA),
+        YELLOW("yellow", 0xFE_D8_3D),
+        LIME("lime", 0x80_C7_1F),
+        PINK("pink", 0xF3_8B_AA),
+        GRAY("gray", 0x47_4F_52),
+        LIGHT_GRAY("light_gray", 0x9D_9D_97),
+        CYAN("cyan", 0x16_9C_9C),
+        PURPLE("purple", 0x89_32_B8),
+        BLUE("blue", 0x3C_44_AA),
+        BROWN("brown", 0x83_54_32),
+        GREEN("green", 0x5E_7C_16),
+        RED("red", 0xB0_2E_26),
+        BLACK("black", 0x1D_1D_21);
+
+        private final String name;
+        private final int color;
+
+        public static DyeColor byName(final String name) {
+            for (DyeColor color : values()) {
+                if (color.getName().equalsIgnoreCase(name)) return color;
+            }
+            throw new IllegalArgumentException("Unknown dye color: " + name);
+        }
+
+        public static DyeColor byColor(final int color) {
+            for (DyeColor dyeColor : values()) {
+                if (dyeColor.getColor() == color) return dyeColor;
+            }
+            throw new IllegalArgumentException("Unknown dye color: " + color);
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class BeeData {
         public static final String ENTITY_DATA = "entity_data";
         public static final String TICKS_IN_HIVE = "ticks_in_hive";

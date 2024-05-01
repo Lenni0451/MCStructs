@@ -13,6 +13,7 @@ import net.lenni0451.mcstructs.itemcomponents.serialization.TypeValidator;
 import net.lenni0451.mcstructs.itemcomponents.serialization.Verifier;
 import net.lenni0451.mcstructs.nbt.INbtNumber;
 import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
@@ -338,12 +339,147 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         return recipes;
     });
     //TODO: lodestone_tracker
-    //TODO: firework_explosion
+    public final ItemComponent<FireworkExplosions> FIREWORK_EXPLOSION = this.register("firework_explosion", fireworkExplosions -> {
+        JsonObject object = new JsonObject();
+        object.addProperty(FireworkExplosions.SHAPE, fireworkExplosions.getShape().getName());
+        if (fireworkExplosions.getColors().length != 0) {
+            JsonArray colors = new JsonArray();
+            for (int color : fireworkExplosions.getColors()) colors.add(color);
+            object.add(FireworkExplosions.COLORS, colors);
+        }
+        if (fireworkExplosions.getFadeColors().length != 0) {
+            JsonArray fadeColors = new JsonArray();
+            for (int fadeColor : fireworkExplosions.getFadeColors()) fadeColors.add(fadeColor);
+            object.add(FireworkExplosions.FADE_COLORS, fadeColors);
+        }
+        if (fireworkExplosions.isHasTrail()) object.addProperty(FireworkExplosions.HAS_TRAIL, true);
+        if (fireworkExplosions.isHasTwinkle()) object.addProperty(FireworkExplosions.HAS_TWINKLE, true);
+        return object;
+    }, element -> {
+        JsonObject object = requireJsonObject(element);
+        FireworkExplosions fireworkExplosions = new FireworkExplosions();
+        fireworkExplosions.setShape(FireworkExplosions.ExplosionShape.byName(requireString(object.get(FireworkExplosions.SHAPE))));
+        if (object.has(FireworkExplosions.COLORS)) {
+            List<Integer> colors = requireList(object.get(FireworkExplosions.COLORS), TypeValidator::requireInt);
+            fireworkExplosions.setColors(colors.stream().mapToInt(i -> i).toArray());
+        }
+        if (object.has(FireworkExplosions.FADE_COLORS)) {
+            List<Integer> fadeColors = requireList(object.get(FireworkExplosions.FADE_COLORS), TypeValidator::requireInt);
+            fireworkExplosions.setFadeColors(fadeColors.stream().mapToInt(i -> i).toArray());
+        }
+        if (object.has(FireworkExplosions.HAS_TRAIL)) fireworkExplosions.setHasTrail(requireBoolean(object.get(FireworkExplosions.HAS_TRAIL)));
+        if (object.has(FireworkExplosions.HAS_TWINKLE)) fireworkExplosions.setHasTwinkle(requireBoolean(object.get(FireworkExplosions.HAS_TWINKLE)));
+        return fireworkExplosions;
+    }, fireworkExplosions -> {
+        CompoundTag compound = new CompoundTag();
+        compound.addString(FireworkExplosions.SHAPE, fireworkExplosions.getShape().getName());
+        if (fireworkExplosions.getColors().length != 0) compound.addIntArray(FireworkExplosions.COLORS, fireworkExplosions.getColors());
+        if (fireworkExplosions.getFadeColors().length != 0) compound.addIntArray(FireworkExplosions.FADE_COLORS, fireworkExplosions.getFadeColors());
+        if (fireworkExplosions.isHasTrail()) compound.addBoolean(FireworkExplosions.HAS_TRAIL, true);
+        if (fireworkExplosions.isHasTwinkle()) compound.addBoolean(FireworkExplosions.HAS_TWINKLE, true);
+        return compound;
+    }, tag -> {
+        CompoundTag compound = requireCompoundTag(tag);
+        FireworkExplosions fireworkExplosions = new FireworkExplosions();
+        fireworkExplosions.setShape(FireworkExplosions.ExplosionShape.byName(requireString(compound.<INbtTag>get(FireworkExplosions.SHAPE))));
+        if (compound.contains(FireworkExplosions.COLORS)) {
+            List<Integer> colors = TypeValidator.requireList(compound.<INbtTag>get(FireworkExplosions.COLORS), TypeValidator::requireInt);
+            fireworkExplosions.setColors(colors.stream().mapToInt(i -> i).toArray());
+        }
+        if (compound.contains(FireworkExplosions.FADE_COLORS)) {
+            List<Integer> fadeColors = TypeValidator.requireList(compound.<INbtTag>get(FireworkExplosions.FADE_COLORS), TypeValidator::requireInt);
+            fireworkExplosions.setFadeColors(fadeColors.stream().mapToInt(i -> i).toArray());
+        }
+        if (compound.contains(FireworkExplosions.HAS_TRAIL)) {
+            fireworkExplosions.setHasTrail(TypeValidator.requireBoolean(compound.<INbtTag>get(FireworkExplosions.HAS_TRAIL)));
+        }
+        if (compound.contains(FireworkExplosions.HAS_TWINKLE)) {
+            fireworkExplosions.setHasTwinkle(TypeValidator.requireBoolean(compound.<INbtTag>get(FireworkExplosions.HAS_TWINKLE)));
+        }
+        return fireworkExplosions;
+    });
     //TODO: fireworks
     //TODO: profile
     //TODO: note_block_sound
-    //TODO: banner_patterns
-    //TODO: base_color
+    public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", patterns -> {
+        JsonArray array = new JsonArray();
+        for (BannerPattern pattern : patterns) {
+            JsonObject object = new JsonObject();
+            object.addProperty(BannerPattern.COLOR, pattern.getColor().getName());
+            JsonObject patternObject = new JsonObject();
+            patternObject.addProperty(BannerPattern.Pattern.ASSET_ID, pattern.getPattern().getAssetId().get());
+            patternObject.addProperty(BannerPattern.Pattern.TRANSLATION_KEY, pattern.getPattern().getTranslationKey());
+            object.add(BannerPattern.PATTERN, patternObject);
+            array.add(object);
+        }
+        return array;
+    }, element -> {
+        JsonArray array = requireJsonArray(element);
+        List<BannerPattern> patterns = new ArrayList<>();
+        for (JsonElement arrayElement : array) {
+            JsonObject object = requireJsonObject(arrayElement);
+            DyeColor color = DyeColor.byName(requireString(object.get(BannerPattern.COLOR)));
+            if (object.get(BannerPattern.PATTERN).isJsonPrimitive()) {
+                Identifier assetId = Identifier.of(requireString(object.get(BannerPattern.PATTERN)));
+                this.bannerPatternVerifier.verify(assetId);
+                patterns.add(new BannerPattern(new BannerPattern.Pattern(
+                        assetId,
+                        "" //TODO: Translation key?
+                ), color));
+            } else if (object.get(BannerPattern.PATTERN).isJsonObject()) {
+                JsonObject patternObject = requireJsonObject(object.get(BannerPattern.PATTERN));
+                Identifier assetId = Identifier.of(requireString(patternObject.get(BannerPattern.Pattern.ASSET_ID)));
+                this.bannerPatternVerifier.verify(assetId);
+                patterns.add(new BannerPattern(new BannerPattern.Pattern(
+                        assetId,
+                        requireString(patternObject.get(BannerPattern.Pattern.TRANSLATION_KEY))
+                ), color));
+            } else {
+                throw InvalidTypeException.of(object.get(BannerPattern.PATTERN), "String or Object");
+            }
+        }
+        return patterns;
+    }, patterns -> {
+        ListTag<CompoundTag> list = new ListTag<>();
+        for (BannerPattern pattern : patterns) {
+            list.add(
+                    new CompoundTag()
+                            .addString(BannerPattern.COLOR, pattern.getColor().getName())
+                            .add(BannerPattern.PATTERN, new CompoundTag()
+                                    .addString(BannerPattern.Pattern.ASSET_ID, pattern.getPattern().getAssetId().get())
+                                    .addString(BannerPattern.Pattern.TRANSLATION_KEY, pattern.getPattern().getTranslationKey())
+                            )
+            );
+        }
+        return list;
+    }, tag -> {
+        List<INbtTag> list = requireListTag(tag);
+        List<BannerPattern> patterns = new ArrayList<>();
+        for (INbtTag arrayElement : list) {
+            CompoundTag object = requireCompoundTag(arrayElement);
+            DyeColor color = DyeColor.byName(requireString(object.<INbtTag>get(BannerPattern.COLOR)));
+            if (object.contains(BannerPattern.PATTERN, NbtType.STRING)) {
+                Identifier assetId = Identifier.of(requireString(object.<INbtTag>get(BannerPattern.PATTERN)));
+                this.bannerPatternVerifier.verify(assetId);
+                patterns.add(new BannerPattern(new BannerPattern.Pattern(
+                        assetId,
+                        "" //TODO: Translation key?
+                ), color));
+            } else if (object.contains(BannerPattern.PATTERN, NbtType.COMPOUND)) {
+                CompoundTag patternObject = requireCompoundTag(object.get(BannerPattern.PATTERN));
+                Identifier assetId = Identifier.of(requireString(patternObject.<INbtTag>get(BannerPattern.Pattern.ASSET_ID)));
+                this.bannerPatternVerifier.verify(assetId);
+                patterns.add(new BannerPattern(new BannerPattern.Pattern(
+                        assetId,
+                        requireString(patternObject.<INbtTag>get(BannerPattern.Pattern.TRANSLATION_KEY))
+                ), color));
+            } else {
+                throw InvalidTypeException.of(object.get(BannerPattern.PATTERN), "String or Compound");
+            }
+        }
+        return patterns;
+    });
+    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", baseColor -> new JsonPrimitive(baseColor.getName()), element -> DyeColor.byName(requireString(element)), baseColor -> new StringTag(baseColor.getName()), tag -> DyeColor.byName(requireString(tag)));
     public final ItemComponent<List<Identifier>> POT_DECORATIONS = register("pot_decorations", potDecorations -> {
         JsonArray array = new JsonArray();
         potDecorations.forEach(decoration -> array.add(new JsonPrimitive(decoration.get())));
@@ -470,6 +606,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     private Verifier<Identifier> statusEffectVerifier = statusEffect -> true;
     private Verifier<Identifier> mapDecorationTypeVerifier = type -> true;
     private Verifier<Identifier> recipeVerifier = recipe -> true;
+    private Verifier<Identifier> bannerPatternVerifier = bannerPattern -> true;
 
     @Override
     public JsonElement mapToJson(ItemComponentMap map) {
@@ -571,6 +708,12 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         return itemComponents;
     }
 
+    public ItemComponents_v1_20_5 withBannerPatternVerifier(final Verifier<Identifier> verifier) {
+        ItemComponents_v1_20_5 itemComponents = this.copy();
+        itemComponents.bannerPatternVerifier = verifier;
+        return itemComponents;
+    }
+
     private ItemComponents_v1_20_5 copy() {
         ItemComponents_v1_20_5 itemComponents = new ItemComponents_v1_20_5();
         itemComponents.itemVerifier = this.itemVerifier;
@@ -579,6 +722,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         itemComponents.statusEffectVerifier = this.statusEffectVerifier;
         itemComponents.mapDecorationTypeVerifier = this.mapDecorationTypeVerifier;
         itemComponents.recipeVerifier = this.recipeVerifier;
+        itemComponents.bannerPatternVerifier = this.bannerPatternVerifier;
         return itemComponents;
     }
 

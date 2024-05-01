@@ -9,7 +9,9 @@ import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.nbt.utils.NbtCodecUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class TypeValidator {
 
@@ -97,10 +99,29 @@ public class TypeValidator {
         return element.getAsJsonArray();
     }
 
+    public static <T> List<T> requireList(final JsonElement element, final Function<JsonElement, T> mapper) {
+        JsonArray array = requireJsonArray(element);
+        List<T> list = new ArrayList<>();
+        for (JsonElement e : array) list.add(mapper.apply(e));
+        return list;
+    }
+
     public static List<INbtTag> requireListTag(final INbtTag tag) {
         if (tag == null) throw InvalidTypeException.of(null, ListTag.class);
         if (!tag.isListTag()) throw InvalidTypeException.of(tag, ListTag.class);
         return NbtCodecUtils.unwrapMarkers(tag.asListTag());
+    }
+
+    public static <T> List<T> requireList(final INbtTag tag, final Function<INbtTag, T> mapper) {
+        if (tag == null) throw InvalidTypeException.of(null, ListTag.class, ByteArrayTag.class, IntArrayTag.class, LongArrayTag.class);
+        List<INbtTag> list;
+        if (tag.isListTag()) list = requireListTag(tag);
+        else if (tag.isArrayTag()) list = requireListTag(tag.asArrayTag().toListTag());
+        else throw InvalidTypeException.of(tag, ListTag.class, ByteArrayTag.class, IntArrayTag.class, LongArrayTag.class);
+
+        List<T> result = new ArrayList<>();
+        for (INbtTag t : list) result.add(mapper.apply(t));
+        return result;
     }
 
     public static JsonObject requireJsonObject(final JsonElement element) {
