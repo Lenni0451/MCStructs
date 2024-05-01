@@ -18,7 +18,7 @@ class TypeSerializers_v1_20_5 {
         static JsonObject toJson(final ItemComponentRegistry registry, final ItemStack stack) {
             JsonObject object = new JsonObject();
             object.addProperty(ItemStack.ID, stack.getId().get());
-            if (stack.getCount() != 1) object.addProperty(ItemStack.COUNT, stack.getCount());
+            object.addProperty(ItemStack.COUNT, stack.getCount());
             if (!stack.getComponents().isEmpty()) object.add(ItemStack.COMPONENTS, registry.mapToJson(stack.getComponents()));
             return object;
         }
@@ -36,7 +36,7 @@ class TypeSerializers_v1_20_5 {
         static CompoundTag toNbt(final ItemComponentRegistry registry, final ItemStack stack) {
             CompoundTag compound = new CompoundTag();
             compound.addString(ItemStack.ID, stack.getId().get());
-            if (stack.getCount() != 1) compound.addInt(ItemStack.COUNT, stack.getCount());
+            compound.addInt(ItemStack.COUNT, stack.getCount());
             if (!stack.getComponents().isEmpty()) compound.add(ItemStack.COMPONENTS, registry.mapToNbt(stack.getComponents()));
             return compound;
         }
