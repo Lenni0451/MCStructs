@@ -1,7 +1,11 @@
 package net.lenni0451.mcstructs.converter;
 
+import com.google.gson.JsonArray;
+import net.lenni0451.mcstructs.converter.impl.v1_20_3.JsonConverter_v1_20_3;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
 import net.lenni0451.mcstructs.converter.impl.v1_20_5.JsonConverter_v1_20_5;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.nbt.tags.ListTag;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -55,6 +59,38 @@ public class ConverterTest {
                 converter.createString("key2"), converter.createBoolean(true),
                 converter.createString("key3"), converter.createString("test")
         ).get();
+    }
+
+    @Test
+    void convertJsonToNbt() {
+        JsonArray array = new JsonArray();
+        array.add(12);
+        array.add(true);
+        array.add("test");
+
+        ListTag<?> list = new JsonConverter_v1_20_3().convert(new NbtConverter_v1_20_3(), array).asListTag();
+        ListTag<CompoundTag> expected = new ListTag<>();
+        expected.add(new CompoundTag().addByte("", (byte) 12));
+        expected.add(new CompoundTag().addBoolean("", true));
+        expected.add(new CompoundTag().addString("", "test"));
+
+        assertEquals(expected, list);
+    }
+
+    @Test
+    void convertNbtToJson() {
+        ListTag<CompoundTag> list = new ListTag<>();
+        list.add(new CompoundTag().addByte("", (byte) 12));
+        list.add(new CompoundTag().addBoolean("", true));
+        list.add(new CompoundTag().addString("", "test"));
+
+        JsonArray array = new NbtConverter_v1_20_3().convert(new JsonConverter_v1_20_3(), list).getAsJsonArray();
+        JsonArray expected = new JsonArray();
+        expected.add(12);
+        expected.add(1); //nbt has no boolean type, so it will be converted to a byte
+        expected.add("test");
+
+        assertEquals(expected, array);
     }
 
 }

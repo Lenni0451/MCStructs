@@ -17,6 +17,41 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     private static final String MARKER_KEY = "";
 
     @Override
+    public <N> N convert(DataConverter<N> converter, @Nullable INbtTag element) {
+        if (element == null) return null;
+        switch (element.getNbtType()) {
+            case END:
+                return null;
+            case BYTE:
+                return converter.createByte(element.asByteTag().getValue());
+            case SHORT:
+                return converter.createShort(element.asShortTag().getValue());
+            case INT:
+                return converter.createInt(element.asIntTag().getValue());
+            case LONG:
+                return converter.createLong(element.asLongTag().getValue());
+            case FLOAT:
+                return converter.createFloat(element.asFloatTag().getValue());
+            case DOUBLE:
+                return converter.createDouble(element.asDoubleTag().getValue());
+            case BYTE_ARRAY:
+                return converter.createByteArray(element.asByteArrayTag().getValue());
+            case STRING:
+                return converter.createString(element.asStringTag().getValue());
+            case LIST:
+                return this.convertList(converter, element);
+            case COMPOUND:
+                return this.convertMap(converter, element);
+            case INT_ARRAY:
+                return converter.createIntArray(element.asIntArrayTag().getValue());
+            case LONG_ARRAY:
+                return converter.createLongArray(element.asLongArrayTag().getValue());
+            default:
+                throw new IllegalArgumentException("Unknown Nbt type: " + element.getNbtType());
+        }
+    }
+
+    @Override
     public INbtTag createBoolean(boolean value) {
         return new ByteTag(value);
     }

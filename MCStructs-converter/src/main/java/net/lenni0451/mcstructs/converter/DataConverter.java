@@ -5,6 +5,22 @@ import java.util.*;
 
 public interface DataConverter<T> {
 
+    <N> N convert(final DataConverter<N> converter, @Nullable final T element);
+
+    default <N> N convertList(final DataConverter<N> converter, final T list) {
+        List<T> in = this.asList(list).orElse(new ArrayList<>());
+        List<N> out = new ArrayList<>();
+        for (T element : in) out.add(this.convert(converter, element));
+        return converter.createList(out);
+    }
+
+    default <N> N convertMap(final DataConverter<N> converter, final T map) {
+        Map<T, T> in = this.asMap(map).orElse(new HashMap<>());
+        Map<N, N> out = new HashMap<>();
+        for (Map.Entry<T, T> entry : in.entrySet()) out.put(this.convert(converter, entry.getKey()), this.convert(converter, entry.getValue()));
+        return converter.createMap(out);
+    }
+
     T createBoolean(final boolean value);
 
     ConverterResult<Boolean> asBoolean(final T element);

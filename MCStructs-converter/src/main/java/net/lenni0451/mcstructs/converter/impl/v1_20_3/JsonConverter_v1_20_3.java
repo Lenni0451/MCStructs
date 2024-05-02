@@ -1,19 +1,41 @@
 package net.lenni0451.mcstructs.converter.impl.v1_20_3;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import net.lenni0451.mcstructs.converter.ConverterResult;
 import net.lenni0451.mcstructs.converter.DataConverter;
 
 import javax.annotation.Nullable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
 public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
+
+    @Override
+    public <N> N convert(DataConverter<N> converter, @Nullable JsonElement element) {
+        if (element == null || element instanceof JsonNull) return null;
+        if (element instanceof JsonObject) return this.convertMap(converter, element);
+        if (element instanceof JsonArray) return this.convertList(converter, element);
+
+        JsonPrimitive primitive = element.getAsJsonPrimitive();
+        if (primitive.isString()) return converter.createString(primitive.getAsString());
+        if (primitive.isBoolean()) return converter.createBoolean(primitive.getAsBoolean());
+
+        BigDecimal number = primitive.getAsBigDecimal();
+        try {
+            long l = number.longValueExact();
+            if ((byte) l == l) return converter.createByte((byte) l);
+            if ((short) l == l) return converter.createShort((short) l);
+            if ((int) l == l) return converter.createInt((int) l);
+            return converter.createLong(l);
+        } catch (ArithmeticException e) {
+            double d = number.doubleValue();
+            if ((float) d == d) return converter.createFloat((float) d);
+            return converter.createDouble(d);
+        }
+    }
 
     @Override
     public JsonElement createBoolean(boolean value) {
