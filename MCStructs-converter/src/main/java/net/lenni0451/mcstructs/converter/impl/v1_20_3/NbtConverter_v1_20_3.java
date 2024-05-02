@@ -14,38 +14,40 @@ import java.util.*;
 
 public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
 
+    public static final NbtConverter_v1_20_3 INSTANCE = new NbtConverter_v1_20_3();
     private static final String MARKER_KEY = "";
 
     @Override
-    public <N> N convert(DataConverter<N> converter, @Nullable INbtTag element) {
+    public <N> N convertTo(DataConverter<N> to, @Nullable INbtTag element) {
+        if (to == this) return (N) element;
         if (element == null) return null;
         switch (element.getNbtType()) {
             case END:
                 return null;
             case BYTE:
-                return converter.createByte(element.asByteTag().getValue());
+                return to.createByte(element.asByteTag().getValue());
             case SHORT:
-                return converter.createShort(element.asShortTag().getValue());
+                return to.createShort(element.asShortTag().getValue());
             case INT:
-                return converter.createInt(element.asIntTag().getValue());
+                return to.createInt(element.asIntTag().getValue());
             case LONG:
-                return converter.createLong(element.asLongTag().getValue());
+                return to.createLong(element.asLongTag().getValue());
             case FLOAT:
-                return converter.createFloat(element.asFloatTag().getValue());
+                return to.createFloat(element.asFloatTag().getValue());
             case DOUBLE:
-                return converter.createDouble(element.asDoubleTag().getValue());
+                return to.createDouble(element.asDoubleTag().getValue());
             case BYTE_ARRAY:
-                return converter.createByteArray(element.asByteArrayTag().getValue());
+                return to.createByteArray(element.asByteArrayTag().getValue());
             case STRING:
-                return converter.createString(element.asStringTag().getValue());
+                return to.createString(element.asStringTag().getValue());
             case LIST:
-                return this.convertList(converter, element);
+                return this.convertList(to, element);
             case COMPOUND:
-                return this.convertMap(converter, element);
+                return this.convertMap(to, element);
             case INT_ARRAY:
-                return converter.createIntArray(element.asIntArrayTag().getValue());
+                return to.createIntArray(element.asIntArrayTag().getValue());
             case LONG_ARRAY:
-                return converter.createLongArray(element.asLongArrayTag().getValue());
+                return to.createLongArray(element.asLongArrayTag().getValue());
             default:
                 throw new IllegalArgumentException("Unknown Nbt type: " + element.getNbtType());
         }
@@ -212,7 +214,6 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     public ConverterResult<INbtTag> mergeMap(@Nullable INbtTag map, Map<INbtTag, INbtTag> values) {
         if (map == null) map = new CompoundTag();
         if (!map.isCompoundTag()) return ConverterResult.unexpected(map, CompoundTag.class);
-
         CompoundTag compound = map.asCompoundTag();
         for (Map.Entry<INbtTag, INbtTag> entry : values.entrySet()) {
             if (entry.getKey().isStringTag()) {
@@ -227,10 +228,18 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     @Override
     public ConverterResult<Map<INbtTag, INbtTag>> asMap(INbtTag element) {
         if (!element.isCompoundTag()) return ConverterResult.unexpected(element, CompoundTag.class);
-
         CompoundTag compound = element.asCompoundTag();
         Map<INbtTag, INbtTag> map = new HashMap<>();
         for (Map.Entry<String, INbtTag> entry : compound) map.put(this.createString(entry.getKey()), entry.getValue());
+        return ConverterResult.success(map);
+    }
+
+    @Override
+    public ConverterResult<Map<String, INbtTag>> asStringTypeMap(INbtTag element) {
+        if (!element.isCompoundTag()) return ConverterResult.unexpected(element, CompoundTag.class);
+        CompoundTag compound = element.asCompoundTag();
+        Map<String, INbtTag> map = new HashMap<>();
+        for (Map.Entry<String, INbtTag> entry : compound) map.put(entry.getKey(), entry.getValue());
         return ConverterResult.success(map);
     }
 

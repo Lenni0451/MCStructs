@@ -43,6 +43,14 @@ public class ConverterTest {
         assertTrue(converter.asString(map.get(converter.createString("key3"))).map(s -> s.equals("test")).orElse(false));
     }
 
+    <T> void testStringTypeMap(final DataConverter<T> converter) {
+        Map<String, T> map = converter.asStringTypeMap(this.createMap(converter)).get();
+        assertEquals(3, map.size());
+        assertTrue(converter.asNumber(map.get("key1")).map(n -> n.intValue() == 12).orElse(false));
+        assertTrue(converter.asBoolean(map.get("key2")).map(Boolean::booleanValue).orElse(false));
+        assertTrue(converter.asString(map.get("key3")).map(s -> s.equals("test")).orElse(false));
+    }
+
     <T> T createList(final DataConverter<T> converter) {
         return converter.mergeList(
                 null,
@@ -68,7 +76,7 @@ public class ConverterTest {
         array.add(true);
         array.add("test");
 
-        ListTag<?> list = new JsonConverter_v1_20_3().convert(new NbtConverter_v1_20_3(), array).asListTag();
+        ListTag<?> list = new JsonConverter_v1_20_3().convertTo(new NbtConverter_v1_20_3(), array).asListTag();
         ListTag<CompoundTag> expected = new ListTag<>();
         expected.add(new CompoundTag().addByte("", (byte) 12));
         expected.add(new CompoundTag().addBoolean("", true));
@@ -84,7 +92,7 @@ public class ConverterTest {
         list.add(new CompoundTag().addBoolean("", true));
         list.add(new CompoundTag().addString("", "test"));
 
-        JsonArray array = new NbtConverter_v1_20_3().convert(new JsonConverter_v1_20_3(), list).getAsJsonArray();
+        JsonArray array = new NbtConverter_v1_20_3().convertTo(new JsonConverter_v1_20_3(), list).getAsJsonArray();
         JsonArray expected = new JsonArray();
         expected.add(12);
         expected.add(1); //nbt has no boolean type, so it will be converted to a byte

@@ -10,7 +10,7 @@ public class ConverterResult<T> {
     }
 
     public static <T> ConverterResult<T> error(final String error) {
-        return new ConverterResult<>(null, error);
+        return new ConverterResult<>(null, new IllegalStateException(error));
     }
 
     public static <T> ConverterResult<T> unexpected(final Object actual, final Class<?>... expected) {
@@ -25,9 +25,9 @@ public class ConverterResult<T> {
     private final T result;
     private final IllegalStateException error;
 
-    private ConverterResult(final T result, final String error) {
+    private ConverterResult(final T result, final IllegalStateException error) {
         this.result = result;
-        this.error = error == null ? null : new IllegalStateException(error);
+        this.error = error;
     }
 
     public T get() {
@@ -40,7 +40,7 @@ public class ConverterResult<T> {
     }
 
     public <N> ConverterResult<N> map(final Function<T, N> mapper) {
-        if (this.isError()) return ConverterResult.error(this.error.getMessage());
+        if (this.isError()) return new ConverterResult<>(null, this.error);
         return ConverterResult.success(mapper.apply(this.result));
     }
 

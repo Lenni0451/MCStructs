@@ -5,20 +5,24 @@ import java.util.*;
 
 public interface DataConverter<T> {
 
-    <N> N convert(final DataConverter<N> converter, @Nullable final T element);
+    <N> N convertTo(final DataConverter<N> converter, @Nullable final T element);
 
-    default <N> N convertList(final DataConverter<N> converter, final T list) {
-        List<T> in = this.asList(list).orElse(new ArrayList<>());
-        List<N> out = new ArrayList<>();
-        for (T element : in) out.add(this.convert(converter, element));
-        return converter.createList(out);
+    default <N> T convertFrom(final DataConverter<N> converter, @Nullable final N element) {
+        return converter.convertTo(this, element);
     }
 
-    default <N> N convertMap(final DataConverter<N> converter, final T map) {
+    default <N> N convertList(final DataConverter<N> to, final T list) {
+        List<T> in = this.asList(list).orElse(new ArrayList<>());
+        List<N> out = new ArrayList<>();
+        for (T element : in) out.add(this.convertTo(to, element));
+        return to.createList(out);
+    }
+
+    default <N> N convertMap(final DataConverter<N> to, final T map) {
         Map<T, T> in = this.asMap(map).orElse(new HashMap<>());
         Map<N, N> out = new HashMap<>();
-        for (Map.Entry<T, T> entry : in.entrySet()) out.put(this.convert(converter, entry.getKey()), this.convert(converter, entry.getValue()));
-        return converter.createMap(out);
+        for (Map.Entry<T, T> entry : in.entrySet()) out.put(this.convertTo(to, entry.getKey()), this.convertTo(to, entry.getValue()));
+        return to.createMap(out);
     }
 
     T createBoolean(final boolean value);
@@ -91,6 +95,8 @@ public interface DataConverter<T> {
     }
 
     ConverterResult<Map<T, T>> asMap(final T element);
+
+    ConverterResult<Map<String, T>> asStringTypeMap(final T element);
 
     boolean put(final T map, final String key, final T value);
 

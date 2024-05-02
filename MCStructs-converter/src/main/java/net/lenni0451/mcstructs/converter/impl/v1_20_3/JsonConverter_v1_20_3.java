@@ -13,27 +13,30 @@ import java.util.stream.StreamSupport;
 
 public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
 
+    public static final JsonConverter_v1_20_3 INSTANCE = new JsonConverter_v1_20_3();
+
     @Override
-    public <N> N convert(DataConverter<N> converter, @Nullable JsonElement element) {
+    public <N> N convertTo(DataConverter<N> to, @Nullable JsonElement element) {
+        if (to == this) return (N) element;
         if (element == null || element instanceof JsonNull) return null;
-        if (element instanceof JsonObject) return this.convertMap(converter, element);
-        if (element instanceof JsonArray) return this.convertList(converter, element);
+        if (element instanceof JsonObject) return this.convertMap(to, element);
+        if (element instanceof JsonArray) return this.convertList(to, element);
 
         JsonPrimitive primitive = element.getAsJsonPrimitive();
-        if (primitive.isString()) return converter.createString(primitive.getAsString());
-        if (primitive.isBoolean()) return converter.createBoolean(primitive.getAsBoolean());
+        if (primitive.isString()) return to.createString(primitive.getAsString());
+        if (primitive.isBoolean()) return to.createBoolean(primitive.getAsBoolean());
 
         BigDecimal number = primitive.getAsBigDecimal();
         try {
             long l = number.longValueExact();
-            if ((byte) l == l) return converter.createByte((byte) l);
-            if ((short) l == l) return converter.createShort((short) l);
-            if ((int) l == l) return converter.createInt((int) l);
-            return converter.createLong(l);
+            if ((byte) l == l) return to.createByte((byte) l);
+            if ((short) l == l) return to.createShort((short) l);
+            if ((int) l == l) return to.createInt((int) l);
+            return to.createLong(l);
         } catch (ArithmeticException e) {
             double d = number.doubleValue();
-            if ((float) d == d) return converter.createFloat((float) d);
-            return converter.createDouble(d);
+            if ((float) d == d) return to.createFloat((float) d);
+            return to.createDouble(d);
         }
     }
 
@@ -123,6 +126,14 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
         if (!element.isJsonObject()) return ConverterResult.unexpected(element, JsonObject.class);
         Map<JsonElement, JsonElement> map = new HashMap<>();
         element.getAsJsonObject().entrySet().forEach(entry -> map.put(this.createString(entry.getKey()), entry.getValue()));
+        return ConverterResult.success(map);
+    }
+
+    @Override
+    public ConverterResult<Map<String, JsonElement>> asStringTypeMap(JsonElement element) {
+        if (!element.isJsonObject()) return ConverterResult.unexpected(element, JsonObject.class);
+        Map<String, JsonElement> map = new HashMap<>();
+        element.getAsJsonObject().entrySet().forEach(entry -> map.put(entry.getKey(), entry.getValue()));
         return ConverterResult.success(map);
     }
 
