@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.converter;
 
+import lombok.SneakyThrows;
+
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -35,8 +37,25 @@ public class ConverterResult<T> {
         return this.result;
     }
 
+    public T getOrThrow() {
+        if (this.isError()) throw this.error;
+        return this.result;
+    }
+
+    @SneakyThrows
+    public T getOrThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier) {
+        if (this.isError()) throw exceptionSupplier.apply(this.error);
+        return this.result;
+    }
+
     public T orElse(final T other) {
         return this.isError() ? other : this.result;
+    }
+
+    @SneakyThrows
+    public T orElseThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier) {
+        if (this.isError()) throw exceptionSupplier.apply(this.error);
+        return this.result;
     }
 
     public <N> ConverterResult<N> map(final Function<T, N> mapper) {
@@ -62,7 +81,7 @@ public class ConverterResult<T> {
     }
 
     public void validate() {
-        if (this.isError()) throw new IllegalStateException(this.error);
+        if (this.isError()) throw new IllegalStateException("Tried to get result from error", this.error);
     }
 
 }
