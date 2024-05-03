@@ -61,7 +61,9 @@ public interface DataConverter<T> {
 
     ConverterResult<String> asString(final T element);
 
-    T createList(final List<T> values);
+    default T createList(final List<T> values) {
+        return this.mergeList(null, values).get();
+    }
 
     default T emptyList() {
         return this.createList(Collections.emptyList());

@@ -116,11 +116,6 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     }
 
     @Override
-    public INbtTag createList(List<INbtTag> values) {
-        return this.mergeList(new ListTag<>(), values).get();
-    }
-
-    @Override
     public ConverterResult<INbtTag> mergeList(@Nullable INbtTag list, List<INbtTag> values) {
         if (list == null) list = new ListTag<>();
         if (list.isByteArrayTag() && values.stream().allMatch(INbtTag::isByteArrayTag)) {

@@ -82,11 +82,6 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public JsonElement createList(List<JsonElement> values) {
-        return this.mergeList(new JsonArray(), values).get();
-    }
-
-    @Override
     public ConverterResult<JsonElement> mergeList(@Nullable JsonElement list, List<JsonElement> values) {
         if (list == null) list = new JsonArray();
         if (!list.isJsonArray()) return ConverterResult.unexpected(list, JsonArray.class);
