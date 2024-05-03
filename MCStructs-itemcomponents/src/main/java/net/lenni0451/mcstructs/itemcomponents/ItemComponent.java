@@ -35,7 +35,7 @@ public class ItemComponent<T> {
         try {
             return this.deserializer.deserialize(converter, data);
         } catch (Throwable t) {
-            throw new IllegalStateException("Failed to deserialize component " + this.name, t);
+            throw new IllegalStateException("Failed to deserialize component " + this.name.get(), t);
         }
     }
 
