@@ -27,11 +27,11 @@ public interface DataConverter<T> {
 
     T createBoolean(final boolean value);
 
-    ConverterResult<Boolean> asBoolean(final T element);
+    Result<Boolean> asBoolean(final T element);
 
     T createNumber(final Number number);
 
-    ConverterResult<Number> asNumber(final T element);
+    Result<Number> asNumber(final T element);
 
     default T createByte(final byte value) {
         return this.createNumber(value);
@@ -59,7 +59,7 @@ public interface DataConverter<T> {
 
     T createString(final String value);
 
-    ConverterResult<String> asString(final T element);
+    Result<String> asString(final T element);
 
     default T createList(final List<T> values) {
         return this.mergeList(null, values).get();
@@ -69,13 +69,13 @@ public interface DataConverter<T> {
         return this.createList(Collections.emptyList());
     }
 
-    ConverterResult<T> mergeList(@Nullable final T list, final List<T> values);
+    Result<T> mergeList(@Nullable final T list, final List<T> values);
 
-    default ConverterResult<T> mergeList(@Nullable final T list, final T... values) {
+    default Result<T> mergeList(@Nullable final T list, final T... values) {
         return this.mergeList(list, Arrays.asList(values));
     }
 
-    ConverterResult<List<T>> asList(final T element);
+    Result<List<T>> asList(final T element);
 
     T createMap(final Map<T, T> values);
 
@@ -83,35 +83,35 @@ public interface DataConverter<T> {
         return this.createMap(Collections.emptyMap());
     }
 
-    ConverterResult<T> mergeMap(@Nullable final T map, final Map<T, T> values);
+    Result<T> mergeMap(@Nullable final T map, final Map<T, T> values);
 
-    default ConverterResult<T> mergeMap(@Nullable final T map, final T key, final T value) {
+    default Result<T> mergeMap(@Nullable final T map, final T key, final T value) {
         return this.mergeMap(map, Collections.singletonMap(key, value));
     }
 
-    default ConverterResult<T> mergeMap(@Nullable final T map, final T... keyValue) {
-        if (keyValue.length % 2 != 0) return ConverterResult.error("Key-Value pairs must be even");
+    default Result<T> mergeMap(@Nullable final T map, final T... keyValue) {
+        if (keyValue.length % 2 != 0) return Result.error("Key-Value pairs must be even");
         Map<T, T> mapValues = new HashMap<>();
         for (int i = 0; i < keyValue.length; i += 2) mapValues.put(keyValue[i], keyValue[i + 1]);
         return this.mergeMap(map, mapValues);
     }
 
-    ConverterResult<Map<T, T>> asMap(final T element);
+    Result<Map<T, T>> asMap(final T element);
 
-    ConverterResult<Map<String, T>> asStringTypeMap(final T element);
+    Result<Map<String, T>> asStringTypeMap(final T element);
 
     boolean put(final T map, final String key, final T value);
 
     T createByteArray(final byte[] value);
 
-    ConverterResult<byte[]> asByteArray(final T element);
+    Result<byte[]> asByteArray(final T element);
 
     T createIntArray(final int[] value);
 
-    ConverterResult<int[]> asIntArray(final T element);
+    Result<int[]> asIntArray(final T element);
 
     T createLongArray(final long[] value);
 
-    ConverterResult<long[]> asLongArray(final T element);
+    Result<long[]> asLongArray(final T element);
 
 }

@@ -1,8 +1,8 @@
 package net.lenni0451.mcstructs.converter.impl.v1_20_3;
 
 import com.google.gson.*;
-import net.lenni0451.mcstructs.converter.ConverterResult;
 import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.Result;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
@@ -46,13 +46,13 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public ConverterResult<Boolean> asBoolean(JsonElement element) {
+    public Result<Boolean> asBoolean(JsonElement element) {
         if (element.isJsonPrimitive()) {
             JsonPrimitive primitive = element.getAsJsonPrimitive();
-            if (primitive.isBoolean()) return ConverterResult.success(primitive.getAsBoolean());
-            else if (primitive.isNumber()) return ConverterResult.success(primitive.getAsNumber().byteValue() != 0);
+            if (primitive.isBoolean()) return Result.success(primitive.getAsBoolean());
+            else if (primitive.isNumber()) return Result.success(primitive.getAsNumber().byteValue() != 0);
         }
-        return ConverterResult.unexpected(element, "boolean");
+        return Result.unexpected(element, "boolean");
     }
 
     @Override
@@ -61,13 +61,13 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public ConverterResult<Number> asNumber(JsonElement element) {
+    public Result<Number> asNumber(JsonElement element) {
         if (element.isJsonPrimitive()) {
             JsonPrimitive primitive = element.getAsJsonPrimitive();
-            if (primitive.isBoolean()) return ConverterResult.success(primitive.getAsBoolean() ? 1 : 0);
-            else if (primitive.isNumber()) return ConverterResult.success(primitive.getAsNumber());
+            if (primitive.isBoolean()) return Result.success(primitive.getAsBoolean() ? 1 : 0);
+            else if (primitive.isNumber()) return Result.success(primitive.getAsNumber());
         }
-        return ConverterResult.unexpected(element, "number");
+        return Result.unexpected(element, "number");
     }
 
     @Override
@@ -76,25 +76,25 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public ConverterResult<String> asString(JsonElement element) {
-        if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) return ConverterResult.unexpected(element, "string");
-        return ConverterResult.success(element.getAsJsonPrimitive().getAsString());
+    public Result<String> asString(JsonElement element) {
+        if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) return Result.unexpected(element, "string");
+        return Result.success(element.getAsJsonPrimitive().getAsString());
     }
 
     @Override
-    public ConverterResult<JsonElement> mergeList(@Nullable JsonElement list, List<JsonElement> values) {
+    public Result<JsonElement> mergeList(@Nullable JsonElement list, List<JsonElement> values) {
         if (list == null) list = new JsonArray();
-        if (!list.isJsonArray()) return ConverterResult.unexpected(list, JsonArray.class);
+        if (!list.isJsonArray()) return Result.unexpected(list, JsonArray.class);
 
         JsonArray jsonArray = list.getAsJsonArray();
         for (JsonElement value : values) jsonArray.add(value);
-        return ConverterResult.success(jsonArray);
+        return Result.success(jsonArray);
     }
 
     @Override
-    public ConverterResult<List<JsonElement>> asList(JsonElement element) {
-        if (!element.isJsonArray()) return ConverterResult.unexpected(element, JsonArray.class);
-        return ConverterResult.success(element.getAsJsonArray().asList());
+    public Result<List<JsonElement>> asList(JsonElement element) {
+        if (!element.isJsonArray()) return Result.unexpected(element, JsonArray.class);
+        return Result.success(element.getAsJsonArray().asList());
     }
 
     @Override
@@ -105,31 +105,31 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public ConverterResult<JsonElement> mergeMap(@Nullable JsonElement map, Map<JsonElement, JsonElement> values) {
+    public Result<JsonElement> mergeMap(@Nullable JsonElement map, Map<JsonElement, JsonElement> values) {
         if (map == null) map = new JsonObject();
-        if (!map.isJsonObject()) return ConverterResult.unexpected(map, JsonObject.class);
+        if (!map.isJsonObject()) return Result.unexpected(map, JsonObject.class);
         JsonObject jsonObject = map.getAsJsonObject();
         for (Map.Entry<JsonElement, JsonElement> entry : values.entrySet()) {
-            if (!entry.getKey().isJsonPrimitive() || !entry.getKey().getAsJsonPrimitive().isString()) return ConverterResult.unexpected(entry.getKey(), "string");
+            if (!entry.getKey().isJsonPrimitive() || !entry.getKey().getAsJsonPrimitive().isString()) return Result.unexpected(entry.getKey(), "string");
             jsonObject.add(entry.getKey().getAsString(), entry.getValue());
         }
-        return ConverterResult.success(jsonObject);
+        return Result.success(jsonObject);
     }
 
     @Override
-    public ConverterResult<Map<JsonElement, JsonElement>> asMap(JsonElement element) {
-        if (!element.isJsonObject()) return ConverterResult.unexpected(element, JsonObject.class);
+    public Result<Map<JsonElement, JsonElement>> asMap(JsonElement element) {
+        if (!element.isJsonObject()) return Result.unexpected(element, JsonObject.class);
         Map<JsonElement, JsonElement> map = new HashMap<>();
         element.getAsJsonObject().entrySet().forEach(entry -> map.put(this.createString(entry.getKey()), entry.getValue()));
-        return ConverterResult.success(map);
+        return Result.success(map);
     }
 
     @Override
-    public ConverterResult<Map<String, JsonElement>> asStringTypeMap(JsonElement element) {
-        if (!element.isJsonObject()) return ConverterResult.unexpected(element, JsonObject.class);
+    public Result<Map<String, JsonElement>> asStringTypeMap(JsonElement element) {
+        if (!element.isJsonObject()) return Result.unexpected(element, JsonObject.class);
         Map<String, JsonElement> map = new HashMap<>();
         element.getAsJsonObject().entrySet().forEach(entry -> map.put(entry.getKey(), entry.getValue()));
-        return ConverterResult.success(map);
+        return Result.success(map);
     }
 
     @Override
@@ -147,15 +147,15 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public ConverterResult<byte[]> asByteArray(JsonElement element) {
-        if (!element.isJsonArray()) return ConverterResult.unexpected(element, JsonArray.class);
+    public Result<byte[]> asByteArray(JsonElement element) {
+        if (!element.isJsonArray()) return Result.unexpected(element, JsonArray.class);
         JsonArray jsonArray = element.getAsJsonArray();
         if (StreamSupport.stream(jsonArray.spliterator(), false).anyMatch(e -> e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber())) {
             byte[] bytes = new byte[jsonArray.size()];
             for (int i = 0; i < jsonArray.size(); i++) bytes[i] = jsonArray.get(i).getAsByte();
-            return ConverterResult.success(bytes);
+            return Result.success(bytes);
         } else {
-            return ConverterResult.unexpected(element, byte[].class);
+            return Result.unexpected(element, byte[].class);
         }
     }
 
@@ -167,15 +167,15 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public ConverterResult<int[]> asIntArray(JsonElement element) {
-        if (!element.isJsonArray()) return ConverterResult.unexpected(element, JsonArray.class);
+    public Result<int[]> asIntArray(JsonElement element) {
+        if (!element.isJsonArray()) return Result.unexpected(element, JsonArray.class);
         JsonArray jsonArray = element.getAsJsonArray();
         if (StreamSupport.stream(jsonArray.spliterator(), false).anyMatch(e -> e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber())) {
             int[] ints = new int[jsonArray.size()];
             for (int i = 0; i < jsonArray.size(); i++) ints[i] = jsonArray.get(i).getAsInt();
-            return ConverterResult.success(ints);
+            return Result.success(ints);
         } else {
-            return ConverterResult.unexpected(element, int[].class);
+            return Result.unexpected(element, int[].class);
         }
     }
 
@@ -187,15 +187,15 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public ConverterResult<long[]> asLongArray(JsonElement element) {
-        if (!element.isJsonArray()) return ConverterResult.unexpected(element, JsonArray.class);
+    public Result<long[]> asLongArray(JsonElement element) {
+        if (!element.isJsonArray()) return Result.unexpected(element, JsonArray.class);
         JsonArray jsonArray = element.getAsJsonArray();
         if (StreamSupport.stream(jsonArray.spliterator(), false).anyMatch(e -> e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber())) {
             long[] longs = new long[jsonArray.size()];
             for (int i = 0; i < jsonArray.size(); i++) longs[i] = jsonArray.get(i).getAsLong();
-            return ConverterResult.success(longs);
+            return Result.success(longs);
         } else {
-            return ConverterResult.unexpected(element, long[].class);
+            return Result.unexpected(element, long[].class);
         }
     }
 
