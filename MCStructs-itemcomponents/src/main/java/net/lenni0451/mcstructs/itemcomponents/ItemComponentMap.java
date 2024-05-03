@@ -1,7 +1,6 @@
 package net.lenni0451.mcstructs.itemcomponents;
 
-import com.google.gson.JsonElement;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.converter.DataConverter;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -54,12 +53,8 @@ public class ItemComponentMap {
         return this.components.isEmpty();
     }
 
-    public JsonElement toJson() {
-        return this.registry.mapToJson(this);
-    }
-
-    public INbtTag toNbt() {
-        return this.registry.mapToNbt(this);
+    public <T> T to(final DataConverter<T> converter) {
+        return this.registry.mapTo(converter, this);
     }
 
 }
