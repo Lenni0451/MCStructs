@@ -304,4 +304,15 @@ public class Types_v1_20_5 {
         private long seed;
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ContainerSlot {
+        public static final String SLOT = "slot";
+        public static final String ITEM = "item";
+
+        private int slot;
+        private ItemStack item;
+    }
+
 }

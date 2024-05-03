@@ -196,7 +196,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     });
     //TODO: fireworks
     //TODO: profile
-    //TODO: note_block_sound
+    public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", BaseTypes.IDENTIFIER);
     public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", new MergedComponentSerializer<BannerPattern>() {
         @Override
         public <T> T serialize(DataConverter<T> converter, BannerPattern component) {
@@ -219,7 +219,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<List<Identifier>> POT_DECORATIONS = register("pot_decorations", BaseTypes.IDENTIFIER.withVerifier(this.registryVerifier.item).listOf(), potDecorations -> {
         if (potDecorations.size() > 4) throw new IllegalArgumentException("Pot decorations can only have at most 4 elements");
     });
-    //TODO: container
+    public final ItemComponent<List<ContainerSlot>> CONTAINER = register("container", this.typeSerializers.CONTAINER_SLOT.listOf(256));
     public final ItemComponent<Map<String, String>> BLOCK_STATE = register("block_state", BaseTypes.STRING.stringMapOf());
     public final ItemComponent<List<BeeData>> BEES = register("bees", new MergedComponentSerializer<BeeData>() {
         @Override

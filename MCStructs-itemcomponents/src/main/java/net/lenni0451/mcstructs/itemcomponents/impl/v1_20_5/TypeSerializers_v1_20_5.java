@@ -118,6 +118,29 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
         }
         return out;
     });
+    public final MergedComponentSerializer<ContainerSlot> CONTAINER_SLOT = new MergedComponentSerializer<ContainerSlot>() {
+        private final MergedComponentSerializer<Integer> slot = BaseTypes.INTEGER.withVerifier(i -> {
+            if (i < 0) throw new IllegalArgumentException("Slot must be at least 0");
+            if (i > 255) throw new IllegalArgumentException("Slot must be at most 255");
+        });
+
+        @Override
+        public <T> T serialize(DataConverter<T> converter, ContainerSlot component) {
+            T map = converter.emptyMap();
+            converter.put(map, ContainerSlot.SLOT, this.slot.serialize(converter, component.getSlot()));
+            converter.put(map, ContainerSlot.ITEM, TypeSerializers_v1_20_5.this.ITEM_STACK.serialize(converter, component.getItem()));
+            return map;
+        }
+
+        @Override
+        public <T> ContainerSlot deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new ContainerSlot(
+                    this.slot.fromMap(converter, map, ContainerSlot.SLOT),
+                    TypeSerializers_v1_20_5.this.ITEM_STACK.fromMap(converter, map, ContainerSlot.ITEM)
+            );
+        }
+    };
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);
