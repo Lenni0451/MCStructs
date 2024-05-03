@@ -1,15 +1,17 @@
 package net.lenni0451.mcstructs.itemcomponents;
 
-import com.google.gson.JsonElement;
+import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.core.Identifier;
+import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.itemcomponents.serialization.interfaces.ComponentDeserializer;
+import net.lenni0451.mcstructs.itemcomponents.serialization.interfaces.ComponentSerializer;
+import net.lenni0451.mcstructs.itemcomponents.serialization.interfaces.MergedComponentSerializer;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class ItemComponentRegistry {
@@ -25,9 +27,16 @@ public abstract class ItemComponentRegistry {
 
 
     private final List<ItemComponent<?>> components;
+    protected final RegistryVerifier registryVerifier;
 
     public ItemComponentRegistry() {
         this.components = new ArrayList<>();
+        this.registryVerifier = new RegistryVerifier();
+    }
+
+    protected ItemComponentRegistry(final RegistryVerifier registryVerifier) {
+        this.components = new ArrayList<>();
+        this.registryVerifier = registryVerifier;
     }
 
     @Nullable
@@ -38,37 +47,48 @@ public abstract class ItemComponentRegistry {
         return null;
     }
 
-    public abstract JsonElement mapToJson(final ItemComponentMap map);
+    public RegistryVerifier getRegistryVerifier() {
+        return this.registryVerifier;
+    }
 
-    public abstract ItemComponentMap mapFromJson(final JsonElement element);
+    public abstract <D> D mapTo(final DataConverter<D> converter, final ItemComponentMap map);
 
-    public abstract INbtTag mapToNbt(final ItemComponentMap map);
+    public abstract <D> ItemComponentMap mapFrom(final DataConverter<D> converter, final D data);
 
-    public abstract ItemComponentMap mapFromNbt(final INbtTag tag);
 
     protected <T> ItemComponent<T> copy(final String name, final ItemComponent<T> component) {
-        return this.register(name, component.toJson, component.fromJson, component.toNbt, component.fromNbt, component.verifier);
+        return this.register(name, component.serializer, component.deserializer, component.verifier);
     }
 
     protected <T> ItemComponent<T> registerNonSerializable(final String name) {
         Supplier<UnsupportedOperationException> exceptionSupplier = () -> new UnsupportedOperationException("This component is not serializable");
-        return this.register(name, t -> {
-            throw exceptionSupplier.get();
-        }, element -> {
-            throw exceptionSupplier.get();
-        }, t -> {
-            throw exceptionSupplier.get();
-        }, tag -> {
-            throw exceptionSupplier.get();
+        return this.register(name, new ComponentSerializer<T>() {
+            @Override
+            public <D> D serialize(DataConverter<D> converter, T component) {
+                throw exceptionSupplier.get();
+            }
+        }, new ComponentDeserializer<T>() {
+            @Override
+            public <D> T deserialize(DataConverter<D> converter, D data) {
+                throw exceptionSupplier.get();
+            }
         });
     }
 
-    protected <T> ItemComponent<T> register(final String name, final Function<T, JsonElement> toJson, final Function<JsonElement, T> fromJson, final Function<T, INbtTag> toNbt, final Function<INbtTag, T> fromNbt) {
-        return this.register(name, toJson, fromJson, toNbt, fromNbt, null);
+    protected <T> ItemComponent<T> register(final String name, final MergedComponentSerializer<T> serializer) {
+        return this.register(name, serializer, serializer);
     }
 
-    protected <T> ItemComponent<T> register(final String name, final Function<T, JsonElement> toJson, final Function<JsonElement, T> fromJson, final Function<T, INbtTag> toNbt, final Function<INbtTag, T> fromNbt, final Consumer<T> verifier) {
-        ItemComponent<T> itemComponent = new ItemComponent<>(name, toJson, fromJson, toNbt, fromNbt, verifier);
+    protected <T> ItemComponent<T> register(final String name, final MergedComponentSerializer<T> serializer, final Consumer<T> verifier) {
+        return this.register(name, serializer, serializer, verifier);
+    }
+
+    protected <T> ItemComponent<T> register(final String name, final ComponentSerializer<T> serializer, final ComponentDeserializer<T> deserializer) {
+        return this.register(name, serializer, deserializer, null);
+    }
+
+    protected <T> ItemComponent<T> register(final String name, final ComponentSerializer<T> serializer, final ComponentDeserializer<T> deserializer, final Consumer<T> verifier) {
+        ItemComponent<T> itemComponent = new ItemComponent<>(name, serializer, deserializer, verifier);
         this.components.add(itemComponent);
         return itemComponent;
     }

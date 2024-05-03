@@ -1,312 +1,161 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
-import net.lenni0451.mcstructs.itemcomponents.exceptions.InvalidTypeException;
-import net.lenni0451.mcstructs.itemcomponents.serialization.TypeValidator;
-import net.lenni0451.mcstructs.itemcomponents.serialization.Verifier;
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
-import net.lenni0451.mcstructs.nbt.NbtType;
-import net.lenni0451.mcstructs.nbt.tags.*;
+import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
+import net.lenni0451.mcstructs.itemcomponents.serialization.BaseTypes;
+import net.lenni0451.mcstructs.itemcomponents.serialization.interfaces.MergedComponentSerializer;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
-import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
-import net.lenni0451.mcstructs.text.utils.JsonNbtConverter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.TypeSerializers_v1_20_5.ItemStackSerializer;
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.*;
-import static net.lenni0451.mcstructs.itemcomponents.serialization.TypeValidator.*;
 
 public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
 
-    public final ItemComponent<CompoundTag> CUSTOM_DATA = register("custom_data", JsonNbtConverter::toJson, element -> JsonNbtConverter.toNbt(element).asCompoundTag(), tag -> tag, INbtTag::asCompoundTag);
-    public final ItemComponent<Integer> MAX_STACK_SIZE = register("max_stack_size", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt, i -> {
+    private final TypeSerializers_v1_20_5 typeSerializers = new TypeSerializers_v1_20_5(this);
+
+    public final ItemComponent<CompoundTag> CUSTOM_DATA = register("custom_data", this.typeSerializers.COMPOUND_TAG);
+    public final ItemComponent<Integer> MAX_STACK_SIZE = register("max_stack_size", BaseTypes.INTEGER, i -> {
         if (i < 1) throw new IllegalArgumentException("Max stack size must be at least 1");
         if (i > 99) throw new IllegalArgumentException("Max stack size must be at most 99");
     });
-    public final ItemComponent<Integer> MAX_DAMAGE = register("max_damage", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt, i -> {
+    public final ItemComponent<Integer> MAX_DAMAGE = register("max_damage", BaseTypes.INTEGER, i -> {
         if (i < 1) throw new IllegalArgumentException("Max damage must be at least 1");
     });
-    public final ItemComponent<Integer> DAMAGE = register("damage", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt, i -> {
+    public final ItemComponent<Integer> DAMAGE = register("damage", BaseTypes.INTEGER, i -> {
         if (i < 0) throw new IllegalArgumentException("Damage must be at least 0");
     });
-    public final ItemComponent<Unbreakable> UNBREAKABLE = register("unbreakable", unbreakable -> {
-        JsonObject object = new JsonObject();
-        if (!unbreakable.isShowInTooltip()) object.addProperty(Unbreakable.SHOW_IN_TOOLTIP, false);
-        return object;
-    }, element -> {
-        JsonObject object = requireJsonObject(element);
-        Unbreakable unbreakable = new Unbreakable();
-        if (object.has(Unbreakable.SHOW_IN_TOOLTIP)) unbreakable.setShowInTooltip(requireBoolean(object.get(Unbreakable.SHOW_IN_TOOLTIP)));
-        return unbreakable;
-    }, unbreakable -> {
-        CompoundTag compound = new CompoundTag();
-        if (!unbreakable.isShowInTooltip()) compound.add(Unbreakable.SHOW_IN_TOOLTIP, false);
-        return compound;
-    }, tag -> {
-        CompoundTag compound = requireCompoundTag(tag);
-        Unbreakable unbreakable = new Unbreakable();
-        if (compound.contains(Unbreakable.SHOW_IN_TOOLTIP)) unbreakable.setShowInTooltip(requireBoolean(compound.<INbtNumber>get(Unbreakable.SHOW_IN_TOOLTIP)));
-        return unbreakable;
-    });
-    public final ItemComponent<ATextComponent> CUSTOM_NAME = register("custom_name", text -> new JsonPrimitive(TextComponentCodec.V1_20_5.serializeJsonString(text)), element -> TextComponentCodec.V1_20_5.deserializeJson(requireString(element)), text -> new StringTag(TextComponentCodec.V1_20_5.serializeJsonString(text)), tag -> TextComponentCodec.V1_20_5.deserializeJson(requireString(tag)));
-    public final ItemComponent<ATextComponent> ITEM_NAME = copy("item_name", this.CUSTOM_NAME);
-    public final ItemComponent<Lore> LORE = register("lore", lore -> {
-        JsonArray array = new JsonArray();
-        lore.getLines().forEach(line -> array.add(TextComponentCodec.V1_20_5.serializeJsonString(line)));
-        return array;
-    }, element -> {
-        JsonArray array = requireJsonArray(element);
-        List<ATextComponent> lines = new ArrayList<>();
-        array.forEach(line -> lines.add(TextComponentCodec.V1_20_5.deserializeJson(requireString(line))));
-        return new Lore(lines);
-    }, lore -> {
-        ListTag<StringTag> list = new ListTag<>();
-        lore.getLines().forEach(line -> list.add(new StringTag(TextComponentCodec.V1_20_5.serializeJsonString(line))));
-        return list;
-    }, tag -> {
-        List<INbtTag> list = requireListTag(tag);
-        List<ATextComponent> lines = new ArrayList<>();
-        list.forEach(line -> lines.add(TextComponentCodec.V1_20_5.deserializeJson(requireString(line))));
-        return new Lore(lines);
-    });
-    public final ItemComponent<Rarity> RARITY = this.register("rarity", rarity -> new JsonPrimitive(rarity.getName()), element -> Rarity.byName(requireString(element)), rarity -> new StringTag(rarity.getName()), tag -> Rarity.byName(requireString(tag)));
-    public final ItemComponent<Enchantments> ENCHANTMENTS = register("enchantments", enchantments -> {
-        JsonObject object = new JsonObject();
-        if (!enchantments.isShowInTooltip()) object.addProperty(Enchantments.SHOW_IN_TOOLTIP, false);
-        JsonObject levels = new JsonObject();
-        enchantments.getEnchantments().forEach((enchantment, level) -> levels.addProperty(enchantment.get(), level));
-        object.add(Enchantments.LEVELS, levels);
-        return object;
-    }, element -> {
-        Enchantments enchantments = new Enchantments();
-        JsonObject object = requireJsonObject(element);
-        if (object.has("levels")) {
-            JsonObject levels = requireJsonObject(object.get("levels"));
-            levels.entrySet().forEach(entry -> enchantments.addEnchantment(Identifier.of(entry.getKey()), requireInt(entry.getValue())));
-            if (object.has(Enchantments.SHOW_IN_TOOLTIP)) enchantments.setShowInTooltip(requireBoolean(object.get(Enchantments.SHOW_IN_TOOLTIP)));
-        } else {
-            object.entrySet().forEach(entry -> enchantments.addEnchantment(Identifier.of(entry.getKey()), requireInt(entry.getValue())));
+    public final ItemComponent<Unbreakable> UNBREAKABLE = register("unbreakable", new MergedComponentSerializer<Unbreakable>() {
+        @Override
+        public <T> T serialize(DataConverter<T> converter, Unbreakable component) {
+            T map = converter.emptyMap();
+            if (!component.isShowInTooltip()) converter.put(map, Unbreakable.SHOW_IN_TOOLTIP, BaseTypes.BOOLEAN.serialize(converter, false));
+            return map;
         }
-        return enchantments;
-    }, enchantments -> {
-        CompoundTag compound = new CompoundTag();
-        if (!enchantments.isShowInTooltip()) compound.add(Enchantments.SHOW_IN_TOOLTIP, false);
-        CompoundTag levels = new CompoundTag();
-        enchantments.getEnchantments().forEach((enchantment, level) -> levels.add(enchantment.get(), level));
-        compound.add(Enchantments.LEVELS, levels);
-        return compound;
-    }, tag -> {
-        Enchantments enchantments = new Enchantments();
-        CompoundTag compound = requireCompoundTag(tag);
-        if (compound.contains(Enchantments.LEVELS)) {
-            CompoundTag levels = requireCompoundTag(compound.get(Enchantments.LEVELS));
-            levels.forEach(entry -> enchantments.addEnchantment(Identifier.of(entry.getKey()), requireInt(entry.getValue())));
-            if (compound.contains(Enchantments.SHOW_IN_TOOLTIP)) enchantments.setShowInTooltip(requireBoolean(compound.<INbtTag>get(Enchantments.SHOW_IN_TOOLTIP)));
-        } else {
-            compound.forEach(entry -> enchantments.addEnchantment(Identifier.of(entry.getKey()), requireInt(entry.getValue())));
-        }
-        return enchantments;
-    }, enchantments -> {
-        for (Map.Entry<Identifier, Integer> entry : enchantments.getEnchantments().entrySet()) {
-            this.enchantmentVerifier.check("enchantment", entry.getKey());
-            if (entry.getValue() < 0) throw new IllegalArgumentException("Enchantment level must be at least 0");
-            if (entry.getValue() > 255) throw new IllegalArgumentException("Enchantment level must be at most 255");
+
+        @Override
+        public <T> Unbreakable deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new Unbreakable(
+                    BaseTypes.BOOLEAN.fromMap(converter, map, Unbreakable.SHOW_IN_TOOLTIP, true)
+            );
         }
     });
+    public final ItemComponent<ATextComponent> CUSTOM_NAME = register("custom_name", this.typeSerializers.TEXT_COMPONENT);
+    public final ItemComponent<ATextComponent> ITEM_NAME = register("item_name", this.typeSerializers.TEXT_COMPONENT);
+    public final ItemComponent<List<ATextComponent>> LORE = register("lore", this.typeSerializers.TEXT_COMPONENT.listOf(256));
+    public final ItemComponent<Rarity> RARITY = this.register("rarity", BaseTypes.named(Rarity.values()));
+    public final ItemComponent<Enchantments> ENCHANTMENTS = register("enchantments", BaseTypes.oneOf(
+            new MergedComponentSerializer<Enchantments>() {
+                @Override
+                public <T> T serialize(DataConverter<T> converter, Enchantments component) {
+                    T map = converter.emptyMap();
+                    converter.put(map, Enchantments.LEVELS, ItemComponents_v1_20_5.this.typeSerializers.ENCHANTMENT_LEVELS.serialize(converter, component.getEnchantments()));
+                    if (!component.isShowInTooltip()) converter.put(map, Enchantments.SHOW_IN_TOOLTIP, BaseTypes.BOOLEAN.serialize(converter, false));
+                    return map;
+                }
+
+                @Override
+                public <T> Enchantments deserialize(DataConverter<T> converter, T data) {
+                    Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+                    return new Enchantments(
+                            ItemComponents_v1_20_5.this.typeSerializers.ENCHANTMENT_LEVELS.fromMap(converter, map, Enchantments.LEVELS),
+                            BaseTypes.BOOLEAN.fromMap(converter, map, Enchantments.SHOW_IN_TOOLTIP, true)
+                    );
+                }
+            },
+            this.typeSerializers.ENCHANTMENT_LEVELS.map(Enchantments::getEnchantments, map -> new Enchantments(map, true))
+    ));
     //TODO: can_place_on
     //TODO: can_break
     //TODO: attribute_modifiers
-    public final ItemComponent<Integer> CUSTOM_MODEL_DATA = register("custom_model_data", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt);
-    public final ItemComponent<Boolean> HIDE_ADDITIONAL_TOOLTIP = register("hide_additional_tooltip", b -> new JsonObject(), element -> {
-        requireJsonObject(element);
-        return true;
-    }, b -> new CompoundTag(), tag -> {
-        requireCompoundTag(tag);
-        return true;
-    });
-    public final ItemComponent<Boolean> HIDE_TOOLTIP = copy("hide_tooltip", this.HIDE_ADDITIONAL_TOOLTIP);
-    public final ItemComponent<Integer> REPAIR_COST = register("repair_cost", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt, i -> {
+    public final ItemComponent<Integer> CUSTOM_MODEL_DATA = register("custom_model_data", BaseTypes.INTEGER);
+    public final ItemComponent<Boolean> HIDE_ADDITIONAL_TOOLTIP = register("hide_additional_tooltip", BaseTypes.UNIT);
+    public final ItemComponent<Boolean> HIDE_TOOLTIP = register("hide_tooltip", BaseTypes.UNIT);
+    public final ItemComponent<Integer> REPAIR_COST = register("repair_cost", BaseTypes.INTEGER, i -> {
         if (i < 0) throw new IllegalArgumentException("Repair cost must be at least 0");
     });
     public final ItemComponent<Boolean> CREATIVE_SLOT_LOCK = registerNonSerializable("creative_slot_lock"); //No json/nbt serialization
-    public final ItemComponent<Boolean> ENCHANTMENT_GLINT_OVERRIDE = register("enchantment_glint_override", JsonPrimitive::new, TypeValidator::requireBoolean, ByteTag::new, TypeValidator::requireBoolean);
-    public final ItemComponent<Boolean> INTANGIBLE_PROJECTILE = copy("intangible_projectile", this.HIDE_ADDITIONAL_TOOLTIP);
+    public final ItemComponent<Boolean> ENCHANTMENT_GLINT_OVERRIDE = register("enchantment_glint_override", BaseTypes.BOOLEAN);
+    public final ItemComponent<Boolean> INTANGIBLE_PROJECTILE = register("intangible_projectile", BaseTypes.UNIT);
     //TODO: food
-    public final ItemComponent<Boolean> FIRE_RESISTANT = copy("fire_resistant", this.HIDE_ADDITIONAL_TOOLTIP);
+    public final ItemComponent<Boolean> FIRE_RESISTANT = register("fire_resistant", BaseTypes.UNIT);
     //TODO: tool
     public final ItemComponent<Enchantments> STORED_ENCHANTMENTS = copy("stored_enchantments", this.ENCHANTMENTS);
-    public final ItemComponent<DyedColor> DYED_COLOR = register("dyed_color", dyedColor -> {
-        JsonObject object = new JsonObject();
-        object.addProperty(DyedColor.RGB, dyedColor.getRgb());
-        if (!dyedColor.isShowInTooltip()) object.addProperty(DyedColor.SHOW_IN_TOOLTIP, false);
-        return object;
-    }, element -> {
-        JsonObject object = requireJsonObject(element);
-        DyedColor dyedColor = new DyedColor();
-        dyedColor.setRgb(requireInt(object.get(DyedColor.RGB)));
-        if (object.has(DyedColor.SHOW_IN_TOOLTIP)) dyedColor.setShowInTooltip(requireBoolean(object.get(DyedColor.SHOW_IN_TOOLTIP)));
-        return dyedColor;
-    }, dyed_color -> {
-        CompoundTag compound = new CompoundTag();
-        compound.add(DyedColor.RGB, dyed_color.getRgb());
-        if (!dyed_color.isShowInTooltip()) compound.add(DyedColor.SHOW_IN_TOOLTIP, false);
-        return compound;
-    }, tag -> {
-        CompoundTag compound = requireCompoundTag(tag);
-        DyedColor dyedColor = new DyedColor();
-        dyedColor.setRgb(requireInt(compound.<INbtTag>get(DyedColor.RGB)));
-        if (compound.contains(DyedColor.SHOW_IN_TOOLTIP)) dyedColor.setShowInTooltip(requireBoolean(compound.<INbtTag>get(DyedColor.SHOW_IN_TOOLTIP)));
-        return dyedColor;
+    public final ItemComponent<DyedColor> DYED_COLOR = register("dyed_color", new MergedComponentSerializer<DyedColor>() {
+        @Override
+        public <T> T serialize(DataConverter<T> converter, DyedColor component) {
+            T map = converter.emptyMap();
+            converter.put(map, DyedColor.RGB, BaseTypes.INTEGER.serialize(converter, component.getRgb()));
+            if (!component.isShowInTooltip()) converter.put(map, DyedColor.SHOW_IN_TOOLTIP, BaseTypes.BOOLEAN.serialize(converter, false));
+            return map;
+        }
+
+        @Override
+        public <T> DyedColor deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new DyedColor(
+                    BaseTypes.INTEGER.fromMap(converter, map, DyedColor.RGB),
+                    BaseTypes.BOOLEAN.fromMap(converter, map, DyedColor.SHOW_IN_TOOLTIP, true)
+            );
+        }
     });
-    public final ItemComponent<Integer> MAP_COLOR = register("map_color", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt);
-    public final ItemComponent<Integer> MAP_ID = register("map_id", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt);
-    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = register("map_decorations", map -> {
-        JsonObject object = new JsonObject();
-        for (Map.Entry<String, MapDecoration> entry : map.entrySet()) {
-            JsonObject decoration = new JsonObject();
-            decoration.addProperty(MapDecoration.TYPE, entry.getValue().getType().get());
-            decoration.addProperty(MapDecoration.X, entry.getValue().getX());
-            decoration.addProperty(MapDecoration.Z, entry.getValue().getZ());
-            decoration.addProperty(MapDecoration.ROTATION, entry.getValue().getRotation());
-            object.add(entry.getKey(), decoration);
+    public final ItemComponent<Integer> MAP_COLOR = register("map_color", BaseTypes.INTEGER);
+    public final ItemComponent<Integer> MAP_ID = register("map_id", BaseTypes.INTEGER);
+    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = register("map_decorations", new MergedComponentSerializer<MapDecoration>() {
+        @Override
+        public <T> T serialize(DataConverter<T> converter, MapDecoration component) {
+            T map = converter.emptyMap();
+            converter.put(map, MapDecoration.TYPE, BaseTypes.IDENTIFIER.serialize(converter, component.getType()));
+            converter.put(map, MapDecoration.X, BaseTypes.DOUBLE.serialize(converter, component.getX()));
+            converter.put(map, MapDecoration.Z, BaseTypes.DOUBLE.serialize(converter, component.getZ()));
+            converter.put(map, MapDecoration.ROTATION, BaseTypes.FLOAT.serialize(converter, component.getRotation()));
+            return map;
         }
-        return object;
-    }, element -> {
-        JsonObject object = requireJsonObject(element);
-        Map<String, MapDecoration> mapDecorations = new HashMap<>();
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-            JsonObject decoration = requireJsonObject(entry.getValue());
-            mapDecorations.put(entry.getKey(), new MapDecoration(
-                    Identifier.of(requireString(decoration.get(MapDecoration.TYPE))),
-                    requireDouble(decoration.get(MapDecoration.X)),
-                    requireDouble(decoration.get(MapDecoration.Z)),
-                    requireFloat(decoration.get(MapDecoration.ROTATION))
-            ));
+
+        @Override
+        public <T> MapDecoration deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new MapDecoration(
+                    BaseTypes.IDENTIFIER.fromMap(converter, map, MapDecoration.TYPE),
+                    BaseTypes.DOUBLE.fromMap(converter, map, MapDecoration.X),
+                    BaseTypes.DOUBLE.fromMap(converter, map, MapDecoration.Z),
+                    BaseTypes.FLOAT.fromMap(converter, map, MapDecoration.ROTATION)
+            );
         }
-        return mapDecorations;
-    }, map -> {
-        CompoundTag compound = new CompoundTag();
-        for (Map.Entry<String, MapDecoration> entry : map.entrySet()) {
-            CompoundTag decoration = new CompoundTag()
-                    .add(MapDecoration.TYPE, new StringTag(entry.getValue().getType().get()))
-                    .add(MapDecoration.X, new DoubleTag(entry.getValue().getX()))
-                    .add(MapDecoration.Z, new DoubleTag(entry.getValue().getZ()))
-                    .add(MapDecoration.ROTATION, new FloatTag(entry.getValue().getRotation()));
-            compound.add(entry.getKey(), decoration);
-        }
-        return compound;
-    }, tag -> {
-        CompoundTag compound = requireCompoundTag(tag);
-        Map<String, MapDecoration> mapDecorations = new HashMap<>();
-        for (Map.Entry<String, INbtTag> entry : compound) {
-            CompoundTag decoration = requireCompoundTag(entry.getValue());
-            mapDecorations.put(entry.getKey(), new MapDecoration(
-                    Identifier.of(requireString(decoration.<INbtTag>get(MapDecoration.TYPE))),
-                    requireDouble(decoration.<INbtTag>get(MapDecoration.X)),
-                    requireDouble(decoration.<INbtTag>get(MapDecoration.Z)),
-                    requireFloat(decoration.<INbtTag>get(MapDecoration.ROTATION))
-            ));
-        }
-        return mapDecorations;
-    }, map -> {
-        for (MapDecoration decoration : map.values()) this.mapDecorationTypeVerifier.check("map decoration type", decoration.getType());
-    });
+    }.withVerifier(this.registryVerifier.mapDecorationType.map(MapDecoration::getType)).stringMapOf());
     public final ItemComponent<Integer> MAP_POST_PROCESSING = registerNonSerializable("map_post_processing");
-    public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = register("charged_projectiles", list -> {
-        JsonArray array = new JsonArray();
-        for (ItemStack itemStack : list) array.add(ItemStackSerializer.toJson(this, itemStack));
-        return array;
-    }, element -> {
-        JsonArray array = requireJsonArray(element);
-        List<ItemStack> list = new ArrayList<>();
-        for (JsonElement arrayElement : array) list.add(ItemStackSerializer.fromJson(this, this.itemVerifier, arrayElement));
-        return list;
-    }, list -> {
-        ListTag<CompoundTag> listTag = new ListTag<>();
-        for (ItemStack itemStack : list) listTag.add(ItemStackSerializer.toNbt(this, itemStack));
-        return listTag;
-    }, tag -> {
-        List<INbtTag> listTag = requireListTag(tag);
-        List<ItemStack> list = new ArrayList<>();
-        for (INbtTag element : listTag) list.add(ItemStackSerializer.fromNbt(this, this.itemVerifier, element));
-        return list;
-    });
-    public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = copy("bundle_contents", this.CHARGED_PROJECTILES);
+    public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = register("charged_projectiles", this.typeSerializers.ITEM_STACK.listOf());
+    public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = register("bundle_contents", this.typeSerializers.ITEM_STACK.listOf());
     //TODO: potion_contents
     //TODO: suspicious_stew_effects
-    public final ItemComponent<WritableBook> WRITABLE_BOOK_CONTENT = register("writable_book_content", writableBook -> {
-        JsonObject object = new JsonObject();
-        if (!writableBook.getPages().isEmpty()) {
-            JsonArray pages = new JsonArray();
-            for (WritableBook.Page page : writableBook.getPages()) {
-                JsonObject pageObject = new JsonObject();
-                pageObject.addProperty("raw", page.getRaw());
-                if (page.getFiltered() != null) pageObject.addProperty("filtered", page.getFiltered());
-                pages.add(pageObject);
-            }
-            object.add("pages", pages);
+    public final ItemComponent<WritableBook> WRITABLE_BOOK_CONTENT = register("writable_book_content", new MergedComponentSerializer<WritableBook>() {
+        private final MergedComponentSerializer<List<WritableBook.Page>> pageList = ItemComponents_v1_20_5.this.typeSerializers.WRITABLE_BOOK_PAGE.listOf();
+
+        @Override
+        public <T> T serialize(DataConverter<T> converter, WritableBook component) {
+            T map = converter.emptyMap();
+            if (component.getPages().isEmpty()) return map;
+
+            converter.put(map, WritableBook.PAGES, this.pageList.serialize(converter, component.getPages()));
+            return map;
         }
-        return object;
-    }, element -> {
-        JsonObject object = requireJsonObject(element);
-        WritableBook writableBook = new WritableBook();
-        if (object.has("pages")) {
-            JsonArray pages = requireJsonArray(object.get("pages"));
-            for (JsonElement page : pages) {
-                if (page.isJsonPrimitive()) {
-                    writableBook.addPage(requireString(page));
-                } else if (page.isJsonObject()) {
-                    JsonObject pageObject = requireJsonObject(page);
-                    String raw = requireString(pageObject.get("raw"));
-                    String filtered = pageObject.has("filtered") ? requireString(pageObject.get("filtered")) : null;
-                    writableBook.addPage(new WritableBook.Page(raw, filtered));
-                } else {
-                    throw InvalidTypeException.of(page, "String or Object");
-                }
-            }
+
+        @Override
+        public <T> WritableBook deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new WritableBook(
+                    this.pageList.fromMap(converter, map, WritableBook.PAGES, new ArrayList<>())
+            );
         }
-        return writableBook;
-    }, writableBook -> {
-        CompoundTag tag = new CompoundTag();
-        if (!writableBook.getPages().isEmpty()) {
-            ListTag<CompoundTag> pages = new ListTag<>();
-            for (WritableBook.Page page : writableBook.getPages()) {
-                CompoundTag pageTag = new CompoundTag();
-                pageTag.addString("raw", page.getRaw());
-                if (page.getFiltered() != null) pageTag.addString("filtered", page.getFiltered());
-                pages.add(pageTag);
-            }
-            tag.add("pages", pages);
-        }
-        return tag;
-    }, tag -> {
-        CompoundTag compound = requireCompoundTag(tag);
-        WritableBook writableBook = new WritableBook();
-        if (compound.contains("pages")) {
-            List<INbtTag> pages = requireListTag(compound.get("pages"));
-            for (INbtTag page : pages) {
-                if (page.isStringTag()) {
-                    writableBook.addPage(requireString(page));
-                } else if (page.isCompoundTag()) {
-                    CompoundTag pageCompound = requireCompoundTag(page);
-                    String raw = requireString(pageCompound.<INbtTag>get("raw"));
-                    String filtered = pageCompound.contains("filtered") ? requireString(pageCompound.<INbtTag>get("filtered")) : null;
-                    writableBook.addPage(new WritableBook.Page(raw, filtered));
-                } else {
-                    throw InvalidTypeException.of(page, "String or Compound");
-                }
-            }
-        }
-        return writableBook;
     });
     //TODO: written_book_content
     //TODO: trim
@@ -315,415 +164,142 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     //TODO: bucket_entity_data
     //TODO: block_entity_data
     //TODO: instrument
-    public final ItemComponent<Integer> OMINOUS_BOTTLE_AMPLIFIER = register("ominous_bottle_amplifier", JsonPrimitive::new, TypeValidator::requireInt, IntTag::new, TypeValidator::requireInt, amplifier -> {
+    public final ItemComponent<Integer> OMINOUS_BOTTLE_AMPLIFIER = register("ominous_bottle_amplifier", BaseTypes.INTEGER, amplifier -> {
         if (amplifier < 0) throw new IllegalArgumentException("Ominous bottle amplifier must be at least 0");
         if (amplifier > 4) throw new IllegalArgumentException("Ominous bottle amplifier must be at most 4");
     });
-    public final ItemComponent<List<Identifier>> RECIPES = register("recipes", recipes -> {
-        JsonArray array = new JsonArray();
-        for (Identifier recipe : recipes) array.add(new JsonPrimitive(recipe.get()));
-        return array;
-    }, element -> {
-        JsonArray array = requireJsonArray(element);
-        List<Identifier> recipes = new ArrayList<>();
-        for (JsonElement arrayElement : array) recipes.add(Identifier.of(requireString(arrayElement)));
-        return recipes;
-    }, recipes -> {
-        ListTag<StringTag> list = new ListTag<>();
-        recipes.forEach(recipe -> list.add(new StringTag(recipe.get())));
-        return list;
-    }, tag -> {
-        List<INbtTag> list = requireListTag(tag);
-        List<Identifier> recipes = new ArrayList<>();
-        for (INbtTag arrayElement : list) recipes.add(Identifier.of(requireString(arrayElement)));
-        return recipes;
-    });
+    public final ItemComponent<List<Identifier>> RECIPES = register("recipes", BaseTypes.IDENTIFIER.listOf());
     //TODO: lodestone_tracker
-    public final ItemComponent<FireworkExplosions> FIREWORK_EXPLOSION = this.register("firework_explosion", fireworkExplosions -> {
-        JsonObject object = new JsonObject();
-        object.addProperty(FireworkExplosions.SHAPE, fireworkExplosions.getShape().getName());
-        if (fireworkExplosions.getColors().length != 0) {
-            JsonArray colors = new JsonArray();
-            for (int color : fireworkExplosions.getColors()) colors.add(color);
-            object.add(FireworkExplosions.COLORS, colors);
+    public final ItemComponent<FireworkExplosions> FIREWORK_EXPLOSION = this.register("firework_explosion", new MergedComponentSerializer<FireworkExplosions>() {
+        @Override
+        public <T> T serialize(DataConverter<T> converter, FireworkExplosions component) {
+            T map = converter.emptyMap();
+            converter.put(map, FireworkExplosions.SHAPE, ItemComponents_v1_20_5.this.typeSerializers.FIREWORK_EXPLOSIONS_EXPLOSION_SHAPE.serialize(converter, component.getShape()));
+            if (component.getColors().length != 0) converter.put(map, FireworkExplosions.COLORS, BaseTypes.INT_ARRAY.serialize(converter, component.getColors()));
+            if (component.getFadeColors().length != 0) converter.put(map, FireworkExplosions.FADE_COLORS, BaseTypes.INT_ARRAY.serialize(converter, component.getFadeColors()));
+            if (component.isHasTrail()) converter.put(map, FireworkExplosions.HAS_TRAIL, BaseTypes.BOOLEAN.serialize(converter, true));
+            if (component.isHasTwinkle()) converter.put(map, FireworkExplosions.HAS_TWINKLE, BaseTypes.BOOLEAN.serialize(converter, true));
+            return map;
         }
-        if (fireworkExplosions.getFadeColors().length != 0) {
-            JsonArray fadeColors = new JsonArray();
-            for (int fadeColor : fireworkExplosions.getFadeColors()) fadeColors.add(fadeColor);
-            object.add(FireworkExplosions.FADE_COLORS, fadeColors);
+
+        @Override
+        public <T> FireworkExplosions deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new FireworkExplosions(
+                    ItemComponents_v1_20_5.this.typeSerializers.FIREWORK_EXPLOSIONS_EXPLOSION_SHAPE.fromMap(converter, map, FireworkExplosions.SHAPE),
+                    BaseTypes.INT_ARRAY.fromMap(converter, map, FireworkExplosions.COLORS, new int[0]),
+                    BaseTypes.INT_ARRAY.fromMap(converter, map, FireworkExplosions.FADE_COLORS, new int[0]),
+                    BaseTypes.BOOLEAN.fromMap(converter, map, FireworkExplosions.HAS_TRAIL, false),
+                    BaseTypes.BOOLEAN.fromMap(converter, map, FireworkExplosions.HAS_TWINKLE, false)
+            );
         }
-        if (fireworkExplosions.isHasTrail()) object.addProperty(FireworkExplosions.HAS_TRAIL, true);
-        if (fireworkExplosions.isHasTwinkle()) object.addProperty(FireworkExplosions.HAS_TWINKLE, true);
-        return object;
-    }, element -> {
-        JsonObject object = requireJsonObject(element);
-        FireworkExplosions fireworkExplosions = new FireworkExplosions();
-        fireworkExplosions.setShape(FireworkExplosions.ExplosionShape.byName(requireString(object.get(FireworkExplosions.SHAPE))));
-        if (object.has(FireworkExplosions.COLORS)) {
-            List<Integer> colors = requireList(object.get(FireworkExplosions.COLORS), TypeValidator::requireInt);
-            fireworkExplosions.setColors(colors.stream().mapToInt(i -> i).toArray());
-        }
-        if (object.has(FireworkExplosions.FADE_COLORS)) {
-            List<Integer> fadeColors = requireList(object.get(FireworkExplosions.FADE_COLORS), TypeValidator::requireInt);
-            fireworkExplosions.setFadeColors(fadeColors.stream().mapToInt(i -> i).toArray());
-        }
-        if (object.has(FireworkExplosions.HAS_TRAIL)) fireworkExplosions.setHasTrail(requireBoolean(object.get(FireworkExplosions.HAS_TRAIL)));
-        if (object.has(FireworkExplosions.HAS_TWINKLE)) fireworkExplosions.setHasTwinkle(requireBoolean(object.get(FireworkExplosions.HAS_TWINKLE)));
-        return fireworkExplosions;
-    }, fireworkExplosions -> {
-        CompoundTag compound = new CompoundTag();
-        compound.addString(FireworkExplosions.SHAPE, fireworkExplosions.getShape().getName());
-        if (fireworkExplosions.getColors().length != 0) compound.addIntArray(FireworkExplosions.COLORS, fireworkExplosions.getColors());
-        if (fireworkExplosions.getFadeColors().length != 0) compound.addIntArray(FireworkExplosions.FADE_COLORS, fireworkExplosions.getFadeColors());
-        if (fireworkExplosions.isHasTrail()) compound.addBoolean(FireworkExplosions.HAS_TRAIL, true);
-        if (fireworkExplosions.isHasTwinkle()) compound.addBoolean(FireworkExplosions.HAS_TWINKLE, true);
-        return compound;
-    }, tag -> {
-        CompoundTag compound = requireCompoundTag(tag);
-        FireworkExplosions fireworkExplosions = new FireworkExplosions();
-        fireworkExplosions.setShape(FireworkExplosions.ExplosionShape.byName(requireString(compound.<INbtTag>get(FireworkExplosions.SHAPE))));
-        if (compound.contains(FireworkExplosions.COLORS)) {
-            List<Integer> colors = TypeValidator.requireList(compound.<INbtTag>get(FireworkExplosions.COLORS), TypeValidator::requireInt);
-            fireworkExplosions.setColors(colors.stream().mapToInt(i -> i).toArray());
-        }
-        if (compound.contains(FireworkExplosions.FADE_COLORS)) {
-            List<Integer> fadeColors = TypeValidator.requireList(compound.<INbtTag>get(FireworkExplosions.FADE_COLORS), TypeValidator::requireInt);
-            fireworkExplosions.setFadeColors(fadeColors.stream().mapToInt(i -> i).toArray());
-        }
-        if (compound.contains(FireworkExplosions.HAS_TRAIL)) {
-            fireworkExplosions.setHasTrail(TypeValidator.requireBoolean(compound.<INbtTag>get(FireworkExplosions.HAS_TRAIL)));
-        }
-        if (compound.contains(FireworkExplosions.HAS_TWINKLE)) {
-            fireworkExplosions.setHasTwinkle(TypeValidator.requireBoolean(compound.<INbtTag>get(FireworkExplosions.HAS_TWINKLE)));
-        }
-        return fireworkExplosions;
     });
     //TODO: fireworks
     //TODO: profile
     //TODO: note_block_sound
-    public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", patterns -> {
-        JsonArray array = new JsonArray();
-        for (BannerPattern pattern : patterns) {
-            JsonObject object = new JsonObject();
-            object.addProperty(BannerPattern.COLOR, pattern.getColor().getName());
-            JsonObject patternObject = new JsonObject();
-            patternObject.addProperty(BannerPattern.Pattern.ASSET_ID, pattern.getPattern().getAssetId().get());
-            patternObject.addProperty(BannerPattern.Pattern.TRANSLATION_KEY, pattern.getPattern().getTranslationKey());
-            object.add(BannerPattern.PATTERN, patternObject);
-            array.add(object);
+    public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", new MergedComponentSerializer<BannerPattern>() {
+        @Override
+        public <T> T serialize(DataConverter<T> converter, BannerPattern component) {
+            T map = converter.emptyMap();
+            converter.put(map, BannerPattern.COLOR, ItemComponents_v1_20_5.this.typeSerializers.DYE_COLOR.serialize(converter, component.getColor()));
+            converter.put(map, BannerPattern.PATTERN, ItemComponents_v1_20_5.this.typeSerializers.BANNER_PATTERN_PATTERN.serialize(converter, component.getPattern()));
+            return map;
         }
-        return array;
-    }, element -> {
-        JsonArray array = requireJsonArray(element);
-        List<BannerPattern> patterns = new ArrayList<>();
-        for (JsonElement arrayElement : array) {
-            JsonObject object = requireJsonObject(arrayElement);
-            DyeColor color = DyeColor.byName(requireString(object.get(BannerPattern.COLOR)));
-            if (object.get(BannerPattern.PATTERN).isJsonPrimitive()) {
-                Identifier assetId = Identifier.of(requireString(object.get(BannerPattern.PATTERN)));
-                this.bannerPatternVerifier.verify(assetId);
-                patterns.add(new BannerPattern(new BannerPattern.Pattern(
-                        assetId,
-                        "" //TODO: Translation key?
-                ), color));
-            } else if (object.get(BannerPattern.PATTERN).isJsonObject()) {
-                JsonObject patternObject = requireJsonObject(object.get(BannerPattern.PATTERN));
-                Identifier assetId = Identifier.of(requireString(patternObject.get(BannerPattern.Pattern.ASSET_ID)));
-                this.bannerPatternVerifier.verify(assetId);
-                patterns.add(new BannerPattern(new BannerPattern.Pattern(
-                        assetId,
-                        requireString(patternObject.get(BannerPattern.Pattern.TRANSLATION_KEY))
-                ), color));
-            } else {
-                throw InvalidTypeException.of(object.get(BannerPattern.PATTERN), "String or Object");
-            }
-        }
-        return patterns;
-    }, patterns -> {
-        ListTag<CompoundTag> list = new ListTag<>();
-        for (BannerPattern pattern : patterns) {
-            list.add(
-                    new CompoundTag()
-                            .addString(BannerPattern.COLOR, pattern.getColor().getName())
-                            .add(BannerPattern.PATTERN, new CompoundTag()
-                                    .addString(BannerPattern.Pattern.ASSET_ID, pattern.getPattern().getAssetId().get())
-                                    .addString(BannerPattern.Pattern.TRANSLATION_KEY, pattern.getPattern().getTranslationKey())
-                            )
+
+        @Override
+        public <T> BannerPattern deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new BannerPattern(
+                    ItemComponents_v1_20_5.this.typeSerializers.BANNER_PATTERN_PATTERN.fromMap(converter, map, BannerPattern.PATTERN),
+                    ItemComponents_v1_20_5.this.typeSerializers.DYE_COLOR.fromMap(converter, map, BannerPattern.COLOR)
             );
         }
-        return list;
-    }, tag -> {
-        List<INbtTag> list = requireListTag(tag);
-        List<BannerPattern> patterns = new ArrayList<>();
-        for (INbtTag arrayElement : list) {
-            CompoundTag object = requireCompoundTag(arrayElement);
-            DyeColor color = DyeColor.byName(requireString(object.<INbtTag>get(BannerPattern.COLOR)));
-            if (object.contains(BannerPattern.PATTERN, NbtType.STRING)) {
-                Identifier assetId = Identifier.of(requireString(object.<INbtTag>get(BannerPattern.PATTERN)));
-                this.bannerPatternVerifier.verify(assetId);
-                patterns.add(new BannerPattern(new BannerPattern.Pattern(
-                        assetId,
-                        "" //TODO: Translation key?
-                ), color));
-            } else if (object.contains(BannerPattern.PATTERN, NbtType.COMPOUND)) {
-                CompoundTag patternObject = requireCompoundTag(object.get(BannerPattern.PATTERN));
-                Identifier assetId = Identifier.of(requireString(patternObject.<INbtTag>get(BannerPattern.Pattern.ASSET_ID)));
-                this.bannerPatternVerifier.verify(assetId);
-                patterns.add(new BannerPattern(new BannerPattern.Pattern(
-                        assetId,
-                        requireString(patternObject.<INbtTag>get(BannerPattern.Pattern.TRANSLATION_KEY))
-                ), color));
-            } else {
-                throw InvalidTypeException.of(object.get(BannerPattern.PATTERN), "String or Compound");
-            }
-        }
-        return patterns;
-    });
-    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", baseColor -> new JsonPrimitive(baseColor.getName()), element -> DyeColor.byName(requireString(element)), baseColor -> new StringTag(baseColor.getName()), tag -> DyeColor.byName(requireString(tag)));
-    public final ItemComponent<List<Identifier>> POT_DECORATIONS = register("pot_decorations", potDecorations -> {
-        JsonArray array = new JsonArray();
-        potDecorations.forEach(decoration -> array.add(new JsonPrimitive(decoration.get())));
-        return array;
-    }, element -> {
-        JsonArray array = requireJsonArray(element);
-        List<Identifier> potDecorations = new ArrayList<>();
-        for (JsonElement arrayElement : array) {
-            Identifier item = Identifier.of(requireString(arrayElement));
-            this.itemVerifier.check("pot decoration", item);
-            potDecorations.add(item);
-        }
-        return potDecorations;
-    }, potDecorations -> {
-        ListTag<StringTag> list = new ListTag<>();
-        potDecorations.forEach(decoration -> list.add(new StringTag(decoration.get())));
-        return list;
-    }, tag -> {
-        List<INbtTag> list = requireListTag(tag);
-        List<Identifier> potDecorations = new ArrayList<>();
-        for (INbtTag arrayElement : list) {
-            Identifier item = Identifier.of(requireString(arrayElement));
-            this.itemVerifier.check("pot decoration", item);
-            potDecorations.add(item);
-        }
-        return potDecorations;
-    }, potDecorations -> {
+    }.listOf());
+    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.DYE_COLOR);
+    public final ItemComponent<List<Identifier>> POT_DECORATIONS = register("pot_decorations", BaseTypes.IDENTIFIER.withVerifier(this.registryVerifier.item).listOf(), potDecorations -> {
         if (potDecorations.size() > 4) throw new IllegalArgumentException("Pot decorations can only have at most 4 elements");
     });
     //TODO: container
-    public final ItemComponent<Map<String, String>> BLOCK_STATE = register("block_state", blockSate -> {
-        JsonObject object = new JsonObject();
-        blockSate.forEach(object::addProperty);
-        return object;
-    }, element -> {
-        Map<String, String> blockState = new HashMap<>();
-        JsonObject object = requireJsonObject(element);
-        object.entrySet().forEach(entry -> blockState.put(entry.getKey(), requireString(entry.getValue())));
-        return blockState;
-    }, blockState -> {
-        CompoundTag compound = new CompoundTag();
-        blockState.forEach(compound::addString);
-        return compound;
-    }, tag -> {
-        Map<String, String> blockState = new HashMap<>();
-        CompoundTag compound = requireCompoundTag(tag);
-        for (Map.Entry<String, INbtTag> entry : compound) blockState.put(entry.getKey(), requireString(entry.getValue()));
-        return blockState;
-    });
-    public final ItemComponent<List<BeeData>> BEES = register("bees", bees -> {
-        JsonArray array = new JsonArray();
-        for (BeeData bee : bees) {
-            JsonObject object = new JsonObject();
-            if (!bee.getEntityData().isEmpty()) object.add(BeeData.ENTITY_DATA, JsonNbtConverter.toJson(bee.getEntityData()));
-            object.addProperty(BeeData.TICKS_IN_HIVE, bee.getTicksInHive());
-            object.addProperty(BeeData.MIN_TICKS_IN_HIVE, bee.getMinTicksInHive());
-            array.add(object);
+    public final ItemComponent<Map<String, String>> BLOCK_STATE = register("block_state", BaseTypes.STRING.stringMapOf());
+    public final ItemComponent<List<BeeData>> BEES = register("bees", new MergedComponentSerializer<BeeData>() {
+        @Override
+        public <T> T serialize(DataConverter<T> converter, BeeData component) {
+            T map = converter.emptyMap();
+            if (!component.getEntityData().isEmpty()) {
+                converter.put(map, BeeData.ENTITY_DATA, ItemComponents_v1_20_5.this.typeSerializers.COMPOUND_TAG.serialize(converter, component.getEntityData()));
+            }
+            converter.put(map, BeeData.TICKS_IN_HIVE, BaseTypes.INTEGER.serialize(converter, component.getTicksInHive()));
+            converter.put(map, BeeData.MIN_TICKS_IN_HIVE, BaseTypes.INTEGER.serialize(converter, component.getMinTicksInHive()));
+            return map;
         }
-        return array;
-    }, element -> {
-        JsonArray array = requireJsonArray(element);
-        List<BeeData> bees = new ArrayList<>();
-        for (JsonElement arrayElement : array) {
-            JsonObject bee = requireJsonObject(arrayElement);
-            bees.add(new BeeData(
-                    bee.has(BeeData.ENTITY_DATA) ? requireCompoundTag(JsonNbtConverter.toNbt(requireJsonObject(bee.get(BeeData.ENTITY_DATA)))) : new CompoundTag(),
-                    requireInt(bee.get(BeeData.TICKS_IN_HIVE)),
-                    requireInt(bee.get(BeeData.MIN_TICKS_IN_HIVE))
-            ));
+
+        @Override
+        public <T> BeeData deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new BeeData(
+                    ItemComponents_v1_20_5.this.typeSerializers.COMPOUND_TAG.fromMap(converter, map, BeeData.ENTITY_DATA, new CompoundTag()),
+                    BaseTypes.INTEGER.fromMap(converter, map, BeeData.TICKS_IN_HIVE),
+                    BaseTypes.INTEGER.fromMap(converter, map, BeeData.MIN_TICKS_IN_HIVE)
+            );
         }
-        return bees;
-    }, bees -> {
-        ListTag<CompoundTag> list = new ListTag<>();
-        for (BeeData bee : bees) {
-            CompoundTag compound = new CompoundTag();
-            if (!bee.getEntityData().isEmpty()) compound.add(BeeData.ENTITY_DATA, bee.getEntityData());
-            compound.addInt(BeeData.TICKS_IN_HIVE, bee.getTicksInHive());
-            compound.addInt(BeeData.MIN_TICKS_IN_HIVE, bee.getMinTicksInHive());
-            list.add(compound);
+    }.listOf());
+    public final ItemComponent<String> LOCK = register("lock", BaseTypes.STRING);
+    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = register("container_loot", new MergedComponentSerializer<ContainerLoot>() {
+        @Override
+        public <T> T serialize(DataConverter<T> converter, ContainerLoot component) {
+            T map = converter.emptyMap();
+            converter.put(map, ContainerLoot.LOOT_TABLE, BaseTypes.IDENTIFIER.serialize(converter, component.getLootTable()));
+            if (component.getSeed() != 0) converter.put(map, ContainerLoot.SEED, BaseTypes.LONG.serialize(converter, component.getSeed()));
+            return map;
         }
-        return list;
-    }, tag -> {
-        List<INbtTag> list = requireListTag(tag);
-        List<BeeData> bees = new ArrayList<>();
-        for (INbtTag arrayElement : list) {
-            CompoundTag bee = requireCompoundTag(arrayElement);
-            bees.add(new BeeData(
-                    bee.contains(BeeData.ENTITY_DATA) ? requireCompoundTag(bee.get(BeeData.ENTITY_DATA)) : new CompoundTag(),
-                    requireInt(bee.<INbtTag>get(BeeData.TICKS_IN_HIVE)),
-                    requireInt(bee.<INbtTag>get(BeeData.MIN_TICKS_IN_HIVE))
-            ));
+
+        @Override
+        public <T> ContainerLoot deserialize(DataConverter<T> converter, T data) {
+            Map<String, T> map = BaseTypes.asStringTypeMap(converter, data);
+            return new ContainerLoot(
+                    BaseTypes.IDENTIFIER.fromMap(converter, map, ContainerLoot.LOOT_TABLE),
+                    BaseTypes.LONG.fromMap(converter, map, ContainerLoot.SEED, 0L)
+            );
         }
-        return bees;
-    });
-    public final ItemComponent<String> LOCK = register("lock", JsonPrimitive::new, TypeValidator::requireString, StringTag::new, TypeValidator::requireString);
-    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = register("container_loot", containerLoot -> {
-        JsonObject object = new JsonObject();
-        object.addProperty(ContainerLoot.LOOT_TABLE, containerLoot.getLootTable().get());
-        if (containerLoot.getSeed() != 0) object.addProperty(ContainerLoot.SEED, containerLoot.getSeed());
-        return object;
-    }, element -> {
-        JsonObject object = requireJsonObject(element);
-        return new ContainerLoot(
-                Identifier.of(requireString(object.get(ContainerLoot.LOOT_TABLE))),
-                object.has(ContainerLoot.SEED) ? requireLong(object.get(ContainerLoot.SEED)) : 0
-        );
-    }, containerLoot -> {
-        CompoundTag compound = new CompoundTag();
-        compound.addString(ContainerLoot.LOOT_TABLE, containerLoot.getLootTable().get());
-        if (containerLoot.getSeed() != 0) compound.addLong(ContainerLoot.SEED, containerLoot.getSeed());
-        return compound;
-    }, tag -> {
-        CompoundTag compound = requireCompoundTag(tag);
-        return new ContainerLoot(
-                Identifier.of(requireString(compound.<INbtTag>get(ContainerLoot.LOOT_TABLE))),
-                compound.contains(ContainerLoot.SEED) ? requireLong(compound.<INbtTag>get(ContainerLoot.SEED)) : 0
-        );
     });
 
 
-    private Verifier<Identifier> itemVerifier = item -> true;
-    private Verifier<Identifier> enchantmentVerifier = enchantment -> true;
-    private Verifier<Identifier> potionVerifier = potion -> true;
-    private Verifier<Identifier> statusEffectVerifier = statusEffect -> true;
-    private Verifier<Identifier> mapDecorationTypeVerifier = type -> true;
-    private Verifier<Identifier> recipeVerifier = recipe -> true;
-    private Verifier<Identifier> bannerPatternVerifier = bannerPattern -> true;
+    public ItemComponents_v1_20_5() {
+    }
+
+    public ItemComponents_v1_20_5(final RegistryVerifier registryVerifier) {
+        super(registryVerifier);
+    }
 
     @Override
-    public JsonElement mapToJson(ItemComponentMap map) {
-        JsonObject object = new JsonObject();
+    public <D> D mapTo(DataConverter<D> converter, ItemComponentMap map) {
+        D out = converter.emptyMap();
         for (Map.Entry<ItemComponent<?>, Optional<?>> entry : map.getRaw().entrySet()) {
             ItemComponent<Object> component = (ItemComponent<Object>) entry.getKey();
             Optional<?> value = entry.getValue();
 
             String name = component.getName().get();
-            if (value.isPresent()) object.add(name, component.toJson(value.get()));
-            else object.add("!" + name, new JsonObject());
+            if (value.isPresent()) converter.put(out, name, component.serialize(converter, value.get()));
+            else converter.put(out, "!" + name, converter.emptyMap());
         }
-        return object;
+        return out;
     }
 
     @Override
-    public ItemComponentMap mapFromJson(JsonElement element) {
-        JsonObject object = requireJsonObject(element);
-        ItemComponentMap map = new ItemComponentMap(this);
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+    public <D> ItemComponentMap mapFrom(DataConverter<D> converter, D data) {
+        Map<String, D> map = converter.asStringTypeMap(data).getOrThrow();
+        ItemComponentMap out = new ItemComponentMap(this);
+        for (Map.Entry<String, D> entry : map.entrySet()) {
             String name = entry.getKey();
             boolean forRemoval = name.startsWith("!");
             if (forRemoval) name = name.substring(1);
             Identifier id = Identifier.of(name);
             ItemComponent<Object> component = this.getComponent(id);
-            if (component == null) throw new IllegalArgumentException("Unknown item component: " + name);
-
-            if (forRemoval) map.markForRemoval(component);
-            else map.set(component, component.fromJson(entry.getValue()));
+            if (component == null) throw new IllegalArgumentException("Unknown item component: " + id);
+            if (forRemoval) out.markForRemoval(component);
+            else out.set(component, component.deserialize(converter, entry.getValue()));
         }
-        return map;
-    }
-
-    @Override
-    public INbtTag mapToNbt(ItemComponentMap map) {
-        CompoundTag compound = new CompoundTag();
-        for (Map.Entry<ItemComponent<?>, Optional<?>> entry : map.getRaw().entrySet()) {
-            ItemComponent<Object> component = (ItemComponent<Object>) entry.getKey();
-            Optional<?> value = entry.getValue();
-
-            String name = component.getName().get();
-            if (value.isPresent()) compound.add(name, component.toNbt(value.get()));
-            else compound.add("!" + name, new CompoundTag());
-        }
-        return compound;
-    }
-
-    @Override
-    public ItemComponentMap mapFromNbt(INbtTag tag) {
-        CompoundTag compound = requireCompoundTag(tag);
-        ItemComponentMap map = new ItemComponentMap(this);
-        for (Map.Entry<String, INbtTag> entry : compound) {
-            String name = entry.getKey();
-            boolean forRemoval = name.startsWith("!");
-            if (forRemoval) name = name.substring(1);
-            Identifier id = Identifier.of(name);
-            ItemComponent<Object> component = this.getComponent(id);
-            if (component == null) throw new IllegalArgumentException("Unknown item component: " + name);
-
-            if (forRemoval) map.markForRemoval(component);
-            else map.set(component, component.fromNbt(entry.getValue()));
-        }
-        return map;
-    }
-
-    public ItemComponents_v1_20_5 withItemVerifier(final Verifier<Identifier> verifier) {
-        ItemComponents_v1_20_5 itemComponents = this.copy();
-        itemComponents.itemVerifier = verifier;
-        return itemComponents;
-    }
-
-    public ItemComponents_v1_20_5 withEnchantmentVerifier(final Verifier<Identifier> verifier) {
-        ItemComponents_v1_20_5 itemComponents = this.copy();
-        itemComponents.enchantmentVerifier = verifier;
-        return itemComponents;
-    }
-
-    public ItemComponents_v1_20_5 withPotionVerifier(final Verifier<Identifier> verifier) {
-        ItemComponents_v1_20_5 itemComponents = this.copy();
-        itemComponents.potionVerifier = verifier;
-        return itemComponents;
-    }
-
-    public ItemComponents_v1_20_5 withStatusEffectVerifier(final Verifier<Identifier> verifier) {
-        ItemComponents_v1_20_5 itemComponents = this.copy();
-        itemComponents.statusEffectVerifier = verifier;
-        return itemComponents;
-    }
-
-    public ItemComponents_v1_20_5 withMapDecorationTypeVerifier(final Verifier<Identifier> verifier) {
-        ItemComponents_v1_20_5 itemComponents = this.copy();
-        itemComponents.mapDecorationTypeVerifier = verifier;
-        return itemComponents;
-    }
-
-    public ItemComponents_v1_20_5 withRecipeVerifier(final Verifier<Identifier> verifier) {
-        ItemComponents_v1_20_5 itemComponents = this.copy();
-        itemComponents.recipeVerifier = verifier;
-        return itemComponents;
-    }
-
-    public ItemComponents_v1_20_5 withBannerPatternVerifier(final Verifier<Identifier> verifier) {
-        ItemComponents_v1_20_5 itemComponents = this.copy();
-        itemComponents.bannerPatternVerifier = verifier;
-        return itemComponents;
-    }
-
-    private ItemComponents_v1_20_5 copy() {
-        ItemComponents_v1_20_5 itemComponents = new ItemComponents_v1_20_5();
-        itemComponents.itemVerifier = this.itemVerifier;
-        itemComponents.enchantmentVerifier = this.enchantmentVerifier;
-        itemComponents.potionVerifier = this.potionVerifier;
-        itemComponents.statusEffectVerifier = this.statusEffectVerifier;
-        itemComponents.mapDecorationTypeVerifier = this.mapDecorationTypeVerifier;
-        itemComponents.recipeVerifier = this.recipeVerifier;
-        itemComponents.bannerPatternVerifier = this.bannerPatternVerifier;
-        return itemComponents;
+        return out;
     }
 
 }

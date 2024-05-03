@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
+import net.lenni0451.mcstructs.itemcomponents.serialization.Named;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
@@ -47,7 +48,7 @@ public class Types_v1_20_5 {
 
     @Getter
     @AllArgsConstructor
-    public enum Rarity {
+    public enum Rarity implements Named {
         COMMON("common", TextFormatting.WHITE),
         UNCOMMON("uncommon", TextFormatting.YELLOW),
         RARE("rare", TextFormatting.AQUA),
@@ -195,7 +196,7 @@ public class Types_v1_20_5 {
 
         @Getter
         @AllArgsConstructor
-        public enum ExplosionShape {
+        public enum ExplosionShape implements Named {
             SMALL_BALL("small_ball"),
             LARGE_BALL("large_ball"),
             STAR("star"),
@@ -243,7 +244,7 @@ public class Types_v1_20_5 {
 
     @Getter
     @AllArgsConstructor
-    public enum DyeColor {
+    public enum DyeColor implements Named {
         WHITE("white", 0xF9_FF_FE),
         ORANGE("orange", 0xF9_80_1D),
         MAGENTA("magenta", 0xC7_4E_BD),

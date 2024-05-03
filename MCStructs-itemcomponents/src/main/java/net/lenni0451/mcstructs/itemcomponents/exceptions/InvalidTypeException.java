@@ -17,4 +17,9 @@ public class InvalidTypeException extends RuntimeException {
         super("Expected " + String.join("/", expected) + " but got " + (type == null ? "null" : type.getClass().getName()));
     }
 
+    public InvalidTypeException with(final Throwable cause) {
+        this.initCause(cause);
+        return this;
+    }
+
 }
