@@ -57,7 +57,7 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
             ),
             Codec.STRING.map(WritableBook.Page::getRaw, raw -> new WritableBook.Page(raw, null))
     );
-    public final Codec<Map<Identifier, Integer>> ENCHANTMENT_LEVELS = Codec.INTEGER.mapOf(Codec.STRING_IDENTIFIER.verified(registry.getRegistryVerifier().enchantment));
+    public final Codec<Map<Identifier, Integer>> ENCHANTMENT_LEVELS = Codec.mapOf(Codec.STRING_IDENTIFIER.verified(registry.getRegistryVerifier().enchantment), Codec.INTEGER);
     public final Codec<ContainerSlot> CONTAINER_SLOT = ConstructorCodec.of(
             Codec.rangedInt(0, 255).mapCodec(ContainerSlot.SLOT), ContainerSlot::getSlot,
             this.ITEM_STACK.mapCodec(ContainerSlot.ITEM), ContainerSlot::getItem,

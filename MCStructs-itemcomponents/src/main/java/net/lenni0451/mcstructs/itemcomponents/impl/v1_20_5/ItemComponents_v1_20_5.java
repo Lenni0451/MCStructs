@@ -63,13 +63,13 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     ));
     public final ItemComponent<Integer> MAP_COLOR = register("map_color", Codec.INTEGER);
     public final ItemComponent<Integer> MAP_ID = register("map_id", Codec.INTEGER);
-    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = register("map_decorations", ConstructorCodec.of(
+    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = register("map_decorations", Codec.mapOf(Codec.STRING, ConstructorCodec.of(
             Codec.STRING_IDENTIFIER.verified(this.getRegistryVerifier().mapDecorationType).mapCodec(MapDecoration.TYPE), MapDecoration::getType,
             Codec.DOUBLE.mapCodec(MapDecoration.X), MapDecoration::getX,
             Codec.DOUBLE.mapCodec(MapDecoration.Z), MapDecoration::getZ,
             Codec.FLOAT.mapCodec(MapDecoration.ROTATION), MapDecoration::getRotation,
             MapDecoration::new
-    ).stringMapOf());
+    )));
     public final ItemComponent<Integer> MAP_POST_PROCESSING = registerNonSerializable("map_post_processing");
     public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = register("charged_projectiles", this.typeSerializers.ITEM_STACK.listOf());
     public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = register("bundle_contents", this.typeSerializers.ITEM_STACK.listOf());
@@ -108,7 +108,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.DYE_COLOR);
     public final ItemComponent<List<Identifier>> POT_DECORATIONS = register("pot_decorations", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.item).listOf(4));
     public final ItemComponent<List<ContainerSlot>> CONTAINER = register("container", this.typeSerializers.CONTAINER_SLOT.listOf(256));
-    public final ItemComponent<Map<String, String>> BLOCK_STATE = register("block_state", Codec.STRING.stringMapOf());
+    public final ItemComponent<Map<String, String>> BLOCK_STATE = register("block_state", Codec.mapOf(Codec.STRING, Codec.STRING));
     public final ItemComponent<List<BeeData>> BEES = register("bees", ConstructorCodec.of(
             this.typeSerializers.COMPOUND_TAG.mapCodec(BeeData.ENTITY_DATA).defaulted(CompoundTag::new, CompoundTag::isEmpty), BeeData::getEntityData,
             Codec.INTEGER.mapCodec(BeeData.TICKS_IN_HIVE), BeeData::getTicksInHive,

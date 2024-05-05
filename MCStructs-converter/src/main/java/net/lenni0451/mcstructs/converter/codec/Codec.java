@@ -230,6 +230,40 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
+    static <K, V> Codec<Map<K, V>> mapOf(final Codec<K> keyCodec, final Codec<V> valueCodec) {
+        return new Codec<Map<K, V>>() {
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, Map<K, V> element) {
+                Map<S, S> map = new HashMap<>();
+                for (Map.Entry<K, V> entry : element.entrySet()) {
+                    Result<S> key = keyCodec.serialize(converter, entry.getKey());
+                    if (key.isError()) return key.mapError();
+                    Result<S> value = valueCodec.serialize(converter, entry.getValue());
+                    if (value.isError()) return value.mapError();
+
+                    map.put(key.get(), value.get());
+                }
+                return Result.success(converter.createMap(map));
+            }
+
+            @Override
+            public <S> Result<Map<K, V>> deserialize(DataConverter<S> converter, S data) {
+                Result<Map<S, S>> map = converter.asMap(data);
+                if (map.isError()) return map.mapError();
+                Map<K, V> converted = new HashMap<>();
+                for (Map.Entry<S, S> entry : map.get().entrySet()) {
+                    Result<K> key = keyCodec.deserialize(converter, entry.getKey());
+                    if (key.isError()) return key.mapError();
+                    Result<V> value = valueCodec.deserialize(converter, entry.getValue());
+                    if (value.isError()) return value.mapError();
+
+                    converted.put(key.get(), value.get());
+                }
+                return Result.success(converted);
+            }
+        };
+    }
+
     default <N> Codec<N> map(final Function<N, T> serializer, final Function<T, N> deserializer) {
         return new Codec<N>() {
             @Override
@@ -311,44 +345,6 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
                 return Result.success(converted);
             }
         };
-    }
-
-    default <K> Codec<Map<K, T>> mapOf(final Codec<K> keyCodec) {
-        return new Codec<Map<K, T>>() {
-            @Override
-            public <S> Result<S> serialize(DataConverter<S> converter, Map<K, T> element) {
-                Map<S, S> map = new HashMap<>();
-                for (Map.Entry<K, T> entry : element.entrySet()) {
-                    Result<S> key = keyCodec.serialize(converter, entry.getKey());
-                    if (key.isError()) return key.mapError();
-                    Result<S> value = Codec.this.serialize(converter, entry.getValue());
-                    if (value.isError()) return value.mapError();
-
-                    map.put(key.get(), value.get());
-                }
-                return Result.success(converter.createMap(map));
-            }
-
-            @Override
-            public <S> Result<Map<K, T>> deserialize(DataConverter<S> converter, S data) {
-                Result<Map<S, S>> map = converter.asMap(data);
-                if (map.isError()) return map.mapError();
-                Map<K, T> converted = new HashMap<>();
-                for (Map.Entry<S, S> entry : map.get().entrySet()) {
-                    Result<K> key = keyCodec.deserialize(converter, entry.getKey());
-                    if (key.isError()) return key.mapError();
-                    Result<T> value = Codec.this.deserialize(converter, entry.getValue());
-                    if (value.isError()) return value.mapError();
-
-                    converted.put(key.get(), value.get());
-                }
-                return Result.success(converted);
-            }
-        };
-    }
-
-    default Codec<Map<String, T>> stringMapOf() {
-        return this.mapOf(STRING);
     }
 
     default Codec<T> verified(final Function<T, Result<Void>> verifier) {
