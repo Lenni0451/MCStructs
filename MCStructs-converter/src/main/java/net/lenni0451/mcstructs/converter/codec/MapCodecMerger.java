@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class ConstructorCodec {
+class MapCodecMerger {
 
     public static <T1, O> Codec<O> of(
             final MapCodec<?, T1> type1, final Function<O, T1> value1,

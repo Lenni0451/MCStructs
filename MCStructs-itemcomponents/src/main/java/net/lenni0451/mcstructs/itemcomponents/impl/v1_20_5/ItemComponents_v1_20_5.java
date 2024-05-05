@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5;
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
-import net.lenni0451.mcstructs.converter.codec.ConstructorCodec;
+import net.lenni0451.mcstructs.converter.codec.MapCodec;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
@@ -25,7 +25,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Integer> MAX_STACK_SIZE = register("max_stack_size", Codec.rangedInt(1, 99));
     public final ItemComponent<Integer> MAX_DAMAGE = register("max_damage", Codec.minInt(1));
     public final ItemComponent<Integer> DAMAGE = register("damage", Codec.minInt(0));
-    public final ItemComponent<Unbreakable> UNBREAKABLE = register("unbreakable", ConstructorCodec.of(
+    public final ItemComponent<Unbreakable> UNBREAKABLE = register("unbreakable", MapCodec.of(
             Codec.BOOLEAN.mapCodec(Unbreakable.SHOW_IN_TOOLTIP).optionalDefault(() -> true), Unbreakable::isShowInTooltip,
             Unbreakable::new
     ));
@@ -34,7 +34,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<List<ATextComponent>> LORE = register("lore", this.typeSerializers.TEXT_COMPONENT.listOf(256));
     public final ItemComponent<Rarity> RARITY = this.register("rarity", Codec.named(Rarity.values()));
     public final ItemComponent<Enchantments> ENCHANTMENTS = register("enchantments", Codec.oneOf(
-            ConstructorCodec.of(
+            MapCodec.of(
                     this.typeSerializers.ENCHANTMENT_LEVELS.mapCodec(Enchantments.LEVELS), Enchantments::getEnchantments,
                     Codec.BOOLEAN.mapCodec(Enchantments.SHOW_IN_TOOLTIP).optionalDefault(() -> true), Enchantments::isShowInTooltip,
                     Enchantments::new
@@ -55,14 +55,14 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Boolean> FIRE_RESISTANT = register("fire_resistant", Codec.UNIT);
     //TODO: tool
     public final ItemComponent<Enchantments> STORED_ENCHANTMENTS = copy("stored_enchantments", this.ENCHANTMENTS);
-    public final ItemComponent<DyedColor> DYED_COLOR = register("dyed_color", ConstructorCodec.of(
+    public final ItemComponent<DyedColor> DYED_COLOR = register("dyed_color", MapCodec.of(
             Codec.INTEGER.mapCodec(DyedColor.RGB), DyedColor::getRgb,
             Codec.BOOLEAN.mapCodec(DyedColor.SHOW_IN_TOOLTIP).optionalDefault(() -> true), DyedColor::isShowInTooltip,
             DyedColor::new
     ));
     public final ItemComponent<Integer> MAP_COLOR = register("map_color", Codec.INTEGER);
     public final ItemComponent<Integer> MAP_ID = register("map_id", Codec.INTEGER);
-    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = register("map_decorations", Codec.mapOf(Codec.STRING, ConstructorCodec.of(
+    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = register("map_decorations", Codec.mapOf(Codec.STRING, MapCodec.of(
             Codec.STRING_IDENTIFIER.verified(this.getRegistryVerifier().mapDecorationType).mapCodec(MapDecoration.TYPE), MapDecoration::getType,
             Codec.DOUBLE.mapCodec(MapDecoration.X), MapDecoration::getX,
             Codec.DOUBLE.mapCodec(MapDecoration.Z), MapDecoration::getZ,
@@ -73,12 +73,12 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = register("charged_projectiles", this.typeSerializers.ITEM_STACK.listOf());
     public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = register("bundle_contents", this.typeSerializers.ITEM_STACK.listOf());
     //TODO: potion_contents
-    public final ItemComponent<List<SuspiciousStewEffect>> SUSPICIOUS_STEW_EFFECTS = this.register("suspicious_stew_effects", ConstructorCodec.of(
+    public final ItemComponent<List<SuspiciousStewEffect>> SUSPICIOUS_STEW_EFFECTS = this.register("suspicious_stew_effects", MapCodec.of(
             Codec.STRING_IDENTIFIER.verified(this.registryVerifier.statusEffect).mapCodec(SuspiciousStewEffect.ID), SuspiciousStewEffect::getId,
             Codec.INTEGER.mapCodec(SuspiciousStewEffect.DURATION).lenient().optionalDefault(() -> 0), SuspiciousStewEffect::getDuration,
             SuspiciousStewEffect::new
     ).listOf());
-    public final ItemComponent<WritableBook> WRITABLE_BOOK_CONTENT = register("writable_book_content", ConstructorCodec.of(
+    public final ItemComponent<WritableBook> WRITABLE_BOOK_CONTENT = register("writable_book_content", MapCodec.of(
             this.typeSerializers.WRITABLE_BOOK_PAGE.listOf().mapCodec(WritableBook.PAGES).defaulted(ArrayList::new, List::isEmpty), WritableBook::getPages,
             WritableBook::new
     ));
@@ -95,7 +95,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         return Result.success(null);
     }));
     public final ItemComponent<Instrument> INSTRUMENT = this.register("instrument", Codec.oneOf(
-            ConstructorCodec.of(
+            MapCodec.of(
                     this.typeSerializers.SOUND_EVENT.mapCodec(Instrument.SOUND_EVENT), Instrument::getSoundEvent,
                     Codec.minInt(1).mapCodec(Instrument.USE_DURATION), Instrument::getUseDuration,
                     Codec.minFloat(0).mapCodec(Instrument.RANGE), Instrument::getRange,
@@ -105,8 +105,8 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     ));
     public final ItemComponent<Integer> OMINOUS_BOTTLE_AMPLIFIER = register("ominous_bottle_amplifier", Codec.rangedInt(1, 4));
     public final ItemComponent<List<Identifier>> RECIPES = register("recipes", Codec.STRING_IDENTIFIER.listOf());
-    public final ItemComponent<LodestoneTracker> LODESTONE_TRACKER = this.register("lodestone_tracker", ConstructorCodec.of(
-            ConstructorCodec.of(
+    public final ItemComponent<LodestoneTracker> LODESTONE_TRACKER = this.register("lodestone_tracker", MapCodec.of(
+            MapCodec.of(
                     Codec.STRING_IDENTIFIER.mapCodec(LodestoneTracker.GlobalPos.DIMENSION), LodestoneTracker.GlobalPos::getDimension,
                     this.typeSerializers.BLOCK_POS.mapCodec(LodestoneTracker.GlobalPos.POS), LodestoneTracker.GlobalPos::getPos,
                     LodestoneTracker.GlobalPos::new
@@ -114,7 +114,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(LodestoneTracker.TRACKED).optionalDefault(() -> true), LodestoneTracker::isTracked,
             LodestoneTracker::new
     ));
-    public final ItemComponent<FireworkExplosions> FIREWORK_EXPLOSION = this.register("firework_explosion", ConstructorCodec.of(
+    public final ItemComponent<FireworkExplosions> FIREWORK_EXPLOSION = this.register("firework_explosion", MapCodec.of(
             Codec.named(FireworkExplosions.ExplosionShape.values()).mapCodec(FireworkExplosions.SHAPE), FireworkExplosions::getShape,
             Codec.INT_ARRAY.mapCodec(FireworkExplosions.COLORS).defaulted(() -> new int[0], array -> array.length == 0), FireworkExplosions::getColors,
             Codec.INT_ARRAY.mapCodec(FireworkExplosions.FADE_COLORS).defaulted(() -> new int[0], array -> array.length == 0), FireworkExplosions::getFadeColors,
@@ -122,13 +122,13 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(FireworkExplosions.HAS_TWINKLE).optionalDefault(() -> false), FireworkExplosions::isHasTwinkle,
             FireworkExplosions::new
     ));
-    public final ItemComponent<Fireworks> FIREWORKS = this.register("fireworks", ConstructorCodec.of(
+    public final ItemComponent<Fireworks> FIREWORKS = this.register("fireworks", MapCodec.of(
             Codec.BYTE.map(Integer::byteValue, b -> b & 0xFF).mapCodec(Fireworks.FLIGHT_DURATION).optionalDefault(() -> 0), Fireworks::getFlightDuration,
             this.FIREWORK_EXPLOSION.getCodec().listOf().mapCodec(Fireworks.EXPLOSIONS).defaulted(ArrayList::new, List::isEmpty), Fireworks::getExplosions,
             Fireworks::new
     ));
     public final ItemComponent<GameProfile> PROFILE = this.register("profile", Codec.oneOf(
-            ConstructorCodec.of(
+            MapCodec.of(
                     this.typeSerializers.PLAYER_NAME.mapCodec(GameProfile.NAME).optionalDefault(() -> null), GameProfile::getName,
                     Codec.INT_ARRAY_UUID.mapCodec(GameProfile.ID).optionalDefault(() -> null), GameProfile::getUuid,
                     Codec.oneOf(
@@ -149,7 +149,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
                                 }
                                 return properties;
                             }),
-                            ConstructorCodec.of(
+                            MapCodec.of(
                                     Codec.STRING.mapCodec(GameProfile.Property.NAME), GameProfile.Property::getName,
                                     Codec.STRING.mapCodec(GameProfile.Property.VALUE), GameProfile.Property::getValue,
                                     Codec.STRING.mapCodec(GameProfile.Property.SIGNATURE).lenient().optionalDefault(() -> null), GameProfile.Property::getSignature,
@@ -169,7 +169,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             this.typeSerializers.PLAYER_NAME.map(GameProfile::getName, name -> new GameProfile(name, null, new HashMap<>()))
     ));
     public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", Codec.STRING_IDENTIFIER);
-    public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", ConstructorCodec.of(
+    public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", MapCodec.of(
             this.typeSerializers.DYE_COLOR.mapCodec(BannerPattern.COLOR), BannerPattern::getColor,
             this.typeSerializers.BANNER_PATTERN_PATTERN.mapCodec(BannerPattern.PATTERN), BannerPattern::getPattern,
             BannerPattern::new
@@ -178,14 +178,14 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<List<Identifier>> POT_DECORATIONS = register("pot_decorations", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.item).listOf(4));
     public final ItemComponent<List<ContainerSlot>> CONTAINER = register("container", this.typeSerializers.CONTAINER_SLOT.listOf(256));
     public final ItemComponent<Map<String, String>> BLOCK_STATE = register("block_state", Codec.mapOf(Codec.STRING, Codec.STRING));
-    public final ItemComponent<List<BeeData>> BEES = register("bees", ConstructorCodec.of(
+    public final ItemComponent<List<BeeData>> BEES = register("bees", MapCodec.of(
             this.typeSerializers.COMPOUND_TAG.mapCodec(BeeData.ENTITY_DATA).defaulted(CompoundTag::new, CompoundTag::isEmpty), BeeData::getEntityData,
             Codec.INTEGER.mapCodec(BeeData.TICKS_IN_HIVE), BeeData::getTicksInHive,
             Codec.INTEGER.mapCodec(BeeData.MIN_TICKS_IN_HIVE), BeeData::getMinTicksInHive,
             BeeData::new
     ).listOf());
     public final ItemComponent<String> LOCK = register("lock", Codec.STRING);
-    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = register("container_loot", ConstructorCodec.of(
+    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = register("container_loot", MapCodec.of(
             Codec.STRING_IDENTIFIER.mapCodec(ContainerLoot.LOOT_TABLE), ContainerLoot::getLootTable,
             Codec.LONG.mapCodec(ContainerLoot.SEED).optionalDefault(() -> 0L), ContainerLoot::getSeed,
             ContainerLoot::new

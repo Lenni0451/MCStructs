@@ -95,4 +95,9 @@ public class Result<T> {
         if (this.isError()) throw new IllegalStateException("Tried to get result from error", this.error);
     }
 
+    @Override
+    public String toString() {
+        return "Result{" + (this.error == null ? "result=" + this.result : "error=" + this.error) + "}";
+    }
+
 }

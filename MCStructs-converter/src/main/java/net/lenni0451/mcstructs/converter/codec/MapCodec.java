@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class MapCodec<K, V> {
+public class MapCodec<K, V> extends MapCodecMerger {
 
     public static <K, V> MapCodec<K, V> of(final K key, final Codec<K> keyCodec, final Codec<V> valueCodec) {
         return new MapCodec<>(key, keyCodec, valueCodec);

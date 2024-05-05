@@ -180,6 +180,22 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
+    static <T> Codec<T> recursive(final Function<Codec<T>, Codec<T>> creator) {
+        return new Codec<T>() {
+            private final Codec<T> codec = creator.apply(this);
+
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                return this.codec.serialize(converter, element);
+            }
+
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                return this.codec.deserialize(converter, data);
+            }
+        };
+    }
+
     static Codec<Integer> minInt(final int minInclusive) {
         return rangedInt(minInclusive, Integer.MAX_VALUE);
     }
