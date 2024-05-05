@@ -63,6 +63,11 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
             this.ITEM_STACK.mapCodec(ContainerSlot.ITEM), ContainerSlot::getItem,
             ContainerSlot::new
     );
+    public final Codec<String> PLAYER_NAME = Codec.STRING.verified(name -> {
+        if (name.length() > 16) return Result.error("Player name is too long (max. 16 characters)");
+        if (name.chars().filter(c -> c <= 32 || c >= 127).findAny().isPresent()) return Result.error("Player name contains invalid characters");
+        return Result.success(null);
+    });
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);

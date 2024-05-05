@@ -12,10 +12,7 @@ import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Types_v1_20_5 {
 
@@ -222,6 +219,17 @@ public class Types_v1_20_5 {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class Fireworks {
+        public static final String FLIGHT_DURATION = "flight_duration";
+        public static final String EXPLOSIONS = "explosions";
+
+        private int flightDuration;
+        private List<FireworkExplosions> explosions;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class BannerPattern {
         public static final String PATTERN = "pattern";
         public static final String COLOR = "color";
@@ -313,6 +321,36 @@ public class Types_v1_20_5 {
 
         private int slot;
         private ItemStack item;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GameProfile {
+        public static final String NAME = "name";
+        public static final String ID = "id";
+        public static final String PROPERTIES = "properties";
+
+        @Nullable
+        private String name;
+        @Nullable
+        private UUID uuid;
+        private Map<String, List<Property>> properties;
+
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class Property {
+            public static final String NAME = "name";
+            public static final String VALUE = "value";
+            public static final String SIGNATURE = "signature";
+
+            private String name;
+            private String value;
+            @Nullable
+            private String signature;
+        }
     }
 
 }

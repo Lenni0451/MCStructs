@@ -4,10 +4,7 @@ import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
@@ -145,6 +142,21 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         }
     };
     Codec<Identifier> STRING_IDENTIFIER = STRING.mapThrowing(Identifier::get, Identifier::of);
+    Codec<UUID> INT_ARRAY_UUID = INT_ARRAY.verified(array -> {
+        if (array.length != 4) return Result.error("UUID array must have a length of 4");
+        return null;
+    }).map(uuid -> {
+        int[] ints = new int[4];
+        ints[0] = (int) (uuid.getMostSignificantBits() >> 32);
+        ints[1] = (int) uuid.getMostSignificantBits();
+        ints[2] = (int) (uuid.getLeastSignificantBits() >> 32);
+        ints[3] = (int) uuid.getLeastSignificantBits();
+        return ints;
+    }, ints -> {
+        long mostSigBits = ((long) ints[0] << 32) | ints[1] & 0xFFFF_FFFFL;
+        long leastSigBits = ((long) ints[2] << 32) | ints[3] & 0xFFFF_FFFFL;
+        return new UUID(mostSigBits, leastSigBits);
+    });
 
     static <T> Codec<T> ofThrowing(final DataSerializer<T> serializer, final DataDeserializer<T> deserializer) {
         return new Codec<T>() {

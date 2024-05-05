@@ -11,10 +11,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.*;
 
@@ -97,8 +94,52 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(FireworkExplosions.HAS_TWINKLE).optionalDefault(() -> false), FireworkExplosions::isHasTwinkle,
             FireworkExplosions::new
     ));
-    //TODO: fireworks
-    //TODO: profile
+    public final ItemComponent<Fireworks> FIREWORKS = this.register("fireworks", ConstructorCodec.of(
+            Codec.BYTE.map(Integer::byteValue, b -> b & 0xFF).mapCodec(Fireworks.FLIGHT_DURATION).optionalDefault(() -> 0), Fireworks::getFlightDuration,
+            this.FIREWORK_EXPLOSION.getCodec().listOf().mapCodec(Fireworks.EXPLOSIONS).defaulted(ArrayList::new, List::isEmpty), Fireworks::getExplosions,
+            Fireworks::new
+    ));
+    public final ItemComponent<GameProfile> PROFILE = this.register("profile", Codec.oneOf(
+            ConstructorCodec.of(
+                    this.typeSerializers.PLAYER_NAME.mapCodec(GameProfile.NAME).optionalDefault(() -> null), GameProfile::getName,
+                    Codec.INT_ARRAY_UUID.mapCodec(GameProfile.ID).optionalDefault(() -> null), GameProfile::getUuid,
+                    Codec.oneOf(
+                            Codec.mapOf(Codec.STRING, Codec.STRING.listOf()).map(properties -> {
+                                Map<String, List<String>> map = new HashMap<>();
+                                for (Map.Entry<String, List<GameProfile.Property>> entry : properties.entrySet()) {
+                                    for (GameProfile.Property property : entry.getValue()) {
+                                        map.computeIfAbsent(entry.getKey(), key -> new ArrayList<>()).add(property.getValue());
+                                    }
+                                }
+                                return map;
+                            }, map -> {
+                                Map<String, List<GameProfile.Property>> properties = new HashMap<>();
+                                for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+                                    for (String val : entry.getValue()) {
+                                        properties.computeIfAbsent(entry.getKey(), key -> new ArrayList<>()).add(new GameProfile.Property(entry.getKey(), val, null));
+                                    }
+                                }
+                                return properties;
+                            }),
+                            ConstructorCodec.of(
+                                    Codec.STRING.mapCodec(GameProfile.Property.NAME), GameProfile.Property::getName,
+                                    Codec.STRING.mapCodec(GameProfile.Property.VALUE), GameProfile.Property::getValue,
+                                    Codec.STRING.mapCodec(GameProfile.Property.SIGNATURE).lenient().optionalDefault(() -> null), GameProfile.Property::getSignature,
+                                    GameProfile.Property::new
+                            ).listOf().map(properties -> {
+                                List<GameProfile.Property> list = new ArrayList<>();
+                                for (Map.Entry<String, List<GameProfile.Property>> entry : properties.entrySet()) list.addAll(entry.getValue());
+                                return list;
+                            }, list -> {
+                                Map<String, List<GameProfile.Property>> properties = new HashMap<>();
+                                for (GameProfile.Property property : list) properties.computeIfAbsent(property.getName(), key -> new ArrayList<>()).add(property);
+                                return properties;
+                            })
+                    ).mapCodec(GameProfile.PROPERTIES).defaulted(HashMap::new, Map::isEmpty), GameProfile::getProperties,
+                    GameProfile::new
+            ),
+            this.typeSerializers.PLAYER_NAME.map(GameProfile::getName, name -> new GameProfile(name, null, new HashMap<>()))
+    ));
     public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", Codec.STRING_IDENTIFIER);
     public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", ConstructorCodec.of(
             this.typeSerializers.DYE_COLOR.mapCodec(BannerPattern.COLOR), BannerPattern::getColor,

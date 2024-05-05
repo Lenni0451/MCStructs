@@ -18,6 +18,7 @@ public class MapCodec<K, V> {
     private final K key;
     private final Codec<K> keyCodec;
     private final Codec<V> valueCodec;
+    private boolean lenient;
     private Supplier<V> defaultValue;
     private Predicate<V> skipDefault;
 
@@ -25,6 +26,17 @@ public class MapCodec<K, V> {
         this.key = key;
         this.keyCodec = keyCodec;
         this.valueCodec = valueCodec;
+    }
+
+    /**
+     * Set the field to be lenient.<br>
+     * If the field is present in the map but fails to deserialize it will be ignored instead of failing the whole deserialization process.
+     *
+     * @return The map codec
+     */
+    public MapCodec<K, V> lenient() {
+        this.lenient = true;
+        return this;
     }
 
     /**
@@ -73,7 +85,10 @@ public class MapCodec<K, V> {
         Result<T> serializedKey = this.keyCodec.serialize(converter, this.key);
         if (serializedKey.isError()) return serializedKey.mapError();
         Result<T> serializedValue = this.valueCodec.serialize(converter, value);
-        if (serializedValue.isError()) return serializedValue.mapError();
+        if (serializedValue.isError()) {
+            if (this.lenient) return Result.success(null);
+            else return serializedValue;
+        }
 
         if (this.defaultValue != null && this.skipDefault.test(value)) return serializedValue;
         map.put(serializedKey.get(), serializedValue.get());
@@ -89,7 +104,9 @@ public class MapCodec<K, V> {
             if (this.defaultValue == null) return Result.error("Key not found in map: " + key.get());
             else return Result.success(this.defaultValue.get());
         } else {
-            return this.valueCodec.deserialize(converter, value);
+            Result<V> deserializedValue = this.valueCodec.deserialize(converter, value);
+            if (deserializedValue.isError() && this.lenient) return Result.success(this.defaultValue.get());
+            return deserializedValue;
         }
     }
 

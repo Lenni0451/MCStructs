@@ -24,6 +24,10 @@ public class ItemComponent<T> {
         return this.name;
     }
 
+    public Codec<T> getCodec() {
+        return this.codec;
+    }
+
     public <D> D serialize(final DataConverter<D> converter, final T value) {
         return this.codec.serialize(converter, value).getOrThrow(cause -> new IllegalStateException("Failed to serialize component " + this.name.get(), cause));
     }
