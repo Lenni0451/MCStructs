@@ -1,18 +1,18 @@
 package net.lenni0451.mcstructs.itemcomponents;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.Result;
+import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.codec.DataDeserializer;
+import net.lenni0451.mcstructs.converter.codec.DataSerializer;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
-import net.lenni0451.mcstructs.itemcomponents.serialization.interfaces.ComponentDeserializer;
-import net.lenni0451.mcstructs.itemcomponents.serialization.interfaces.ComponentSerializer;
-import net.lenni0451.mcstructs.itemcomponents.serialization.interfaces.MergedComponentSerializer;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class ItemComponentRegistry {
 
@@ -28,6 +28,17 @@ public abstract class ItemComponentRegistry {
 
     private final List<ItemComponent<?>> components;
     protected final RegistryVerifier registryVerifier;
+    private final Codec<ItemComponentMap> mapCodec = Codec.ofThrowing(new DataSerializer<ItemComponentMap>() {
+        @Override
+        public <S> Result<S> serialize(DataConverter<S> converter, ItemComponentMap element) {
+            return Result.success(ItemComponentRegistry.this.mapTo(converter, element));
+        }
+    }, new DataDeserializer<ItemComponentMap>() {
+        @Override
+        public <S> Result<ItemComponentMap> deserialize(DataConverter<S> converter, S data) {
+            return Result.success(ItemComponentRegistry.this.mapFrom(converter, data));
+        }
+    });
 
     public ItemComponentRegistry() {
         this.components = new ArrayList<>();
@@ -51,46 +62,40 @@ public abstract class ItemComponentRegistry {
         return this.registryVerifier;
     }
 
+    public Codec<ItemComponentMap> getMapCodec() {
+        return this.mapCodec;
+    }
+
     public abstract <D> D mapTo(final DataConverter<D> converter, final ItemComponentMap map);
 
     public abstract <D> ItemComponentMap mapFrom(final DataConverter<D> converter, final D data);
 
 
     protected <T> ItemComponent<T> copy(final String name, final ItemComponent<T> component) {
-        return this.register(name, component.serializer, component.deserializer, component.verifier);
+        return this.register(name, component.codec, component.verifier);
     }
 
     protected <T> ItemComponent<T> registerNonSerializable(final String name) {
-        Supplier<UnsupportedOperationException> exceptionSupplier = () -> new UnsupportedOperationException("This component is not serializable");
-        return this.register(name, new ComponentSerializer<T>() {
+        String message = "The component " + name + " is not serializable!";
+        return this.register(name, new Codec<T>() {
             @Override
-            public <D> D serialize(DataConverter<D> converter, T component) {
-                throw exceptionSupplier.get();
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                return Result.error(message);
             }
-        }, new ComponentDeserializer<T>() {
+
             @Override
-            public <D> T deserialize(DataConverter<D> converter, D data) {
-                throw exceptionSupplier.get();
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                return Result.error(message);
             }
         });
     }
 
-    protected <T> ItemComponent<T> register(final String name, final MergedComponentSerializer<T> serializer) {
-        return this.register(name, serializer, serializer);
+    protected <T> ItemComponent<T> register(final String name, final Codec<T> codec) {
+        return this.register(name, codec);
     }
 
-    protected <T> ItemComponent<T> register(final String name, final MergedComponentSerializer<T> serializer, final Consumer<T> verifier) {
-        return this.register(name, serializer, serializer, verifier);
-    }
-
-    protected <T> ItemComponent<T> register(final String name, final ComponentSerializer<T> serializer, final ComponentDeserializer<T> deserializer) {
-        return this.register(name, serializer, deserializer, null);
-    }
-
-    protected <T> ItemComponent<T> register(final String name, final ComponentSerializer<T> serializer, final ComponentDeserializer<T> deserializer, final Consumer<T> verifier) {
-        ItemComponent<T> itemComponent = new ItemComponent<>(name, serializer, deserializer, verifier);
-        this.components.add(itemComponent);
-        return itemComponent;
+    protected <T> ItemComponent<T> register(final String name, final Codec<T> codec, final Consumer<T> verifier) {
+        return new ItemComponent<>(name, codec, verifier);
     }
 
 }

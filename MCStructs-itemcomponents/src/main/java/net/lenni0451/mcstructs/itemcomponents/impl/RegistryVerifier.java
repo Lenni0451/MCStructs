@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.itemcomponents.impl;
 
+import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 
 import java.util.function.Function;
@@ -34,7 +35,7 @@ public class RegistryVerifier {
     }
 
 
-    public static class Checker<T> {
+    public static class Checker<T> implements Function<T, Result<Void>> {
         private final String name;
         private final Predicate<T> predicate;
 
@@ -43,8 +44,14 @@ public class RegistryVerifier {
             this.predicate = predicate;
         }
 
-        public void verify(final T t) {
-            if (!this.predicate.test(t)) throw new IllegalArgumentException("Invalid " + this.name + " value: " + t);
+        @Override
+        public Result<Void> apply(T t) {
+            return this.verify(t);
+        }
+
+        public Result<Void> verify(final T t) {
+            if (!this.predicate.test(t)) Result.error("Invalid " + this.name + " value: " + t);
+            return Result.success(null);
         }
 
         public <N> Checker<N> map(final Function<N, T> mapper) {

@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.converter;
 import lombok.SneakyThrows;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Function;
 
 public class Result<T> {
@@ -13,6 +14,16 @@ public class Result<T> {
 
     public static <T> Result<T> error(final String error) {
         return new Result<>(null, new IllegalStateException(error));
+    }
+
+    public static <T> Result<T> error(final Throwable cause) {
+        return new Result<>(null, new IllegalStateException(cause));
+    }
+
+    public static <T> Result<T> mergeErrors(final String error, final Collection<Result<T>> errors) {
+        IllegalStateException exception = new IllegalStateException(error);
+        errors.stream().filter(Result::isError).map(r -> r.error).forEach(exception::addSuppressed);
+        return new Result<>(null, exception);
     }
 
     public static <T> Result<T> unexpected(final Object actual, final Class<?>... expected) {
@@ -65,7 +76,7 @@ public class Result<T> {
 
     public <N> Result<N> mapError() {
         if (!this.isError()) return Result.error("No error");
-        return Result.error(this.error.getMessage());
+        return (Result<N>) this;
     }
 
     public String error() {
