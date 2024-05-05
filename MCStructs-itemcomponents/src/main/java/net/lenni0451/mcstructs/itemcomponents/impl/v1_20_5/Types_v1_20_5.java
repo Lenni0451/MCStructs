@@ -353,4 +353,72 @@ public class Types_v1_20_5 {
         }
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LodestoneTracker {
+        public static final String TARGET = "target";
+        public static final String TRACKED = "tracked";
+
+        @Nullable
+        private GlobalPos target;
+        private boolean tracked = true;
+
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class GlobalPos {
+            public static final String DIMENSION = "dimension";
+            public static final String POS = "pos";
+
+            private Identifier dimension;
+            private BlockPos pos;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BlockPos {
+        private int x;
+        private int y;
+        private int z;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SoundEvent {
+        public static final String SOUND_ID = "sound_id";
+        public static final String RANGE = "range";
+
+        private Identifier soundId;
+        private float range;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Instrument {
+        public static final String SOUND_EVENT = "sound_event";
+        public static final String USE_DURATION = "use_duration";
+        public static final String RANGE = "range";
+
+        private SoundEvent soundEvent;
+        private int useDuration;
+        private float range;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SuspiciousStewEffect {
+        public static final String ID = "id";
+        public static final String DURATION = "duration";
+
+        private Identifier id;
+        private int duration;
+    }
+
 }

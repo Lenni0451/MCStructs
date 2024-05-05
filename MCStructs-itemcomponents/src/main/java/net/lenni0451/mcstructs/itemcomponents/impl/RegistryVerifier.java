@@ -13,6 +13,8 @@ public class RegistryVerifier {
     public final Checker<Identifier> statusEffect = new Checker<>("status effect", this::verifyStatusEffect);
     public final Checker<Identifier> mapDecorationType = new Checker<>("map decoration type", this::verifyMapDecorationType);
     public final Checker<Identifier> bannerPattern = new Checker<>("banner pattern", this::verifyBannerPattern);
+    public final Checker<Identifier> instrument = new Checker<>("instrument", this::verifyInstrument);
+    public final Checker<Identifier> sound = new Checker<>("sound", this::verifySound);
 
     public boolean verifyItem(final Identifier id) {
         return true;
@@ -34,6 +36,14 @@ public class RegistryVerifier {
         return true;
     }
 
+    public boolean verifyInstrument(final Identifier id) {
+        return true;
+    }
+
+    public boolean verifySound(final Identifier id) {
+        return true;
+    }
+
 
     public static class Checker<T> implements Function<T, Result<Void>> {
         private final String name;
@@ -46,10 +56,6 @@ public class RegistryVerifier {
 
         @Override
         public Result<Void> apply(T t) {
-            return this.verify(t);
-        }
-
-        public Result<Void> verify(final T t) {
             if (!this.predicate.test(t)) Result.error("Invalid " + this.name + " value: " + t);
             return Result.success(null);
         }

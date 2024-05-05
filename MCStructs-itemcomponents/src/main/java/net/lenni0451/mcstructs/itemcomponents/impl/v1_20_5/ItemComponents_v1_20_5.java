@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.ConstructorCodec;
 import net.lenni0451.mcstructs.core.Identifier;
@@ -8,6 +9,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
+import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
@@ -71,7 +73,11 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = register("charged_projectiles", this.typeSerializers.ITEM_STACK.listOf());
     public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = register("bundle_contents", this.typeSerializers.ITEM_STACK.listOf());
     //TODO: potion_contents
-    //TODO: suspicious_stew_effects
+    public final ItemComponent<List<SuspiciousStewEffect>> SUSPICIOUS_STEW_EFFECTS = this.register("suspicious_stew_effects", ConstructorCodec.of(
+            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.statusEffect).mapCodec(SuspiciousStewEffect.ID), SuspiciousStewEffect::getId,
+            Codec.INTEGER.mapCodec(SuspiciousStewEffect.DURATION).lenient().optionalDefault(() -> 0), SuspiciousStewEffect::getDuration,
+            SuspiciousStewEffect::new
+    ).listOf());
     public final ItemComponent<WritableBook> WRITABLE_BOOK_CONTENT = register("writable_book_content", ConstructorCodec.of(
             this.typeSerializers.WRITABLE_BOOK_PAGE.listOf().mapCodec(WritableBook.PAGES).defaulted(ArrayList::new, List::isEmpty), WritableBook::getPages,
             WritableBook::new
@@ -79,13 +85,35 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     //TODO: written_book_content
     //TODO: trim
     //TODO: debug_stick_state
-    //TODO: entity_data
-    //TODO: bucket_entity_data
-    //TODO: block_entity_data
-    //TODO: instrument
+    public final ItemComponent<CompoundTag> ENTITY_DATA = this.register("entity_data", this.typeSerializers.COMPOUND_TAG.verified(tag -> {
+        if (!tag.contains("id", NbtType.STRING)) return Result.error("Entity data tag does not contain an id");
+        return Result.success(null);
+    }));
+    public final ItemComponent<CompoundTag> BUCKET_ENTITY_DATA = this.register("bucket_entity_data", this.typeSerializers.COMPOUND_TAG);
+    public final ItemComponent<CompoundTag> BLOCK_ENTITY_DATA = this.register("block_entity_data", this.typeSerializers.COMPOUND_TAG.verified(tag -> {
+        if (!tag.contains("id", NbtType.STRING)) return Result.error("Block entity data tag does not contain an id");
+        return Result.success(null);
+    }));
+    public final ItemComponent<Instrument> INSTRUMENT = this.register("instrument", Codec.oneOf(
+            ConstructorCodec.of(
+                    this.typeSerializers.SOUND_EVENT.mapCodec(Instrument.SOUND_EVENT), Instrument::getSoundEvent,
+                    Codec.minInt(1).mapCodec(Instrument.USE_DURATION), Instrument::getUseDuration,
+                    Codec.minFloat(0).mapCodec(Instrument.RANGE), Instrument::getRange,
+                    Instrument::new
+            ),
+            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.instrument).map(i -> i.getSoundEvent().getSoundId(), id -> new Instrument(new SoundEvent(id, 16F), 0, 0/*TODO: Default values*/))
+    ));
     public final ItemComponent<Integer> OMINOUS_BOTTLE_AMPLIFIER = register("ominous_bottle_amplifier", Codec.rangedInt(1, 4));
     public final ItemComponent<List<Identifier>> RECIPES = register("recipes", Codec.STRING_IDENTIFIER.listOf());
-    //TODO: lodestone_tracker
+    public final ItemComponent<LodestoneTracker> LODESTONE_TRACKER = this.register("lodestone_tracker", ConstructorCodec.of(
+            ConstructorCodec.of(
+                    Codec.STRING_IDENTIFIER.mapCodec(LodestoneTracker.GlobalPos.DIMENSION), LodestoneTracker.GlobalPos::getDimension,
+                    this.typeSerializers.BLOCK_POS.mapCodec(LodestoneTracker.GlobalPos.POS), LodestoneTracker.GlobalPos::getPos,
+                    LodestoneTracker.GlobalPos::new
+            ).mapCodec(LodestoneTracker.TARGET).optionalDefault(() -> null), LodestoneTracker::getTarget,
+            Codec.BOOLEAN.mapCodec(LodestoneTracker.TRACKED).optionalDefault(() -> true), LodestoneTracker::isTracked,
+            LodestoneTracker::new
+    ));
     public final ItemComponent<FireworkExplosions> FIREWORK_EXPLOSION = this.register("firework_explosion", ConstructorCodec.of(
             Codec.named(FireworkExplosions.ExplosionShape.values()).mapCodec(FireworkExplosions.SHAPE), FireworkExplosions::getShape,
             Codec.INT_ARRAY.mapCodec(FireworkExplosions.COLORS).defaulted(() -> new int[0], array -> array.length == 0), FireworkExplosions::getColors,

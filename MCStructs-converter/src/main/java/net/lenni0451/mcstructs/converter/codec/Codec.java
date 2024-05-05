@@ -192,6 +192,18 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         });
     }
 
+    static Codec<Float> minFloat(final float minInclusive) {
+        return rangedFloat(minInclusive, Float.MAX_VALUE);
+    }
+
+    static Codec<Float> rangedFloat(final float minInclusive, final float maxInclusive) {
+        return FLOAT.verified(f -> {
+            if (f < minInclusive) return Result.error("Value is smaller than minimum: " + f + " < " + minInclusive);
+            if (f > maxInclusive) return Result.error("Value is bigger than maximum: " + f + " > " + maxInclusive);
+            return null;
+        });
+    }
+
     static Codec<String> sizedString(final int minInclusive, final int maxInclusive) {
         return STRING.verified(s -> {
             if (s.length() < minInclusive) return Result.error("String is shorter than minimum: " + s.length() + " < " + minInclusive);

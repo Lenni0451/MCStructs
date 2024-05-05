@@ -105,7 +105,10 @@ public class MapCodec<K, V> {
             else return Result.success(this.defaultValue.get());
         } else {
             Result<V> deserializedValue = this.valueCodec.deserialize(converter, value);
-            if (deserializedValue.isError() && this.lenient) return Result.success(this.defaultValue.get());
+            if (deserializedValue.isError() && this.lenient) {
+                if (this.defaultValue == null) return Result.error("Lenient deserialization has no default value set for key: " + key.get());
+                else return Result.success(this.defaultValue.get());
+            }
             return deserializedValue;
         }
     }

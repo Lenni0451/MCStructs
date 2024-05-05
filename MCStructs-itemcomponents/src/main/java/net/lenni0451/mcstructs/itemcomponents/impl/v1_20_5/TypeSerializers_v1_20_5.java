@@ -43,11 +43,11 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
     public final Codec<DyeColor> DYE_COLOR = Codec.named(DyeColor.values());
     public final Codec<BannerPattern.Pattern> BANNER_PATTERN_PATTERN = Codec.oneOf(
             ConstructorCodec.of(
-                    Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().bannerPattern).mapCodec(BannerPattern.Pattern.ASSET_ID), BannerPattern.Pattern::getAssetId,
+                    Codec.STRING_IDENTIFIER.mapCodec(BannerPattern.Pattern.ASSET_ID), BannerPattern.Pattern::getAssetId,
                     Codec.STRING.mapCodec(BannerPattern.Pattern.TRANSLATION_KEY).requiredDefault(() -> ""), BannerPattern.Pattern::getTranslationKey,
                     BannerPattern.Pattern::new
             ),
-            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().bannerPattern).map(BannerPattern.Pattern::getAssetId, id -> new BannerPattern.Pattern(id, "" /*TODO: Translation key?*/))
+            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().bannerPattern).map(BannerPattern.Pattern::getAssetId, id -> new BannerPattern.Pattern(id, "" /*TODO: Translation key*/))
     );
     public final Codec<WritableBook.Page> WRITABLE_BOOK_PAGE = Codec.oneOf(
             ConstructorCodec.of(
@@ -68,6 +68,18 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
         if (name.chars().filter(c -> c <= 32 || c >= 127).findAny().isPresent()) return Result.error("Player name contains invalid characters");
         return Result.success(null);
     });
+    public final Codec<BlockPos> BLOCK_POS = Codec.INT_ARRAY.verified(array -> {
+        if (array.length != 3) return Result.error("BlockPos array must have a length of 3");
+        return Result.success(null);
+    }).map(pos -> new int[]{pos.getX(), pos.getY(), pos.getZ()}, array -> new BlockPos(array[0], array[1], array[2]));
+    public final Codec<SoundEvent> SOUND_EVENT = Codec.oneOf(
+            ConstructorCodec.of(
+                    Codec.STRING_IDENTIFIER.mapCodec(SoundEvent.SOUND_ID), SoundEvent::getSoundId,
+                    Codec.FLOAT.mapCodec(SoundEvent.RANGE).lenient().optionalDefault(() -> 16F), SoundEvent::getRange,
+                    SoundEvent::new
+            ),
+            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().sound).map(SoundEvent::getSoundId, id -> new SoundEvent(id, 16F))
+    );
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);
