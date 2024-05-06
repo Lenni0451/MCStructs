@@ -82,31 +82,46 @@ public class MapCodec<K, V> extends MapCodecMerger {
     }
 
     public <T> Result<T> serialize(final DataConverter<T> converter, final Map<T, T> map, final V value) {
-        Result<T> serializedKey = this.keyCodec.serialize(converter, this.key);
-        if (serializedKey.isError()) return serializedKey.mapError();
+        if (this.defaultValue != null && this.skipDefault.test(value)) return Result.success(null);
         Result<T> serializedValue = this.valueCodec.serialize(converter, value);
         if (serializedValue.isError()) {
             if (this.lenient) return Result.success(null);
             else return serializedValue;
         }
 
-        if (this.defaultValue != null && this.skipDefault.test(value)) return serializedValue;
-        map.put(serializedKey.get(), serializedValue.get());
-        return serializedValue;
+        if (this.key == null) {
+            Result<Map<T, T>> valueMap = converter.asMap(serializedValue.get());
+            if (valueMap.isError()) return valueMap.mapError();
+            map.putAll(valueMap.get());
+        } else {
+            Result<T> serializedKey = this.keyCodec.serialize(converter, this.key);
+            if (serializedKey.isError()) return serializedKey.mapError();
+            map.put(serializedKey.get(), serializedValue.get());
+        }
+        return Result.success(null);
     }
 
-    public <T> Result<V> deserialize(final DataConverter<T> converter, final Map<T, T> map) {
-        Result<T> key = this.keyCodec.serialize(converter, this.key);
-        if (key.isError()) return key.mapError();
+    public <T> Result<V> deserialize(final DataConverter<T> converter, final T rawMap, final Map<T, T> map) {
+        T value;
+        if (this.key == null) {
+            value = rawMap;
+        } else {
+            Result<T> key = this.keyCodec.serialize(converter, this.key);
+            if (key.isError()) return key.mapError();
 
-        T value = map.get(key.get());
+            value = map.get(key.get());
+        }
+        return this.deserialize(converter, value);
+    }
+
+    private <T> Result<V> deserialize(final DataConverter<T> converter, final T value) {
         if (value == null) {
-            if (this.defaultValue == null) return Result.error("Key not found in map: " + key.get());
+            if (this.defaultValue == null) return Result.error("Key not found in map: " + this.key);
             else return Result.success(this.defaultValue.get());
         } else {
             Result<V> deserializedValue = this.valueCodec.deserialize(converter, value);
             if (deserializedValue.isError() && this.lenient) {
-                if (this.defaultValue == null) return Result.error("Lenient deserialization has no default value set for key: " + key.get());
+                if (this.defaultValue == null) return Result.error("Lenient deserialization has no default value set for key: " + this.key);
                 else return Result.success(this.defaultValue.get());
             }
             return deserializedValue;

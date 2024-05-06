@@ -407,6 +407,10 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
+    default <K> MapCodec<K, T> mapCodec() {
+        return this.mapCodec(null, null);
+    }
+
     default MapCodec<String, T> mapCodec(final String key) {
         return this.mapCodec(STRING, key);
     }

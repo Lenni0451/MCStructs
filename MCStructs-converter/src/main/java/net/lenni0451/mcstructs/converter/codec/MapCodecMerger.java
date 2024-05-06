@@ -28,7 +28,7 @@ class MapCodecMerger {
                 if (mapResult.isError()) return mapResult.mapError();
 
                 Map<S, S> map = mapResult.get();
-                Result<T1> value1Result = type1.deserialize(converter, map);
+                Result<T1> value1Result = type1.deserialize(converter, data, map);
                 if (value1Result.isError()) return value1Result.mapError();
                 return Result.success(generator.generate(value1Result.get()));
             }
@@ -57,9 +57,9 @@ class MapCodecMerger {
                 if (mapResult.isError()) return mapResult.mapError();
 
                 Map<S, S> map = mapResult.get();
-                Result<T1> value1Result = type1.deserialize(converter, map);
+                Result<T1> value1Result = type1.deserialize(converter, data, map);
                 if (value1Result.isError()) return value1Result.mapError();
-                Result<T2> value2Result = type2.deserialize(converter, map);
+                Result<T2> value2Result = type2.deserialize(converter, data, map);
                 if (value2Result.isError()) return value2Result.mapError();
                 return Result.success(generator.generate(value1Result.get(), value2Result.get()));
             }
@@ -91,11 +91,11 @@ class MapCodecMerger {
                 if (mapResult.isError()) return mapResult.mapError();
 
                 Map<S, S> map = mapResult.get();
-                Result<T1> value1Result = type1.deserialize(converter, map);
+                Result<T1> value1Result = type1.deserialize(converter, data, map);
                 if (value1Result.isError()) return value1Result.mapError();
-                Result<T2> value2Result = type2.deserialize(converter, map);
+                Result<T2> value2Result = type2.deserialize(converter, data, map);
                 if (value2Result.isError()) return value2Result.mapError();
-                Result<T3> value3Result = type3.deserialize(converter, map);
+                Result<T3> value3Result = type3.deserialize(converter, data, map);
                 if (value3Result.isError()) return value3Result.mapError();
                 return Result.success(generator.generate(value1Result.get(), value2Result.get(), value3Result.get()));
             }
@@ -130,13 +130,13 @@ class MapCodecMerger {
                 if (mapResult.isError()) return mapResult.mapError();
 
                 Map<S, S> map = mapResult.get();
-                Result<T1> value1Result = type1.deserialize(converter, map);
+                Result<T1> value1Result = type1.deserialize(converter, data, map);
                 if (value1Result.isError()) return value1Result.mapError();
-                Result<T2> value2Result = type2.deserialize(converter, map);
+                Result<T2> value2Result = type2.deserialize(converter, data, map);
                 if (value2Result.isError()) return value2Result.mapError();
-                Result<T3> value3Result = type3.deserialize(converter, map);
+                Result<T3> value3Result = type3.deserialize(converter, data, map);
                 if (value3Result.isError()) return value3Result.mapError();
-                Result<T4> value4Result = type4.deserialize(converter, map);
+                Result<T4> value4Result = type4.deserialize(converter, data, map);
                 if (value4Result.isError()) return value4Result.mapError();
                 return Result.success(generator.generate(value1Result.get(), value2Result.get(), value3Result.get(), value4Result.get()));
             }
@@ -174,15 +174,15 @@ class MapCodecMerger {
                 if (mapResult.isError()) return mapResult.mapError();
 
                 Map<S, S> map = mapResult.get();
-                Result<T1> value1Result = type1.deserialize(converter, map);
+                Result<T1> value1Result = type1.deserialize(converter, data, map);
                 if (value1Result.isError()) return value1Result.mapError();
-                Result<T2> value2Result = type2.deserialize(converter, map);
+                Result<T2> value2Result = type2.deserialize(converter, data, map);
                 if (value2Result.isError()) return value2Result.mapError();
-                Result<T3> value3Result = type3.deserialize(converter, map);
+                Result<T3> value3Result = type3.deserialize(converter, data, map);
                 if (value3Result.isError()) return value3Result.mapError();
-                Result<T4> value4Result = type4.deserialize(converter, map);
+                Result<T4> value4Result = type4.deserialize(converter, data, map);
                 if (value4Result.isError()) return value4Result.mapError();
-                Result<T5> value5Result = type5.deserialize(converter, map);
+                Result<T5> value5Result = type5.deserialize(converter, data, map);
                 if (value5Result.isError()) return value5Result.mapError();
                 return Result.success(generator.generate(value1Result.get(), value2Result.get(), value3Result.get(), value4Result.get(), value5Result.get()));
             }
