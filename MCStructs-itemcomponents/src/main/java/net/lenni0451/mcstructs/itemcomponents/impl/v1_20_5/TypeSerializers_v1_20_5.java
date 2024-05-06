@@ -20,7 +20,6 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.
 
 class TypeSerializers_v1_20_5 extends TypeSerializers {
 
-    public final Codec<ATextComponent> TEXT_COMPONENT = Codec.STRING.mapThrowing(TextComponentCodec.V1_20_5::serializeJsonString, TextComponentCodec.V1_20_5::deserializeJson);
     public final Codec<ItemStack> ITEM_STACK = MapCodec.of(
             Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ItemStack.ID), ItemStack::getId,
             Codec.rangedInt(1, Integer.MAX_VALUE).mapCodec(ItemStack.COUNT).requiredDefault(() -> 1), ItemStack::getCount,
@@ -49,14 +48,6 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
             ),
             Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().bannerPattern).map(BannerPattern.Pattern::getAssetId, id -> new BannerPattern.Pattern(id, "" /*TODO: Translation key*/))
     );
-    public final Codec<WritableBook.Page> WRITABLE_BOOK_PAGE = Codec.oneOf(
-            MapCodec.of(
-                    Codec.STRING.mapCodec("raw"), WritableBook.Page::getRaw,
-                    Codec.STRING.mapCodec("filtered").optionalDefault(() -> null), WritableBook.Page::getFiltered,
-                    WritableBook.Page::new
-            ),
-            Codec.STRING.map(WritableBook.Page::getRaw, raw -> new WritableBook.Page(raw, null))
-    );
     public final Codec<Map<Identifier, Integer>> ENCHANTMENT_LEVELS = Codec.mapOf(Codec.STRING_IDENTIFIER.verified(registry.getRegistryVerifier().enchantment), Codec.INTEGER);
     public final Codec<ContainerSlot> CONTAINER_SLOT = MapCodec.of(
             Codec.rangedInt(0, 255).mapCodec(ContainerSlot.SLOT), ContainerSlot::getSlot,
@@ -78,11 +69,26 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
                     Codec.FLOAT.mapCodec(SoundEvent.RANGE).lenient().optionalDefault(() -> 16F), SoundEvent::getRange,
                     SoundEvent::new
             ),
-            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().sound).map(SoundEvent::getSoundId, id -> new SoundEvent(id, 16F))
+            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().sound).map(SoundEvent::getSoundId, id -> new SoundEvent(id, 16F /*TODO: Default value*/))
     );
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);
+    }
+
+    public Codec<ATextComponent> textComponent(final int maxLength) {
+        return Codec.sizedString(0, maxLength).mapThrowing(TextComponentCodec.V1_20_5::serializeJsonString, TextComponentCodec.V1_20_5::deserializeJson);
+    }
+
+    public <T> Codec<RawFilteredPair<T>> rawFilteredPair(final Codec<T> codec) {
+        return Codec.oneOf(
+                MapCodec.of(
+                        codec.mapCodec(RawFilteredPair.RAW), RawFilteredPair::getRaw,
+                        codec.mapCodec(RawFilteredPair.FILTERED).optionalDefault(() -> null), RawFilteredPair::getFiltered,
+                        RawFilteredPair::new
+                ),
+                codec.map(RawFilteredPair::getRaw, raw -> new RawFilteredPair<>(raw, null))
+        );
     }
 
 }

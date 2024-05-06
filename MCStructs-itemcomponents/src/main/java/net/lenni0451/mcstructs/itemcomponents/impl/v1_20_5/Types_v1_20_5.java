@@ -132,17 +132,17 @@ public class Types_v1_20_5 {
         public static final String PAGES = "pages";
         public static final int MAX_PAGES = 100;
 
-        private List<Page> pages;
+        private List<RawFilteredPair<String>> pages;
 
         public void addPage(final String raw) {
-            this.addPage(new Page(raw));
+            this.addPage(new RawFilteredPair<>(raw));
         }
 
         public void addPage(final String raw, final String filtered) {
-            this.addPage(new Page(raw, filtered));
+            this.addPage(new RawFilteredPair<>(raw, filtered));
         }
 
-        public void addPage(final Page page) {
+        public void addPage(final RawFilteredPair<String> page) {
             if (this.pages.size() >= MAX_PAGES) throw new IllegalArgumentException("Book can only have " + MAX_PAGES + " pages");
             this.pages.add(page);
         }
@@ -155,22 +155,8 @@ public class Types_v1_20_5 {
             this.pages.removeIf(page -> page.getRaw().equals(raw));
         }
 
-        public void removePage(final Page page) {
+        public void removePage(final RawFilteredPair<String> page) {
             this.pages.remove(page);
-        }
-
-
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class Page {
-            private String raw;
-            @Nullable
-            private String filtered;
-
-            public Page(final String raw) {
-                this(raw, null);
-            }
         }
     }
 
@@ -419,6 +405,39 @@ public class Types_v1_20_5 {
 
         private Identifier id;
         private int duration;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RawFilteredPair<T> {
+        public static final String RAW = "raw";
+        public static final String FILTERED = "filtered";
+
+        private T raw;
+        @Nullable
+        private T filtered;
+
+        public RawFilteredPair(final T raw) {
+            this(raw, null);
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class WrittenBook {
+        public static final String TITLE = "title";
+        public static final String AUTHOR = "author";
+        public static final String GENERATION = "generation";
+        public static final String PAGES = "pages";
+        public static final String RESOLVED = "resolved";
+
+        private RawFilteredPair<String> title;
+        private String author;
+        private int generation;
+        private List<RawFilteredPair<ATextComponent>> pages;
+        private boolean resolved;
     }
 
 }
