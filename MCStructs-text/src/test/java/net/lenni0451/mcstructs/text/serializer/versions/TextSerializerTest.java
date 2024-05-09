@@ -23,7 +23,8 @@ public abstract class TextSerializerTest {
             "{\"text\":\"test1\",\"translate\":\"test2\",\"type\":\"translatable\"}",
             "{\"translate\":\"%s %s\",\"with\":[\"abc\",123]}",
             "{\"text\":\"test\",\"color\":\"#-FFF\"}",
-            "{\"text\":\"test\",\"color\":\"#FFFFFFFF\"}"
+            "{\"text\":\"test\",\"color\":\"#FFFFFFFF\"}",
+            "'te\\$st'",
     };
 
     protected static String SERIALIZE_FAIL = "--test fail--";

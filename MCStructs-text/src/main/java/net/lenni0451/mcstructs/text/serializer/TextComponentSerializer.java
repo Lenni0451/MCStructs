@@ -29,7 +29,7 @@ import net.lenni0451.mcstructs.text.serializer.v1_8.StyleSerializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.TextDeserializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.TextSerializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_9.TextSerializer_v1_9;
-import net.lenni0451.mcstructs.text.utils.LegacyGsonCheck;
+import net.lenni0451.mcstructs.text.utils.LegacyGson;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -180,23 +180,23 @@ public class TextComponentSerializer {
 
     private final TextComponentCodec parentCodec;
     private final Supplier<Gson> gsonSupplier;
-    private final boolean legacyGsonCheck;
+    private final boolean legacyGson;
     private Gson gson;
 
     public TextComponentSerializer(final Supplier<Gson> gsonSupplier) {
         this(gsonSupplier, false);
     }
 
-    public TextComponentSerializer(final Supplier<Gson> gsonSupplier, final boolean legacyGsonCheck) {
+    public TextComponentSerializer(final Supplier<Gson> gsonSupplier, final boolean legacyGson) {
         this.parentCodec = null;
         this.gsonSupplier = gsonSupplier;
-        this.legacyGsonCheck = legacyGsonCheck;
+        this.legacyGson = legacyGson;
     }
 
     public TextComponentSerializer(final TextComponentCodec parentCodec, final Supplier<Gson> gsonSupplier) {
         this.parentCodec = parentCodec;
         this.gsonSupplier = gsonSupplier;
-        this.legacyGsonCheck = false;
+        this.legacyGson = false;
     }
 
     /**
@@ -253,7 +253,11 @@ public class TextComponentSerializer {
      * @param json The json string
      * @return The deserialized text component
      */
-    public ATextComponent deserialize(final String json) {
+    public ATextComponent deserialize(String json) {
+        if (this.legacyGson) {
+            LegacyGson.checkStartingType(json, true);
+            json = LegacyGson.fixInvalidEscapes(json);
+        }
         return this.getGson().fromJson(json, ATextComponent.class);
     }
 
@@ -287,7 +291,11 @@ public class TextComponentSerializer {
      * @param json The json string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeParser(final String json) {
+    public ATextComponent deserializeParser(String json) {
+        if (this.legacyGson) {
+            LegacyGson.checkStartingType(json, true);
+            json = LegacyGson.fixInvalidEscapes(json);
+        }
         if (this.parentCodec != null) return this.parentCodec.deserializeJson(json);
         else return this.getGson().fromJson(JsonParser.parseString(json), ATextComponent.class);
     }
@@ -317,8 +325,11 @@ public class TextComponentSerializer {
      * @param lenient Whether to use a lenient json reader
      * @return The deserialized text component
      */
-    public ATextComponent deserializeReader(final String json, final boolean lenient) {
-        if (this.legacyGsonCheck) LegacyGsonCheck.check(json, lenient);
+    public ATextComponent deserializeReader(String json, final boolean lenient) {
+        if (this.legacyGson) {
+            LegacyGson.checkStartingType(json, lenient);
+            json = LegacyGson.fixInvalidEscapes(json);
+        }
         if (this.parentCodec != null) {
             if (lenient) return this.parentCodec.deserializeLenientJson(json);
             else return this.parentCodec.deserializeJsonReader(json);
