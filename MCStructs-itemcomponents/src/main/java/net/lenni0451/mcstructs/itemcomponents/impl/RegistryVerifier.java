@@ -9,14 +9,20 @@ import java.util.function.Predicate;
 public class RegistryVerifier {
 
     public final Checker<Identifier> item = new Checker<>("item", this::verifyItem);
+    public final Checker<Identifier> block = new Checker<>("block", this::verifyBlock);
     public final Checker<Identifier> enchantment = new Checker<>("enchantment", this::verifyEnchantment);
     public final Checker<Identifier> statusEffect = new Checker<>("status effect", this::verifyStatusEffect);
     public final Checker<Identifier> mapDecorationType = new Checker<>("map decoration type", this::verifyMapDecorationType);
     public final Checker<Identifier> bannerPattern = new Checker<>("banner pattern", this::verifyBannerPattern);
     public final Checker<Identifier> instrument = new Checker<>("instrument", this::verifyInstrument);
     public final Checker<Identifier> sound = new Checker<>("sound", this::verifySound);
+    public final Checker<Identifier> attributeModifier = new Checker<>("attribute modifier", this::verifyAttributeModifier);
 
     public boolean verifyItem(final Identifier id) {
+        return true;
+    }
+
+    public boolean verifyBlock(final Identifier id) {
         return true;
     }
 
@@ -41,6 +47,10 @@ public class RegistryVerifier {
     }
 
     public boolean verifySound(final Identifier id) {
+        return true;
+    }
+
+    public boolean verifyAttributeModifier(final Identifier id) {
         return true;
     }
 

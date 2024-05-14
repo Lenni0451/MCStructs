@@ -14,6 +14,7 @@ import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.*;
@@ -71,6 +72,45 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
             ),
             Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().sound).map(SoundEvent::getSoundId, id -> new SoundEvent(id, 16F /*TODO: Default value*/))
     );
+    public final Codec<ValueMatcher> VALUE_MATCHER = Codec.oneOf(
+            Codec.STRING.verified(s -> {
+                if (s == null) return Result.error("Value matcher cannot be null");
+                return Result.success(null);
+            }).map(ValueMatcher::getValue, ValueMatcher::new),
+            MapCodec.of(
+                    Codec.STRING.mapCodec(ValueMatcher.MIN).optionalDefault(() -> null), ValueMatcher::getMin,
+                    Codec.STRING.mapCodec(ValueMatcher.MAX).optionalDefault(() -> null), ValueMatcher::getMax,
+                    ValueMatcher::new
+            )
+    );
+    public final Codec<Map<String, ValueMatcher>> CONDITION_LIST = Codec.mapOf(Codec.STRING, this.VALUE_MATCHER);
+    public final Codec<BlockPredicate> BLOCK_PREDICATE = MapCodec.of(
+            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().block).optionalListOf().mapCodec(BlockPredicate.BLOCKS).optionalDefault(() -> null), BlockPredicate::getBlocks,
+            this.CONDITION_LIST.mapCodec(BlockPredicate.STATE).optionalDefault(() -> null), BlockPredicate::getState,
+            this.COMPOUND_TAG.mapCodec(BlockPredicate.NBT).optionalDefault(() -> null), BlockPredicate::getNbt,
+            BlockPredicate::new
+    );
+    public final Codec<EntityAttributeModifier> ENTITY_ATTRIBUTE_MODIFIER = MapCodec.of(
+            Codec.INT_ARRAY_UUID.mapCodec(EntityAttributeModifier.UUID), EntityAttributeModifier::getUuid,
+            Codec.STRING.mapCodec(EntityAttributeModifier.NAME), EntityAttributeModifier::getName,
+            Codec.DOUBLE.mapCodec(EntityAttributeModifier.AMOUNT), EntityAttributeModifier::getAmount,
+            Codec.named(EntityAttributeModifier.Operation.values()).mapCodec(EntityAttributeModifier.OPERATION), EntityAttributeModifier::getOperation,
+            EntityAttributeModifier::new
+    );
+    public final Codec<AttributeModifier> ATTRIBUTE_MODIFIER = MapCodec.of(
+            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().attributeModifier).mapCodec(AttributeModifier.TYPE), AttributeModifier::getType,
+            this.ENTITY_ATTRIBUTE_MODIFIER.mapCodec(), AttributeModifier::getModifier,
+            Codec.named(AttributeModifier.Slot.values()).mapCodec(AttributeModifier.SLOT).optionalDefault(() -> AttributeModifier.Slot.ANY), AttributeModifier::getSlot,
+            AttributeModifier::new
+    );
+
+    public static void main(String[] args) {
+        BlockPredicate predicate = new BlockPredicate();
+        predicate.setBlocks(new ArrayList<>());
+        predicate.getBlocks().add(Identifier.of("test"));
+        predicate.getBlocks().add(Identifier.of("test2"));
+        System.out.println(new TypeSerializers_v1_20_5(new ItemComponents_v1_20_5()).BLOCK_PREDICATE.serialize(NbtConverter_v1_20_3.INSTANCE, predicate));
+    }
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);

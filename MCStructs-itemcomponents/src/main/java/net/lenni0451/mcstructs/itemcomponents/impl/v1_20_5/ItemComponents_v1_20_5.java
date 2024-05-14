@@ -41,9 +41,35 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             ),
             this.typeSerializers.ENCHANTMENT_LEVELS.map(Enchantments::getEnchantments, map -> new Enchantments(map, true))
     ));
-    //TODO: can_place_on
-    //TODO: can_break
-    //TODO: attribute_modifiers
+    public final ItemComponent<BlockPredicatesChecker> CAN_PLACE_ON = this.register("can_place_on", Codec.oneOf(
+            MapCodec.of(
+                    this.typeSerializers.BLOCK_PREDICATE.listOf(1, Integer.MAX_VALUE).mapCodec(BlockPredicatesChecker.PREDICATES), BlockPredicatesChecker::getPredicates,
+                    Codec.BOOLEAN.mapCodec(BlockPredicatesChecker.SHOW_IN_TOOLTIP).optionalDefault(() -> true), BlockPredicatesChecker::isShowInTooltip,
+                    BlockPredicatesChecker::new
+            ),
+            this.typeSerializers.BLOCK_PREDICATE.flatMap(predicates -> Result.error("Can't encode single block predicate"), predicate -> {
+                BlockPredicatesChecker checker = new BlockPredicatesChecker();
+                List<BlockPredicate> predicates = new ArrayList<>();
+                predicates.add(predicate);
+                checker.setPredicates(predicates);
+                return Result.success(checker);
+            })
+    ));
+    public final ItemComponent<BlockPredicatesChecker> CAN_BREAK = this.copy("can_break", this.CAN_PLACE_ON);
+    public final ItemComponent<AttributeModifiers> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", Codec.oneOf(
+            MapCodec.of(
+                    this.typeSerializers.ATTRIBUTE_MODIFIER.listOf().mapCodec(AttributeModifiers.MODIFIERS), AttributeModifiers::getModifiers,
+                    Codec.BOOLEAN.mapCodec(AttributeModifiers.SHOW_IN_TOOLTIP).optionalDefault(() -> true), AttributeModifiers::isShowInTooltip,
+                    AttributeModifiers::new
+            ),
+            this.typeSerializers.ATTRIBUTE_MODIFIER.flatMap(modifiers -> Result.error("Can't encode single attribute modifier"), modifier -> {
+                AttributeModifiers attributeModifiers = new AttributeModifiers();
+                List<AttributeModifier> list = new ArrayList<>();
+                list.add(modifier);
+                attributeModifiers.setModifiers(list);
+                return Result.success(attributeModifiers);
+            })
+    ));
     public final ItemComponent<Integer> CUSTOM_MODEL_DATA = this.register("custom_model_data", Codec.INTEGER);
     public final ItemComponent<Boolean> HIDE_ADDITIONAL_TOOLTIP = this.register("hide_additional_tooltip", Codec.UNIT);
     public final ItemComponent<Boolean> HIDE_TOOLTIP = this.register("hide_tooltip", Codec.UNIT);
@@ -53,7 +79,17 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Boolean> INTANGIBLE_PROJECTILE = this.register("intangible_projectile", Codec.UNIT);
     //TODO: food
     public final ItemComponent<Boolean> FIRE_RESISTANT = this.register("fire_resistant", Codec.UNIT);
-    //TODO: tool
+    public final ItemComponent<ToolComponent> TOOL = this.register("tool", MapCodec.of(
+            MapCodec.of(
+                    Codec.STRING_IDENTIFIER.verified(this.registryVerifier.block).optionalListOf().mapCodec(ToolComponent.Rule.BLOCKS), ToolComponent.Rule::getBlocks,
+                    Codec.minFloat(0).mapCodec(ToolComponent.Rule.SPEED).optionalDefault(() -> null), ToolComponent.Rule::getSpeed,
+                    Codec.BOOLEAN.mapCodec(ToolComponent.Rule.CORRECT_FOR_DROPS).optionalDefault(() -> null), ToolComponent.Rule::getCorrectForDrops,
+                    ToolComponent.Rule::new
+            ).listOf().mapCodec(ToolComponent.RULES), ToolComponent::getRules,
+            Codec.FLOAT.mapCodec(ToolComponent.DEFAULT_MINING_SPEED).optionalDefault(() -> 1F), ToolComponent::getDefaultMiningSpeed,
+            Codec.minInt(0).mapCodec(ToolComponent.DAMAGE_PER_BLOCK).optionalDefault(() -> 1), ToolComponent::getDamagePerBlock,
+            ToolComponent::new
+    ));
     public final ItemComponent<Enchantments> STORED_ENCHANTMENTS = copy("stored_enchantments", this.ENCHANTMENTS);
     public final ItemComponent<DyedColor> DYED_COLOR = this.register("dyed_color", MapCodec.of(
             Codec.INTEGER.mapCodec(DyedColor.RGB), DyedColor::getRgb,

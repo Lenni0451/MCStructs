@@ -440,4 +440,150 @@ public class Types_v1_20_5 {
         private boolean resolved;
     }
 
+
+    @Data
+    @NoArgsConstructor
+    public static class ValueMatcher {
+        public static final String MIN = "min";
+        public static final String MAX = "max";
+
+        @Nullable
+        private String value;
+        @Nullable
+        private String min;
+        @Nullable
+        private String max;
+
+        public ValueMatcher(final String value) {
+            this.value = value;
+        }
+
+        public ValueMatcher(final String min, final String max) {
+            this.min = min;
+            this.max = max;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BlockPredicate {
+        public static final String BLOCKS = "blocks";
+        public static final String STATE = "state";
+        public static final String NBT = "nbt";
+
+        @Nullable
+        private List<Identifier> blocks;
+        @Nullable
+        private Map<String, ValueMatcher> state;
+        @Nullable
+        private CompoundTag nbt;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BlockPredicatesChecker {
+        public static final String PREDICATES = "predicates";
+        public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
+
+        private List<BlockPredicate> predicates;
+        private boolean showInTooltip = true;
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AttributeModifier {
+        public static final String TYPE = "type";
+        public static final String SLOT = "slot";
+
+        private Identifier type;
+        private EntityAttributeModifier modifier;
+        private Slot slot;
+
+
+        @Getter
+        @AllArgsConstructor
+        public enum Slot implements NamedType {
+            ANY("any"),
+            MAINHAND("mainhand"),
+            OFFHAND("offhand"),
+            HAND("hand"),
+            FEET("feet"),
+            LEGS("legs"),
+            CHEST("chest"),
+            HEAD("head"),
+            ARMOR("armor"),
+            BODY("body");
+
+            private final String name;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EntityAttributeModifier {
+        public static final String UUID = "uuid";
+        public static final String NAME = "name";
+        public static final String AMOUNT = "amount";
+        public static final String OPERATION = "operation";
+
+        private UUID uuid;
+        private String name;
+        private double amount;
+        private Operation operation;
+
+
+        @Getter
+        @AllArgsConstructor
+        public enum Operation implements NamedType {
+            ADD_VALUE("add_value"),
+            ADD_MULTIPLIED_BASE("add_multiplied_base"),
+            ADD_MULTIPLIED_TOTAL("add_multiplied_total");
+
+            private final String name;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AttributeModifiers {
+        public static final String MODIFIERS = "modifiers";
+        public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
+
+        private List<AttributeModifier> modifiers;
+        private boolean showInTooltip = true;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ToolComponent {
+        public static final String RULES = "rules";
+        public static final String DEFAULT_MINING_SPEED = "default_mining_speed";
+        public static final String DAMAGE_PER_BLOCK = "damage_per_block";
+
+        private List<Rule> rules;
+        private float defaultMiningSpeed = 1;
+        private int damagePerBlock = 1;
+
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class Rule {
+            public static final String BLOCKS = "blocks";
+            public static final String SPEED = "speed";
+            public static final String CORRECT_FOR_DROPS = "correct_for_drops";
+
+            private List<Identifier> blocks;
+            private Float speed;
+            private Boolean correctForDrops;
+        }
+    }
+
 }
