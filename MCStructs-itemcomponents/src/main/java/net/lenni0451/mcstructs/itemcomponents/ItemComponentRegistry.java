@@ -91,7 +91,7 @@ public abstract class ItemComponentRegistry {
     }
 
     protected <T> ItemComponent<T> register(final String name, final Codec<T> codec) {
-        return this.register(name, codec);
+        return this.register(name, codec, null);
     }
 
     protected <T> ItemComponent<T> register(final String name, final Codec<T> codec, final Consumer<T> verifier) {
