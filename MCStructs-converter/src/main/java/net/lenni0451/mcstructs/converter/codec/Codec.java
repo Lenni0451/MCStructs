@@ -357,9 +357,14 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
     }
 
     default Codec<List<T>> listOf(final int maxElements) {
+        return this.listOf(0, maxElements);
+    }
+
+    default Codec<List<T>> listOf(final int minElements, final int maxElements) {
         return new Codec<List<T>>() {
             @Override
             public <S> Result<S> serialize(DataConverter<S> converter, List<T> element) {
+                if (element.size() < minElements) return Result.error("List size is smaller than minimum: " + element.size() + " < " + minElements);
                 if (element.size() > maxElements) return Result.error("List size is bigger than maximum: " + element.size() + " > " + maxElements);
                 List<S> converted = new ArrayList<>();
                 for (T value : element) {
@@ -375,6 +380,7 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
                 Result<List<S>> result = converter.asList(data);
                 if (result.isError()) return result.mapError();
                 List<S> list = result.get();
+                if (list.size() < minElements) return Result.error("List size is smaller than minimum: " + list.size() + " < " + minElements);
                 if (list.size() > maxElements) return Result.error("List size is bigger than maximum: " + list.size() + " > " + maxElements);
                 List<T> converted = new ArrayList<>();
                 for (S value : list) {
@@ -383,6 +389,34 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
                     converted.add(element.get());
                 }
                 return Result.success(converted);
+            }
+        };
+    }
+
+    default Codec<List<T>> optionalListOf() {
+        return this.optionalListOf(Integer.MAX_VALUE);
+    }
+
+    default Codec<List<T>> optionalListOf(final int maxElements) {
+        return this.optionalListOf(0, maxElements);
+    }
+
+    default Codec<List<T>> optionalListOf(final int minElements, final int maxElements) {
+        Codec<List<T>> listCodec = this.listOf(maxElements);
+        return new Codec<List<T>>() {
+            @Override
+            public <S> Result<List<T>> deserialize(DataConverter<S> converter, S data) {
+                Result<T> single = Codec.this.deserialize(converter, data);
+                if (single.isError()) return listCodec.deserialize(converter, data);
+                List<T> list = new ArrayList<>();
+                list.add(single.get());
+                return Result.success(list);
+            }
+
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, List<T> element) {
+                if (element.size() == 1) return Codec.this.serialize(converter, element.get(0));
+                return listCodec.serialize(converter, element);
             }
         };
     }
