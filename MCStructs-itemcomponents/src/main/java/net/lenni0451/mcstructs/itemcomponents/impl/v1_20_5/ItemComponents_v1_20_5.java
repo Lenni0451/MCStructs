@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5;
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.codec.Either;
 import net.lenni0451.mcstructs.converter.codec.MapCodec;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
@@ -137,14 +138,14 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         if (!tag.contains("id", NbtType.STRING)) return Result.error("Block entity data tag does not contain an id");
         return Result.success(null);
     }));
-    public final ItemComponent<Instrument> INSTRUMENT = this.register("instrument", Codec.oneOf(
+    public final ItemComponent<Either<Identifier, Instrument>> INSTRUMENT = this.register("instrument", this.typeSerializers.registryEntry(
+            this.registryVerifier.instrument,
             MapCodec.of(
                     this.typeSerializers.SOUND_EVENT.mapCodec(Instrument.SOUND_EVENT), Instrument::getSoundEvent,
                     Codec.minInt(1).mapCodec(Instrument.USE_DURATION), Instrument::getUseDuration,
                     Codec.minFloat(0).mapCodec(Instrument.RANGE), Instrument::getRange,
                     Instrument::new
-            ),
-            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.instrument).map(i -> i.getSoundEvent().getSoundId(), id -> new Instrument(new SoundEvent(id, 16F), 0, 0/*TODO: Default values*/))
+            )
     ));
     public final ItemComponent<Integer> OMINOUS_BOTTLE_AMPLIFIER = this.register("ominous_bottle_amplifier", Codec.rangedInt(1, 4));
     public final ItemComponent<List<Identifier>> RECIPES = this.register("recipes", Codec.STRING_IDENTIFIER.listOf());

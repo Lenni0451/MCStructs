@@ -20,7 +20,7 @@ public class Result<T> {
         return new Result<>(null, new IllegalStateException(cause));
     }
 
-    public static <T> Result<T> mergeErrors(final String error, final Collection<Result<T>> errors) {
+    public static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
         IllegalStateException exception = new IllegalStateException(error);
         errors.stream().filter(Result::isError).map(r -> r.error).forEach(exception::addSuppressed);
         return new Result<>(null, exception);

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.lenni0451.mcstructs.converter.codec.Either;
 import net.lenni0451.mcstructs.converter.codec.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.TextFormatting;
@@ -221,7 +222,7 @@ public class Types_v1_20_5 {
         public static final String COLOR = "color";
 
         private DyeColor color;
-        private Pattern pattern;
+        private Either<Identifier, Pattern> pattern;
 
 
         @Data
@@ -391,7 +392,7 @@ public class Types_v1_20_5 {
         public static final String USE_DURATION = "use_duration";
         public static final String RANGE = "range";
 
-        private SoundEvent soundEvent;
+        private Either<Identifier, SoundEvent> soundEvent;
         private int useDuration;
         private float range;
     }

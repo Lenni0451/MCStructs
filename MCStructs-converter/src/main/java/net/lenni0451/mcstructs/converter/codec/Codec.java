@@ -240,13 +240,33 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         });
     }
 
+    static <L, R> Codec<Either<L, R>> either(final Codec<L> leftCodec, final Codec<R> rightCodec) {
+        return new Codec<Either<L, R>>() {
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, Either<L, R> element) {
+                if (element.isLeft()) return leftCodec.serialize(converter, element.getLeft());
+                if (element.isRight()) return rightCodec.serialize(converter, element.getRight());
+                return Result.error("Either is neither left nor right");
+            }
+
+            @Override
+            public <S> Result<Either<L, R>> deserialize(DataConverter<S> converter, S data) {
+                Result<L> left = leftCodec.deserialize(converter, data);
+                if (!left.isError()) return Result.success(Either.left(left.get()));
+                Result<R> right = rightCodec.deserialize(converter, data);
+                if (!right.isError()) return Result.success(Either.right(right.get()));
+                return Result.mergeErrors("Failed to deserialize as either left or right", Arrays.asList(left, right));
+            }
+        };
+    }
+
     @SafeVarargs
     static <T> Codec<T> oneOf(final Codec<T>... codecs) {
         if (codecs.length == 0) throw new IllegalArgumentException("At least one codec is required");
         return new Codec<T>() {
             @Override
             public <S> Result<S> serialize(DataConverter<S> converter, T element) {
-                List<Result<S>> failed = null;
+                List<Result<?>> failed = null;
                 for (Codec<T> codec : codecs) {
                     Result<S> result = codec.serialize(converter, element);
                     if (!result.isError()) return result;
@@ -258,7 +278,7 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
 
             @Override
             public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
-                List<Result<T>> failed = null;
+                List<Result<?>> failed = null;
                 for (Codec<T> codec : codecs) {
                     Result<T> result = codec.deserialize(converter, data);
                     if (!result.isError()) return result;
