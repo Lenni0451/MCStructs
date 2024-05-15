@@ -587,4 +587,49 @@ public class Types_v1_20_5 {
         }
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArmorTrim {
+        public static final String MATERIAL = "material";
+        public static final String PATTERN = "pattern";
+        public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
+
+        private Either<Identifier, ArmorTrimMaterial> material;
+        private Either<Identifier, ArmorTrimPattern> pattern;
+        private boolean showInTooltip = true;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArmorTrimMaterial {
+        public static final String ASSET_NAME = "asset_name";
+        public static final String INGREDIENT = "ingredient";
+        public static final String ITEM_MODEL_INDEX = "item_model_index";
+        public static final String OVERRIDE_ARMOR_MATERIALS = "override_armor_materials";
+        public static final String DESCRIPTION = "description";
+
+        private String assetName;
+        private Identifier ingredient;
+        private float itemModelIndex;
+        private Map<Identifier, String> overrideArmorMaterials;
+        private ATextComponent description;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArmorTrimPattern {
+        public static final String ASSET_ID = "asset_id";
+        public static final String TEMPLATE_ITEM = "template_item";
+        public static final String DESCRIPTION = "description";
+        public static final String DECAL = "decal";
+
+        private Identifier assetId;
+        private Identifier templateItem;
+        private ATextComponent description;
+        private boolean decal = false;
+    }
+
 }

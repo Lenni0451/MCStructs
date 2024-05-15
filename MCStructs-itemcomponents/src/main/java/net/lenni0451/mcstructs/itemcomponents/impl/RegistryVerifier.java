@@ -17,6 +17,9 @@ public class RegistryVerifier {
     public final Checker<Identifier> instrument = new Checker<>("instrument", this::verifyInstrument);
     public final Checker<Identifier> sound = new Checker<>("sound", this::verifySound);
     public final Checker<Identifier> attributeModifier = new Checker<>("attribute modifier", this::verifyAttributeModifier);
+    public final Checker<Identifier> armorMaterial = new Checker<>("armor material", this::verifyArmorMaterial);
+    public final Checker<Identifier> armorTrimMaterial = new Checker<>("armor trim material", this::verifyArmorTrimMaterial);
+    public final Checker<Identifier> armorTrimPattern = new Checker<>("armor trim pattern", this::verifyArmorTrimPattern);
 
     public boolean verifyItem(final Identifier id) {
         return true;
@@ -55,6 +58,18 @@ public class RegistryVerifier {
     }
 
     public boolean verifyAttributeModifier(final Identifier id) {
+        return true;
+    }
+
+    public boolean verifyArmorMaterial(final Identifier id) {
+        return true;
+    }
+
+    public boolean verifyArmorTrimMaterial(final Identifier id) {
+        return true;
+    }
+
+    public boolean verifyArmorTrimPattern(final Identifier id) {
         return true;
     }
 

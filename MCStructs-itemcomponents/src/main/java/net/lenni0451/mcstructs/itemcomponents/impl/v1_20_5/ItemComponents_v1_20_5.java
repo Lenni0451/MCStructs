@@ -127,7 +127,12 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(WrittenBook.RESOLVED).optionalDefault(() -> false), WrittenBook::isResolved,
             WrittenBook::new
     ));
-    //TODO: trim
+    public final ItemComponent<ArmorTrim> TRIM = this.register("trim", MapCodec.of(
+            this.typeSerializers.ARMOR_TRIM_MATERIAL.mapCodec(ArmorTrim.MATERIAL), ArmorTrim::getMaterial,
+            this.typeSerializers.ARMOR_TRIM_PATTERN.mapCodec(ArmorTrim.PATTERN), ArmorTrim::getPattern,
+            Codec.BOOLEAN.mapCodec(ArmorTrim.SHOW_IN_TOOLTIP).optionalDefault(() -> true), ArmorTrim::isShowInTooltip,
+            ArmorTrim::new
+    ));
     public final ItemComponent<Map<Identifier, String>> DEBUG_STICK_STATE = this.register("debug_stick_state", Codec.mapOf(
             Codec.STRING_IDENTIFIER.verified(this.registryVerifier.block),
             block -> Codec.STRING.verified(value -> {

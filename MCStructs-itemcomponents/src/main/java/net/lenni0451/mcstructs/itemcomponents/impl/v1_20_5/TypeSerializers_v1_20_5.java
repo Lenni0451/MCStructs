@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
@@ -12,10 +14,10 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.TypeSerializers;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.nbt.tags.StringTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -40,6 +42,46 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
             INbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
             if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
             return Result.success(tag.asCompoundTag());
+        }
+    };
+    public final Codec<ATextComponent> RAW_TEXT_COMPONENT = new Codec<ATextComponent>() {
+        @Override
+        public <S> Result<S> serialize(DataConverter<S> converter, ATextComponent element) {
+            S test = converter.createString("");
+            if (test instanceof StringTag) {
+                try {
+                    return Result.success((S) TextComponentCodec.V1_20_5.serializeNbt(element));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            } else if (test instanceof JsonPrimitive) {
+                try {
+                    return Result.success((S) TextComponentCodec.V1_20_5.serializeJsonTree(element));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            } else {
+                return Result.error("Unsupported data type: " + test.getClass().getName());
+            }
+        }
+
+        @Override
+        public <S> Result<ATextComponent> deserialize(DataConverter<S> converter, S data) {
+            if (data instanceof INbtTag) {
+                try {
+                    return Result.success(TextComponentCodec.V1_20_5.deserializeNbtTree((INbtTag) data));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            } else if (data instanceof JsonElement) {
+                try {
+                    return Result.success(TextComponentCodec.V1_20_5.deserializeJsonTree((JsonElement) data));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            } else {
+                return Result.error("Unsupported data type: " + data.getClass().getName());
+            }
         }
     };
     public final Codec<DyeColor> DYE_COLOR = Codec.named(DyeColor.values());
@@ -105,14 +147,33 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
             Codec.named(AttributeModifier.Slot.values()).mapCodec(AttributeModifier.SLOT).optionalDefault(() -> AttributeModifier.Slot.ANY), AttributeModifier::getSlot,
             AttributeModifier::new
     );
-
-    public static void main(String[] args) {
-        BlockPredicate predicate = new BlockPredicate();
-        predicate.setBlocks(new ArrayList<>());
-        predicate.getBlocks().add(Identifier.of("test"));
-        predicate.getBlocks().add(Identifier.of("test2"));
-        System.out.println(new TypeSerializers_v1_20_5(new ItemComponents_v1_20_5()).BLOCK_PREDICATE.serialize(NbtConverter_v1_20_3.INSTANCE, predicate));
-    }
+    public final Codec<Either<Identifier, ArmorTrimMaterial>> ARMOR_TRIM_MATERIAL = this.registryEntry(
+            this.registry.getRegistryVerifier().armorTrimMaterial,
+            MapCodec.of(
+                    Codec.STRING.verified(s -> {
+                        if (s.matches(Identifier.VALID_VALUE_CHARS)) return Result.error("Invalid armor trim material: " + s);
+                        return Result.success(null);
+                    }).mapCodec(ArmorTrimMaterial.ASSET_NAME), ArmorTrimMaterial::getAssetName,
+                    Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ArmorTrimMaterial.INGREDIENT), ArmorTrimMaterial::getIngredient,
+                    Codec.FLOAT.mapCodec(ArmorTrimMaterial.ITEM_MODEL_INDEX), ArmorTrimMaterial::getItemModelIndex,
+                    Codec.mapOf(
+                            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().armorMaterial),
+                            Codec.STRING
+                    ).mapCodec(ArmorTrimMaterial.OVERRIDE_ARMOR_MATERIALS), ArmorTrimMaterial::getOverrideArmorMaterials,
+                    this.RAW_TEXT_COMPONENT.mapCodec(ArmorTrimMaterial.DESCRIPTION), ArmorTrimMaterial::getDescription,
+                    ArmorTrimMaterial::new
+            )
+    );
+    public final Codec<Either<Identifier, ArmorTrimPattern>> ARMOR_TRIM_PATTERN = this.registryEntry(
+            this.registry.getRegistryVerifier().armorTrimPattern,
+            MapCodec.of(
+                    Codec.STRING_IDENTIFIER.mapCodec(ArmorTrimPattern.ASSET_ID), ArmorTrimPattern::getAssetId,
+                    Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ArmorTrimPattern.TEMPLATE_ITEM), ArmorTrimPattern::getTemplateItem,
+                    this.RAW_TEXT_COMPONENT.mapCodec(ArmorTrimPattern.DESCRIPTION), ArmorTrimPattern::getDescription,
+                    Codec.BOOLEAN.mapCodec(ArmorTrimPattern.DECAL).optionalDefault(() -> false), ArmorTrimPattern::isDecal,
+                    ArmorTrimPattern::new
+            )
+    );
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);
