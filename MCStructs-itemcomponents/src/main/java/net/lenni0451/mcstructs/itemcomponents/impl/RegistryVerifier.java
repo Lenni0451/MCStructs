@@ -26,6 +26,10 @@ public class RegistryVerifier {
         return true;
     }
 
+    public boolean verifyBlockState(final Identifier id, final String state) {
+        return true;
+    }
+
     public boolean verifyEnchantment(final Identifier id) {
         return true;
     }

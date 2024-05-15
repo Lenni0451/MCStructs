@@ -291,6 +291,10 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
     }
 
     static <K, V> Codec<Map<K, V>> mapOf(final Codec<K> keyCodec, final Codec<V> valueCodec) {
+        return mapOf(keyCodec, key -> valueCodec);
+    }
+
+    static <K, V> Codec<Map<K, V>> mapOf(final Codec<K> keyCodec, final Function<K, Codec<V>> valueFunction) {
         return new Codec<Map<K, V>>() {
             @Override
             public <S> Result<S> serialize(DataConverter<S> converter, Map<K, V> element) {
@@ -298,7 +302,7 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
                 for (Map.Entry<K, V> entry : element.entrySet()) {
                     Result<S> key = keyCodec.serialize(converter, entry.getKey());
                     if (key.isError()) return key.mapError();
-                    Result<S> value = valueCodec.serialize(converter, entry.getValue());
+                    Result<S> value = valueFunction.apply(entry.getKey()).serialize(converter, entry.getValue());
                     if (value.isError()) return value.mapError();
 
                     map.put(key.get(), value.get());
@@ -314,7 +318,7 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
                 for (Map.Entry<S, S> entry : map.get().entrySet()) {
                     Result<K> key = keyCodec.deserialize(converter, entry.getKey());
                     if (key.isError()) return key.mapError();
-                    Result<V> value = valueCodec.deserialize(converter, entry.getValue());
+                    Result<V> value = valueFunction.apply(key.get()).deserialize(converter, entry.getValue());
                     if (value.isError()) return value.mapError();
 
                     converted.put(key.get(), value.get());

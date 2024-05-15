@@ -128,7 +128,13 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             WrittenBook::new
     ));
     //TODO: trim
-    //TODO: debug_stick_state
+    public final ItemComponent<Map<Identifier, String>> DEBUG_STICK_STATE = this.register("debug_stick_state", Codec.mapOf(
+            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.block),
+            block -> Codec.STRING.verified(value -> {
+                if (this.registryVerifier.verifyBlockState(block, value)) return Result.success(null);
+                return Result.error("Invalid " + block + " block state value: " + value);
+            })
+    ));
     public final ItemComponent<CompoundTag> ENTITY_DATA = this.register("entity_data", this.typeSerializers.COMPOUND_TAG.verified(tag -> {
         if (!tag.contains("id", NbtType.STRING)) return Result.error("Entity data tag does not contain an id");
         return Result.success(null);
