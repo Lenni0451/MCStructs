@@ -174,6 +174,19 @@ class TypeSerializers_v1_20_5 extends TypeSerializers {
                     ArmorTrimPattern::new
             )
     );
+    public final Codec<StatusEffect> STATUS_EFFECT = MapCodec.of(
+            Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().statusEffect).mapCodec(StatusEffect.ID), StatusEffect::getId,
+            Codec.<StatusEffect.Parameters>recursive(thiz -> MapCodec.of(
+                    Codec.UNSIGNED_BYTE.mapCodec(StatusEffect.Parameters.AMPLIFIER).optionalDefault(() -> 0), StatusEffect.Parameters::getAmplifier,
+                    Codec.INTEGER.mapCodec(StatusEffect.Parameters.DURATION).optionalDefault(() -> 0), StatusEffect.Parameters::getDuration,
+                    Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.AMBIENT).optionalDefault(() -> false), StatusEffect.Parameters::isAmbient,
+                    Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.SHOW_PARTICLES).optionalDefault(() -> true), StatusEffect.Parameters::isShowParticles,
+                    Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.SHOW_ICON).defaulted(() -> null, v -> false), StatusEffect.Parameters::isShowIcon,
+                    thiz.mapCodec(StatusEffect.Parameters.HIDDEN_EFFECT).optionalDefault(() -> null), StatusEffect.Parameters::getHiddenEffect,
+                    StatusEffect.Parameters::new
+            )).mapCodec(), StatusEffect::getParameters,
+            StatusEffect::new
+    );
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);

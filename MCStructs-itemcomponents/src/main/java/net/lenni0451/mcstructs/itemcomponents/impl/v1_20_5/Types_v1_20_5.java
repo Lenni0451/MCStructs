@@ -632,4 +632,64 @@ public class Types_v1_20_5 {
         private boolean decal = false;
     }
 
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class StatusEffect {
+        public static final String ID = "id";
+
+        private Identifier id;
+        private int amplifier = 0;
+        private int duration = 0;
+        private boolean ambient = false;
+        private boolean showParticles = true;
+        private boolean showIcon = this.showParticles;
+        @Nullable
+        private StatusEffect hiddenEffect;
+
+        public StatusEffect(final Identifier id, final Parameters parameters) {
+            this.id = id;
+            this.amplifier = parameters.amplifier;
+            this.duration = parameters.duration;
+            this.ambient = parameters.ambient;
+            this.showParticles = parameters.showParticles;
+            this.showIcon = parameters.showIcon;
+            if (parameters.hiddenEffect != null) this.hiddenEffect = new StatusEffect(id, parameters.hiddenEffect);
+        }
+
+        public Parameters getParameters() {
+            return new Parameters(this.amplifier, this.duration, this.ambient, this.showParticles, this.showIcon, this.hiddenEffect != null ? this.hiddenEffect.getParameters() : null);
+        }
+
+
+        @Data
+        @NoArgsConstructor
+        public static class Parameters {
+            public static final String AMPLIFIER = "amplifier";
+            public static final String DURATION = "duration";
+            public static final String AMBIENT = "ambient";
+            public static final String SHOW_PARTICLES = "show_particles";
+            public static final String SHOW_ICON = "show_icon";
+            public static final String HIDDEN_EFFECT = "hidden_effect";
+
+            private int amplifier = 0;
+            private int duration = 0;
+            private boolean ambient = false;
+            private boolean showParticles = true;
+            private boolean showIcon = this.showParticles;
+            @Nullable
+            private Parameters hiddenEffect;
+
+            public Parameters(final int amplifier, final int duration, final boolean ambient, final boolean showParticles, @Nullable final Boolean showIcon, @Nullable final Parameters hiddenEffect) {
+                this.amplifier = amplifier;
+                this.duration = duration;
+                this.ambient = ambient;
+                this.showParticles = showParticles;
+                this.showIcon = showIcon != null ? showIcon : showParticles;
+                this.hiddenEffect = hiddenEffect;
+            }
+        }
+    }
+
 }
