@@ -32,22 +32,9 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
             this.registry.getMapCodec().mapCodec(ItemStack.COMPONENTS).defaulted(() -> new ItemComponentMap(this.registry), ItemComponentMap::isEmpty), ItemStack::getComponents,
             ItemStack::new
     );
-    public final Codec<CompoundTag> COMPOUND_TAG = new Codec<CompoundTag>() {
-        @Override
-        public <T> Result<T> serialize(DataConverter<T> converter, CompoundTag component) {
-            return Result.success(NbtConverter_v1_20_3.INSTANCE.convertTo(converter, component));
-        }
-
-        @Override
-        public <T> Result<CompoundTag> deserialize(DataConverter<T> converter, T data) {
-            INbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
-            if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
-            return Result.success(tag.asCompoundTag());
-        }
-    };
-    public final Codec<CompoundTag> STRING_OR_DIRECT_COMPOUND_TAG = Codec.oneOf(
+    public final Codec<CompoundTag> LENIENT_COMPOUND_TAG = Codec.oneOf(
             Codec.STRING.mapThrowing(SNbtSerializer.V1_14::serialize, SNbtSerializer.V1_14::deserialize),
-            this.COMPOUND_TAG
+            this.customData()
     );
     public final Codec<ATextComponent> RAW_TEXT_COMPONENT = new Codec<ATextComponent>() {
         @Override
@@ -136,7 +123,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     public final Codec<BlockPredicate> BLOCK_PREDICATE = MapCodec.of(
             Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().block).optionalListOf().mapCodec(BlockPredicate.BLOCKS).optionalDefault(() -> null), BlockPredicate::getBlocks,
             this.CONDITION_LIST.mapCodec(BlockPredicate.STATE).optionalDefault(() -> null), BlockPredicate::getState,
-            this.STRING_OR_DIRECT_COMPOUND_TAG.mapCodec(BlockPredicate.NBT).optionalDefault(() -> null), BlockPredicate::getNbt,
+            this.LENIENT_COMPOUND_TAG.mapCodec(BlockPredicate.NBT).optionalDefault(() -> null), BlockPredicate::getNbt,
             BlockPredicate::new
     );
     public final Codec<EntityAttributeModifier> ENTITY_ATTRIBUTE_MODIFIER = MapCodec.of(
@@ -195,6 +182,22 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);
+    }
+
+    public Codec<CompoundTag> customData() {
+        return new Codec<CompoundTag>() {
+            @Override
+            public <T> Result<T> serialize(DataConverter<T> converter, CompoundTag component) {
+                return Result.success(NbtConverter_v1_20_3.INSTANCE.convertTo(converter, component));
+            }
+
+            @Override
+            public <T> Result<CompoundTag> deserialize(DataConverter<T> converter, T data) {
+                INbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
+                if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
+                return Result.success(tag.asCompoundTag());
+            }
+        };
     }
 
     public Codec<ATextComponent> textComponent(final int maxLength) {

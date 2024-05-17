@@ -22,7 +22,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
 
     private final TypeSerializers_v1_20_5 typeSerializers = new TypeSerializers_v1_20_5(this);
 
-    public final ItemComponent<CompoundTag> CUSTOM_DATA = this.register("custom_data", this.typeSerializers.COMPOUND_TAG);
+    public final ItemComponent<CompoundTag> CUSTOM_DATA = this.register("custom_data", this.typeSerializers.customData());
     public final ItemComponent<Integer> MAX_STACK_SIZE = this.register("max_stack_size", Codec.rangedInt(1, 99));
     public final ItemComponent<Integer> MAX_DAMAGE = this.register("max_damage", Codec.minInt(1));
     public final ItemComponent<Integer> DAMAGE = this.register("damage", Codec.minInt(0));
@@ -159,12 +159,12 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
                 return Result.error("Invalid " + block + " block state value: " + value);
             })
     ));
-    public final ItemComponent<CompoundTag> ENTITY_DATA = this.register("entity_data", this.typeSerializers.COMPOUND_TAG.verified(tag -> {
+    public final ItemComponent<CompoundTag> ENTITY_DATA = this.register("entity_data", this.typeSerializers.customData().verified(tag -> {
         if (!tag.contains("id", NbtType.STRING)) return Result.error("Entity data tag does not contain an id");
         return Result.success(null);
     }));
-    public final ItemComponent<CompoundTag> BUCKET_ENTITY_DATA = this.register("bucket_entity_data", this.typeSerializers.COMPOUND_TAG);
-    public final ItemComponent<CompoundTag> BLOCK_ENTITY_DATA = this.register("block_entity_data", this.typeSerializers.COMPOUND_TAG.verified(tag -> {
+    public final ItemComponent<CompoundTag> BUCKET_ENTITY_DATA = this.register("bucket_entity_data", this.typeSerializers.customData());
+    public final ItemComponent<CompoundTag> BLOCK_ENTITY_DATA = this.register("block_entity_data", this.typeSerializers.customData().verified(tag -> {
         if (!tag.contains("id", NbtType.STRING)) return Result.error("Block entity data tag does not contain an id");
         return Result.success(null);
     }));
@@ -253,7 +253,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<List<ContainerSlot>> CONTAINER = this.register("container", this.typeSerializers.CONTAINER_SLOT.listOf(256));
     public final ItemComponent<Map<String, String>> BLOCK_STATE = this.register("block_state", Codec.mapOf(Codec.STRING, Codec.STRING));
     public final ItemComponent<List<BeeData>> BEES = this.register("bees", MapCodec.of(
-            this.typeSerializers.COMPOUND_TAG.mapCodec(BeeData.ENTITY_DATA).defaulted(CompoundTag::new, CompoundTag::isEmpty), BeeData::getEntityData,
+            this.typeSerializers.customData().mapCodec(BeeData.ENTITY_DATA).defaulted(CompoundTag::new, CompoundTag::isEmpty), BeeData::getEntityData,
             Codec.INTEGER.mapCodec(BeeData.TICKS_IN_HIVE), BeeData::getTicksInHive,
             Codec.INTEGER.mapCodec(BeeData.MIN_TICKS_IN_HIVE), BeeData::getMinTicksInHive,
             BeeData::new
