@@ -10,7 +10,7 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.
 
 public class TypeSerializers_v1_21 extends TypeSerializers_v1_20_5 {
 
-    public static final String SINGLE_ITEM_STACK = "single_item_stack";
+    protected static final String SINGLE_ITEM_STACK = "single_item_stack";
 
     public TypeSerializers_v1_21(final ItemComponentRegistry registry) {
         super(registry);

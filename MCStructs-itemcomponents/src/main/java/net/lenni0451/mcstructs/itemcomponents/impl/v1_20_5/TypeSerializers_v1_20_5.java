@@ -26,21 +26,21 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.
 
 public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
-    public static final String CUSTOM_DATA = "custom_data";
-    public static final String STRING_OR_RAW_COMPOUND_TAG = "string_or_raw_compound_tag";
-    public static final String ITEM_STACK = "item_stack";
-    public static final String BLOCK_POS = "block_pos";
-    public static final String RAW_TEXT_COMPONENT = "RAW_TEXT_COMPONENT";
-    public static final String PLAYER_NAME = "player_name";
-    public static final String DYE_COLOR = "dye_color";
-    public static final String ENCHANTMENT_LEVELS = "enchantment_levels";
-    public static final String SOUND_EVENT = "sound_event";
-    public static final String BLOCK_PREDICATE = "block_predicate";
-    public static final String ATTRIBUTE_MODIFIER = "attribute_modifier";
-    public static final String ENTITY_ATTRIBUTE_MODIFIER = "entity_attribute_modifier";
-    public static final String ARMOR_TRIM_MATERIAL = "armor_trim_material";
-    public static final String ARMOR_TRIM_PATTERN = "armor_trim_pattern";
-    public static final String STATUS_EFFECT = "status_effect";
+    protected static final String CUSTOM_DATA = "custom_data";
+    protected static final String STRING_OR_RAW_COMPOUND_TAG = "string_or_raw_compound_tag";
+    protected static final String ITEM_STACK = "item_stack";
+    protected static final String BLOCK_POS = "block_pos";
+    protected static final String RAW_TEXT_COMPONENT = "RAW_TEXT_COMPONENT";
+    protected static final String PLAYER_NAME = "player_name";
+    protected static final String DYE_COLOR = "dye_color";
+    protected static final String ENCHANTMENT_LEVELS = "enchantment_levels";
+    protected static final String SOUND_EVENT = "sound_event";
+    protected static final String BLOCK_PREDICATE = "block_predicate";
+    protected static final String ATTRIBUTE_MODIFIER = "attribute_modifier";
+    protected static final String ENTITY_ATTRIBUTE_MODIFIER = "entity_attribute_modifier";
+    protected static final String ARMOR_TRIM_MATERIAL = "armor_trim_material";
+    protected static final String ARMOR_TRIM_PATTERN = "armor_trim_pattern";
+    protected static final String STATUS_EFFECT = "status_effect";
 
     public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
         super(registry);
