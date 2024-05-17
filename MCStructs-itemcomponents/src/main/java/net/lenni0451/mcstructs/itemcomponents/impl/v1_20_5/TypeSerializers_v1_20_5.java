@@ -23,7 +23,7 @@ import java.util.function.Function;
 
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.*;
 
-class TypeSerializers_v1_20_5 extends TypeSerializers {
+public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public final Codec<ItemStack> ITEM_STACK = MapCodec.of(
             Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ItemStack.ID), ItemStack::getId,
