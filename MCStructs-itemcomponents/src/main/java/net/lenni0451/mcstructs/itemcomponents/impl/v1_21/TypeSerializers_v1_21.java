@@ -5,6 +5,8 @@ import net.lenni0451.mcstructs.converter.codec.MapCodec;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.TypeSerializers_v1_20_5;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.ItemStack;
 
@@ -14,6 +16,14 @@ public class TypeSerializers_v1_21 extends TypeSerializers_v1_20_5 {
 
     public TypeSerializers_v1_21(final ItemComponentRegistry registry) {
         super(registry);
+    }
+
+    @Override
+    public Codec<CompoundTag> customData() {
+        return this.init(CUSTOM_DATA, () -> Codec.oneOf(
+                super.customData(),
+                Codec.STRING.mapThrowing(SNbtSerializer.V1_14::serialize, SNbtSerializer.V1_14::deserialize)
+        ));
     }
 
     public Codec<ItemStack> singleItemStack() {
