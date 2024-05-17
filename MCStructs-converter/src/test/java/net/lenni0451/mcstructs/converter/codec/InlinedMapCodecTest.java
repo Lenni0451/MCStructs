@@ -1,6 +1,5 @@
 package net.lenni0451.mcstructs.converter.codec;
 
-import com.sun.istack.internal.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -8,6 +7,8 @@ import lombok.ToString;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import org.junit.jupiter.api.Test;
+
+import javax.annotation.Nullable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
