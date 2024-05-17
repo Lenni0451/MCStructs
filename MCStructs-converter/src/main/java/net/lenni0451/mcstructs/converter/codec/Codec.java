@@ -42,6 +42,11 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
             return converter.asNumber(data).map(Number::byteValue);
         }
     };
+    Codec<Integer> UNSIGNED_BYTE = BYTE.flatMap(i -> {
+        if (i < 0) return Result.error("Value is smaller than minimum: " + i + " < 0");
+        if (i > 255) return Result.error("Value is bigger than maximum: " + i + " > 255");
+        return Result.success((byte) (i & 0xFF));
+    }, b -> Result.success(b & 0xFF));
     Codec<Short> SHORT = new Codec<Short>() {
         @Override
         public <S> Result<S> serialize(DataConverter<S> converter, Short element) {
