@@ -20,9 +20,9 @@ public class ItemComponents_v1_21 extends ItemComponents_v1_20_5 {
             Codec.FLOAT.mapCodec(Food.SATURATION), Food::getSaturation,
             Codec.BOOLEAN.mapCodec(Food.CAN_ALWAYS_EAT).optionalDefault(() -> false), Food::isCanAlwaysEat,
             Codec.minExclusiveFloat(0).mapCodec(Food.EAT_SECONDS).optionalDefault(() -> 1.6F), Food::getEatSeconds,
-            this.typeSerializers.SINGLE_ITEM_STACK.mapCodec(Food.USING_CONVERTS_TO).optionalDefault(() -> null), Food::getUsingConvertsTo,
+            this.typeSerializers.singleItemStack().mapCodec(Food.USING_CONVERTS_TO).optionalDefault(() -> null), Food::getUsingConvertsTo,
             MapCodec.of(
-                    this.typeSerializers.STATUS_EFFECT.mapCodec(Types_v1_20_5.Food.Effect.EFFECT), Types_v1_20_5.Food.Effect::getEffect,
+                    this.typeSerializers.statusEffect().mapCodec(Types_v1_20_5.Food.Effect.EFFECT), Types_v1_20_5.Food.Effect::getEffect,
                     Codec.rangedFloat(0, 1).mapCodec(Types_v1_20_5.Food.Effect.PROBABILITY).optionalDefault(() -> 1F), Types_v1_20_5.Food.Effect::getProbability,
                     Types_v1_20_5.Food.Effect::new
             ).listOf().mapCodec(Food.EFFECTS).defaulted(ArrayList::new, List::isEmpty), Food::getEffects,

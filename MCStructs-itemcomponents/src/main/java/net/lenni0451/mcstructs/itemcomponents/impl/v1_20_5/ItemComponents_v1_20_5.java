@@ -36,19 +36,19 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Rarity> RARITY = this.register("rarity", Codec.named(Rarity.values()));
     public final ItemComponent<Enchantments> ENCHANTMENTS = this.register("enchantments", Codec.oneOf(
             MapCodec.of(
-                    this.typeSerializers.ENCHANTMENT_LEVELS.mapCodec(Enchantments.LEVELS), Enchantments::getEnchantments,
+                    this.typeSerializers.enchantmentLevels().mapCodec(Enchantments.LEVELS), Enchantments::getEnchantments,
                     Codec.BOOLEAN.mapCodec(Enchantments.SHOW_IN_TOOLTIP).optionalDefault(() -> true), Enchantments::isShowInTooltip,
                     Enchantments::new
             ),
-            this.typeSerializers.ENCHANTMENT_LEVELS.map(Enchantments::getEnchantments, map -> new Enchantments(map, true))
+            this.typeSerializers.enchantmentLevels().map(Enchantments::getEnchantments, map -> new Enchantments(map, true))
     ));
     public final ItemComponent<BlockPredicatesChecker> CAN_PLACE_ON = this.register("can_place_on", Codec.oneOf(
             MapCodec.of(
-                    this.typeSerializers.BLOCK_PREDICATE.listOf(1, Integer.MAX_VALUE).mapCodec(BlockPredicatesChecker.PREDICATES), BlockPredicatesChecker::getPredicates,
+                    this.typeSerializers.blockPredicate().listOf(1, Integer.MAX_VALUE).mapCodec(BlockPredicatesChecker.PREDICATES), BlockPredicatesChecker::getPredicates,
                     Codec.BOOLEAN.mapCodec(BlockPredicatesChecker.SHOW_IN_TOOLTIP).optionalDefault(() -> true), BlockPredicatesChecker::isShowInTooltip,
                     BlockPredicatesChecker::new
             ),
-            this.typeSerializers.BLOCK_PREDICATE.flatMap(predicates -> Result.error("Can't encode single block predicate"), predicate -> {
+            this.typeSerializers.blockPredicate().flatMap(predicates -> Result.error("Can't encode single block predicate"), predicate -> {
                 BlockPredicatesChecker checker = new BlockPredicatesChecker();
                 List<BlockPredicate> predicates = new ArrayList<>();
                 predicates.add(predicate);
@@ -59,11 +59,11 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<BlockPredicatesChecker> CAN_BREAK = this.copy("can_break", this.CAN_PLACE_ON);
     public final ItemComponent<AttributeModifiers> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", Codec.oneOf(
             MapCodec.of(
-                    this.typeSerializers.ATTRIBUTE_MODIFIER.listOf().mapCodec(AttributeModifiers.MODIFIERS), AttributeModifiers::getModifiers,
+                    this.typeSerializers.attributeModifier().listOf().mapCodec(AttributeModifiers.MODIFIERS), AttributeModifiers::getModifiers,
                     Codec.BOOLEAN.mapCodec(AttributeModifiers.SHOW_IN_TOOLTIP).optionalDefault(() -> true), AttributeModifiers::isShowInTooltip,
                     AttributeModifiers::new
             ),
-            this.typeSerializers.ATTRIBUTE_MODIFIER.flatMap(modifiers -> Result.error("Can't encode single attribute modifier"), modifier -> {
+            this.typeSerializers.attributeModifier().flatMap(modifiers -> Result.error("Can't encode single attribute modifier"), modifier -> {
                 AttributeModifiers attributeModifiers = new AttributeModifiers();
                 List<AttributeModifier> list = new ArrayList<>();
                 list.add(modifier);
@@ -84,7 +84,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(Food.CAN_ALWAYS_EAT).optionalDefault(() -> false), Food::isCanAlwaysEat,
             Codec.minExclusiveFloat(0).mapCodec(Food.EAT_SECONDS).optionalDefault(() -> 1.6F), Food::getEatSeconds,
             MapCodec.of(
-                    this.typeSerializers.STATUS_EFFECT.mapCodec(Food.Effect.EFFECT), Food.Effect::getEffect,
+                    this.typeSerializers.statusEffect().mapCodec(Food.Effect.EFFECT), Food.Effect::getEffect,
                     Codec.rangedFloat(0, 1).mapCodec(Food.Effect.PROBABILITY).optionalDefault(() -> 1F), Food.Effect::getProbability,
                     Food.Effect::new
             ).listOf().mapCodec(Food.EFFECTS).defaulted(ArrayList::new, List::isEmpty), Food::getEffects,
@@ -118,13 +118,13 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             MapDecoration::new
     )));
     public final ItemComponent<Integer> MAP_POST_PROCESSING = this.registerNonSerializable("map_post_processing");
-    public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = this.register("charged_projectiles", this.typeSerializers.ITEM_STACK.listOf());
-    public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = this.register("bundle_contents", this.typeSerializers.ITEM_STACK.listOf());
+    public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = this.register("charged_projectiles", this.typeSerializers.itemStack().listOf());
+    public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = this.register("bundle_contents", this.typeSerializers.itemStack().listOf());
     public final ItemComponent<PotionContents> POTION_CONTENTS = this.register("potion_contents", Codec.oneOf(
             MapCodec.of(
                     Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).mapCodec(PotionContents.POTION).optionalDefault(() -> null), PotionContents::getPotion,
                     Codec.INTEGER.mapCodec(PotionContents.CUSTOM_COLOR).optionalDefault(() -> null), PotionContents::getCustomColor,
-                    this.typeSerializers.STATUS_EFFECT.listOf().mapCodec(PotionContents.CUSTOM_EFFECTS).defaulted(ArrayList::new, List::isEmpty), PotionContents::getCustomEffects,
+                    this.typeSerializers.statusEffect().listOf().mapCodec(PotionContents.CUSTOM_EFFECTS).defaulted(ArrayList::new, List::isEmpty), PotionContents::getCustomEffects,
                     PotionContents::new
             ),
             Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).map(PotionContents::getPotion, id -> new PotionContents(id, null, new ArrayList<>()))
@@ -147,8 +147,8 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             WrittenBook::new
     ));
     public final ItemComponent<ArmorTrim> TRIM = this.register("trim", MapCodec.of(
-            this.typeSerializers.ARMOR_TRIM_MATERIAL.mapCodec(ArmorTrim.MATERIAL), ArmorTrim::getMaterial,
-            this.typeSerializers.ARMOR_TRIM_PATTERN.mapCodec(ArmorTrim.PATTERN), ArmorTrim::getPattern,
+            this.typeSerializers.armorTrimMaterial().mapCodec(ArmorTrim.MATERIAL), ArmorTrim::getMaterial,
+            this.typeSerializers.armorTrimPattern().mapCodec(ArmorTrim.PATTERN), ArmorTrim::getPattern,
             Codec.BOOLEAN.mapCodec(ArmorTrim.SHOW_IN_TOOLTIP).optionalDefault(() -> true), ArmorTrim::isShowInTooltip,
             ArmorTrim::new
     ));
@@ -171,7 +171,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Either<Identifier, Instrument>> INSTRUMENT = this.register("instrument", this.typeSerializers.registryEntry(
             this.registryVerifier.instrument,
             MapCodec.of(
-                    this.typeSerializers.SOUND_EVENT.mapCodec(Instrument.SOUND_EVENT), Instrument::getSoundEvent,
+                    this.typeSerializers.soundEvent().mapCodec(Instrument.SOUND_EVENT), Instrument::getSoundEvent,
                     Codec.minInt(1).mapCodec(Instrument.USE_DURATION), Instrument::getUseDuration,
                     Codec.minExclusiveFloat(0).mapCodec(Instrument.RANGE), Instrument::getRange,
                     Instrument::new
@@ -182,7 +182,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<LodestoneTracker> LODESTONE_TRACKER = this.register("lodestone_tracker", MapCodec.of(
             MapCodec.of(
                     Codec.STRING_IDENTIFIER.mapCodec(LodestoneTracker.GlobalPos.DIMENSION), LodestoneTracker.GlobalPos::getDimension,
-                    this.typeSerializers.BLOCK_POS.mapCodec(LodestoneTracker.GlobalPos.POS), LodestoneTracker.GlobalPos::getPos,
+                    this.typeSerializers.blockPos().mapCodec(LodestoneTracker.GlobalPos.POS), LodestoneTracker.GlobalPos::getPos,
                     LodestoneTracker.GlobalPos::new
             ).mapCodec(LodestoneTracker.TARGET).optionalDefault(() -> null), LodestoneTracker::getTarget,
             Codec.BOOLEAN.mapCodec(LodestoneTracker.TRACKED).optionalDefault(() -> true), LodestoneTracker::isTracked,
@@ -203,7 +203,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     ));
     public final ItemComponent<GameProfile> PROFILE = this.register("profile", Codec.oneOf(
             MapCodec.of(
-                    this.typeSerializers.PLAYER_NAME.mapCodec(GameProfile.NAME).optionalDefault(() -> null), GameProfile::getName,
+                    this.typeSerializers.playerName().mapCodec(GameProfile.NAME).optionalDefault(() -> null), GameProfile::getName,
                     Codec.INT_ARRAY_UUID.mapCodec(GameProfile.ID).optionalDefault(() -> null), GameProfile::getUuid,
                     Codec.oneOf(
                             Codec.mapOf(Codec.STRING, Codec.STRING.listOf()).map(properties -> {
@@ -240,17 +240,28 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
                     ).mapCodec(GameProfile.PROPERTIES).defaulted(HashMap::new, Map::isEmpty), GameProfile::getProperties,
                     GameProfile::new
             ),
-            this.typeSerializers.PLAYER_NAME.map(GameProfile::getName, name -> new GameProfile(name, null, new HashMap<>()))
+            this.typeSerializers.playerName().map(GameProfile::getName, name -> new GameProfile(name, null, new HashMap<>()))
     ));
     public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", Codec.STRING_IDENTIFIER);
     public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", MapCodec.of(
-            this.typeSerializers.DYE_COLOR.mapCodec(BannerPattern.COLOR), BannerPattern::getColor,
-            this.typeSerializers.BANNER_PATTERN_PATTERN.mapCodec(BannerPattern.PATTERN), BannerPattern::getPattern,
+            this.typeSerializers.dyeColor().mapCodec(BannerPattern.COLOR), BannerPattern::getColor,
+            this.typeSerializers.registryEntry(
+                    this.getRegistryVerifier().bannerPattern,
+                    MapCodec.of(
+                            Codec.STRING_IDENTIFIER.mapCodec(BannerPattern.Pattern.ASSET_ID), BannerPattern.Pattern::getAssetId,
+                            Codec.STRING.mapCodec(BannerPattern.Pattern.TRANSLATION_KEY), BannerPattern.Pattern::getTranslationKey,
+                            BannerPattern.Pattern::new
+                    )
+            ).mapCodec(BannerPattern.PATTERN), BannerPattern::getPattern,
             BannerPattern::new
     ).listOf());
-    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.DYE_COLOR);
+    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.dyeColor());
     public final ItemComponent<List<Identifier>> POT_DECORATIONS = this.register("pot_decorations", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.item).listOf(4));
-    public final ItemComponent<List<ContainerSlot>> CONTAINER = this.register("container", this.typeSerializers.CONTAINER_SLOT.listOf(256));
+    public final ItemComponent<List<ContainerSlot>> CONTAINER = this.register("container", MapCodec.of(
+            Codec.rangedInt(0, 255).mapCodec(ContainerSlot.SLOT), ContainerSlot::getSlot,
+            this.typeSerializers.itemStack().mapCodec(ContainerSlot.ITEM), ContainerSlot::getItem,
+            ContainerSlot::new
+    ).listOf(256));
     public final ItemComponent<Map<String, String>> BLOCK_STATE = this.register("block_state", Codec.mapOf(Codec.STRING, Codec.STRING));
     public final ItemComponent<List<BeeData>> BEES = this.register("bees", MapCodec.of(
             this.typeSerializers.customData().mapCodec(BeeData.ENTITY_DATA).defaulted(CompoundTag::new, CompoundTag::isEmpty), BeeData::getEntityData,

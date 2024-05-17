@@ -433,30 +433,6 @@ public class Types_v1_20_5 {
         }
     }
 
-
-    @Data
-    @NoArgsConstructor
-    public static class ValueMatcher {
-        public static final String MIN = "min";
-        public static final String MAX = "max";
-
-        @Nullable
-        private String value;
-        @Nullable
-        private String min;
-        @Nullable
-        private String max;
-
-        public ValueMatcher(final String value) {
-            this.value = value;
-        }
-
-        public ValueMatcher(final String min, final String max) {
-            this.min = min;
-            this.max = max;
-        }
-    }
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -471,6 +447,30 @@ public class Types_v1_20_5 {
         private Map<String, ValueMatcher> state;
         @Nullable
         private CompoundTag nbt;
+
+
+        @Data
+        @NoArgsConstructor
+        public static class ValueMatcher {
+            public static final String MIN = "min";
+            public static final String MAX = "max";
+
+            @Nullable
+            private String value;
+            @Nullable
+            private String min;
+            @Nullable
+            private String max;
+
+            public ValueMatcher(final String value) {
+                this.value = value;
+            }
+
+            public ValueMatcher(final String min, final String max) {
+                this.min = min;
+                this.max = max;
+            }
+        }
     }
 
     @Data
