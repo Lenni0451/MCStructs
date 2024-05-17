@@ -20,6 +20,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> armorMaterial = new Checker<>("armor material", this::verifyArmorMaterial);
     public final Checker<Identifier> armorTrimMaterial = new Checker<>("armor trim material", this::verifyArmorTrimMaterial);
     public final Checker<Identifier> armorTrimPattern = new Checker<>("armor trim pattern", this::verifyArmorTrimPattern);
+    public final Checker<Identifier> potion = new Checker<>("potion", this::verifyPotion);
 
     public boolean verifyItem(final Identifier id) {
         return true;
@@ -70,6 +71,10 @@ public class RegistryVerifier {
     }
 
     public boolean verifyArmorTrimPattern(final Identifier id) {
+        return true;
+    }
+
+    public boolean verifyPotion(final Identifier id) {
         return true;
     }
 

@@ -692,4 +692,20 @@ public class Types_v1_20_5 {
         }
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PotionContents {
+        public static final String POTION = "potion";
+        public static final String CUSTOM_COLOR = "custom_color";
+        public static final String CUSTOM_EFFECTS = "custom_effects";
+
+        @Nullable
+        private Identifier potion;
+        @Nullable
+        private Integer customColor;
+        @Nullable
+        private List<StatusEffect> customEffects;
+    }
+
 }

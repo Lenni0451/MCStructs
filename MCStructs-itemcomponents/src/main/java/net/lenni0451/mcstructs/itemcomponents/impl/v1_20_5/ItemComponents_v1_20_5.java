@@ -109,7 +109,15 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Integer> MAP_POST_PROCESSING = this.registerNonSerializable("map_post_processing");
     public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = this.register("charged_projectiles", this.typeSerializers.ITEM_STACK.listOf());
     public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = this.register("bundle_contents", this.typeSerializers.ITEM_STACK.listOf());
-    //TODO: potion_contents
+    public final ItemComponent<PotionContents> POTION_CONTENTS = this.register("potion_contents", Codec.oneOf(
+            MapCodec.of(
+                    Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).mapCodec(PotionContents.POTION).optionalDefault(() -> null), PotionContents::getPotion,
+                    Codec.INTEGER.mapCodec(PotionContents.CUSTOM_COLOR).optionalDefault(() -> null), PotionContents::getCustomColor,
+                    this.typeSerializers.STATUS_EFFECT.listOf().mapCodec(PotionContents.CUSTOM_EFFECTS).defaulted(ArrayList::new, List::isEmpty), PotionContents::getCustomEffects,
+                    PotionContents::new
+            ),
+            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).map(PotionContents::getPotion, id -> new PotionContents(id, null, new ArrayList<>()))
+    ));
     public final ItemComponent<List<SuspiciousStewEffect>> SUSPICIOUS_STEW_EFFECTS = this.register("suspicious_stew_effects", MapCodec.of(
             Codec.STRING_IDENTIFIER.verified(this.registryVerifier.statusEffect).mapCodec(SuspiciousStewEffect.ID), SuspiciousStewEffect::getId,
             Codec.INTEGER.mapCodec(SuspiciousStewEffect.DURATION).lenient().optionalDefault(() -> 0), SuspiciousStewEffect::getDuration,
