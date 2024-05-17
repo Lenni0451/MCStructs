@@ -492,7 +492,6 @@ public class Types_v1_20_5 {
         private boolean showInTooltip = true;
     }
 
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -706,6 +705,36 @@ public class Types_v1_20_5 {
         private Integer customColor;
         @Nullable
         private List<StatusEffect> customEffects;
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Food {
+        public static final String NUTRITION = "nutrition";
+        public static final String SATURATION = "saturation";
+        public static final String CAN_ALWAYS_EAT = "can_always_eat";
+        public static final String EAT_SECONDS = "eat_seconds";
+        public static final String EFFECTS = "effects";
+
+        private int nutrition;
+        private float saturation;
+        private boolean canAlwaysEat = false;
+        private float eatSeconds = 1.6F;
+        private List<Effect> effects = new ArrayList<>();
+
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class Effect {
+            public static final String EFFECT = "effect";
+            public static final String PROBABILITY = "probability";
+
+            private StatusEffect effect;
+            private float probability = 1;
+        }
     }
 
 }

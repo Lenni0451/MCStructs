@@ -78,7 +78,18 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Boolean> CREATIVE_SLOT_LOCK = this.registerNonSerializable("creative_slot_lock"); //No json/nbt serialization
     public final ItemComponent<Boolean> ENCHANTMENT_GLINT_OVERRIDE = this.register("enchantment_glint_override", Codec.BOOLEAN);
     public final ItemComponent<Boolean> INTANGIBLE_PROJECTILE = this.register("intangible_projectile", Codec.UNIT);
-    //TODO: food
+    public final ItemComponent<Food> FOOD = this.register("food", MapCodec.of(
+            Codec.minInt(0).mapCodec(Food.NUTRITION), Food::getNutrition,
+            Codec.FLOAT.mapCodec(Food.SATURATION), Food::getSaturation,
+            Codec.BOOLEAN.mapCodec(Food.CAN_ALWAYS_EAT).optionalDefault(() -> false), Food::isCanAlwaysEat,
+            Codec.minFloat(0).mapCodec(Food.EAT_SECONDS).optionalDefault(() -> 1.6F), Food::getEatSeconds,
+            MapCodec.of(
+                    this.typeSerializers.STATUS_EFFECT.mapCodec(Food.Effect.EFFECT), Food.Effect::getEffect,
+                    Codec.rangedFloat(0, 1).mapCodec(Food.Effect.PROBABILITY).optionalDefault(() -> 1F), Food.Effect::getProbability,
+                    Food.Effect::new
+            ).listOf().mapCodec(Food.EFFECTS).defaulted(ArrayList::new, List::isEmpty), Food::getEffects,
+            Food::new
+    ));
     public final ItemComponent<Boolean> FIRE_RESISTANT = this.register("fire_resistant", Codec.UNIT);
     public final ItemComponent<ToolComponent> TOOL = this.register("tool", MapCodec.of(
             MapCodec.of(
