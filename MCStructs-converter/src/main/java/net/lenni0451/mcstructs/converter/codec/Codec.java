@@ -368,18 +368,18 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
-    default <N> Codec<N> mapThrowing(final Function<N, T> serializer, final Function<T, N> deserializer) {
+    default <N> Codec<N> mapThrowing(final ThrowingFunction<N, T> serializer, final ThrowingFunction<T, N> deserializer) {
         return this.flatMap(n -> {
             try {
                 return Result.success(serializer.apply(n));
-            } catch (Exception e) {
-                return Result.error(e);
+            } catch (Throwable t) {
+                return Result.error(t);
             }
         }, t -> {
             try {
                 return Result.success(deserializer.apply(t));
-            } catch (Exception e) {
-                return Result.error(e);
+            } catch (Throwable t2) {
+                return Result.error(t2);
             }
         });
     }
