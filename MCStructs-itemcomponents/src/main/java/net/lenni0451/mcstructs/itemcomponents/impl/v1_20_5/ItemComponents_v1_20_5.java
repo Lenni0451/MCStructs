@@ -274,6 +274,17 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     }
 
     @Override
+    public ItemComponentMap getItemDefaults() {
+        return new ItemComponentMap(this)
+                .set(this.MAX_STACK_SIZE, 64)
+                .set(this.LORE, new ArrayList<>())
+                .set(this.ENCHANTMENTS, new Enchantments(new HashMap<>(), true))
+                .set(this.REPAIR_COST, 0)
+                .set(this.ATTRIBUTE_MODIFIERS, new AttributeModifiers(new ArrayList<>(), true))
+                .set(this.RARITY, Rarity.COMMON);
+    }
+
+    @Override
     public <D> D mapTo(DataConverter<D> converter, ItemComponentMap map) {
         D out = converter.emptyMap();
         for (Map.Entry<ItemComponent<?>, Optional<?>> entry : map.getRaw().entrySet()) {

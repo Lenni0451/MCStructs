@@ -83,6 +83,11 @@ public abstract class ItemComponentRegistry {
     }
 
     /**
+     * @return The default values for item components
+     */
+    public abstract ItemComponentMap getItemDefaults();
+
+    /**
      * Serialize an item component map to a data object.
      *
      * @param converter The data converter
