@@ -1,0 +1,8 @@
+dependencies {
+    api "com.google.code.gson:gson:2.10"
+
+    api project(":MCStructs-converter")
+    api project(":MCStructs-core")
+    api project(":MCStructs-nbt")
+    api project(":MCStructs-text")
+}

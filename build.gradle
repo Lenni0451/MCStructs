@@ -1,8 +1,13 @@
+plugins {
+    id "io.freefair.lombok" version "8.6" apply false
+}
+
 subprojects {
     apply plugin: "java-library"
     apply plugin: "maven-publish"
     apply plugin: "signing"
     apply plugin: "checkstyle"
+    apply plugin: "io.freefair.lombok"
 
     base {
         java.toolchain.languageVersion = JavaLanguageVersion.of(8)
@@ -24,6 +29,7 @@ subprojects {
     dependencies {
         compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
+        testImplementation "com.google.code.findbugs:jsr305:3.0.2"
         testImplementation(platform("org.junit:junit-bom:5.10.1"))
         testImplementation "org.junit.jupiter:junit-jupiter"
         testRuntimeOnly "org.junit.platform:junit-platform-launcher"
@@ -32,6 +38,11 @@ subprojects {
     java {
         withSourcesJar()
         withJavadocJar()
+    }
+
+    sourcesJar {
+        from delombok
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 
     test {
