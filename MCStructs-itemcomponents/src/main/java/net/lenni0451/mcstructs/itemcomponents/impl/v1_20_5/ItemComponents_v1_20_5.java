@@ -197,7 +197,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             FireworkExplosions::new
     ));
     public final ItemComponent<Fireworks> FIREWORKS = this.register("fireworks", MapCodec.of(
-            Codec.BYTE.map(Integer::byteValue, b -> b & 0xFF).mapCodec(Fireworks.FLIGHT_DURATION).optionalDefault(() -> 0), Fireworks::getFlightDuration,
+            Codec.UNSIGNED_BYTE.mapCodec(Fireworks.FLIGHT_DURATION).optionalDefault(() -> 0), Fireworks::getFlightDuration,
             this.FIREWORK_EXPLOSION.getCodec().listOf().mapCodec(Fireworks.EXPLOSIONS).defaulted(ArrayList::new, List::isEmpty), Fireworks::getExplosions,
             Fireworks::new
     ));

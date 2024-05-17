@@ -54,18 +54,6 @@ public class Types_v1_20_5 {
 
         private final String name;
         private final TextFormatting color;
-
-        public static Rarity byOrdinal(final int ordinal) {
-            if (ordinal < 0 || ordinal >= values().length) throw new IllegalArgumentException("Unknown rarity ordinal: " + ordinal);
-            return values()[ordinal];
-        }
-
-        public static Rarity byName(final String name) {
-            for (Rarity rarity : values()) {
-                if (rarity.getName().equalsIgnoreCase(name)) return rarity;
-            }
-            throw new IllegalArgumentException("Unknown rarity: " + name);
-        }
     }
 
     @Data
@@ -96,6 +84,10 @@ public class Types_v1_20_5 {
 
         private int rgb;
         private boolean showInTooltip = true;
+
+        public DyedColor(final int rgb) {
+            this.rgb = rgb;
+        }
     }
 
     @Data
@@ -122,8 +114,8 @@ public class Types_v1_20_5 {
         public static final String COMPONENTS = "components";
 
         private Identifier id;
-        private int count;
-        private ItemComponentMap components;
+        private int count = 1;
+        private ItemComponentMap components /* = new ItemComponentMap() */;
     }
 
     @Data
@@ -172,10 +164,14 @@ public class Types_v1_20_5 {
         public static final String HAS_TWINKLE = "has_twinkle";
 
         private ExplosionShape shape;
-        private int[] colors;
-        private int[] fadeColors;
-        private boolean hasTrail;
-        private boolean hasTwinkle;
+        private int[] colors = new int[0];
+        private int[] fadeColors = new int[0];
+        private boolean hasTrail = false;
+        private boolean hasTwinkle = false;
+
+        public FireworkExplosions(final ExplosionShape shape) {
+            this.shape = shape;
+        }
 
 
         @Getter
@@ -188,18 +184,6 @@ public class Types_v1_20_5 {
             BURST("burst");
 
             private final String name;
-
-            public static ExplosionShape byName(final String name) {
-                for (ExplosionShape shape : values()) {
-                    if (shape.getName().equalsIgnoreCase(name)) return shape;
-                }
-                throw new IllegalArgumentException("Unknown explosion shape: " + name);
-            }
-
-            public static ExplosionShape byOrdinal(final int ordinal) {
-                if (ordinal < 0 || ordinal >= values().length) throw new IllegalArgumentException("Unknown explosion shape ordinal: " + ordinal);
-                return values()[ordinal];
-            }
         }
     }
 
@@ -210,8 +194,8 @@ public class Types_v1_20_5 {
         public static final String FLIGHT_DURATION = "flight_duration";
         public static final String EXPLOSIONS = "explosions";
 
-        private int flightDuration;
-        private List<FireworkExplosions> explosions;
+        private int flightDuration = 0;
+        private List<FireworkExplosions> explosions = new ArrayList<>();
     }
 
     @Data
@@ -259,20 +243,6 @@ public class Types_v1_20_5 {
 
         private final String name;
         private final int color;
-
-        public static DyeColor byName(final String name) {
-            for (DyeColor color : values()) {
-                if (color.getName().equalsIgnoreCase(name)) return color;
-            }
-            throw new IllegalArgumentException("Unknown dye color: " + name);
-        }
-
-        public static DyeColor byColor(final int color) {
-            for (DyeColor dyeColor : values()) {
-                if (dyeColor.getColor() == color) return dyeColor;
-            }
-            throw new IllegalArgumentException("Unknown dye color: " + color);
-        }
     }
 
     @Data
@@ -283,9 +253,14 @@ public class Types_v1_20_5 {
         public static final String TICKS_IN_HIVE = "ticks_in_hive";
         public static final String MIN_TICKS_IN_HIVE = "min_ticks_in_hive";
 
-        private CompoundTag entityData;
+        private CompoundTag entityData = new CompoundTag();
         private int ticksInHive;
         private int minTicksInHive;
+
+        public BeeData(final int ticksInHive, final int minTicksInHive) {
+            this.ticksInHive = ticksInHive;
+            this.minTicksInHive = minTicksInHive;
+        }
     }
 
     @Data
@@ -296,7 +271,11 @@ public class Types_v1_20_5 {
         public static final String SEED = "seed";
 
         private Identifier lootTable;
-        private long seed;
+        private long seed = 0;
+
+        public ContainerLoot(final Identifier lootTable) {
+            this.lootTable = lootTable;
+        }
     }
 
     @Data
@@ -381,7 +360,11 @@ public class Types_v1_20_5 {
         public static final String RANGE = "range";
 
         private Identifier soundId;
-        private float range;
+        private float range = 16;
+
+        public SoundEvent(final Identifier soundId) {
+            this.soundId = soundId;
+        }
     }
 
     @Data
@@ -405,7 +388,11 @@ public class Types_v1_20_5 {
         public static final String DURATION = "duration";
 
         private Identifier id;
-        private int duration;
+        private int duration = 0;
+
+        public SuspiciousStewEffect(final Identifier id) {
+            this.id = id;
+        }
     }
 
     @Data
@@ -436,9 +423,14 @@ public class Types_v1_20_5 {
 
         private RawFilteredPair<String> title;
         private String author;
-        private int generation;
-        private List<RawFilteredPair<ATextComponent>> pages;
-        private boolean resolved;
+        private int generation = 0;
+        private List<RawFilteredPair<ATextComponent>> pages = new ArrayList<>();
+        private boolean resolved = false;
+
+        public WrittenBook(final RawFilteredPair<String> title, final String author) {
+            this.title = title;
+            this.author = author;
+        }
     }
 
 
@@ -501,7 +493,12 @@ public class Types_v1_20_5 {
 
         private Identifier type;
         private EntityAttributeModifier modifier;
-        private Slot slot;
+        private Slot slot = Slot.ANY;
+
+        public AttributeModifier(final Identifier type, final EntityAttributeModifier modifier) {
+            this.type = type;
+            this.modifier = modifier;
+        }
 
 
         @Getter
@@ -557,6 +554,10 @@ public class Types_v1_20_5 {
 
         private List<AttributeModifier> modifiers;
         private boolean showInTooltip = true;
+
+        public AttributeModifiers(final List<AttributeModifier> modifiers) {
+            this.modifiers = modifiers;
+        }
     }
 
     @Data
@@ -571,6 +572,10 @@ public class Types_v1_20_5 {
         private float defaultMiningSpeed = 1;
         private int damagePerBlock = 1;
 
+        public ToolComponent(final List<Rule> rules) {
+            this.rules = rules;
+        }
+
 
         @Data
         @NoArgsConstructor
@@ -581,8 +586,12 @@ public class Types_v1_20_5 {
             public static final String CORRECT_FOR_DROPS = "correct_for_drops";
 
             private List<Identifier> blocks;
-            private Float speed;
-            private Boolean correctForDrops;
+            private Float speed = null;
+            private Boolean correctForDrops = null;
+
+            public Rule(final List<Identifier> blocks) {
+                this.blocks = blocks;
+            }
         }
     }
 
@@ -597,6 +606,11 @@ public class Types_v1_20_5 {
         private Either<Identifier, ArmorTrimMaterial> material;
         private Either<Identifier, ArmorTrimPattern> pattern;
         private boolean showInTooltip = true;
+
+        public ArmorTrim(final Either<Identifier, ArmorTrimMaterial> material, final Either<Identifier, ArmorTrimPattern> pattern) {
+            this.material = material;
+            this.pattern = pattern;
+        }
     }
 
     @Data
@@ -629,6 +643,12 @@ public class Types_v1_20_5 {
         private Identifier templateItem;
         private ATextComponent description;
         private boolean decal = false;
+
+        public ArmorTrimPattern(final Identifier assetId, final Identifier templateItem, final ATextComponent description) {
+            this.assetId = assetId;
+            this.templateItem = templateItem;
+            this.description = description;
+        }
     }
 
 
@@ -646,6 +666,10 @@ public class Types_v1_20_5 {
         private boolean showIcon = this.showParticles;
         @Nullable
         private StatusEffect hiddenEffect;
+
+        public StatusEffect(final Identifier id) {
+            this.id = id;
+        }
 
         public StatusEffect(final Identifier id, final Parameters parameters) {
             this.id = id;
@@ -724,6 +748,11 @@ public class Types_v1_20_5 {
         private float eatSeconds = 1.6F;
         private List<Effect> effects = new ArrayList<>();
 
+        public Food(final int nutrition, final float saturation) {
+            this.nutrition = nutrition;
+            this.saturation = saturation;
+        }
+
 
         @Data
         @NoArgsConstructor
@@ -734,6 +763,10 @@ public class Types_v1_20_5 {
 
             private StatusEffect effect;
             private float probability = 1;
+
+            public Effect(final StatusEffect effect) {
+                this.effect = effect;
+            }
         }
     }
 
