@@ -12,8 +12,11 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
+/**
+ * The registry containing all item components.<br>
+ * Components are registered internally and can't be registered by the user.
+ */
 public abstract class ItemComponentRegistry {
 
     /**
@@ -50,6 +53,13 @@ public abstract class ItemComponentRegistry {
         this.registryVerifier = registryVerifier;
     }
 
+    /**
+     * Get a component by its name.
+     *
+     * @param name The name of the component
+     * @param <T>  The type of the component
+     * @return The component or null if not found
+     */
     @Nullable
     public <T> ItemComponent<T> getComponent(final Identifier name) {
         for (ItemComponent<?> component : this.components) {
@@ -58,44 +68,59 @@ public abstract class ItemComponentRegistry {
         return null;
     }
 
+    /**
+     * @return The verifier for registry entries
+     */
     public RegistryVerifier getRegistryVerifier() {
         return this.registryVerifier;
     }
 
+    /**
+     * @return The codec for the item component map
+     */
     public Codec<ItemComponentMap> getMapCodec() {
         return this.mapCodec;
     }
 
+    /**
+     * Serialize an item component map to a data object.
+     *
+     * @param converter The data converter
+     * @param map       The item component map
+     * @param <D>       The type of the data object
+     * @return The serialized data object
+     */
     public abstract <D> D mapTo(final DataConverter<D> converter, final ItemComponentMap map);
 
+    /**
+     * Deserialize an item component map from a data object.
+     *
+     * @param converter The data converter
+     * @param data      The data object
+     * @param <D>       The type of the data object
+     * @return The deserialized item component map
+     */
     public abstract <D> ItemComponentMap mapFrom(final DataConverter<D> converter, final D data);
 
 
     protected <T> ItemComponent<T> copy(final String name, final ItemComponent<T> component) {
-        return this.register(name, component.codec, component.verifier);
+        return this.register(name, component.codec);
     }
 
     protected <T> ItemComponent<T> registerNonSerializable(final String name) {
-        String message = "The component " + name + " is not serializable!";
-        return this.register(name, new Codec<T>() {
-            @Override
-            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
-                return Result.error(message);
-            }
-
-            @Override
-            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
-                return Result.error(message);
-            }
-        });
+        return this.register(name, Codec.failing("The component " + name + " is not serializable!"));
     }
 
     protected <T> ItemComponent<T> register(final String name, final Codec<T> codec) {
-        return this.register(name, codec, null);
+        ItemComponent<T> itemComponent = new ItemComponent<>(name, codec);
+        this.components.add(itemComponent);
+        return itemComponent;
     }
 
-    protected <T> ItemComponent<T> register(final String name, final Codec<T> codec, final Consumer<T> verifier) {
-        return new ItemComponent<>(name, codec, verifier);
+    protected <T> ItemComponent<T> unregister(final String name) {
+        ItemComponent<?> itemComponent = this.getComponent(Identifier.of(name));
+        if (itemComponent != null) this.components.remove(itemComponent);
+        return null;
     }
 
 }

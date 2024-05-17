@@ -163,6 +163,20 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         return new UUID(mostSigBits, leastSigBits);
     });
 
+    static <T> Codec<T> failing(final String error) {
+        return new Codec<T>() {
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                return Result.error(error);
+            }
+
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                return Result.error(error);
+            }
+        };
+    }
+
     static <T> Codec<T> ofThrowing(final DataSerializer<T> serializer, final DataDeserializer<T> deserializer) {
         return new Codec<T>() {
             @Override

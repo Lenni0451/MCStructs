@@ -6,6 +6,10 @@ import net.lenni0451.mcstructs.core.Identifier;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * A verifier for all registry values that can be used in item components.<br>
+ * The default implementation returns always true, you can override the methods to ensure that the deserialized values are valid.
+ */
 public class RegistryVerifier {
 
     public final Checker<Identifier> item = new Checker<>("item", this::verifyItem);
@@ -22,63 +26,153 @@ public class RegistryVerifier {
     public final Checker<Identifier> armorTrimPattern = new Checker<>("armor trim pattern", this::verifyArmorTrimPattern);
     public final Checker<Identifier> potion = new Checker<>("potion", this::verifyPotion);
 
+    /**
+     * Verify the item in the item registry.
+     *
+     * @param id The item id
+     * @return If the item is valid
+     */
     public boolean verifyItem(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the block in the block registry.
+     *
+     * @param id The block id
+     * @return If the block is valid
+     */
     public boolean verifyBlock(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the block state of a block.
+     *
+     * @param id    The block id
+     * @param state The block state
+     * @return If the block state is valid
+     */
     public boolean verifyBlockState(final Identifier id, final String state) {
         return true;
     }
 
+    /**
+     * Verify the enchantment in the enchantment registry.
+     *
+     * @param id The enchantment id
+     * @return If the enchantment is valid
+     */
     public boolean verifyEnchantment(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the status effect in the status effect registry.
+     *
+     * @param id The status effect id
+     * @return If the status effect is valid
+     */
     public boolean verifyStatusEffect(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the map decoration type in the map decoration type registry.
+     *
+     * @param id The map decoration type id
+     * @return If the map decoration type is valid
+     */
     public boolean verifyMapDecorationType(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the banner pattern in the banner pattern registry.
+     *
+     * @param id The banner pattern id
+     * @return If the banner pattern is valid
+     */
     public boolean verifyBannerPattern(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the instrument in the instrument registry.
+     *
+     * @param id The instrument id
+     * @return If the instrument is valid
+     */
     public boolean verifyInstrument(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the sound in the sound registry.
+     *
+     * @param id The sound id
+     * @return If the sound is valid
+     */
     public boolean verifySound(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the attribute modifier in the attribute modifier registry.
+     *
+     * @param id The attribute modifier id
+     * @return If the attribute modifier is valid
+     */
     public boolean verifyAttributeModifier(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the armor material in the armor material registry.
+     *
+     * @param id The armor material id
+     * @return If the armor material is valid
+     */
     public boolean verifyArmorMaterial(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the armor trim material in the armor trim material registry.
+     *
+     * @param id The armor trim material id
+     * @return If the armor trim material is valid
+     */
     public boolean verifyArmorTrimMaterial(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the armor trim pattern in the armor trim pattern registry.
+     *
+     * @param id The armor trim pattern id
+     * @return If the armor trim pattern is valid
+     */
     public boolean verifyArmorTrimPattern(final Identifier id) {
         return true;
     }
 
+    /**
+     * Verify the potion in the potion registry.
+     *
+     * @param id The potion id
+     * @return If the potion is valid
+     */
     public boolean verifyPotion(final Identifier id) {
         return true;
     }
 
 
+    /**
+     * A util class ensuring human readable error messages for invalid values.
+     *
+     * @param <T> The type of the value to check
+     */
     public static class Checker<T> implements Function<T, Result<Void>> {
         private final String name;
         private final Predicate<T> predicate;
@@ -92,10 +186,6 @@ public class RegistryVerifier {
         public Result<Void> apply(T t) {
             if (!this.predicate.test(t)) Result.error("Invalid " + this.name + " value: " + t);
             return Result.success(null);
-        }
-
-        public <N> Checker<N> map(final Function<N, T> mapper) {
-            return new Checker<>(this.name, t -> this.predicate.test(mapper.apply(t)));
         }
     }
 
