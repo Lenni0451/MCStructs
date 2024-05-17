@@ -82,7 +82,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.minInt(0).mapCodec(Food.NUTRITION), Food::getNutrition,
             Codec.FLOAT.mapCodec(Food.SATURATION), Food::getSaturation,
             Codec.BOOLEAN.mapCodec(Food.CAN_ALWAYS_EAT).optionalDefault(() -> false), Food::isCanAlwaysEat,
-            Codec.minFloat(0).mapCodec(Food.EAT_SECONDS).optionalDefault(() -> 1.6F), Food::getEatSeconds,
+            Codec.minExclusiveFloat(0).mapCodec(Food.EAT_SECONDS).optionalDefault(() -> 1.6F), Food::getEatSeconds,
             MapCodec.of(
                     this.typeSerializers.STATUS_EFFECT.mapCodec(Food.Effect.EFFECT), Food.Effect::getEffect,
                     Codec.rangedFloat(0, 1).mapCodec(Food.Effect.PROBABILITY).optionalDefault(() -> 1F), Food.Effect::getProbability,
@@ -94,7 +94,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<ToolComponent> TOOL = this.register("tool", MapCodec.of(
             MapCodec.of(
                     Codec.STRING_IDENTIFIER.verified(this.registryVerifier.block).optionalListOf().mapCodec(ToolComponent.Rule.BLOCKS), ToolComponent.Rule::getBlocks,
-                    Codec.minFloat(0).mapCodec(ToolComponent.Rule.SPEED).optionalDefault(() -> null), ToolComponent.Rule::getSpeed,
+                    Codec.minExclusiveFloat(0).mapCodec(ToolComponent.Rule.SPEED).optionalDefault(() -> null), ToolComponent.Rule::getSpeed,
                     Codec.BOOLEAN.mapCodec(ToolComponent.Rule.CORRECT_FOR_DROPS).optionalDefault(() -> null), ToolComponent.Rule::getCorrectForDrops,
                     ToolComponent.Rule::new
             ).listOf().mapCodec(ToolComponent.RULES), ToolComponent::getRules,
@@ -173,7 +173,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             MapCodec.of(
                     this.typeSerializers.SOUND_EVENT.mapCodec(Instrument.SOUND_EVENT), Instrument::getSoundEvent,
                     Codec.minInt(1).mapCodec(Instrument.USE_DURATION), Instrument::getUseDuration,
-                    Codec.minFloat(0).mapCodec(Instrument.RANGE), Instrument::getRange,
+                    Codec.minExclusiveFloat(0).mapCodec(Instrument.RANGE), Instrument::getRange,
                     Instrument::new
             )
     ));

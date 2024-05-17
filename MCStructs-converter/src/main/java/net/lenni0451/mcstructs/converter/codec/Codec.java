@@ -217,6 +217,13 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         return rangedFloat(minInclusive, Float.MAX_VALUE);
     }
 
+    static Codec<Float> minExclusiveFloat(final float minExclusive) {
+        return Codec.FLOAT.verified(f -> {
+            if (f <= minExclusive) return Result.error("Value is smaller or equal to minimum: " + f + " <= " + minExclusive);
+            return null;
+        });
+    }
+
     static Codec<Float> rangedFloat(final float minInclusive, final float maxInclusive) {
         return FLOAT.verified(f -> {
             if (f < minInclusive) return Result.error("Value is smaller than minimum: " + f + " < " + minInclusive);
