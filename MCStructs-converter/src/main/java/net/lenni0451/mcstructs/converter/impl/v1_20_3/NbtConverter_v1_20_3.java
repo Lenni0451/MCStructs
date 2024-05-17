@@ -197,7 +197,7 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     }
 
     @Override
-    public INbtTag createMap(Map<INbtTag, INbtTag> values) {
+    public INbtTag createUnsafeMap(Map<INbtTag, INbtTag> values) {
         CompoundTag compound = new CompoundTag();
         for (Map.Entry<INbtTag, INbtTag> entry : values.entrySet()) {
             compound.add(SNbtSerializer.V1_14.trySerialize(entry.getKey()), entry.getValue());

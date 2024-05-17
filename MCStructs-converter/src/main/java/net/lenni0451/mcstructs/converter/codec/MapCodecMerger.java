@@ -19,7 +19,7 @@ class MapCodecMerger {
                 Map<S, S> map = new HashMap<>();
                 Result<S> result = type1.serialize(converter, map, value1.apply(element));
                 if (result.isError()) return result.mapError();
-                return Result.success(converter.createMap(map));
+                return converter.createMergedMap(map);
             }
 
             @Override
@@ -48,7 +48,7 @@ class MapCodecMerger {
                 if (result1.isError()) return result1.mapError();
                 Result<S> result2 = type2.serialize(converter, map, value2.apply(element));
                 if (result2.isError()) return result2.mapError();
-                return Result.success(converter.createMap(map));
+                return converter.createMergedMap(map);
             }
 
             @Override
@@ -82,7 +82,7 @@ class MapCodecMerger {
                 if (result2.isError()) return result2.mapError();
                 Result<S> result3 = type3.serialize(converter, map, value3.apply(element));
                 if (result3.isError()) return result3.mapError();
-                return Result.success(converter.createMap(map));
+                return converter.createMergedMap(map);
             }
 
             @Override
@@ -121,7 +121,7 @@ class MapCodecMerger {
                 if (result3.isError()) return result3.mapError();
                 Result<S> result4 = type4.serialize(converter, map, value4.apply(element));
                 if (result4.isError()) return result4.mapError();
-                return Result.success(converter.createMap(map));
+                return converter.createMergedMap(map);
             }
 
             @Override
@@ -165,7 +165,7 @@ class MapCodecMerger {
                 if (result4.isError()) return result4.mapError();
                 Result<S> result5 = type5.serialize(converter, map, value5.apply(element));
                 if (result5.isError()) return result5.mapError();
-                return Result.success(converter.createMap(map));
+                return converter.createMergedMap(map);
             }
 
             @Override
@@ -214,7 +214,7 @@ class MapCodecMerger {
                 if (result5.isError()) return result5.mapError();
                 Result<S> result6 = type6.serialize(converter, map, value6.apply(element));
                 if (result6.isError()) return result6.mapError();
-                return Result.success(converter.createMap(map));
+                return converter.createMergedMap(map);
             }
 
             @Override

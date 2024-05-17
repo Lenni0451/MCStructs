@@ -98,7 +98,7 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     }
 
     @Override
-    public JsonElement createMap(Map<JsonElement, JsonElement> values) {
+    public JsonElement createUnsafeMap(Map<JsonElement, JsonElement> values) {
         JsonObject object = new JsonObject();
         values.forEach((key, value) -> object.add(key.getAsString(), value));
         return object;

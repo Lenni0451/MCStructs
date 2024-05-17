@@ -22,7 +22,7 @@ public interface DataConverter<T> {
         Map<T, T> in = this.asMap(map).orElse(new HashMap<>());
         Map<N, N> out = new HashMap<>();
         for (Map.Entry<T, T> entry : in.entrySet()) out.put(this.convertTo(to, entry.getKey()), this.convertTo(to, entry.getValue()));
-        return to.createMap(out);
+        return to.createUnsafeMap(out);
     }
 
     T createBoolean(final boolean value);
@@ -77,10 +77,20 @@ public interface DataConverter<T> {
 
     Result<List<T>> asList(final T element);
 
-    T createMap(final Map<T, T> values);
+    T createUnsafeMap(final Map<T, T> values);
 
     default T emptyMap() {
-        return this.createMap(Collections.emptyMap());
+        return this.createUnsafeMap(Collections.emptyMap());
+    }
+
+    default Result<T> createMergedMap(final Map<T, T> values) {
+        T map = this.emptyMap();
+        for (Map.Entry<T, T> entry : values.entrySet()) {
+            Result<T> mergedMap = this.mergeMap(map, entry.getKey(), entry.getValue());
+            if (mergedMap.isError()) return mergedMap;
+            map = mergedMap.get();
+        }
+        return Result.success(map);
     }
 
     Result<T> mergeMap(@Nullable final T map, final Map<T, T> values);

@@ -312,7 +312,7 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
 
                     map.put(key.get(), value.get());
                 }
-                return Result.success(converter.createMap(map));
+                return converter.createMergedMap(map);
             }
 
             @Override
