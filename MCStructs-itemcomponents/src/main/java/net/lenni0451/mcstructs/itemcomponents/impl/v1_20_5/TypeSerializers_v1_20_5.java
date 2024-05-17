@@ -15,6 +15,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.TypeSerializers;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.StringTag;
+import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
@@ -44,6 +45,10 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
             return Result.success(tag.asCompoundTag());
         }
     };
+    public final Codec<CompoundTag> STRING_OR_DIRECT_COMPOUND_TAG = Codec.oneOf(
+            Codec.STRING.mapThrowing(SNbtSerializer.V1_14::serialize, SNbtSerializer.V1_14::deserialize),
+            this.COMPOUND_TAG
+    );
     public final Codec<ATextComponent> RAW_TEXT_COMPONENT = new Codec<ATextComponent>() {
         @Override
         public <S> Result<S> serialize(DataConverter<S> converter, ATextComponent element) {
@@ -131,7 +136,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     public final Codec<BlockPredicate> BLOCK_PREDICATE = MapCodec.of(
             Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().block).optionalListOf().mapCodec(BlockPredicate.BLOCKS).optionalDefault(() -> null), BlockPredicate::getBlocks,
             this.CONDITION_LIST.mapCodec(BlockPredicate.STATE).optionalDefault(() -> null), BlockPredicate::getState,
-            this.COMPOUND_TAG.mapCodec(BlockPredicate.NBT).optionalDefault(() -> null), BlockPredicate::getNbt,
+            this.STRING_OR_DIRECT_COMPOUND_TAG.mapCodec(BlockPredicate.NBT).optionalDefault(() -> null), BlockPredicate::getNbt,
             BlockPredicate::new
     );
     public final Codec<EntityAttributeModifier> ENTITY_ATTRIBUTE_MODIFIER = MapCodec.of(
