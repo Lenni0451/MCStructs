@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.converter.codec.DataSerializer;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -24,9 +25,13 @@ public abstract class ItemComponentRegistry {
      */
     public static final ItemComponents_v1_20_5 V1_20_5 = new ItemComponents_v1_20_5();
     /**
+     * Item component registry for 1.21.
+     */
+    public static final ItemComponents_v1_20_5 V1_21 = new ItemComponents_v1_21();
+    /**
      * The latest item component registry.
      */
-    public static final ItemComponentRegistry LATEST = V1_20_5;
+    public static final ItemComponentRegistry LATEST = V1_21;
 
 
     private final List<ItemComponent<?>> components;
