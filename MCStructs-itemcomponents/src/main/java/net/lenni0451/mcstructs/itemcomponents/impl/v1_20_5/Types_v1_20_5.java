@@ -30,12 +30,9 @@ public class Types_v1_20_5 {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Lore {
-        public static final int MAX_COUNT = 256;
-
         private List<ATextComponent> lines = new ArrayList<>();
 
         public void addLine(final ATextComponent line) {
-            if (this.lines.size() >= MAX_COUNT) throw new IllegalArgumentException("Lore can only have " + MAX_COUNT + " lines");
             this.lines.add(line);
         }
 
@@ -123,7 +120,6 @@ public class Types_v1_20_5 {
     @AllArgsConstructor
     public static class WritableBook {
         public static final String PAGES = "pages";
-        public static final int MAX_PAGES = 100;
 
         private List<RawFilteredPair<String>> pages;
 
@@ -136,7 +132,6 @@ public class Types_v1_20_5 {
         }
 
         public void addPage(final RawFilteredPair<String> page) {
-            if (this.pages.size() >= MAX_PAGES) throw new IllegalArgumentException("Book can only have " + MAX_PAGES + " pages");
             this.pages.add(page);
         }
 
@@ -654,7 +649,6 @@ public class Types_v1_20_5 {
 
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class StatusEffect {
         public static final String ID = "id";
 
@@ -679,6 +673,16 @@ public class Types_v1_20_5 {
             this.showParticles = parameters.showParticles;
             this.showIcon = parameters.showIcon;
             if (parameters.hiddenEffect != null) this.hiddenEffect = new StatusEffect(id, parameters.hiddenEffect);
+        }
+
+        public StatusEffect(final Identifier id, final int amplifier, final int duration, final boolean ambient, final boolean showParticles, final Boolean showIcon, final StatusEffect hiddenEffect) {
+            this.id = id;
+            this.amplifier = amplifier;
+            this.duration = duration;
+            this.ambient = ambient;
+            this.showParticles = showParticles;
+            this.showIcon = showIcon != null ? showIcon : showParticles;
+            this.hiddenEffect = hiddenEffect;
         }
 
         public Parameters getParameters() {
