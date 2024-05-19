@@ -117,7 +117,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.FLOAT.mapCodec(MapDecoration.ROTATION), MapDecoration::getRotation,
             MapDecoration::new
     )));
-    public final ItemComponent<Integer> MAP_POST_PROCESSING = this.registerNonSerializable("map_post_processing");
+    public final ItemComponent<MapPostProcessing> MAP_POST_PROCESSING = this.registerNonSerializable("map_post_processing");
     public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = this.register("charged_projectiles", this.typeSerializers.itemStack().listOf());
     public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = this.register("bundle_contents", this.typeSerializers.itemStack().listOf());
     public final ItemComponent<PotionContents> POTION_CONTENTS = this.register("potion_contents", Codec.oneOf(

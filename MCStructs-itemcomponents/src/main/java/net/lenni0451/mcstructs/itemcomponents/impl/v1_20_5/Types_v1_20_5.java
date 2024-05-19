@@ -774,4 +774,8 @@ public class Types_v1_20_5 {
         }
     }
 
+    public enum MapPostProcessing {
+        LOCK, SCALE
+    }
+
 }
