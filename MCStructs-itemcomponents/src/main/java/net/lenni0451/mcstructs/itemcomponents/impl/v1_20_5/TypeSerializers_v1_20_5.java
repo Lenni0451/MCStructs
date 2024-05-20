@@ -278,7 +278,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
                 Codec.STRING.verified(tag -> {
                     if (!tag.startsWith("#")) return Result.error("Tag must start with a #");
                     else return null;
-                }).mapThrowing(id -> "#" + id.get(), Identifier::of).verified(tagVerifier).flatMap(list -> {
+                }).mapThrowing(id -> "#" + id.get(), value -> Identifier.of(value.substring(1))).verified(tagVerifier).flatMap(list -> {
                     if (!list.isTag()) return Result.error("TagEntryList is not a tag");
                     return Result.success(list.getTag());
                 }, tag -> Result.success(new TagEntryList(tag))),
