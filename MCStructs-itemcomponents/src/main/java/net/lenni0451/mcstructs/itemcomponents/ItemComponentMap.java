@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.itemcomponents;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.core.utils.ToString;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -55,10 +56,27 @@ public class ItemComponentMap {
     }
 
     /**
+     * @return The total amount of components in this map
+     */
+    public int size() {
+        return this.components.size() + this.markedForRemoval.size();
+    }
+
+    /**
      * @return If this map is empty
      */
     public boolean isEmpty() {
         return this.components.isEmpty() && this.markedForRemoval.isEmpty();
+    }
+
+    /**
+     * Check if a component is present in this map.
+     *
+     * @param component The component to check
+     * @return If the component is present
+     */
+    public boolean contains(final ItemComponent<?> component) {
+        return this.components.containsKey(component) || this.markedForRemoval.contains(component);
     }
 
     /**
@@ -131,6 +149,28 @@ public class ItemComponentMap {
      */
     public <T> T to(final DataConverter<T> converter) {
         return this.registry.mapTo(converter, this);
+    }
+
+    @Override
+    public String toString() {
+        return ToString.of(this)
+                .add("registry", this.registry)
+                .add("components", this.components, map -> !map.isEmpty())
+                .add("markedForRemoval", this.markedForRemoval, list -> !list.isEmpty())
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemComponentMap that = (ItemComponentMap) o;
+        return Objects.equals(this.registry, that.registry) && Objects.equals(this.components, that.components) && Objects.equals(this.markedForRemoval, that.markedForRemoval);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.registry, this.components, this.markedForRemoval);
     }
 
 }

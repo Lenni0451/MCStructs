@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.itemcomponents;
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.core.Identifier;
+import net.lenni0451.mcstructs.core.utils.ToString;
 
 public class ItemComponent<T> {
 
@@ -28,6 +29,14 @@ public class ItemComponent<T> {
 
     public <D> T deserialize(final DataConverter<D> converter, final D data) {
         return this.codec.deserialize(converter, data).getOrThrow(cause -> new IllegalStateException("Failed to deserialize component " + this.name.get(), cause));
+    }
+
+    @Override
+    public String toString() {
+        return ToString.of(this)
+                .add("name", this.name)
+                .add("codec", this.codec)
+                .toString();
     }
 
 }
