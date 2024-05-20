@@ -35,7 +35,6 @@ public class ItemComponent<T> {
     public String toString() {
         return ToString.of(this)
                 .add("name", this.name)
-                .add("codec", this.codec)
                 .toString();
     }
 
