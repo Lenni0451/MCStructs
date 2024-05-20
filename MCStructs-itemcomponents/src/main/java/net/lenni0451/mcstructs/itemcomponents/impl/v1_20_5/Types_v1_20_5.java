@@ -12,6 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -437,7 +438,7 @@ public class Types_v1_20_5 {
         public static final String NBT = "nbt";
 
         @Nullable
-        private List<Identifier> blocks;
+        private TagEntryList blocks;
         @Nullable
         private Map<String, ValueMatcher> state;
         @Nullable
@@ -450,20 +451,27 @@ public class Types_v1_20_5 {
             public static final String MIN = "min";
             public static final String MAX = "max";
 
-            @Nullable
             private String value;
             @Nullable
             private String min;
             @Nullable
             private String max;
 
-            public ValueMatcher(final String value) {
+            public ValueMatcher(@Nonnull final String value) {
                 this.value = value;
             }
 
-            public ValueMatcher(final String min, final String max) {
+            public ValueMatcher(@Nullable final String min, @Nullable final String max) {
                 this.min = min;
                 this.max = max;
+            }
+
+            public boolean isValue() {
+                return this.value != null;
+            }
+
+            public boolean isRange() {
+                return !this.isValue();
             }
         }
     }
@@ -580,11 +588,11 @@ public class Types_v1_20_5 {
             public static final String SPEED = "speed";
             public static final String CORRECT_FOR_DROPS = "correct_for_drops";
 
-            private List<Identifier> blocks;
+            private TagEntryList blocks;
             private Float speed = null;
             private Boolean correctForDrops = null;
 
-            public Rule(final List<Identifier> blocks) {
+            public Rule(final TagEntryList blocks) {
                 this.blocks = blocks;
             }
         }
@@ -731,7 +739,6 @@ public class Types_v1_20_5 {
         private Identifier potion;
         @Nullable
         private Integer customColor;
-        @Nullable
         private List<StatusEffect> customEffects;
     }
 
@@ -776,6 +783,30 @@ public class Types_v1_20_5 {
 
     public enum MapPostProcessing {
         LOCK, SCALE
+    }
+
+    @Data
+    public static class TagEntryList {
+        private final Identifier tag;
+        private final List<Identifier> entries;
+
+        public TagEntryList(final Identifier tag) {
+            this.tag = tag;
+            this.entries = null;
+        }
+
+        public TagEntryList(final List<Identifier> entries) {
+            this.tag = null;
+            this.entries = entries;
+        }
+
+        public boolean isTag() {
+            return this.tag != null;
+        }
+
+        public boolean isEntries() {
+            return this.entries != null;
+        }
     }
 
 }

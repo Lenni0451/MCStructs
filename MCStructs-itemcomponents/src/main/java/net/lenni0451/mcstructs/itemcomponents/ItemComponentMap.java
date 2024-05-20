@@ -3,10 +3,7 @@ package net.lenni0451.mcstructs.itemcomponents;
 import net.lenni0451.mcstructs.converter.DataConverter;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * A map containing item components and their values.<br>
@@ -15,7 +12,8 @@ import java.util.Optional;
 public class ItemComponentMap {
 
     private final ItemComponentRegistry registry;
-    private final Map<ItemComponent<?>, Optional<?>> components = new HashMap<>();
+    private final Map<ItemComponent<?>, Object> components = new HashMap<>();
+    private final List<ItemComponent<?>> markedForRemoval = new ArrayList<>();
 
     public ItemComponentMap(final ItemComponentRegistry registry) {
         this.registry = registry;
@@ -29,10 +27,38 @@ public class ItemComponentMap {
     }
 
     /**
-     * @return The raw map containing all components and their values
+     * @return The components with values in this map
      */
-    public Map<ItemComponent<?>, Optional<?>> getRaw() {
+    public Map<ItemComponent<?>, ?> getValues() {
         return Collections.unmodifiableMap(this.components);
+    }
+
+    /**
+     * @return The amount of components with values in this map
+     */
+    public int getValuesSize() {
+        return this.components.size();
+    }
+
+    /**
+     * @return The components marked for removal in this map
+     */
+    public List<ItemComponent<?>> getMarkedForRemoval() {
+        return Collections.unmodifiableList(this.markedForRemoval);
+    }
+
+    /**
+     * @return The amount of components marked for removal in this map
+     */
+    public int getMarkedForRemovalSize() {
+        return this.markedForRemoval.size();
+    }
+
+    /**
+     * @return If this map is empty
+     */
+    public boolean isEmpty() {
+        return this.components.isEmpty() && this.markedForRemoval.isEmpty();
     }
 
     /**
@@ -44,7 +70,8 @@ public class ItemComponentMap {
      * @return This map
      */
     public <T> ItemComponentMap set(final ItemComponent<T> component, final T value) {
-        this.components.put(component, Optional.of(value));
+        this.components.put(component, value);
+        this.markedForRemoval.remove(component);
         return this;
     }
 
@@ -57,7 +84,7 @@ public class ItemComponentMap {
      */
     @Nullable
     public <T> T get(final ItemComponent<T> component) {
-        return (T) this.components.getOrDefault(component, Optional.empty()).orElse(null);
+        return (T) this.components.get(component);
     }
 
     /**
@@ -68,6 +95,7 @@ public class ItemComponentMap {
      */
     public ItemComponentMap remove(final ItemComponent<?> component) {
         this.components.remove(component);
+        this.markedForRemoval.remove(component);
         return this;
     }
 
@@ -79,7 +107,8 @@ public class ItemComponentMap {
      * @return This map
      */
     public ItemComponentMap markForRemoval(final ItemComponent<?> component) {
-        this.components.put(component, Optional.empty());
+        this.components.remove(component);
+        this.markedForRemoval.add(component);
         return this;
     }
 
@@ -90,15 +119,7 @@ public class ItemComponentMap {
      * @return If the component is marked for removal
      */
     public boolean isMarkedForRemoval(final ItemComponent<?> component) {
-        Optional<?> optional = this.components.get(component);
-        return optional != null && !optional.isPresent();
-    }
-
-    /**
-     * @return If this map is empty
-     */
-    public boolean isEmpty() {
-        return this.components.isEmpty();
+        return this.markedForRemoval.contains(component);
     }
 
     /**

@@ -14,7 +14,10 @@ import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.*;
 
@@ -93,7 +96,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Boolean> FIRE_RESISTANT = this.register("fire_resistant", Codec.UNIT);
     public final ItemComponent<ToolComponent> TOOL = this.register("tool", MapCodec.of(
             MapCodec.of(
-                    Codec.STRING_IDENTIFIER.verified(this.registryVerifier.block).optionalListOf().mapCodec(ToolComponent.Rule.BLOCKS), ToolComponent.Rule::getBlocks,
+                    this.typeSerializers.tagEntryList(this.registryVerifier.blockTag, this.registryVerifier.block).mapCodec(ToolComponent.Rule.BLOCKS), ToolComponent.Rule::getBlocks,
                     Codec.minExclusiveFloat(0).mapCodec(ToolComponent.Rule.SPEED).optionalDefault(() -> null), ToolComponent.Rule::getSpeed,
                     Codec.BOOLEAN.mapCodec(ToolComponent.Rule.CORRECT_FOR_DROPS).optionalDefault(() -> null), ToolComponent.Rule::getCorrectForDrops,
                     ToolComponent.Rule::new
@@ -298,13 +301,16 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     @Override
     public <D> D mapTo(DataConverter<D> converter, ItemComponentMap map) {
         D out = converter.emptyMap();
-        for (Map.Entry<ItemComponent<?>, Optional<?>> entry : map.getRaw().entrySet()) {
+        for (Map.Entry<ItemComponent<?>, ?> entry : map.getValues().entrySet()) {
             ItemComponent<Object> component = (ItemComponent<Object>) entry.getKey();
-            Optional<?> value = entry.getValue();
+            Object value = entry.getValue();
 
             String name = component.getName().get();
-            if (value.isPresent()) converter.put(out, name, component.serialize(converter, value.get()));
-            else converter.put(out, "!" + name, converter.emptyMap());
+            converter.put(out, name, component.serialize(converter, value));
+        }
+        for (ItemComponent<?> component : map.getMarkedForRemoval()) {
+            String name = "!" + component.getName().get();
+            converter.put(out, name, converter.emptyMap());
         }
         return out;
     }

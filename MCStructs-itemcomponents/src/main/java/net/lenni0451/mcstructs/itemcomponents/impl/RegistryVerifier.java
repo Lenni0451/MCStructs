@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 public class RegistryVerifier {
 
     public final Checker<Identifier> item = new Checker<>("item", this::verifyItem);
+    public final Checker<Identifier> blockTag = new Checker<>("block tag", this::verifyBlockTag);
     public final Checker<Identifier> block = new Checker<>("block", this::verifyBlock);
     public final Checker<Identifier> enchantment = new Checker<>("enchantment", this::verifyEnchantment);
     public final Checker<Identifier> statusEffect = new Checker<>("status effect", this::verifyStatusEffect);
@@ -33,6 +34,16 @@ public class RegistryVerifier {
      * @return If the item is valid
      */
     public boolean verifyItem(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the block tag in the block tag registry.
+     *
+     * @param id The block tag id
+     * @return If the block tag is valid
+     */
+    public boolean verifyBlockTag(final Identifier id) {
         return true;
     }
 

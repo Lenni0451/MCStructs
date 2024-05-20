@@ -173,7 +173,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public Codec<BlockPredicate> blockPredicate() {
         return this.init(BLOCK_PREDICATE, () -> MapCodec.of(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().block).optionalListOf().mapCodec(BlockPredicate.BLOCKS).optionalDefault(() -> null), BlockPredicate::getBlocks,
+                this.tagEntryList(this.registry.getRegistryVerifier().blockTag, this.registry.getRegistryVerifier().block).mapCodec(BlockPredicate.BLOCKS).optionalDefault(() -> null), BlockPredicate::getBlocks,
                 Codec.mapOf(Codec.STRING, Codec.oneOf(
                         Codec.STRING.verified(s -> {
                             if (s == null) return Result.error("Value matcher cannot be null");
@@ -271,6 +271,22 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public <T> Codec<Either<Identifier, T>> registryEntry(final Function<Identifier, Result<Void>> idVerifier, final Codec<T> entryCodec) {
         return Codec.either(Codec.STRING_IDENTIFIER.verified(idVerifier), entryCodec);
+    }
+
+    public Codec<TagEntryList> tagEntryList(final Function<Identifier, Result<Void>> tagVerifier, final Function<Identifier, Result<Void>> entryVerifier) {
+        return Codec.oneOf(
+                Codec.STRING.verified(tag -> {
+                    if (!tag.startsWith("#")) return Result.error("Tag must start with a #");
+                    else return null;
+                }).mapThrowing(id -> "#" + id.get(), Identifier::of).verified(tagVerifier).flatMap(list -> {
+                    if (!list.isTag()) return Result.error("TagEntryList is not a tag");
+                    return Result.success(list.getTag());
+                }, tag -> Result.success(new TagEntryList(tag))),
+                Codec.STRING_IDENTIFIER.verified(entryVerifier).optionalListOf().flatMap(list -> {
+                    if (!list.isEntries()) return Result.error("TagEntryList is not a list of entries");
+                    return Result.success(list.getEntries());
+                }, entries -> Result.success(new TagEntryList(entries)))
+        );
     }
 
 }
