@@ -209,22 +209,14 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
                     this.typeSerializers.playerName().mapCodec(GameProfile.NAME).optionalDefault(() -> null), GameProfile::getName,
                     Codec.INT_ARRAY_UUID.mapCodec(GameProfile.ID).optionalDefault(() -> null), GameProfile::getUuid,
                     Codec.oneOf(
-                            Codec.mapOf(Codec.STRING, Codec.STRING.listOf()).map(properties -> {
-                                Map<String, List<String>> map = new HashMap<>();
-                                for (Map.Entry<String, List<GameProfile.Property>> entry : properties.entrySet()) {
-                                    for (GameProfile.Property property : entry.getValue()) {
-                                        map.computeIfAbsent(entry.getKey(), key -> new ArrayList<>()).add(property.getValue());
-                                    }
-                                }
-                                return map;
-                            }, map -> {
+                            Codec.mapOf(Codec.STRING, Codec.STRING.listOf()).flatMap(properties -> Result.error("Can't serialize properties to String/String map"), map -> {
                                 Map<String, List<GameProfile.Property>> properties = new HashMap<>();
                                 for (Map.Entry<String, List<String>> entry : map.entrySet()) {
                                     for (String val : entry.getValue()) {
                                         properties.computeIfAbsent(entry.getKey(), key -> new ArrayList<>()).add(new GameProfile.Property(entry.getKey(), val, null));
                                     }
                                 }
-                                return properties;
+                                return Result.success(properties);
                             }),
                             MapCodec.of(
                                     Codec.STRING.mapCodec(GameProfile.Property.NAME), GameProfile.Property::getName,

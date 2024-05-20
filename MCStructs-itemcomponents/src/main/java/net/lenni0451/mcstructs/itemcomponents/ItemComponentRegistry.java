@@ -27,7 +27,7 @@ public abstract class ItemComponentRegistry {
     /**
      * Item component registry for 1.21.
      */
-    public static final ItemComponents_v1_20_5 V1_21 = new ItemComponents_v1_21();
+    public static final ItemComponents_v1_21 V1_21 = new ItemComponents_v1_21();
     /**
      * The latest item component registry.
      */
