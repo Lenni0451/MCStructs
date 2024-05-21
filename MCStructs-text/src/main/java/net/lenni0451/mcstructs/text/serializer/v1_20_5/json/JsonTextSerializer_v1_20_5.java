@@ -3,8 +3,7 @@ package net.lenni0451.mcstructs.text.serializer.v1_20_5.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.lenni0451.mcstructs.text.Style;
-import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.subtypes.IStyleSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonTextSerializer_v1_20_3;
 
 import javax.annotation.Nullable;
@@ -14,7 +13,7 @@ import java.util.function.Function;
 @ParametersAreNonnullByDefault
 public class JsonTextSerializer_v1_20_5 extends JsonTextSerializer_v1_20_3 {
 
-    public JsonTextSerializer_v1_20_5(final Function<JsonTextSerializer_v1_20_3, ITypedSerializer<JsonElement, Style>> styleSerializer) {
+    public JsonTextSerializer_v1_20_5(final Function<JsonTextSerializer_v1_20_3, IStyleSerializer<JsonElement>> styleSerializer) {
         super(styleSerializer);
     }
 

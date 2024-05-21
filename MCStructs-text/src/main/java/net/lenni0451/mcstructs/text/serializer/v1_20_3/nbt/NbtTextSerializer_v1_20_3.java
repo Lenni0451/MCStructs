@@ -10,19 +10,24 @@ import net.lenni0451.mcstructs.text.components.*;
 import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
-import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
+import net.lenni0451.mcstructs.text.serializer.subtypes.IStyleSerializer;
+import net.lenni0451.mcstructs.text.serializer.subtypes.ITextComponentSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class NbtTextSerializer_v1_20_3 implements ITypedSerializer<INbtTag, ATextComponent>, CodecUtils_v1_20_3 {
+public class NbtTextSerializer_v1_20_3 implements ITextComponentSerializer<INbtTag>, CodecUtils_v1_20_3 {
 
-    private final ITypedSerializer<INbtTag, Style> styleSerializer;
+    private final IStyleSerializer<INbtTag> styleSerializer;
 
-    public NbtTextSerializer_v1_20_3(final Function<NbtTextSerializer_v1_20_3, ITypedSerializer<INbtTag, Style>> styleSerializer) {
+    public NbtTextSerializer_v1_20_3(final Function<NbtTextSerializer_v1_20_3, IStyleSerializer<INbtTag>> styleSerializer) {
         this.styleSerializer = styleSerializer.apply(this);
+    }
+
+    public IStyleSerializer<INbtTag> getStyleSerializer() {
+        return this.styleSerializer;
     }
 
     @Override
