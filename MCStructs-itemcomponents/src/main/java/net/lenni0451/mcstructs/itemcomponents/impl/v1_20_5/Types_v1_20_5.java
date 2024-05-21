@@ -201,8 +201,8 @@ public class Types_v1_20_5 {
         public static final String PATTERN = "pattern";
         public static final String COLOR = "color";
 
-        private DyeColor color;
         private Either<Identifier, Pattern> pattern;
+        private DyeColor color;
 
 
         @Data

@@ -239,7 +239,6 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     ));
     public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", Codec.STRING_IDENTIFIER);
     public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", MapCodec.of(
-            this.typeSerializers.dyeColor().mapCodec(BannerPattern.COLOR), BannerPattern::getColor,
             this.typeSerializers.registryEntry(
                     this.getRegistryVerifier().bannerPattern,
                     MapCodec.of(
@@ -248,6 +247,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
                             BannerPattern.Pattern::new
                     )
             ).mapCodec(BannerPattern.PATTERN), BannerPattern::getPattern,
+            this.typeSerializers.dyeColor().mapCodec(BannerPattern.COLOR), BannerPattern::getColor,
             BannerPattern::new
     ).listOf());
     public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.dyeColor());
