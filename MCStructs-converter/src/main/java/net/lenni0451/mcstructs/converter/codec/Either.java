@@ -1,15 +1,8 @@
 package net.lenni0451.mcstructs.converter.codec;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Objects;
 
-@Getter
-@ToString
-@EqualsAndHashCode
 public class Either<L, R> {
 
     public static <L, R> Either<L, R> left(@Nonnull L left) {
@@ -21,14 +14,20 @@ public class Either<L, R> {
     }
 
 
-    @Nullable
     private final L left;
-    @Nullable
     private final R right;
 
-    private Either(@Nullable L left, @Nullable R right) {
+    private Either(final L left, final R right) {
         this.left = left;
         this.right = right;
+    }
+
+    public L getLeft() {
+        return this.left;
+    }
+
+    public R getRight() {
+        return this.right;
     }
 
     public boolean isLeft() {
@@ -37,6 +36,28 @@ public class Either<L, R> {
 
     public boolean isRight() {
         return this.right != null;
+    }
+
+    @Override
+    public String toString() {
+        if (this.isLeft()) {
+            return "Left{" + this.left + "}";
+        } else {
+            return "Right{" + this.right + "}";
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Either<?, ?> either = (Either<?, ?>) o;
+        return Objects.equals(this.left, either.left) && Objects.equals(this.right, either.right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.left, this.right);
     }
 
 }
