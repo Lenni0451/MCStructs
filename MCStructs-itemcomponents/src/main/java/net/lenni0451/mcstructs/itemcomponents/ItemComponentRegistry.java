@@ -123,6 +123,8 @@ public abstract class ItemComponentRegistry {
 
     protected <T> ItemComponent<T> register(final String name, final Codec<T> codec) {
         ItemComponent<T> itemComponent = new ItemComponent<>(name, codec);
+        ItemComponent<?> oldComponent = this.getComponent(itemComponent.getName());
+        if (oldComponent != null) this.components.remove(oldComponent);
         this.components.add(itemComponent);
         return itemComponent;
     }
