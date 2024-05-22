@@ -5,6 +5,8 @@ import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
 
+import java.util.Objects;
+
 public class ItemComponent<T> {
 
     private final Identifier name;
@@ -36,6 +38,19 @@ public class ItemComponent<T> {
         return ToString.of(this)
                 .add("name", this.name)
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemComponent<?> that = (ItemComponent<?>) o;
+        return Objects.equals(this.name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name);
     }
 
 }
