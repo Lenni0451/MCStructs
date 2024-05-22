@@ -26,6 +26,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> armorTrimMaterial = new Checker<>("armor trim material", this::verifyArmorTrimMaterial);
     public final Checker<Identifier> armorTrimPattern = new Checker<>("armor trim pattern", this::verifyArmorTrimPattern);
     public final Checker<Identifier> potion = new Checker<>("potion", this::verifyPotion);
+    public final Checker<Identifier> jukeboxSong = new Checker<>("jukebox song", this::jukeboxSong);
 
     /**
      * Verify the item in the item registry.
@@ -175,6 +176,16 @@ public class RegistryVerifier {
      * @return If the potion is valid
      */
     public boolean verifyPotion(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the song in the jukebox song registry.
+     *
+     * @param id The song id
+     * @return If the song is valid
+     */
+    public boolean jukeboxSong(final Identifier id) {
         return true;
     }
 

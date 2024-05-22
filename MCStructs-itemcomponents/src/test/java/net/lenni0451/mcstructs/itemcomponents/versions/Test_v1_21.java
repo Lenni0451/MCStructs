@@ -6,7 +6,8 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
-import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.components.StringComponent;
@@ -19,12 +20,12 @@ import java.util.function.Supplier;
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Test_v1_20_5 {
+public class Test_v1_21 {
 
     private static final Map<ItemComponent<?>, Object> itemComponents = new HashMap<>();
 
     static {
-        ItemComponents_v1_20_5 registry = ItemComponentRegistry.V1_20_5;
+        ItemComponents_v1_21 registry = ItemComponentRegistry.V1_21;
         register(registry.CUSTOM_DATA, new CompoundTag().addString("test", "test2"));
         register(registry.MAX_STACK_SIZE, 12);
         register(registry.MAX_DAMAGE, 123);
@@ -55,7 +56,7 @@ public class Test_v1_20_5 {
 //        register(registry.CREATIVE_SLOT_LOCK, true);
         register(registry.ENCHANTMENT_GLINT_OVERRIDE, true);
         register(registry.INTANGIBLE_PROJECTILE, true);
-        register(registry.FOOD, new Food(10, 20, true, 14, Collections.singletonList(new Food.Effect(new StatusEffect(Identifier.of("test"), 123, 456, true, true, false, null), 0.5F))));
+        register(registry.FOOD, new Types_v1_21.Food(10, 20, true, 14, new ItemStack(Identifier.of("test", "test"), 63, new ItemComponentMap(registry)), Collections.singletonList(new Food.Effect(new StatusEffect(Identifier.of("test"), 123, 456, true, true, false, null), 0.5F))));
         register(registry.FIRE_RESISTANT, true);
         register(registry.TOOL, new ToolComponent(Collections.singletonList(new ToolComponent.Rule(new TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))), 10F, true)), 20, 10));
         register(registry.STORED_ENCHANTMENTS, (Enchantments) itemComponents.get(registry.ENCHANTMENTS));
@@ -109,6 +110,7 @@ public class Test_v1_20_5 {
         register(registry.BEES, Collections.singletonList(new BeeData(new CompoundTag().addBoolean("test", true), 1, 2)));
         register(registry.LOCK, "test");
         register(registry.CONTAINER_LOOT, new ContainerLoot(Identifier.of("test"), 123));
+        register(registry.JUKEBOX_PLAYABLE, new Types_v1_21.JukeboxPlayable(Either.left(Identifier.of("test")), false));
     }
 
     private static <T> void register(final ItemComponent<T> itemComponent, final T value) {
@@ -121,13 +123,13 @@ public class Test_v1_20_5 {
 
     @Test
     void test() {
-        ItemComponentMap map = new ItemComponentMap(ItemComponentRegistry.V1_20_5);
+        ItemComponentMap map = new ItemComponentMap(ItemComponentRegistry.V1_21);
         for (Map.Entry<ItemComponent<?>, Object> entry : itemComponents.entrySet()) {
             map.set(cast(entry.getKey()), entry.getValue());
         }
 
         INbtTag tag = map.to(NbtConverter_v1_20_3.INSTANCE);
-        ItemComponentMap deserialized = ItemComponentRegistry.V1_20_5.mapFrom(NbtConverter_v1_20_3.INSTANCE, tag);
+        ItemComponentMap deserialized = ItemComponentRegistry.V1_21.mapFrom(NbtConverter_v1_20_3.INSTANCE, tag);
         assertEquals(map.size(), deserialized.size());
         for (Map.Entry<ItemComponent<?>, ?> entry : deserialized.getValues().entrySet()) {
             assertEquals(itemComponents.get(entry.getKey()), entry.getValue());
