@@ -37,7 +37,6 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     protected static final String SOUND_EVENT = "sound_event";
     protected static final String BLOCK_PREDICATE = "block_predicate";
     protected static final String ATTRIBUTE_MODIFIER = "attribute_modifier";
-    protected static final String ENTITY_ATTRIBUTE_MODIFIER = "entity_attribute_modifier";
     protected static final String ARMOR_TRIM_MATERIAL = "armor_trim_material";
     protected static final String ARMOR_TRIM_PATTERN = "armor_trim_pattern";
     protected static final String STATUS_EFFECT = "status_effect";
@@ -193,19 +192,15 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     public Codec<AttributeModifier> attributeModifier() {
         return this.init(ATTRIBUTE_MODIFIER, () -> MapCodec.of(
                 Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().attributeModifier).mapCodec(AttributeModifier.TYPE), AttributeModifier::getType,
-                this.entityAttributeModifier().mapCodec(), AttributeModifier::getModifier,
+                MapCodec.of(
+                        Codec.INT_ARRAY_UUID.mapCodec(AttributeModifier.EntityAttribute.UUID), AttributeModifier.EntityAttribute::getUuid,
+                        Codec.STRING.mapCodec(AttributeModifier.EntityAttribute.NAME), AttributeModifier.EntityAttribute::getName,
+                        Codec.DOUBLE.mapCodec(AttributeModifier.EntityAttribute.AMOUNT), AttributeModifier.EntityAttribute::getAmount,
+                        Codec.named(AttributeModifier.EntityAttribute.Operation.values()).mapCodec(AttributeModifier.EntityAttribute.OPERATION), AttributeModifier.EntityAttribute::getOperation,
+                        AttributeModifier.EntityAttribute::new
+                ).mapCodec(), AttributeModifier::getModifier,
                 Codec.named(AttributeModifier.Slot.values()).mapCodec(AttributeModifier.SLOT).optionalDefault(() -> AttributeModifier.Slot.ANY), AttributeModifier::getSlot,
                 AttributeModifier::new
-        ));
-    }
-
-    public Codec<EntityAttributeModifier> entityAttributeModifier() {
-        return this.init(ENTITY_ATTRIBUTE_MODIFIER, () -> MapCodec.of(
-                Codec.INT_ARRAY_UUID.mapCodec(EntityAttributeModifier.UUID), EntityAttributeModifier::getUuid,
-                Codec.STRING.mapCodec(EntityAttributeModifier.NAME), EntityAttributeModifier::getName,
-                Codec.DOUBLE.mapCodec(EntityAttributeModifier.AMOUNT), EntityAttributeModifier::getAmount,
-                Codec.named(EntityAttributeModifier.Operation.values()).mapCodec(EntityAttributeModifier.OPERATION), EntityAttributeModifier::getOperation,
-                EntityAttributeModifier::new
         ));
     }
 

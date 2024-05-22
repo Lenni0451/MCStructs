@@ -1,11 +1,14 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_21;
 
+import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.MapCodec;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeModifier;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeModifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.Food;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.JukeboxPlayable;
 
@@ -39,6 +42,20 @@ public class ItemComponents_v1_21 extends ItemComponents_v1_20_5 {
             )).mapCodec(JukeboxPlayable.SONG), JukeboxPlayable::getSong,
             Codec.BOOLEAN.mapCodec(JukeboxPlayable.SHOW_IN_TOOLTIP).optionalDefault(() -> true), JukeboxPlayable::isShowInTooltip,
             JukeboxPlayable::new
+    ));
+    public final ItemComponent<AttributeModifiers> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", Codec.oneOf(
+            MapCodec.of(
+                    this.typeSerializers.attributeModifier_v1_21().listOf().mapCodec(AttributeModifiers.MODIFIERS), AttributeModifiers::getModifiers,
+                    Codec.BOOLEAN.mapCodec(AttributeModifiers.SHOW_IN_TOOLTIP).optionalDefault(() -> true), AttributeModifiers::isShowInTooltip,
+                    AttributeModifiers::new
+            ),
+            this.typeSerializers.attributeModifier_v1_21().flatMap(modifiers -> Result.error("Can't encode single attribute modifier"), modifier -> {
+                AttributeModifiers attributeModifiers = new AttributeModifiers();
+                List<AttributeModifier> list = new ArrayList<>();
+                list.add(modifier);
+                attributeModifiers.setModifiers(list);
+                return Result.success(attributeModifiers);
+            })
     ));
 
 

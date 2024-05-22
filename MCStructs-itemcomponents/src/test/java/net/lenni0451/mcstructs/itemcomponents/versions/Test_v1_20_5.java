@@ -47,7 +47,7 @@ public class Test_v1_20_5 {
             return valueMatchers;
         }), new CompoundTag().addInt("abc", 123))), false));
         register(registry.CAN_BREAK, (BlockPredicatesChecker) itemComponents.get(registry.CAN_PLACE_ON));
-        register(registry.ATTRIBUTE_MODIFIERS, new AttributeModifiers(Collections.singletonList(new AttributeModifier(Identifier.of("attr"), new EntityAttributeModifier(UUID.randomUUID(), "name", 12.34, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))), false));
+        register(registry.ATTRIBUTE_MODIFIERS, new AttributeModifiers(Collections.singletonList(new AttributeModifier(Identifier.of("attr"), new AttributeModifier.EntityAttribute(UUID.randomUUID(), "name", 12.34, AttributeModifier.EntityAttribute.Operation.ADD_MULTIPLIED_TOTAL))), false));
         register(registry.CUSTOM_MODEL_DATA, 1234);
         register(registry.HIDE_ADDITIONAL_TOOLTIP, true);
         register(registry.HIDE_TOOLTIP, true);

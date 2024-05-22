@@ -2,8 +2,10 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_21;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.lenni0451.mcstructs.converter.codec.Either;
+import net.lenni0451.mcstructs.converter.codec.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.text.ATextComponent;
@@ -65,6 +67,63 @@ public class Types_v1_21 {
             private ATextComponent description;
             private float lengthInSeconds;
             private int comparatorOutput;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AttributeModifiers {
+        public static final String MODIFIERS = "modifiers";
+        public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
+
+        private List<AttributeModifier> modifiers;
+        private boolean showInTooltip = true;
+
+        public AttributeModifiers(final List<AttributeModifier> modifiers) {
+            this.modifiers = modifiers;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AttributeModifier {
+        public static final String TYPE = "type";
+        public static final String SLOT = "slot";
+
+        private Identifier type;
+        private AttributeModifier.EntityAttribute modifier;
+        private Types_v1_20_5.AttributeModifier.Slot slot = Types_v1_20_5.AttributeModifier.Slot.ANY;
+
+        public AttributeModifier(final Identifier type, final AttributeModifier.EntityAttribute modifier) {
+            this.type = type;
+            this.modifier = modifier;
+        }
+
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class EntityAttribute {
+            public static final String ID = "id";
+            public static final String AMOUNT = "amount";
+            public static final String OPERATION = "operation";
+
+            private Identifier id;
+            private double amount;
+            private AttributeModifier.EntityAttribute.Operation operation;
+
+
+            @Getter
+            @AllArgsConstructor
+            public enum Operation implements NamedType {
+                ADD_VALUE("add_value"),
+                ADD_MULTIPLIED_BASE("add_multiplied_base"),
+                ADD_MULTIPLIED_TOTAL("add_multiplied_total");
+
+                private final String name;
+            }
         }
     }
 

@@ -495,14 +495,40 @@ public class Types_v1_20_5 {
         public static final String SLOT = "slot";
 
         private Identifier type;
-        private EntityAttributeModifier modifier;
+        private EntityAttribute modifier;
         private Slot slot = Slot.ANY;
 
-        public AttributeModifier(final Identifier type, final EntityAttributeModifier modifier) {
+        public AttributeModifier(final Identifier type, final EntityAttribute modifier) {
             this.type = type;
             this.modifier = modifier;
         }
 
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class EntityAttribute {
+            public static final String UUID = "uuid";
+            public static final String NAME = "name";
+            public static final String AMOUNT = "amount";
+            public static final String OPERATION = "operation";
+
+            private UUID uuid;
+            private String name;
+            private double amount;
+            private Operation operation;
+
+
+            @Getter
+            @AllArgsConstructor
+            public enum Operation implements NamedType {
+                ADD_VALUE("add_value"),
+                ADD_MULTIPLIED_BASE("add_multiplied_base"),
+                ADD_MULTIPLIED_TOTAL("add_multiplied_total");
+
+                private final String name;
+            }
+        }
 
         @Getter
         @AllArgsConstructor
@@ -517,32 +543,6 @@ public class Types_v1_20_5 {
             HEAD("head"),
             ARMOR("armor"),
             BODY("body");
-
-            private final String name;
-        }
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class EntityAttributeModifier {
-        public static final String UUID = "uuid";
-        public static final String NAME = "name";
-        public static final String AMOUNT = "amount";
-        public static final String OPERATION = "operation";
-
-        private UUID uuid;
-        private String name;
-        private double amount;
-        private Operation operation;
-
-
-        @Getter
-        @AllArgsConstructor
-        public enum Operation implements NamedType {
-            ADD_VALUE("add_value"),
-            ADD_MULTIPLIED_BASE("add_multiplied_base"),
-            ADD_MULTIPLIED_TOTAL("add_multiplied_total");
 
             private final String name;
         }
