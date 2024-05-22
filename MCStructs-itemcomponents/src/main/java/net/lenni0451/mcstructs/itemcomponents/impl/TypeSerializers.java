@@ -21,7 +21,11 @@ public class TypeSerializers {
     }
 
     protected <T> Codec<T> init(final String key, final Supplier<Codec<T>> codecSupplier) {
-        return (Codec<T>) this.codecCache.computeIfAbsent(key, k -> codecSupplier.get());
+        Codec<T> codec = (Codec<T>) this.codecCache.get(key);
+        if (codec != null) return codec;
+        codec = codecSupplier.get();
+        this.codecCache.put(key, codec);
+        return codec;
     }
 
 }
