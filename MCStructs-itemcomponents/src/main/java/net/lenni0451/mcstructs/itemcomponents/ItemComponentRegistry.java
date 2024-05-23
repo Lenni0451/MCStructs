@@ -11,8 +11,6 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The registry containing all item components.<br>
@@ -34,7 +32,7 @@ public abstract class ItemComponentRegistry {
     public static final ItemComponentRegistry LATEST = V1_21;
 
 
-    private final List<ItemComponent<?>> components;
+    private final ItemComponentList components;
     protected final RegistryVerifier registryVerifier;
     private final Codec<ItemComponentMap> mapCodec = Codec.ofThrowing(new DataSerializer<ItemComponentMap>() {
         @Override
@@ -49,13 +47,20 @@ public abstract class ItemComponentRegistry {
     });
 
     public ItemComponentRegistry() {
-        this.components = new ArrayList<>();
+        this.components = new ItemComponentList();
         this.registryVerifier = new RegistryVerifier();
     }
 
     protected ItemComponentRegistry(final RegistryVerifier registryVerifier) {
-        this.components = new ArrayList<>();
+        this.components = new ItemComponentList();
         this.registryVerifier = registryVerifier;
+    }
+
+    /**
+     * @return The list of all registered components
+     */
+    public ItemComponentList getComponentList() {
+        return this.components;
     }
 
     /**
@@ -67,10 +72,7 @@ public abstract class ItemComponentRegistry {
      */
     @Nullable
     public <T> ItemComponent<T> getComponent(final Identifier name) {
-        for (ItemComponent<?> component : this.components) {
-            if (component.getName().equals(name)) return (ItemComponent<T>) component;
-        }
-        return null;
+        return this.components.<T>getByName(name).orElse(null);
     }
 
     /**
@@ -122,17 +124,24 @@ public abstract class ItemComponentRegistry {
     }
 
     protected <T> ItemComponent<T> register(final String name, final Codec<T> codec) {
+        this.unregister(name);
         ItemComponent<T> itemComponent = new ItemComponent<>(name, codec);
-        ItemComponent<?> oldComponent = this.getComponent(itemComponent.getName());
-        if (oldComponent != null) this.components.remove(oldComponent);
-        this.components.add(itemComponent);
+        this.components.register(itemComponent);
         return itemComponent;
     }
 
-    protected <T> ItemComponent<T> unregister(final String name) {
-        ItemComponent<?> itemComponent = this.getComponent(Identifier.of(name));
-        if (itemComponent != null) this.components.remove(itemComponent);
-        return null;
+    protected void unregister(final String name) {
+        this.components.getByName(name).ifPresent(this.components::unregister);
+    }
+
+    /**
+     * Sort the components by their names.<br>
+     * The array should contain all names of the components in the version specific order.
+     *
+     * @param sortedNames The sorted names
+     */
+    protected void sort(final String[] sortedNames) {
+        this.components.sort(sortedNames);
     }
 
 }
