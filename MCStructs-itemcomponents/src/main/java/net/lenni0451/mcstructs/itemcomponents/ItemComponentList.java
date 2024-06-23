@@ -3,11 +3,12 @@ package net.lenni0451.mcstructs.itemcomponents;
 import net.lenni0451.mcstructs.core.Identifier;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ItemComponentList {
+public class ItemComponentList implements Iterable<ItemComponent<?>> {
 
     private final List<ItemComponent<?>> components;
 
@@ -15,33 +16,11 @@ public class ItemComponentList {
         this.components = new ArrayList<>();
     }
 
-    void register(final ItemComponent<?> component) {
-        this.components.add(component);
-    }
-
-    void unregister(final ItemComponent<?> component) {
-        this.components.remove(component);
-    }
-
-    void sort(final String[] names) {
-        List<ItemComponent<?>> sorted = new ArrayList<>();
-        List<ItemComponent<?>> missed = new ArrayList<>(this.components);
-        NAMES:
-        for (String name : names) {
-            for (ItemComponent<?> component : missed) {
-                if (component.getName().equals(Identifier.of(name))) {
-                    sorted.add(component);
-                    missed.remove(component);
-                    continue NAMES;
-                }
-            }
-            throw new IllegalArgumentException("Component '" + name + "' was not found in the registry or was already sorted");
-        }
-        if (!missed.isEmpty()) {
-            throw new IllegalArgumentException("Missed components after sorting " + missed.stream().map(c -> c.getName().get()).collect(Collectors.joining("/")));
-        }
-        this.components.clear();
-        this.components.addAll(sorted);
+    /**
+     * @return The amount of registered components
+     */
+    public int size() {
+        return this.components.size();
     }
 
     /**
@@ -90,6 +69,52 @@ public class ItemComponentList {
      */
     public int getId(final ItemComponent<?> component) {
         return this.components.indexOf(component);
+    }
+
+    void register(final ItemComponent<?> component) {
+        this.components.add(component);
+    }
+
+    void unregister(final ItemComponent<?> component) {
+        this.components.remove(component);
+    }
+
+    void sort(final String[] names) {
+        List<ItemComponent<?>> sorted = new ArrayList<>();
+        List<ItemComponent<?>> missed = new ArrayList<>(this.components);
+        NAMES:
+        for (String name : names) {
+            for (ItemComponent<?> component : missed) {
+                if (component.getName().equals(Identifier.of(name))) {
+                    sorted.add(component);
+                    missed.remove(component);
+                    continue NAMES;
+                }
+            }
+            throw new IllegalArgumentException("Component '" + name + "' was not found in the registry or was already sorted");
+        }
+        if (!missed.isEmpty()) {
+            throw new IllegalArgumentException("Missed components after sorting " + missed.stream().map(c -> c.getName().get()).collect(Collectors.joining("/")));
+        }
+        this.components.clear();
+        this.components.addAll(sorted);
+    }
+
+    @Override
+    public Iterator<ItemComponent<?>> iterator() {
+        return new Iterator<ItemComponent<?>>() {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return this.index < ItemComponentList.this.components.size();
+            }
+
+            @Override
+            public ItemComponent<?> next() {
+                return ItemComponentList.this.components.get(this.index++);
+            }
+        };
     }
 
 }
