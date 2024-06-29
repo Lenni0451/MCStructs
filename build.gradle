@@ -14,8 +14,8 @@ subprojects {
         compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = "UTF-8"
 
         archivesName = "MCStructs-" + project.maven_name
-        group = project.maven_group
-        version = project.maven_version
+        group = project.maven_group ?: rootProject.maven_group
+        version = project.maven_version ?: rootProject.maven_version
     }
 
     repositories {
@@ -84,20 +84,20 @@ subprojects {
         }
         publications {
             maven(MavenPublication) {
-                artifactId = project.maven_name
-                groupId = project.maven_group
-                version = project.maven_version
+                artifactId = project.maven_name ?: rootProject.maven_name
+                groupId = rootProject.maven_group
+                version = rootProject.maven_version
 
                 from components.java
 
                 pom {
-                    name = "MCStructs"
-                    description = "A minecraft data structure library with the goal of being compliant with the vanilla client"
-                    url = "https://github.com/Lenni0451/MCStructs"
+                    name = rootProject.name
+                    description = rootProject.maven_description
+                    url = "https://github.com/" + rootProject.github_repo
                     licenses {
                         license {
                             name = "MIT License"
-                            url = "https://github.com/Lenni0451/MCStructs/blob/main/LICENSE"
+                            url = "https://github.com/" + rootProject.github_repo + "/blob/main/LICENSE"
                         }
                     }
                     developers {
@@ -106,7 +106,9 @@ subprojects {
                         }
                     }
                     scm {
-                        url = "https://github.com/Lenni0451/MCStructs.git"
+                        connection = "scm:git:git://github.com/" + rootProject.github_repo + ".git"
+                        developerConnection = "scm:git:ssh://github.com/" + rootProject.github_repo + ".git"
+                        url = "github.com/" + rootProject.github_repo
                     }
                 }
             }
