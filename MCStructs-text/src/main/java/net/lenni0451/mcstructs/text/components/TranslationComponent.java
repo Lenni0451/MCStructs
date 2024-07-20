@@ -126,7 +126,7 @@ public class TranslationComponent extends ATextComponent {
                 String rawIndex = matcher.group(1);
                 int index;
                 if (rawIndex == null) index = argIndex++;
-                else index = Integer.parseInt(rawIndex);
+                else index = Integer.parseInt(rawIndex) - 1;
                 if (index < this.args.length) {
                     Object arg = this.args[index];
                     if (arg instanceof ATextComponent) out.append(((ATextComponent) arg).asUnformattedString());

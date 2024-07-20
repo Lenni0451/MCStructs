@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 class TranslationComponentTest {
 
     private static final String translationKey = "test";
-    private static final String translation = "%%test %1$s %0$s";
+    private static final String translation = "%%test %2$s %1$s";
     private static final TranslationComponent component = new TranslationComponent(translationKey, "test1", new StringComponent("test2"));
 
     @Test
