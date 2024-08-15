@@ -9,6 +9,7 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.ItemComponents_v1_21_2;
 
 import javax.annotation.Nullable;
 
@@ -27,9 +28,13 @@ public abstract class ItemComponentRegistry {
      */
     public static final ItemComponents_v1_21 V1_21 = new ItemComponents_v1_21();
     /**
+     * Item component registry for 1.21.2.
+     */
+    public static final ItemComponents_v1_21_2 V1_21_2 = new ItemComponents_v1_21_2();
+    /**
      * The latest item component registry.
      */
-    public static final ItemComponentRegistry LATEST = V1_21;
+    public static final ItemComponentRegistry LATEST = V1_21_2;
 
 
     private final ItemComponentList components;
@@ -140,7 +145,7 @@ public abstract class ItemComponentRegistry {
      *
      * @param sortedNames The sorted names
      */
-    protected void sort(final String[] sortedNames) {
+    protected void sort(final String... sortedNames) {
         this.components.sort(sortedNames);
     }
 

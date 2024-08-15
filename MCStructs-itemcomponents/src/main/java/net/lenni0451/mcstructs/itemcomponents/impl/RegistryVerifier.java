@@ -12,6 +12,7 @@ import java.util.function.Predicate;
  */
 public class RegistryVerifier {
 
+    public final Checker<Identifier> itemTag = new Checker<>("item tag", this::verifyItemTag);
     public final Checker<Identifier> item = new Checker<>("item", this::verifyItem);
     public final Checker<Identifier> blockTag = new Checker<>("block tag", this::verifyBlockTag);
     public final Checker<Identifier> block = new Checker<>("block", this::verifyBlock);
@@ -27,6 +28,16 @@ public class RegistryVerifier {
     public final Checker<Identifier> armorTrimPattern = new Checker<>("armor trim pattern", this::verifyArmorTrimPattern);
     public final Checker<Identifier> potion = new Checker<>("potion", this::verifyPotion);
     public final Checker<Identifier> jukeboxSong = new Checker<>("jukebox song", this::jukeboxSong);
+
+    /**
+     * Verify the item tag in the item tag registry.
+     *
+     * @param id The item tag id
+     * @return If the item tag is valid
+     */
+    public boolean verifyItemTag(final Identifier id) {
+        return true;
+    }
 
     /**
      * Verify the item in the item registry.
