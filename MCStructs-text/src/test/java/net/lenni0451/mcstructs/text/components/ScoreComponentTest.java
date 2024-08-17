@@ -49,4 +49,13 @@ class ScoreComponentTest {
         assertNotSame(component, copy);
     }
 
+    @Test
+    @Order(2)
+    void shallowCopy() {
+        ScoreComponent copy = (ScoreComponent) component.copy();
+        copy.append("Test");
+        assertEquals(1, copy.getSiblings().size());
+        assertEquals(0, copy.shallowCopy().getSiblings().size());
+    }
+
 }

@@ -40,8 +40,13 @@ public class EntityNbtComponent extends NbtComponent {
 
     @Override
     public ATextComponent copy() {
-        if (this.getSeparator() == null) return this.putMetaCopy(new EntityNbtComponent(this.getComponent(), this.isResolve(), null, this.selector));
-        else return this.putMetaCopy(new EntityNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.selector));
+        return this.putMetaCopy(this.shallowCopy());
+    }
+
+    @Override
+    public ATextComponent shallowCopy() {
+        if (this.getSeparator() == null) return new EntityNbtComponent(this.getComponent(), this.isResolve(), null, this.selector);
+        else return new EntityNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.selector);
     }
 
     @Override

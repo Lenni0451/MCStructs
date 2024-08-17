@@ -85,9 +85,14 @@ public class ScoreComponent extends ATextComponent {
 
     @Override
     public ATextComponent copy() {
+        return this.putMetaCopy(this.shallowCopy());
+    }
+
+    @Override
+    public ATextComponent shallowCopy() {
         ScoreComponent copy = new ScoreComponent(this.name, this.objective);
         copy.value = this.value;
-        return this.putMetaCopy(copy);
+        return copy;
     }
 
     @Override

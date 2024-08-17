@@ -42,7 +42,12 @@ public class StringComponent extends ATextComponent {
 
     @Override
     public ATextComponent copy() {
-        return this.putMetaCopy(new StringComponent(this.text));
+        return this.putMetaCopy(this.shallowCopy());
+    }
+
+    @Override
+    public ATextComponent shallowCopy() {
+        return new StringComponent(this.text);
     }
 
     @Override

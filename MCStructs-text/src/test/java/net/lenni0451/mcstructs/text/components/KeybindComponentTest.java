@@ -33,4 +33,13 @@ class KeybindComponentTest {
         assertNotSame(component, copy);
     }
 
+    @Test
+    @Order(1)
+    void shallowCopy() {
+        KeybindComponent copy = (KeybindComponent) component.copy();
+        copy.append("Test");
+        assertEquals(1, copy.getSiblings().size());
+        assertEquals(0, copy.shallowCopy().getSiblings().size());
+    }
+
 }

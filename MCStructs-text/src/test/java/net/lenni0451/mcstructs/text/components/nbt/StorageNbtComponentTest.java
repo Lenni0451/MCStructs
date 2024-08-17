@@ -10,13 +10,21 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 class StorageNbtComponentTest {
 
+    private static final StorageNbtComponent component = new StorageNbtComponent("test", true, new StringComponent("separator"), Identifier.of("id"));
+
     @Test
     void copy() {
-        StorageNbtComponent component = new StorageNbtComponent("test", true, new StringComponent("separator"), Identifier.of("id"));
         ATextComponent copy = component.copy();
-
         assertEquals(component, copy);
         assertNotSame(component, copy);
+    }
+
+    @Test
+    void shallowCopy() {
+        StorageNbtComponent copy = (StorageNbtComponent) component.copy();
+        copy.append("Test");
+        assertEquals(1, copy.getSiblings().size());
+        assertEquals(0, copy.shallowCopy().getSiblings().size());
     }
 
 }

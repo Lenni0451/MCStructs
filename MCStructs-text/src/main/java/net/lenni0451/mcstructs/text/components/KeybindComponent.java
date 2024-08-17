@@ -61,9 +61,14 @@ public class KeybindComponent extends ATextComponent {
 
     @Override
     public ATextComponent copy() {
+        return this.putMetaCopy(this.shallowCopy());
+    }
+
+    @Override
+    public ATextComponent shallowCopy() {
         KeybindComponent copy = new KeybindComponent(this.keybind);
         copy.translator = this.translator;
-        return this.putMetaCopy(copy);
+        return copy;
     }
 
     @Override

@@ -45,4 +45,12 @@ class TranslationComponentTest {
         assertNotSame(component, copy);
     }
 
+    @Test
+    void shallowCopy() {
+        TranslationComponent copy = (TranslationComponent) component.copy();
+        copy.append("Test");
+        assertEquals(1, copy.getSiblings().size());
+        assertEquals(0, copy.shallowCopy().getSiblings().size());
+    }
+
 }

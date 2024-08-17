@@ -141,6 +141,11 @@ public class TranslationComponent extends ATextComponent {
 
     @Override
     public ATextComponent copy() {
+        return this.putMetaCopy(this.shallowCopy());
+    }
+
+    @Override
+    public ATextComponent shallowCopy() {
         Object[] copyArgs = new Object[this.args.length];
         for (int i = 0; i < this.args.length; i++) {
             Object arg = this.args[i];
@@ -149,7 +154,7 @@ public class TranslationComponent extends ATextComponent {
         }
         TranslationComponent copy = new TranslationComponent(this.key, copyArgs);
         copy.translator = this.translator;
-        return this.putMetaCopy(copy);
+        return copy;
     }
 
     @Override

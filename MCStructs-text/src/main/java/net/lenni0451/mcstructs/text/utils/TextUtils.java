@@ -45,8 +45,7 @@ public class TextUtils {
      * @return A new component with the replaced components
      */
     public static ATextComponent replace(final ATextComponent component, final Function<ATextComponent, ATextComponent> replaceFunction) {
-        ATextComponent out = component.copy();
-        out.getSiblings().clear();
+        ATextComponent out = component.shallowCopy();
         out = replaceFunction.apply(out);
         if (out instanceof TranslationComponent) {
             Object[] args = ((TranslationComponent) out).getArgs();
@@ -91,13 +90,11 @@ public class TextUtils {
                 out = new StringComponent("");
                 for (ATextComponent part : parts) out.append(part);
             } else {
-                if (parts.size() == 1) out = parts.get(0).copy();
-                else out = component.copy();
-                out.getSiblings().clear();
+                if (parts.size() == 1) out = parts.get(0).shallowCopy();
+                else out = component.shallowCopy();
             }
         } else {
-            out = component.copy();
-            out.getSiblings().clear();
+            out = component.shallowCopy();
         }
         for (ATextComponent sibling : component.getSiblings()) {
             ATextComponent replace = replace(sibling, searchRegex, replaceFunction);

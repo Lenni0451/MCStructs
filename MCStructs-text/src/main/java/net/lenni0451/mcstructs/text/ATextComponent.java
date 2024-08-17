@@ -190,6 +190,18 @@ public abstract class ATextComponent implements ICopyable<ATextComponent> {
     @Override
     public abstract ATextComponent copy();
 
+    /**
+     * Create a shallow copy of this component.<br>
+     * This will only copy the component itself and not its siblings.
+     *
+     * @return The shallow copy
+     */
+    public ATextComponent shallowCopy() {
+        ATextComponent copy = this.copy();
+        copy.getSiblings().clear();
+        return copy;
+    }
+
     public abstract boolean equals(final Object o);
 
     public abstract int hashCode();

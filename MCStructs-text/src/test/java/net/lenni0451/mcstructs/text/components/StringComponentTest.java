@@ -26,4 +26,12 @@ class StringComponentTest {
         assertNotSame(component, copy);
     }
 
+    @Test
+    void shallowCopy() {
+        StringComponent copy = (StringComponent) component.copy();
+        copy.append("Test");
+        assertEquals(1, copy.getSiblings().size());
+        assertEquals(0, copy.shallowCopy().getSiblings().size());
+    }
+
 }
