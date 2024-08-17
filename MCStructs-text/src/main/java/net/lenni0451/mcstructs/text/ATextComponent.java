@@ -141,6 +141,21 @@ public abstract class ATextComponent implements ICopyable<ATextComponent> {
     }
 
     /**
+     * Apply the parent style to all siblings.<br>
+     * This removes the inheritance of styles while keeping the formatting.
+     *
+     * @return This component
+     */
+    public ATextComponent applyParentStyle() {
+        for (ATextComponent sibling : this.siblings) {
+            sibling.getStyle().setParent(this.style);
+            sibling.getStyle().applyParent();
+            sibling.applyParentStyle();
+        }
+        return this;
+    }
+
+    /**
      * Copy the style and siblings of this component to the given component.
      *
      * @param component The component to copy to

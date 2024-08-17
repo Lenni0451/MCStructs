@@ -205,4 +205,53 @@ public class TextUtils {
         });
     }
 
+    /**
+     * Split the given component by the given split string.<br>
+     * An array of components will be returned where each component is a part.<br>
+     * The original component will not be modified.
+     *
+     * @param component           The component to split
+     * @param split               The split string
+     * @param resolveTranslations If translations should be resolved before splitting
+     * @return An array of components
+     */
+    public static ATextComponent[] split(final ATextComponent component, final String split, final boolean resolveTranslations) {
+        ATextComponent rootCopy = component.copy();
+        rootCopy.applyParentStyle(); //Make sure all siblings have the correct style
+
+        List<ATextComponent> components = new ArrayList<>();
+        List<ATextComponent> current = new ArrayList<>();
+        Runnable addCurrent = () -> {
+            if (current.size() == 1) {
+                components.add(current.get(0));
+            } else if (!current.isEmpty()) {
+                ATextComponent part = new StringComponent("");
+                for (ATextComponent textComponent : current) part.append(textComponent);
+                components.add(part);
+            }
+            current.clear();
+        };
+        rootCopy.forEach(comp -> {
+            if (comp instanceof StringComponent || (comp instanceof TranslationComponent && resolveTranslations)) {
+                String text = comp.asSingleString();
+                if (text.contains(split)) {
+                    String[] parts = text.split(split, -1 /*Keep empty parts*/);
+                    for (int i = 0; i < parts.length; i++) {
+                        String part = parts[i];
+                        ATextComponent partComp = new StringComponent(part).setStyle(comp.getStyle().copy());
+                        current.add(partComp);
+
+                        if (i != parts.length - 1) addCurrent.run();
+                    }
+                } else {
+                    current.add(comp.shallowCopy());
+                }
+            } else {
+                current.add(comp.shallowCopy());
+            }
+        });
+        addCurrent.run();
+        return components.toArray(new ATextComponent[0]);
+    }
+
 }

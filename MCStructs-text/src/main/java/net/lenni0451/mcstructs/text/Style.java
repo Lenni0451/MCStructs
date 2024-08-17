@@ -337,6 +337,24 @@ public class Style implements ICopyable<Style> {
                 this.getFont() == null;
     }
 
+    /**
+     * Apply the parent style to this style.<br>
+     * The parent style will be removed.
+     */
+    public void applyParent() {
+        this.color = this.getColor();
+        this.bold = this.getBold();
+        this.italic = this.getItalic();
+        this.underlined = this.getUnderlined();
+        this.strikethrough = this.getStrikethrough();
+        this.obfuscated = this.getObfuscated();
+        this.clickEvent = this.getClickEvent();
+        this.hoverEvent = this.getHoverEvent();
+        this.insertion = this.getInsertion();
+        this.font = this.getFont();
+        this.parent = null;
+    }
+
     @Override
     public Style copy() {
         Style style = new Style();
