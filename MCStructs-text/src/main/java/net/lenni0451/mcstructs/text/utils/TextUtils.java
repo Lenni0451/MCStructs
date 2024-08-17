@@ -208,6 +208,7 @@ public class TextUtils {
     /**
      * Split the given component by the given split string.<br>
      * An array of components will be returned where each component is a part.<br>
+     * This method behaves like {@code string.split(split,  -1)} without regex.<br>
      * The original component will not be modified.
      *
      * @param component           The component to split
@@ -218,13 +219,17 @@ public class TextUtils {
     public static ATextComponent[] split(final ATextComponent component, final String split, final boolean resolveTranslations) {
         ATextComponent rootCopy = component.copy();
         rootCopy.applyParentStyle(); //Make sure all siblings have the correct style
+        //This allows us to handle every component independently without having to worry about the hierarchy
+        //Using this approach is kind of cheating, but it's by far the easiest way
 
         List<ATextComponent> components = new ArrayList<>();
         List<ATextComponent> current = new ArrayList<>();
         Runnable addCurrent = () -> {
+            boolean wasEmpty = current.isEmpty();
+            current.removeIf(comp -> comp instanceof StringComponent && comp.asSingleString().isEmpty()); //Remove empty components to reduce the amount of components
             if (current.size() == 1) {
                 components.add(current.get(0));
-            } else if (!current.isEmpty()) {
+            } else if (!wasEmpty) {
                 ATextComponent part = new StringComponent("");
                 for (ATextComponent textComponent : current) part.append(textComponent);
                 components.add(part);
@@ -241,13 +246,13 @@ public class TextUtils {
                         ATextComponent partComp = new StringComponent(part).setStyle(comp.getStyle().copy());
                         current.add(partComp);
 
-                        if (i != parts.length - 1) addCurrent.run();
+                        if (i != parts.length - 1) addCurrent.run(); //Don't add the last part since more text will follow
                     }
                 } else {
-                    current.add(comp.shallowCopy());
+                    current.add(comp.shallowCopy()); //No split found, just add the component
                 }
             } else {
-                current.add(comp.shallowCopy());
+                current.add(comp.shallowCopy()); //Can't split this component, just add it
             }
         });
         addCurrent.run();

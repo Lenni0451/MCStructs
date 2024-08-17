@@ -83,4 +83,27 @@ class TextUtilsTest {
         for (ATextComponent aTextComponent : split) assertEquals(new StringComponent(""), aTextComponent);
     }
 
+    @Test
+    void splitSiblings() {
+        ATextComponent component = new StringComponent("A").append(" ").append("B").append(" ").append("C");
+        ATextComponent[] split = TextUtils.split(component, " ", true);
+        assertEquals(3, split.length);
+        assertEquals(new StringComponent("A"), split[0]);
+        assertEquals(new StringComponent("B"), split[1]);
+        assertEquals(new StringComponent("C"), split[2]);
+    }
+
+    @Test
+    void splitEmptySplitter() {
+        ATextComponent component = new StringComponent("A B C");
+        ATextComponent[] split = TextUtils.split(component, "", false);
+        assertEquals(6, split.length);
+        assertEquals(new StringComponent("A"), split[0]);
+        assertEquals(new StringComponent(" "), split[1]);
+        assertEquals(new StringComponent("B"), split[2]);
+        assertEquals(new StringComponent(" "), split[3]);
+        assertEquals(new StringComponent("C"), split[4]);
+        assertEquals(new StringComponent(""), split[5]);
+    }
+
 }
