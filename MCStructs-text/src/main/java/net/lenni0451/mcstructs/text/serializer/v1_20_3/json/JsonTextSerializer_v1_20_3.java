@@ -80,7 +80,7 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
         }
 
         JsonObject style = this.styleSerializer.serialize(object.getStyle()).getAsJsonObject();
-        if (style.size() > 0) {
+        if (!style.isEmpty()) {
             for (Map.Entry<String, JsonElement> entry : style.entrySet()) out.add(entry.getKey(), entry.getValue());
         }
 
