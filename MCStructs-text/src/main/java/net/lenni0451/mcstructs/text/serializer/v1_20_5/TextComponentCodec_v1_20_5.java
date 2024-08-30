@@ -1,11 +1,13 @@
 package net.lenni0451.mcstructs.text.serializer.v1_20_5;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
+import net.lenni0451.mcstructs.text.serializer.subtypes.ITextComponentSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtStyleSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtTextSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.json.JsonHoverEventSerializer_v1_20_5;
@@ -13,6 +15,9 @@ import net.lenni0451.mcstructs.text.serializer.v1_20_5.json.JsonStyleSerializer_
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.json.JsonTextSerializer_v1_20_5;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.nbt.NbtHoverEventSerializer_v1_20_5;
 import net.lenni0451.mcstructs.text.utils.JsonNbtConverter;
+
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class TextComponentCodec_v1_20_5 extends TextComponentCodec {
 
@@ -22,6 +27,10 @@ public class TextComponentCodec_v1_20_5 extends TextComponentCodec {
                 (codec, sNbtSerializer) -> new JsonTextSerializer_v1_20_5(textSerializer -> new JsonStyleSerializer_v1_20_5(styleSerializer -> new JsonHoverEventSerializer_v1_20_5((TextComponentCodec_v1_20_5) codec, textSerializer, sNbtSerializer))),
                 (codec, sNbtSerializer) -> new NbtTextSerializer_v1_20_3(textSerializer -> new NbtStyleSerializer_v1_20_3(styleSerializer -> new NbtHoverEventSerializer_v1_20_5((TextComponentCodec_v1_20_5) codec, textSerializer, sNbtSerializer)))
         );
+    }
+
+    protected TextComponentCodec_v1_20_5(final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<INbtTag>> nbtSerializerSupplier) {
+        super(sNbtSerializerSupplier, jsonSerializerSupplier, nbtSerializerSupplier);
     }
 
     /**

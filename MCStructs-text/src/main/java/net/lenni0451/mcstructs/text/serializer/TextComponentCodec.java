@@ -17,6 +17,7 @@ import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtHoverEventSerializ
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtStyleSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtTextSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_5;
+import net.lenni0451.mcstructs.text.serializer.v1_21_2.TextComponentCodec_v1_21_2;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -50,9 +51,14 @@ public class TextComponentCodec {
      */
     public static final TextComponentCodec_v1_20_5 V1_20_5 = new TextComponentCodec_v1_20_5();
     /**
+     * The text codec for 1.21.2.<br>
+     * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_21_2} class yourself instead of using this codec.</b>
+     */
+    public static final TextComponentCodec_v1_21_2 V1_21_2 = new TextComponentCodec_v1_21_2();
+    /**
      * The latest text codec.
      */
-    public static final TextComponentCodec LATEST = V1_20_5;
+    public static final TextComponentCodec LATEST = V1_21_2;
 
 
     private final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier;
