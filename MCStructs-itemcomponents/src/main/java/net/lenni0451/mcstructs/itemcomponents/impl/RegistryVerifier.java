@@ -27,7 +27,8 @@ public class RegistryVerifier {
     public final Checker<Identifier> armorTrimMaterial = new Checker<>("armor trim material", this::verifyArmorTrimMaterial);
     public final Checker<Identifier> armorTrimPattern = new Checker<>("armor trim pattern", this::verifyArmorTrimPattern);
     public final Checker<Identifier> potion = new Checker<>("potion", this::verifyPotion);
-    public final Checker<Identifier> jukeboxSong = new Checker<>("jukebox song", this::jukeboxSong);
+    public final Checker<Identifier> jukeboxSong = new Checker<>("jukebox song", this::verifyJukeboxSong);
+    public final Checker<Identifier> consumeEffect = new Checker<>("consume effect", this::verifyConsumeEffect);
 
     /**
      * Verify the item tag in the item tag registry.
@@ -196,7 +197,17 @@ public class RegistryVerifier {
      * @param id The song id
      * @return If the song is valid
      */
-    public boolean jukeboxSong(final Identifier id) {
+    public boolean verifyJukeboxSong(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the consume effect in the consume effect registry.
+     *
+     * @param id The consume effect id
+     * @return If the consume effect is valid
+     */
+    public boolean verifyConsumeEffect(final Identifier id) {
         return true;
     }
 

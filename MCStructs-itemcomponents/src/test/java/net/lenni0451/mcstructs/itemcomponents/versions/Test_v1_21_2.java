@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.itemcomponents.versions;
 
+import net.lenni0451.mcstructs.converter.codec.Either;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
@@ -24,6 +25,10 @@ public class Test_v1_21_2 {
 
     static {
         ItemComponents_v1_21_2 registry = ItemComponentRegistry.V1_21_2;
+        register(registry.FOOD, new Types_1_21_2.Food(123, 0.24F, false));
+        register(registry.CONSUMABLE, new Types_1_21_2.Consumable(1.87F, Types_1_21_2.Consumable.ItemUseAnimation.BOW, Either.left(Identifier.of("test")), false, Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))));
+        register(registry.USE_REMAINDER, new Types_v1_20_5.ItemStack(Identifier.of("test"), 123, registry.getItemDefaults()));
+        register(registry.USE_COOLDOWN, new Types_1_21_2.UseCooldown(1.23F, Identifier.of("test")));
         register(registry.ENCHANTABLE, new Types_1_21_2.Enchantable(123));
         register(registry.REPAIRABLE, new Types_1_21_2.Repairable(new Types_v1_20_5.TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2")))));
     }

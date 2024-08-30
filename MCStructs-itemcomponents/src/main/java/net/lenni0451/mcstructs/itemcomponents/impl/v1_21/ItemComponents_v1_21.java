@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.MapCodec;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
+import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
@@ -13,6 +14,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.Food;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.JukeboxPlayable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ItemComponents_v1_21 extends ItemComponents_v1_20_5 {
@@ -68,6 +70,17 @@ public class ItemComponents_v1_21 extends ItemComponents_v1_20_5 {
 
     {
         this.sort("custom_data", "max_stack_size", "max_damage", "damage", "unbreakable", "custom_name", "item_name", "lore", "rarity", "enchantments", "can_place_on", "can_break", "attribute_modifiers", "custom_model_data", "hide_additional_tooltip", "hide_tooltip", "repair_cost", "creative_slot_lock", "enchantment_glint_override", "intangible_projectile", "food", "fire_resistant", "tool", "stored_enchantments", "dyed_color", "map_color", "map_id", "map_decorations", "map_post_processing", "charged_projectiles", "bundle_contents", "potion_contents", "suspicious_stew_effects", "writable_book_content", "written_book_content", "trim", "debug_stick_state", "entity_data", "bucket_entity_data", "block_entity_data", "instrument", "ominous_bottle_amplifier", "jukebox_playable", "recipes", "lodestone_tracker", "firework_explosion", "fireworks", "profile", "note_block_sound", "banner_patterns", "base_color", "pot_decorations", "container", "block_state", "bees", "lock", "container_loot");
+    }
+
+    @Override
+    public ItemComponentMap getItemDefaults() {
+        return new ItemComponentMap(this)
+                .set(this.MAX_STACK_SIZE, 64)
+                .set(this.LORE, new ArrayList<>())
+                .set(this.ENCHANTMENTS, new Types_v1_20_5.Enchantments(new HashMap<>(), true))
+                .set(this.REPAIR_COST, 0)
+                .set(this.ATTRIBUTE_MODIFIERS, new AttributeModifiers(new ArrayList<>(), true))
+                .set(this.RARITY, Types_v1_20_5.Rarity.COMMON);
     }
 
 }
