@@ -82,20 +82,18 @@ public class Types_1_21_2 {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Enchantable {
-
         public static final String VALUE = "value";
-        private int value;
 
+        private int value;
     }
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Repairable {
-
         public static final String ITEMS = "items";
-        private Types_v1_20_5.TagEntryList items;
 
+        private Types_v1_20_5.TagEntryList items;
     }
 
 }
