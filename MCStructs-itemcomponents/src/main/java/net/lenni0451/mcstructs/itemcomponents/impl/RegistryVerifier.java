@@ -29,6 +29,8 @@ public class RegistryVerifier {
     public final Checker<Identifier> potion = new Checker<>("potion", this::verifyPotion);
     public final Checker<Identifier> jukeboxSong = new Checker<>("jukebox song", this::verifyJukeboxSong);
     public final Checker<Identifier> consumeEffect = new Checker<>("consume effect", this::verifyConsumeEffect);
+    public final Checker<Identifier> entityTypeTag = new Checker<>("entity type tag", this::verifyItemTag);
+    public final Checker<Identifier> entityType = new Checker<>("entity type", this::verifyItem);
 
     /**
      * Verify the item tag in the item tag registry.
@@ -208,6 +210,24 @@ public class RegistryVerifier {
      * @return If the consume effect is valid
      */
     public boolean verifyConsumeEffect(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the entity type tag in the entity type tag registry.
+     *
+     * @param id The entity type tag id
+     */
+    public boolean verifyEntityTypeTag(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the entity type in the entity type registry.
+     *
+     * @param id The entity type id
+     */
+    public boolean verifyEntityType(final Identifier id) {
         return true;
     }
 

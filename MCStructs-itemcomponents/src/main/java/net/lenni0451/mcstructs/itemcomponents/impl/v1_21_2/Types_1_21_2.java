@@ -90,10 +90,45 @@ public class Types_1_21_2 {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class Equippable {
+        public static final String SLOT = "slot";
+        public static final String EQUIP_SOUND = "equip_sound";
+        public static final String MODEL = "model";
+        public static final String ALLOWED_ENTITIES = "allowed_entities";
+        public static final String DISPENSABLE = "dispensable";
+
+        private EquipmentSlot slot;
+        private Either<Identifier, Types_v1_20_5.SoundEvent> equipSound = Either.left(Identifier.of("item.armor.equip_generic"));
+        private Identifier model = null;
+        private Types_v1_20_5.TagEntryList allowedEntities = null;
+        private boolean dispensable = true;
+
+        public Equippable(final EquipmentSlot slot) {
+            this.slot = slot;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Repairable {
         public static final String ITEMS = "items";
 
         private Types_v1_20_5.TagEntryList items;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum EquipmentSlot implements NamedType {
+        MAINHAND("mainhand"),
+        OFFHAND("offhand"),
+        FEET("feet"),
+        LEGS("legs"),
+        CHEST("chest"),
+        HEAD("head"),
+        BODY("body");
+
+        private final String name;
     }
 
 }
