@@ -697,6 +697,20 @@ public class Types_v1_20_5 {
             return new Parameters(this.amplifier, this.duration, this.ambient, this.showParticles, this.showIcon, this.hiddenEffect != null ? this.hiddenEffect.getParameters() : null);
         }
 
+        public void setParameters(final Parameters parameters) {
+            this.amplifier = parameters.amplifier;
+            this.duration = parameters.duration;
+            this.ambient = parameters.ambient;
+            this.showParticles = parameters.showParticles;
+            this.showIcon = parameters.showIcon;
+            if (parameters.hiddenEffect != null) {
+                if (this.hiddenEffect == null) this.hiddenEffect = new StatusEffect(this.id, parameters.hiddenEffect);
+                else this.hiddenEffect.setParameters(parameters.hiddenEffect);
+            } else {
+                this.hiddenEffect = null;
+            }
+        }
+
 
         @Data
         @NoArgsConstructor
