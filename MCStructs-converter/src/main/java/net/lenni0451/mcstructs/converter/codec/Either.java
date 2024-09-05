@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.converter.codec;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class Either<L, R> {
 
@@ -40,6 +41,14 @@ public class Either<L, R> {
 
     public boolean isRight() {
         return this.right != null;
+    }
+
+    public <ML, MR> Either<ML, MR> map(final Function<L, ML> leftMapper, final Function<R, MR> rightMapper) {
+        if (this.isLeft()) {
+            return Either.left(leftMapper.apply(this.left));
+        } else {
+            return Either.right(rightMapper.apply(this.right));
+        }
     }
 
     @Override
