@@ -6,6 +6,7 @@ import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Deserialize a legacy formatted string to an {@link ATextComponent}.
@@ -55,8 +56,23 @@ public class LegacyStringDeserializer {
      * @return The parsed string
      */
     public static ATextComponent parse(final String s, final char colorChar, final Function<Character, TextFormatting> formattingResolver) {
+        return parse(s, colorChar, Style::new, formattingResolver);
+    }
+
+    /**
+     * Parse a string with legacy formatting codes into an {@link ATextComponent}.<br>
+     * The {@code formattingResolver} should return a formatting for the given char or {@code null} if the previous formatting should be kept.<br>
+     * When returning a color the previous formattings like {@code bold, italic, etc.} will be reset.
+     *
+     * @param s                  The string to parse
+     * @param colorChar          The color char to use (e.g. {@link TextFormatting#COLOR_CHAR})
+     * @param styleSupplier      The supplier for the default style (not copied)
+     * @param formattingResolver The function that resolves the formatting for the given char
+     * @return The parsed string
+     */
+    public static ATextComponent parse(final String s, final char colorChar, final Supplier<Style> styleSupplier, final Function<Character, TextFormatting> formattingResolver) {
         char[] chars = s.toCharArray();
-        Style style = new Style();
+        Style style = styleSupplier.get();
         StringBuilder currentPart = new StringBuilder();
         ATextComponent out = new StringComponent("");
 
@@ -71,7 +87,7 @@ public class LegacyStringDeserializer {
                     if (currentPart.length() != 0) {
                         out.append(new StringComponent(currentPart.toString()).setStyle(style.copy()));
                         currentPart = new StringBuilder();
-                        if (formatting.isColor() || TextFormatting.RESET.equals(formatting)) style = new Style();
+                        if (formatting.isColor() || TextFormatting.RESET.equals(formatting)) style = styleSupplier.get();
                     }
                     style.setFormatting(formatting);
                 }
