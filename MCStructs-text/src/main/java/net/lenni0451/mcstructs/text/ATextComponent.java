@@ -181,7 +181,7 @@ public abstract class ATextComponent implements ICopyable<ATextComponent> {
      * @return A legacy formatted string representation of this component
      */
     public String asLegacyFormatString() {
-        StringBuilder out = new StringBuilder();
+        StringBuilder out = new StringBuilder("§r");
         if (this.style.getColor() != null && this.style.getColor().isFormattingColor()) out.append(COLOR_CHAR).append(this.style.getColor().getCode());
         if (this.style.isObfuscated()) out.append(COLOR_CHAR).append(TextFormatting.OBFUSCATED.getCode());
         if (this.style.isBold()) out.append(COLOR_CHAR).append(TextFormatting.BOLD.getCode());
