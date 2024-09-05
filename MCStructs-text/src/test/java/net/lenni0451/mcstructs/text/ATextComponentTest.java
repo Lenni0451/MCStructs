@@ -59,9 +59,9 @@ class ATextComponentTest {
 
     @Test
     void asLegacyFormatString() {
-        assertEquals("§r§r§c§lHello§r §r§9§oWorld", component.asLegacyFormatString());
+        assertEquals("§r§c§lHello§r §9§oWorld", component.asLegacyFormatString());
         assertEquals(
-                "§r§r§4Hello §rWorld",
+                "§r§4Hello §rWorld",
                 new StringComponent()
                         .append(new StringComponent("Hello ").modifyStyle(style -> style.setFormatting(TextFormatting.DARK_RED)))
                         .append(new StringComponent("World"))

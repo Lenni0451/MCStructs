@@ -10,7 +10,7 @@ class TextComponentBuilderTest {
     @Test
     void build() {
         ATextComponent component = TextComponentBuilder.build("Hello", TextFormatting.RED, " World ", 1, TextFormatting.GREEN);
-        assertEquals("§cHello§a World §a1", component.asLegacyFormatString());
+        assertEquals("§r§cHello§a World §a1", component.asLegacyFormatString());
     }
 
 }

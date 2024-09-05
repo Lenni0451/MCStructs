@@ -217,6 +217,7 @@ public class RegistryVerifier {
      * Verify the entity type tag in the entity type tag registry.
      *
      * @param id The entity type tag id
+     * @return If the entity type tag is valid
      */
     public boolean verifyEntityTypeTag(final Identifier id) {
         return true;
@@ -226,6 +227,7 @@ public class RegistryVerifier {
      * Verify the entity type in the entity type registry.
      *
      * @param id The entity type id
+     * @return If the entity type is valid
      */
     public boolean verifyEntityType(final Identifier id) {
         return true;
