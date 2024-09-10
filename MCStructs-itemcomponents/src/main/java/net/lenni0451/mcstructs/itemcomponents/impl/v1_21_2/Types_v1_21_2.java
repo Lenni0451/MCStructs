@@ -12,7 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Types_1_21_2 {
+public class Types_v1_21_2 {
 
     @Data
     @NoArgsConstructor

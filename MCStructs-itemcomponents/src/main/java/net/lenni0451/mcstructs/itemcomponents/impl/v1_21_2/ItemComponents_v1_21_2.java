@@ -12,8 +12,8 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.TypeSerializers_v1_21;
 
 import java.util.ArrayList;
 
-import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_1_21_2.*;
-import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_1_21_2.Food.*;
+import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2.*;
+import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2.Food.*;
 
 public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
 
