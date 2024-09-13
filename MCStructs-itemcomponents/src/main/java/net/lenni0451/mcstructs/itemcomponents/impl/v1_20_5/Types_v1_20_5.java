@@ -756,7 +756,6 @@ public class Types_v1_20_5 {
         private List<StatusEffect> customEffects;
     }
 
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

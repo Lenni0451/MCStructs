@@ -268,12 +268,16 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         return Codec.either(Codec.STRING_IDENTIFIER.verified(idVerifier), entryCodec);
     }
 
+    public Codec<Identifier> tag(final Function<Identifier, Result<Void>> verifier) {
+        return Codec.STRING.verified(tag -> {
+            if (!tag.startsWith("#")) return Result.error("Tag must start with a #");
+            else return null;
+        }).mapThrowing(id -> "#" + id.get(), value -> Identifier.of(value.substring(1))).verified(verifier);
+    }
+
     public Codec<TagEntryList> tagEntryList(final Function<Identifier, Result<Void>> tagVerifier, final Function<Identifier, Result<Void>> entryVerifier) {
         return Codec.oneOf(
-                Codec.STRING.verified(tag -> {
-                    if (!tag.startsWith("#")) return Result.error("Tag must start with a #");
-                    else return null;
-                }).mapThrowing(id -> "#" + id.get(), value -> Identifier.of(value.substring(1))).verified(tagVerifier).flatMap(list -> {
+                this.tag(tagVerifier).flatMap(list -> {
                     if (!list.isTag()) return Result.error("TagEntryList is not a tag");
                     return Result.success(list.getTag());
                 }, tag -> Result.success(new TagEntryList(tag))),

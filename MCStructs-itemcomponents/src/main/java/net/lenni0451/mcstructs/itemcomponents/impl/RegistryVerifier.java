@@ -30,7 +30,8 @@ public class RegistryVerifier {
     public final Checker<Identifier> jukeboxSong = new Checker<>("jukebox song", this::verifyJukeboxSong);
     public final Checker<Identifier> consumeEffect = new Checker<>("consume effect", this::verifyConsumeEffect);
     public final Checker<Identifier> entityTypeTag = new Checker<>("entity type tag", this::verifyItemTag);
-    public final Checker<Identifier> entityType = new Checker<>("entity type", this::verifyItem);
+    public final Checker<Identifier> entityType = new Checker<>("entity type", this::verifyEntityType);
+    public final Checker<Identifier> damageTypeTag = new Checker<>("damage type tag", this::verifyDamageTypeTag);
 
     /**
      * Verify the item tag in the item tag registry.
@@ -230,6 +231,16 @@ public class RegistryVerifier {
      * @return If the entity type is valid
      */
     public boolean verifyEntityType(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the damage type tag in the damage type tag registry.
+     *
+     * @param id The damage type tag id
+     * @return If the damage type tag is valid
+     */
+    public boolean verifyDamageTypeTag(final Identifier id) {
         return true;
     }
 
