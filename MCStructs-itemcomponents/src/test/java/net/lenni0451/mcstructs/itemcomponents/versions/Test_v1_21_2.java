@@ -27,16 +27,16 @@ public class Test_v1_21_2 {
         ItemComponents_v1_21_2 registry = ItemComponentRegistry.V1_21_2;
         register(registry.ITEM_MODEL, Identifier.of("test"));
         register(registry.FOOD, new Food(123, 0.24F, false));
-        register(registry.CONSUMABLE, new Consumable(1.87F, Consumable.ItemUseAnimation.BOW, Either.left(Identifier.of("test")), false, Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))));
+        register(registry.CONSUMABLE, new Consumable(1.87F, Consumable.ItemUseAnimation.BOW, Either.left(Identifier.of("test")), false, Arrays.asList(new ConsumeEffect.ClearAllEffects(), new ConsumeEffect.RemoveEffects(new Types_v1_20_5.TagEntryList(Identifier.of("test"))))));
         register(registry.USE_REMAINDER, new Types_v1_20_5.ItemStack(Identifier.of("test"), 123, registry.getItemDefaults()));
         register(registry.USE_COOLDOWN, new UseCooldown(1.23F, Identifier.of("test")));
         register(registry.DAMAGE_RESISTANT, new DamageResistant(Identifier.of("test")));
         register(registry.ENCHANTABLE, new Enchantable(123));
-        register(registry.EQUIPPABLE, new Equippable(EquipmentSlot.CHEST, Either.left(Identifier.of("test")), Identifier.of("test"), new Types_v1_20_5.TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))), false));
+        register(registry.EQUIPPABLE, new Equippable(EquipmentSlot.CHEST, Either.left(Identifier.of("test")), Identifier.of("test"), new Types_v1_20_5.TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))), false, false, false));
         register(registry.REPAIRABLE, new Repairable(new Types_v1_20_5.TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2")))));
         register(registry.GLIDER, true);
         register(registry.TOOLTIP_STYLE, Identifier.of("test"));
-        register(registry.DEATH_PROTECTION, new DeathProtection(Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))));
+        register(registry.DEATH_PROTECTION, new DeathProtection(Arrays.asList(new ConsumeEffect.ClearAllEffects(), new ConsumeEffect.TeleportRandomly(10))));
     }
 
     private static <T> void register(final ItemComponent<T> itemComponent, final T value) {

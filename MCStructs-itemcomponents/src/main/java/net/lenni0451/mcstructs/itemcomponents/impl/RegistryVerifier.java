@@ -17,6 +17,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> blockTag = new Checker<>("block tag", this::verifyBlockTag);
     public final Checker<Identifier> block = new Checker<>("block", this::verifyBlock);
     public final Checker<Identifier> enchantment = new Checker<>("enchantment", this::verifyEnchantment);
+    public final Checker<Identifier> statusEffectTag = new Checker<>("status effect", this::verifyStatusEffectTag);
     public final Checker<Identifier> statusEffect = new Checker<>("status effect", this::verifyStatusEffect);
     public final Checker<Identifier> mapDecorationType = new Checker<>("map decoration type", this::verifyMapDecorationType);
     public final Checker<Identifier> bannerPattern = new Checker<>("banner pattern", this::verifyBannerPattern);
@@ -28,8 +29,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> armorTrimPattern = new Checker<>("armor trim pattern", this::verifyArmorTrimPattern);
     public final Checker<Identifier> potion = new Checker<>("potion", this::verifyPotion);
     public final Checker<Identifier> jukeboxSong = new Checker<>("jukebox song", this::verifyJukeboxSong);
-    public final Checker<Identifier> consumeEffect = new Checker<>("consume effect", this::verifyConsumeEffect);
-    public final Checker<Identifier> entityTypeTag = new Checker<>("entity type tag", this::verifyItemTag);
+    public final Checker<Identifier> entityTypeTag = new Checker<>("entity type tag", this::verifyEntityTypeTag);
     public final Checker<Identifier> entityType = new Checker<>("entity type", this::verifyEntityType);
     public final Checker<Identifier> damageTypeTag = new Checker<>("damage type tag", this::verifyDamageTypeTag);
 
@@ -91,6 +91,16 @@ public class RegistryVerifier {
      * @return If the enchantment is valid
      */
     public boolean verifyEnchantment(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the status effect tag in the status effect registry.
+     *
+     * @param id The status effect tag id
+     * @return If the status effect tag is valid
+     */
+    public boolean verifyStatusEffectTag(final Identifier id) {
         return true;
     }
 
@@ -201,16 +211,6 @@ public class RegistryVerifier {
      * @return If the song is valid
      */
     public boolean verifyJukeboxSong(final Identifier id) {
-        return true;
-    }
-
-    /**
-     * Verify the consume effect in the consume effect registry.
-     *
-     * @param id The consume effect id
-     * @return If the consume effect is valid
-     */
-    public boolean verifyConsumeEffect(final Identifier id) {
         return true;
     }
 

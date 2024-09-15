@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.lenni0451.mcstructs.converter.codec.Either;
+import net.lenni0451.mcstructs.converter.codec.IdentifiedType;
 import net.lenni0451.mcstructs.converter.codec.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
@@ -65,7 +66,7 @@ public class Types_v1_21_2 {
         private ItemUseAnimation animation = ItemUseAnimation.EAT;
         private Either<Identifier, Types_v1_20_5.SoundEvent> sound = Either.left(Identifier.of("entity.generic.eat"));
         private boolean hasConsumeParticles = true;
-        private List<Identifier> onConsumeEffects = new ArrayList<>();
+        private List<ConsumeEffect> onConsumeEffects = new ArrayList<>();
 
 
         @Getter
@@ -155,7 +156,7 @@ public class Types_v1_21_2 {
     public static class DeathProtection {
         public static final String DEATH_EFFECTS = "death_effects";
 
-        private List<Identifier> deathEffects = new ArrayList<>();
+        private List<ConsumeEffect> deathEffects = new ArrayList<>();
     }
 
     @Getter
@@ -170,6 +171,75 @@ public class Types_v1_21_2 {
         BODY("body");
 
         private final String name;
+    }
+
+    public interface ConsumeEffect {
+        Type getType();
+
+        @Getter
+        @AllArgsConstructor
+        enum Type implements IdentifiedType {
+            APPLY_EFFECTS(Identifier.of("apply_effects")),
+            REMOVE_EFFECTS(Identifier.of("remove_effects")),
+            CLEAR_ALL_EFFECTS(Identifier.of("clear_all_effects")),
+            TELEPORT_RANDOMLY(Identifier.of("teleport_randomly")),
+            PLAY_SOUND(Identifier.of("play_sound")),
+            ;
+
+            private final Identifier identifier;
+        }
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        class ApplyEffects implements ConsumeEffect {
+            public static final String EFFECTS = "effects";
+            public static final String PROBABILITY = "probability";
+
+            private final Type type = Type.APPLY_EFFECTS;
+            private List<Types_v1_20_5.StatusEffect> effects;
+            private float probability = 1;
+
+            public ApplyEffects(final List<Types_v1_20_5.StatusEffect> effects) {
+                this.effects = effects;
+            }
+        }
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        class RemoveEffects implements ConsumeEffect {
+            public static final String EFFECTS = "effects";
+
+            private final Type type = Type.REMOVE_EFFECTS;
+            private Types_v1_20_5.TagEntryList effects;
+        }
+
+        @Data
+        @NoArgsConstructor
+        class ClearAllEffects implements ConsumeEffect {
+            private final Type type = Type.CLEAR_ALL_EFFECTS;
+        }
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        class TeleportRandomly implements ConsumeEffect {
+            public static final String DIAMETER = "diameter";
+
+            private final Type type = Type.TELEPORT_RANDOMLY;
+            private float diameter = 16;
+        }
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        class PlaySound implements ConsumeEffect {
+            public static final String SOUND = "sound";
+
+            private final Type type = Type.PLAY_SOUND;
+            private Either<Identifier, Types_v1_20_5.SoundEvent> sound;
+        }
     }
 
 }

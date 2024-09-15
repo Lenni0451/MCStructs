@@ -6,20 +6,11 @@ import net.lenni0451.mcstructs.core.Identifier;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
 
-    Codec<Boolean> UNIT = new Codec<Boolean>() {
-        @Override
-        public <S> Result<S> serialize(DataConverter<S> converter, Boolean element) {
-            return Result.success(converter.emptyMap());
-        }
-
-        @Override
-        public <S> Result<Boolean> deserialize(DataConverter<S> converter, S data) {
-            return converter.asMap(data).map(map -> true);
-        }
-    };
+    Codec<Boolean> UNIT = Codec.unit(() -> true);
     Codec<Boolean> BOOLEAN = new Codec<Boolean>() {
         @Override
         public <S> Result<S> serialize(DataConverter<S> converter, Boolean element) {
@@ -163,6 +154,20 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         return new UUID(mostSigBits, leastSigBits);
     });
 
+    static <T> Codec<T> unit(final Supplier<T> supplier) {
+        return new Codec<T>() {
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                return Result.success(converter.emptyMap());
+            }
+
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                return converter.asMap(data).map(map -> supplier.get());
+            }
+        };
+    }
+
     static <T> Codec<T> failing(final String error) {
         return new Codec<T>() {
             @Override
@@ -263,6 +268,18 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
             for (T value : values) available += value.getName() + ", ";
             if (!available.isEmpty()) available = available.substring(0, available.length() - 2);
             return Result.error("Unknown named value: " + name + " (" + available + ")");
+        });
+    }
+
+    static <T extends IdentifiedType> Codec<T> identified(final T[] values) {
+        return STRING_IDENTIFIER.flatMap(identified -> Result.success(identified.getIdentifier()), identifier -> {
+            for (T value : values) {
+                if (value.getIdentifier().equals(identifier)) return Result.success(value);
+            }
+            String available = "";
+            for (T value : values) available += value.getIdentifier() + ", ";
+            if (!available.isEmpty()) available = available.substring(0, available.length() - 2);
+            return Result.error("Unknown identified value: " + identifier + " (" + available + ")");
         });
     }
 
@@ -398,6 +415,33 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
                 Result<T> result = Codec.this.deserialize(converter, data);
                 if (result.isError()) return result.mapError();
                 return deserializer.apply(result.get());
+            }
+        };
+    }
+
+    default <N> Codec<N> typed(final Function<N, T> typeMapper, final Function<T, Codec<N>> continuation) {
+        return new Codec<N>() {
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, N element) {
+                T type = typeMapper.apply(element);
+                Result<S> result = Codec.this.serialize(converter, type);
+                if (result.isError()) return result.mapError();
+
+                Result<S> continuedResult = continuation.apply(type).serialize(converter, element);
+                if (continuedResult.isError()) return continuedResult.mapError();
+
+                return converter.mergeMap(continuedResult.get(), converter.createString("type"), result.get());
+            }
+
+            @Override
+            public <S> Result<N> deserialize(DataConverter<S> converter, S data) {
+                Result<Map<S, S>> mapResult = converter.asMap(data);
+                if (mapResult.isError()) return mapResult.mapError();
+
+                Result<T> type = Codec.this.deserialize(converter, mapResult.get().get(converter.createString("type")));
+                if (type.isError()) return type.mapError();
+
+                return continuation.apply(type.get()).deserialize(converter, data);
             }
         };
     }

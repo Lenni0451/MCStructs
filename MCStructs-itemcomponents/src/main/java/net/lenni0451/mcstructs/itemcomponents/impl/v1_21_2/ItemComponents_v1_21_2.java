@@ -8,7 +8,6 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
-import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.TypeSerializers_v1_21;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2.
 
 public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
 
-    private final TypeSerializers_v1_21 typeSerializers = new TypeSerializers_v1_21(this);
+    private final TypeSerializers_v1_21_2 typeSerializers = new TypeSerializers_v1_21_2(this);
 
     public final ItemComponent<PotionContents> POTION_CONTENTS = this.register("potion_contents", Codec.oneOf(
             MapCodec.of(
@@ -42,7 +41,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
             Codec.named(Consumable.ItemUseAnimation.values()).mapCodec(Consumable.ANIMATION).optionalDefault(() -> Consumable.ItemUseAnimation.EAT), Consumable::getAnimation,
             this.typeSerializers.soundEvent().mapCodec(Consumable.SOUND).optionalDefault(() -> Either.left(Identifier.of("entity.generic.eat"))), Consumable::getSound,
             Codec.BOOLEAN.mapCodec(Consumable.HAS_CONSUME_PARTICLES).optionalDefault(() -> true), Consumable::isHasConsumeParticles,
-            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.consumeEffect).listOf().mapCodec(Consumable.ON_CONSUME_EFFECTS).optionalDefault(ArrayList::new), Consumable::getOnConsumeEffects,
+            this.typeSerializers.consumeEffect().listOf().mapCodec(Consumable.ON_CONSUME_EFFECTS).optionalDefault(ArrayList::new), Consumable::getOnConsumeEffects,
             Consumable::new
     ));
     public final ItemComponent<Types_v1_20_5.ItemStack> USE_REMAINDER = this.register("use_remainder", this.typeSerializers.itemStack());
@@ -76,7 +75,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
     public final ItemComponent<Boolean> GLIDER = this.register("glider", Codec.UNIT);
     public final ItemComponent<Identifier> TOOLTIP_STYLE = this.register("tooltip_style", Codec.STRING_IDENTIFIER);
     public final ItemComponent<DeathProtection> DEATH_PROTECTION = this.register("death_protection", MapCodec.of(
-            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.consumeEffect).listOf().mapCodec(Consumable.ON_CONSUME_EFFECTS).optionalDefault(ArrayList::new), DeathProtection::getDeathEffects,
+            this.typeSerializers.consumeEffect().listOf().mapCodec(DeathProtection.DEATH_EFFECTS).optionalDefault(ArrayList::new), DeathProtection::getDeathEffects,
             DeathProtection::new
     ));
 
