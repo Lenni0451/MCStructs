@@ -4,8 +4,11 @@ import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.components.StringComponent;
+import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
+import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
+import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,6 +58,19 @@ class TextUtilsTest {
 
         ATextComponent joined = TextUtils.join(new StringComponent(" "), a, b, c);
         assertEquals(new StringComponent("").append(a).append(" ").append(b).append(" ").append(c), joined);
+    }
+
+    @Test
+    void iterateAll() {
+        ATextComponent component = new TranslationComponent("%s", new StringComponent("A").append("B")).append("C").modifyStyle(style -> style.setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_TEXT, new StringComponent("D"))));
+        StringBuilder out = new StringBuilder();
+        TextUtils.iterateAll(component, comp -> out.append(comp.asSingleString()));
+        //'AB' from the translation component filled with the args
+        //'A' from the translation argument
+        //'B' from the sibling of the translation argument
+        //'D' from the hover event
+        //'C' from the sibling of the translation component
+        assertEquals("ABABDC", out.toString());
     }
 
     @Test

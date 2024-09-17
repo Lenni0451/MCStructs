@@ -154,6 +154,12 @@ public class TextUtils {
      */
     public static void iterateAll(final ATextComponent component, final Consumer<ATextComponent> consumer) {
         consumer.accept(component);
+        if (component instanceof TranslationComponent) {
+            TranslationComponent translationComponent = (TranslationComponent) component;
+            for (Object arg : translationComponent.getArgs()) {
+                if (arg instanceof ATextComponent) iterateAll((ATextComponent) arg, consumer);
+            }
+        }
         if (component.getStyle().getHoverEvent() != null) {
             AHoverEvent hoverEvent = component.getStyle().getHoverEvent();
             if (hoverEvent instanceof TextHoverEvent) {
@@ -165,12 +171,6 @@ public class TextUtils {
         }
         for (ATextComponent sibling : component.getSiblings()) {
             iterateAll(sibling, consumer);
-            if (sibling instanceof TranslationComponent) {
-                TranslationComponent translationComponent = (TranslationComponent) sibling;
-                for (Object arg : translationComponent.getArgs()) {
-                    if (arg instanceof ATextComponent) iterateAll((ATextComponent) arg, consumer);
-                }
-            }
         }
     }
 
