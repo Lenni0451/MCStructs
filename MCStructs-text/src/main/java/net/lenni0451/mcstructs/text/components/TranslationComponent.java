@@ -154,7 +154,7 @@ public class TranslationComponent extends ATextComponent {
         }
         TranslationComponent copy = new TranslationComponent(this.key, copyArgs);
         copy.translator = this.translator;
-        return copy;
+        return copy.setStyle(this.getStyle().copy());
     }
 
     @Override

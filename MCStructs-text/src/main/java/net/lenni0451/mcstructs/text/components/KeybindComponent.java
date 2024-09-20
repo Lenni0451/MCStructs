@@ -68,7 +68,7 @@ public class KeybindComponent extends ATextComponent {
     public ATextComponent shallowCopy() {
         KeybindComponent copy = new KeybindComponent(this.keybind);
         copy.translator = this.translator;
-        return copy;
+        return copy.setStyle(this.getStyle().copy());
     }
 
     @Override

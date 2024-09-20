@@ -47,7 +47,7 @@ public class StringComponent extends ATextComponent {
 
     @Override
     public ATextComponent shallowCopy() {
-        return new StringComponent(this.text);
+        return new StringComponent(this.text).setStyle(this.getStyle().copy());
     }
 
     @Override

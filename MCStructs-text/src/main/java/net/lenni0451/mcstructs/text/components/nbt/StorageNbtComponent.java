@@ -46,8 +46,8 @@ public class StorageNbtComponent extends NbtComponent {
 
     @Override
     public ATextComponent shallowCopy() {
-        if (this.getSeparator() == null) return new StorageNbtComponent(this.getComponent(), this.isResolve(), null, this.id);
-        else return new StorageNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.id);
+        if (this.getSeparator() == null) return new StorageNbtComponent(this.getComponent(), this.isResolve(), null, this.id).setStyle(this.getStyle().copy());
+        else return new StorageNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.id).setStyle(this.getStyle().copy());
     }
 
     @Override

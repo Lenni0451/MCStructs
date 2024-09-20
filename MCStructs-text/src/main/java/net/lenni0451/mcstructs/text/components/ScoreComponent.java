@@ -92,7 +92,7 @@ public class ScoreComponent extends ATextComponent {
     public ATextComponent shallowCopy() {
         ScoreComponent copy = new ScoreComponent(this.name, this.objective);
         copy.value = this.value;
-        return copy;
+        return copy.setStyle(this.getStyle().copy());
     }
 
     @Override

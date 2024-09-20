@@ -45,8 +45,8 @@ public class BlockNbtComponent extends NbtComponent {
 
     @Override
     public ATextComponent shallowCopy() {
-        if (this.getSeparator() == null) return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.pos);
-        else return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator().copy(), this.pos);
+        if (this.getSeparator() == null) return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.pos).setStyle(this.getStyle().copy());
+        else return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator().copy(), this.pos).setStyle(this.getStyle().copy());
     }
 
     @Override
