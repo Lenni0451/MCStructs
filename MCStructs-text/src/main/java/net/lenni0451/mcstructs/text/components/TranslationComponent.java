@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.ATextComponent;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -101,10 +102,8 @@ public class TranslationComponent extends ATextComponent {
         return this;
     }
 
-    @Override
-    public String asSingleString() {
-        StringBuilder out = new StringBuilder();
-
+    public ATextComponent resolveIntoComponents() {
+        List<ATextComponent> components = new ArrayList<>();
         String translated = this.translator.apply(this.key);
         if (translated == null) translated = this.fallback;
         if (translated == null) translated = this.key;
@@ -114,13 +113,13 @@ public class TranslationComponent extends ATextComponent {
         while (matcher.find(start)) {
             int matchStart = matcher.start();
             int matchEnd = matcher.end();
-            if (matchStart > start) out.append(String.format(translated.substring(start, matchStart)));
+            if (matchStart > start) components.add(new StringComponent(String.format(translated.substring(start, matchStart))));
             start = matchEnd;
 
             String argType = matcher.group(2);
             String match = translated.substring(matchStart, matchEnd);
             if (argType.equals("%") && match.equals("%%")) {
-                out.append("%");
+                components.add(new StringComponent("%"));
             } else {
                 if (!argType.equals("s")) throw new IllegalStateException("Unsupported format: '" + match + "'");
                 String rawIndex = matcher.group(1);
@@ -129,14 +128,20 @@ public class TranslationComponent extends ATextComponent {
                 else index = Integer.parseInt(rawIndex) - 1;
                 if (index < this.args.length) {
                     Object arg = this.args[index];
-                    if (arg instanceof ATextComponent) out.append(((ATextComponent) arg).asUnformattedString());
-                    else if (arg == null) out.append("null");
-                    else out.append(arg);
+                    if (arg instanceof ATextComponent) components.add((ATextComponent) arg);
+                    else if (arg == null) components.add(new StringComponent("null"));
+                    else components.add(new StringComponent(arg.toString()));
                 }
             }
         }
-        if (start < translated.length()) out.append(String.format(translated.substring(start)));
-        return out.toString();
+        if (start < translated.length()) components.add(new StringComponent(String.format(translated.substring(start))));
+        if (components.size() == 1) return components.get(0);
+        return new StringComponent().append(components.toArray(new ATextComponent[0]));
+    }
+
+    @Override
+    public String asSingleString() {
+        return this.resolveIntoComponents().asUnformattedString();
     }
 
     @Override

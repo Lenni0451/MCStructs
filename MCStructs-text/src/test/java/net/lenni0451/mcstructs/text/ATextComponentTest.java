@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.text;
 
 import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.components.StringComponent;
+import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 import net.lenni0451.mcstructs.text.utils.JsonUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -65,6 +66,17 @@ class ATextComponentTest {
                 new StringComponent()
                         .append(new StringComponent("Hello ").modifyStyle(style -> style.setFormatting(TextFormatting.DARK_RED)))
                         .append(new StringComponent("World"))
+                        .asLegacyFormatString()
+        );
+        assertEquals(
+                "§f§f§cHello§f §9World",
+                new TranslationComponent("%s", new StringComponent("")
+                        .modifyStyle(style -> style.setFormatting(TextFormatting.WHITE))
+                        .append(new StringComponent("Hello").modifyStyle(style -> style.setFormatting(TextFormatting.RED)))
+                        .append(" ")
+                        .append(new StringComponent("World").modifyStyle(style -> style.setFormatting(TextFormatting.BLUE)))
+                )
+                        .modifyStyle(style -> style.setFormatting(TextFormatting.WHITE))
                         .asLegacyFormatString()
         );
     }
