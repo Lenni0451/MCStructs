@@ -135,8 +135,15 @@ public class TranslationComponent extends ATextComponent {
             }
         }
         if (start < translated.length()) components.add(new StringComponent(String.format(translated.substring(start))));
-        if (components.size() == 1) return components.get(0);
-        return new StringComponent().append(components.toArray(new ATextComponent[0]));
+        ATextComponent out = new StringComponent();
+        out.setStyle(this.getStyle());
+        components.forEach(out::append);
+        return out;
+    }
+
+    @Override
+    public String asLegacyFormatString() {
+        return this.resolveIntoComponents().asLegacyFormatString();
     }
 
     @Override

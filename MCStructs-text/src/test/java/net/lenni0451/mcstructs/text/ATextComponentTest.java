@@ -79,6 +79,10 @@ class ATextComponentTest {
                         .modifyStyle(style -> style.setFormatting(TextFormatting.WHITE))
                         .asLegacyFormatString()
         );
+        assertEquals(
+                "§e§cHello§e World",
+                new TranslationComponent("%s World", new StringComponent("Hello").modifyStyle(style -> style.setFormatting(TextFormatting.RED))).modifyStyle(style -> style.setFormatting(TextFormatting.YELLOW)).asLegacyFormatString()
+        );
     }
 
     @Test

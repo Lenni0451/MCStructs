@@ -189,8 +189,7 @@ public abstract class ATextComponent implements ICopyable<ATextComponent> {
         if (this.style.isStrikethrough()) out.append(COLOR_CHAR).append(TextFormatting.STRIKETHROUGH.getCode());
         if (this.style.isUnderlined()) out.append(COLOR_CHAR).append(TextFormatting.UNDERLINE.getCode());
         if (this.style.isItalic()) out.append(COLOR_CHAR).append(TextFormatting.ITALIC.getCode());
-        if (this instanceof TranslationComponent) out.append(((TranslationComponent) this).resolveIntoComponents().asLegacyFormatString());
-        else out.append(this.asSingleString());
+        out.append(this.asSingleString());
         for (ATextComponent sibling : this.siblings) {
             ATextComponent copy = sibling.copy();
             copy.getStyle().setParent(this.style);
