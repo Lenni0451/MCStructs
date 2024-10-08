@@ -51,6 +51,10 @@ public class Either<L, R> {
         }
     }
 
+    public <T> T xmap(final Function<L, T> leftMapper, final Function<R, T> rightMapper) {
+        return this.isLeft() ? leftMapper.apply(this.left) : rightMapper.apply(this.right);
+    }
+
     @Override
     public String toString() {
         if (this.isLeft()) {

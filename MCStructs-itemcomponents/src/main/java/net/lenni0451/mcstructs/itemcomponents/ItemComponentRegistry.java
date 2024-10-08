@@ -39,6 +39,11 @@ public abstract class ItemComponentRegistry {
 
     private final ItemComponentList components;
     protected final RegistryVerifier registryVerifier;
+    private final Codec<ItemComponent<?>> componentCodec = Codec.STRING_IDENTIFIER.flatMap(itemComponent -> Result.success(itemComponent.getName()), identifier -> {
+        ItemComponent<?> component = ItemComponentRegistry.this.getComponent(identifier);
+        if (component == null) return Result.error("Unknown item component: " + identifier);
+        return Result.success(component);
+    });
     private final Codec<ItemComponentMap> mapCodec = Codec.ofThrowing(new DataSerializer<ItemComponentMap>() {
         @Override
         public <S> Result<S> serialize(DataConverter<S> converter, ItemComponentMap element) {
@@ -85,6 +90,13 @@ public abstract class ItemComponentRegistry {
      */
     public RegistryVerifier getRegistryVerifier() {
         return this.registryVerifier;
+    }
+
+    /**
+     * @return The codec for item components
+     */
+    public Codec<ItemComponent<?>> getComponentCodec() {
+        return this.componentCodec;
     }
 
     /**

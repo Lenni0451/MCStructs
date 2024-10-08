@@ -12,6 +12,7 @@ import net.lenni0451.mcstructs.nbt.INbtTag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -32,11 +33,12 @@ public class Test_v1_21_2 {
         register(registry.USE_COOLDOWN, new UseCooldown(1.23F, Identifier.of("test")));
         register(registry.DAMAGE_RESISTANT, new DamageResistant(Identifier.of("test")));
         register(registry.ENCHANTABLE, new Enchantable(123));
-        register(registry.EQUIPPABLE, new Equippable(EquipmentSlot.CHEST, Either.left(Identifier.of("test")), Identifier.of("test"), new Types_v1_20_5.TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))), false, false, false));
+        register(registry.EQUIPPABLE, new Equippable(EquipmentSlot.CHEST, Either.left(Identifier.of("test")), Identifier.of("test"), Identifier.of("test2"), new Types_v1_20_5.TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))), false, false, false));
         register(registry.REPAIRABLE, new Repairable(new Types_v1_20_5.TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2")))));
         register(registry.GLIDER, true);
         register(registry.TOOLTIP_STYLE, Identifier.of("test"));
         register(registry.DEATH_PROTECTION, new DeathProtection(Arrays.asList(new ConsumeEffect.ClearAllEffects(), new ConsumeEffect.TeleportRandomly(10))));
+        register(registry.LOCK, new ItemPredicate(new Types_v1_20_5.TagEntryList(Identifier.of("test")), new MinMaxInt(1, 10), Collections.emptyMap(), Collections.emptyMap()));
     }
 
     private static <T> void register(final ItemComponent<T> itemComponent, final T value) {

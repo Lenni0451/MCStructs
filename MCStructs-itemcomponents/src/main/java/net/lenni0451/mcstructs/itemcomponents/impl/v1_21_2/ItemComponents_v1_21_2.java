@@ -62,6 +62,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
             Codec.named(EquipmentSlot.values()).mapCodec(Equippable.SLOT), Equippable::getSlot,
             this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optionalDefault(() -> Either.left(Identifier.of("item.armor.equip_generic"))), Equippable::getEquipSound,
             Codec.STRING_IDENTIFIER.mapCodec(Equippable.MODEL).optionalDefault(() -> null), Equippable::getModel,
+            Codec.STRING_IDENTIFIER.mapCodec(Equippable.CAMERA_OVERLAY).optionalDefault(() -> null), Equippable::getCameraOverlay,
             this.typeSerializers.tagEntryList(this.registryVerifier.entityTypeTag, this.registryVerifier.entityType).mapCodec(Equippable.ALLOWED_ENTITIES).optionalDefault(() -> null), Equippable::getAllowedEntities,
             Codec.BOOLEAN.mapCodec(Equippable.DISPENSABLE).optionalDefault(() -> true), Equippable::isDispensable,
             Codec.BOOLEAN.mapCodec(Equippable.SWAPPABLE).optionalDefault(() -> true), Equippable::isSwappable,
@@ -78,6 +79,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
             this.typeSerializers.consumeEffect().listOf().mapCodec(DeathProtection.DEATH_EFFECTS).optionalDefault(ArrayList::new), DeathProtection::getDeathEffects,
             DeathProtection::new
     ));
+    public final ItemComponent<ItemPredicate> LOCK = this.register("lock", this.typeSerializers.itemPredicate());
 
 
     public ItemComponents_v1_21_2() {

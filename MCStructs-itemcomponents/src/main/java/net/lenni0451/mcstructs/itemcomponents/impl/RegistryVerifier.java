@@ -16,6 +16,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> item = new Checker<>("item", this::verifyItem);
     public final Checker<Identifier> blockTag = new Checker<>("block tag", this::verifyBlockTag);
     public final Checker<Identifier> block = new Checker<>("block", this::verifyBlock);
+    public final Checker<Identifier> enchantmentTag = new Checker<>("enchantment tag", this::verifyEnchantmentTag);
     public final Checker<Identifier> enchantment = new Checker<>("enchantment", this::verifyEnchantment);
     public final Checker<Identifier> statusEffectTag = new Checker<>("status effect", this::verifyStatusEffectTag);
     public final Checker<Identifier> statusEffect = new Checker<>("status effect", this::verifyStatusEffect);
@@ -23,11 +24,16 @@ public class RegistryVerifier {
     public final Checker<Identifier> bannerPattern = new Checker<>("banner pattern", this::verifyBannerPattern);
     public final Checker<Identifier> instrument = new Checker<>("instrument", this::verifyInstrument);
     public final Checker<Identifier> sound = new Checker<>("sound", this::verifySound);
+    public final Checker<Identifier> attributeModifierTag = new Checker<>("attribute modifier tag", this::verifyAttributeModifierTag);
     public final Checker<Identifier> attributeModifier = new Checker<>("attribute modifier", this::verifyAttributeModifier);
     public final Checker<Identifier> armorMaterial = new Checker<>("armor material", this::verifyArmorMaterial);
+    public final Checker<Identifier> armorTrimMaterialTag = new Checker<>("armor trim material tag", this::verifyArmorTrimMaterialTag);
     public final Checker<Identifier> armorTrimMaterial = new Checker<>("armor trim material", this::verifyArmorTrimMaterial);
+    public final Checker<Identifier> armorTrimPatternTag = new Checker<>("armor trim pattern tag", this::verifyArmorTrimPatternTag);
     public final Checker<Identifier> armorTrimPattern = new Checker<>("armor trim pattern", this::verifyArmorTrimPattern);
+    public final Checker<Identifier> potionTag = new Checker<>("potion tag", this::verifyPotionTag);
     public final Checker<Identifier> potion = new Checker<>("potion", this::verifyPotion);
+    public final Checker<Identifier> jukeboxSongTag = new Checker<>("jukebox song tag", this::verifyJukeboxSongTag);
     public final Checker<Identifier> jukeboxSong = new Checker<>("jukebox song", this::verifyJukeboxSong);
     public final Checker<Identifier> entityTypeTag = new Checker<>("entity type tag", this::verifyEntityTypeTag);
     public final Checker<Identifier> entityType = new Checker<>("entity type", this::verifyEntityType);
@@ -81,6 +87,16 @@ public class RegistryVerifier {
      * @return If the block state is valid
      */
     public boolean verifyBlockState(final Identifier id, final String state) {
+        return true;
+    }
+
+    /**
+     * Verify the enchantment tag in the enchantment tag registry.
+     *
+     * @param id The enchantment tag id
+     * @return If the enchantment tag is valid
+     */
+    public boolean verifyEnchantmentTag(final Identifier id) {
         return true;
     }
 
@@ -155,6 +171,16 @@ public class RegistryVerifier {
     }
 
     /**
+     * Verify the attribute modifier tag in the attribute modifier tag registry.
+     *
+     * @param id The attribute modifier tag id
+     * @return If the attribute modifier tag is valid
+     */
+    public boolean verifyAttributeModifierTag(final Identifier id) {
+        return true;
+    }
+
+    /**
      * Verify the attribute modifier in the attribute modifier registry.
      *
      * @param id The attribute modifier id
@@ -175,12 +201,32 @@ public class RegistryVerifier {
     }
 
     /**
+     * Verify the armor trim material tag in the armor trim material tag registry.
+     *
+     * @param id The armor trim material tag id
+     * @return If the armor trim material tag is valid
+     */
+    public boolean verifyArmorTrimMaterialTag(final Identifier id) {
+        return true;
+    }
+
+    /**
      * Verify the armor trim material in the armor trim material registry.
      *
      * @param id The armor trim material id
      * @return If the armor trim material is valid
      */
     public boolean verifyArmorTrimMaterial(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the armor trim pattern tag in the armor trim pattern tag registry.
+     *
+     * @param id The armor trim pattern tag id
+     * @return If the armor trim pattern tag is valid
+     */
+    public boolean verifyArmorTrimPatternTag(final Identifier id) {
         return true;
     }
 
@@ -195,12 +241,32 @@ public class RegistryVerifier {
     }
 
     /**
+     * Verify the potion tag in the potion tag registry.
+     *
+     * @param id The potion tag id
+     * @return If the potion tag is valid
+     */
+    public boolean verifyPotionTag(final Identifier id) {
+        return true;
+    }
+
+    /**
      * Verify the potion in the potion registry.
      *
      * @param id The potion id
      * @return If the potion is valid
      */
     public boolean verifyPotion(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the jukebox song tag in the jukebox song tag registry.
+     *
+     * @param id The jukebox song tag id
+     * @return If the jukebox song tag is valid
+     */
+    public boolean verifyJukeboxSongTag(final Identifier id) {
         return true;
     }
 

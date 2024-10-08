@@ -30,7 +30,8 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     protected static final String STRING_OR_RAW_COMPOUND_TAG = "string_or_raw_compound_tag";
     protected static final String ITEM_STACK = "item_stack";
     protected static final String BLOCK_POS = "block_pos";
-    protected static final String RAW_TEXT_COMPONENT = "RAW_TEXT_COMPONENT";
+    protected static final String RAW_TEXT_COMPONENT = "raw_text_component";
+    protected static final String TEXT_COMPONENT = "text_component";
     protected static final String PLAYER_NAME = "player_name";
     protected static final String DYE_COLOR = "dye_color";
     protected static final String ENCHANTMENT_LEVELS = "enchantment_levels";
