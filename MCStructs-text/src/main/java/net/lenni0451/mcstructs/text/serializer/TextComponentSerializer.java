@@ -179,7 +179,7 @@ public class TextComponentSerializer {
     /**
      * The latest text component serializer.
      */
-    public static final TextComponentSerializer LATEST = V1_20_5;
+    public static final TextComponentSerializer LATEST = V1_21_2;
 
 
     private final TextComponentCodec parentCodec;
