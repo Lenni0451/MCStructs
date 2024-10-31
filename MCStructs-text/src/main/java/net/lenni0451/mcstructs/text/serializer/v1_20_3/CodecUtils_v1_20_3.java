@@ -41,6 +41,49 @@ public interface CodecUtils_v1_20_3 {
     }
 
     /**
+     * Convert the given tag to a list of numbers.<br>
+     * It must either be a list or an array tag containing only number tags.
+     *
+     * @param tag The tag to convert
+     * @return The list of numbers
+     */
+    default List<Number> asNumberStream(final INbtTag tag) {
+        List<Number> numbers = new ArrayList<>();
+        ListTag<?> list;
+        if (tag.isArrayTag()) list = tag.asArrayTag().toListTag();
+        else if (tag.isListTag()) list = tag.asListTag();
+        else throw new IllegalArgumentException("Expected list or array tag");
+
+        List<INbtTag> unwrapped = this.unwrapMarkers(list);
+        for (INbtTag number : unwrapped) {
+            if (number.isNumberTag()) numbers.add(number.asNumberTag().numberValue());
+            else throw new IllegalArgumentException("Expected number tag");
+        }
+        return numbers;
+    }
+
+    /**
+     * Convert the given json element to a list of numbers.<br>
+     * It must be an array containing only number elements.
+     *
+     * @param element The element to convert
+     * @return The list of numbers
+     */
+    default List<Number> asNumberStream(final JsonElement element) {
+        if (!element.isJsonArray()) throw new IllegalArgumentException("Expected array element");
+        List<Number> numbers = new ArrayList<>();
+        for (JsonElement elem : element.getAsJsonArray()) {
+            if (!this.isNumber(elem)) throw new IllegalArgumentException("Expected number element");
+
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (primitive.isNumber()) numbers.add(primitive.getAsInt());
+            else if (primitive.isBoolean()) numbers.add(primitive.getAsBoolean() ? 1 : 0);
+            else throw new UnsupportedOperationException("Unsupported number type: " + primitive);
+        }
+        return numbers;
+    }
+
+    /**
      * Check if the given element is a string.
      *
      * @param element The element to check

@@ -13,6 +13,7 @@ public class Style implements ICopyable<Style> {
 
     private Style parent;
     private TextFormatting color;
+    private Integer shadowColor;
     private Boolean obfuscated;
     private Boolean bold;
     private Boolean strikethrough;
@@ -108,6 +109,23 @@ public class Style implements ICopyable<Style> {
     public TextFormatting getColor() {
         if (this.color == null && this.parent != null) return this.parent.getColor();
         return this.color;
+    }
+
+    /**
+     * Set the shadow color of this style.
+     *
+     * @param shadowColor The shadow color
+     */
+    public void setShadowColor(final Integer shadowColor) {
+        this.shadowColor = shadowColor;
+    }
+
+    /**
+     * @return The shadow color of this style
+     */
+    public Integer getShadowColor() {
+        if (this.shadowColor == null && this.parent != null) return this.parent.getShadowColor();
+        return this.shadowColor;
     }
 
     /**
@@ -326,6 +344,7 @@ public class Style implements ICopyable<Style> {
      */
     public boolean isEmpty() {
         return this.getColor() == null &&
+                this.getShadowColor() == null &&
                 this.getBold() == null &&
                 this.getItalic() == null &&
                 this.getUnderlined() == null &&
@@ -343,6 +362,7 @@ public class Style implements ICopyable<Style> {
      */
     public void applyParent() {
         this.color = this.getColor();
+        this.shadowColor = this.getShadowColor();
         this.bold = this.getBold();
         this.italic = this.getItalic();
         this.underlined = this.getUnderlined();
@@ -360,6 +380,7 @@ public class Style implements ICopyable<Style> {
         Style style = new Style();
         style.parent = this.parent;
         style.color = this.color;
+        style.shadowColor = this.shadowColor;
         style.bold = this.bold;
         style.italic = this.italic;
         style.underlined = this.underlined;
@@ -377,18 +398,19 @@ public class Style implements ICopyable<Style> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Style style = (Style) o;
-        return Objects.equals(this.parent, style.parent) && Objects.equals(this.color, style.color) && Objects.equals(this.obfuscated, style.obfuscated) && Objects.equals(this.bold, style.bold) && Objects.equals(this.strikethrough, style.strikethrough) && Objects.equals(this.underlined, style.underlined) && Objects.equals(this.italic, style.italic) && Objects.equals(this.clickEvent, style.clickEvent) && Objects.equals(this.hoverEvent, style.hoverEvent) && Objects.equals(this.insertion, style.insertion) && Objects.equals(this.font, style.font);
+        return Objects.equals(this.parent, style.parent) && Objects.equals(this.color, style.color) && Objects.equals(this.shadowColor, style.shadowColor) && Objects.equals(this.obfuscated, style.obfuscated) && Objects.equals(this.bold, style.bold) && Objects.equals(this.strikethrough, style.strikethrough) && Objects.equals(this.underlined, style.underlined) && Objects.equals(this.italic, style.italic) && Objects.equals(this.clickEvent, style.clickEvent) && Objects.equals(this.hoverEvent, style.hoverEvent) && Objects.equals(this.insertion, style.insertion) && Objects.equals(this.font, style.font);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.parent, this.color, this.obfuscated, this.bold, this.strikethrough, this.underlined, this.italic, this.clickEvent, this.hoverEvent, this.insertion, this.font);
+        return Objects.hash(this.parent, this.color, this.shadowColor, this.obfuscated, this.bold, this.strikethrough, this.underlined, this.italic, this.clickEvent, this.hoverEvent, this.insertion, this.font);
     }
 
     @Override
     public String toString() {
         return ToString.of(this)
                 .add("parent", this.parent, Objects::nonNull)
+                .add("shadowColor", this.shadowColor, Objects::nonNull)
                 .add("color", this.color, Objects::nonNull)
                 .add("obfuscated", this.obfuscated, Objects::nonNull)
                 .add("bold", this.bold, Objects::nonNull)

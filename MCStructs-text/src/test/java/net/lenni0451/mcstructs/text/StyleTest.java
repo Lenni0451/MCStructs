@@ -37,6 +37,18 @@ class StyleTest {
 
     @Test
     @Order(0)
+    void setShadowColor() {
+        style.setShadowColor(0x00FF00);
+    }
+
+    @Test
+    @Order(1)
+    void getShadowColor() {
+        assertEquals(0x00FF00, style.getShadowColor());
+    }
+
+    @Test
+    @Order(0)
     void setBold() {
         style.setBold(true);
     }
