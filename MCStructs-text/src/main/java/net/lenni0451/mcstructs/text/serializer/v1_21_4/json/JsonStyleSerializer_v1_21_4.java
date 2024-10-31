@@ -33,10 +33,11 @@ public class JsonStyleSerializer_v1_21_4 extends JsonStyleSerializer_v1_20_5 {
             if (shadowColor == null) {
                 List<Number> numbers = this.asNumberStream(obj.get("shadow_color"));
                 if (numbers.size() != 4) throw new IllegalArgumentException("Expected list with 4 values for 'shadow_color' tag");
-                int a = (int) Math.floor(numbers.get(0).floatValue() * 255);
-                int r = (int) Math.floor(numbers.get(1).floatValue() * 255);
-                int g = (int) Math.floor(numbers.get(2).floatValue() * 255);
-                int b = (int) Math.floor(numbers.get(3).floatValue() * 255);
+                //For some reason the stream is in RGBA order
+                int r = (int) Math.floor(numbers.get(0).floatValue() * 255);
+                int g = (int) Math.floor(numbers.get(1).floatValue() * 255);
+                int b = (int) Math.floor(numbers.get(2).floatValue() * 255);
+                int a = (int) Math.floor(numbers.get(3).floatValue() * 255);
                 shadowColor = (a << 24) | (r << 16) | (g << 8) | b;
             }
             style.setShadowColor(shadowColor);
