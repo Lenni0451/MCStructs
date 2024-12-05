@@ -1,10 +1,13 @@
 package net.lenni0451.mcstructs.itemcomponents.versions;
 
+import net.lenni0451.mcstructs.converter.codec.Either;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
 import net.lenni0451.mcstructs.nbt.INbtTag;
 import org.junit.jupiter.api.Test;
@@ -23,8 +26,8 @@ public class Test_v1_21_4 {
 
     static {
         ItemComponents_v1_21_4 registry = ItemComponentRegistry.V1_21_4;
-        register(registry.ITEM_MODEL, Identifier.of("test"));
         register(registry.CUSTOM_MODEL_DATA, new CustomModelData(Arrays.asList(1F, 2F), Arrays.asList(true, false), Arrays.asList("test1", "test2"), Arrays.asList(0x123456, 0x789ABC)));
+        register(registry.EQUIPPABLE, new Types_v1_21_2.Equippable(Types_v1_21_2.EquipmentSlot.CHEST, Either.left(Identifier.of("test")), Identifier.of("test"), Identifier.of("test2"), new Types_v1_20_5.TagEntryList(Arrays.asList(Identifier.of("test1"), Identifier.of("test2"))), false, false, false));
     }
 
     private static <T> void register(final ItemComponent<T> itemComponent, final T value) {
