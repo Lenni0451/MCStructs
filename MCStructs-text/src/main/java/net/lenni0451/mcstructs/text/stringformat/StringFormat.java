@@ -190,7 +190,7 @@ public abstract class StringFormat {
      * @param unknownHandling The unknown handling
      * @return The converted string
      */
-    public String toString(final TextComponent component, final SerializerUnknownHandling unknownHandling) {
+    public String toString(final TextComponent component, final ColorHandling colorHandling, final SerializerUnknownHandling unknownHandling) {
         StringBuilder output = new StringBuilder();
         Style lastStyle = null;
         List<TextComponent> texts = new ArrayList<>();
@@ -208,8 +208,13 @@ public abstract class StringFormat {
                 if (!text.isEmpty()) {
                     Style currentStyle = current.getStyle();
                     if (!currentStyle.equals(lastStyle)) {
-                        if (lastStyle != null && !lastStyle.isEmpty()) this.write(output, TextFormatting.RESET);
-                        for (TextFormatting formatting : currentStyle.getFormattings()) {
+                        TextFormatting[] formattings = currentStyle.getFormattings();
+                        if (lastStyle != null && !lastStyle.isEmpty()) {
+                            if (colorHandling.equals(ColorHandling.FORMATTING) || formattings.length <= 0 || !formattings[0].isColor()) {
+                                this.write(output, TextFormatting.RESET);
+                            }
+                        }
+                        for (TextFormatting formatting : formattings) {
                             if (this.canWrite(formatting)) {
                                 this.write(output, formatting);
                             } else {

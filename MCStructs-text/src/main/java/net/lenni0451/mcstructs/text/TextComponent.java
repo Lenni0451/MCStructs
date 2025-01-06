@@ -7,6 +7,7 @@ import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
 import net.lenni0451.mcstructs.text.stringformat.StringFormat;
+import net.lenni0451.mcstructs.text.stringformat.handling.ColorHandling;
 import net.lenni0451.mcstructs.text.stringformat.handling.SerializerUnknownHandling;
 import net.lenni0451.mcstructs.text.utils.TextUtils;
 
@@ -200,10 +201,10 @@ public abstract class TextComponent implements Copyable<TextComponent> {
     /**
      * @return A legacy formatted string representation of this component
      * @see StringFormat#vanilla(char, boolean)
-     * @see StringFormat#toString(TextComponent, SerializerUnknownHandling)
+     * @see StringFormat#toString(TextComponent, ColorHandling, SerializerUnknownHandling)
      */
     public String asLegacyFormatString() {
-        return LEGACY_FORMAT.toString(this, SerializerUnknownHandling.IGNORE);
+        return LEGACY_FORMAT.toString(this, ColorHandling.RESET, SerializerUnknownHandling.IGNORE);
     }
 
     /**

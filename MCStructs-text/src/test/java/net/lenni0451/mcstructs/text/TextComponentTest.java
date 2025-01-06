@@ -68,7 +68,7 @@ class TextComponentTest {
                         .asLegacyFormatString()
         );
         assertEquals(
-                "§cHello§r§f §r§9World",
+                "§cHello§f §9World",
                 new TranslationComponent("%s", new StringComponent("")
                         .styled(style -> style.setFormatting(TextFormatting.WHITE))
                         .append(new StringComponent("Hello").styled(style -> style.setFormatting(TextFormatting.RED)))
@@ -79,7 +79,7 @@ class TextComponentTest {
                         .asLegacyFormatString()
         );
         assertEquals(
-                "§cHello§r§e World",
+                "§cHello§e World",
                 new TranslationComponent("%s World", new StringComponent("Hello").styled(style -> style.setFormatting(TextFormatting.RED))).styled(style -> style.setFormatting(TextFormatting.YELLOW)).asLegacyFormatString()
         );
     }
