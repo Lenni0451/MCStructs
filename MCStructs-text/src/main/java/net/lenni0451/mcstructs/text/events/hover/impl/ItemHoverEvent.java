@@ -6,7 +6,7 @@ import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.components.StringComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * The implementation for item hover events.
  */
-public class ItemHoverEvent extends AHoverEvent {
+public class ItemHoverEvent extends HoverEvent {
 
     private Identifier item;
     private int count;
@@ -91,6 +91,7 @@ public class ItemHoverEvent extends AHoverEvent {
     }
 
     @Override
+    @Deprecated
     public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbtSerializer<?> sNbtSerializer) {
         CompoundTag tag = new CompoundTag();
         tag.addString("id", this.item.getValue());

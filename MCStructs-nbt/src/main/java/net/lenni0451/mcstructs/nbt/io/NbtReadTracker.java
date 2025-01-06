@@ -18,7 +18,7 @@ public class NbtReadTracker {
     public static final int DEFAULT_MAX_DEPTH = 512;
 
     /**
-     * Create an unlimited read tracker.<br>
+     * Create an unlimited bytes read tracker.<br>
      * The depth ({@link #DEFAULT_MAX_DEPTH}) is still limited.
      *
      * @return The unlimited read tracker

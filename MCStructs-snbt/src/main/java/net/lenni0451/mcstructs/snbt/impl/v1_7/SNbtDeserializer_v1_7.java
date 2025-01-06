@@ -1,13 +1,13 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_7;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
-import net.lenni0451.mcstructs.snbt.ISNbtDeserializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
+import net.lenni0451.mcstructs.snbt.impl.ISNbtDeserializer;
 
 import java.util.Stack;
 
-public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
+public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<NbtTag> {
 
     private static final String ARRAY_PATTERN = "\\[[-\\d|,\\s]+]";
     private static final String BYTE_PATTERN = "[-+]?[0-9]+[b|B]";
@@ -19,18 +19,18 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
     private static final String SHORT_DOUBLE_PATTERN = "[-+]?[0-9]*\\.?[0-9]+";
 
     @Override
-    public INbtTag deserialize(String s) throws SNbtDeserializeException {
+    public NbtTag deserialize(String s) throws SNbtDeserializeException {
         s = s.trim();
         int tagCount = this.getTagCount(s);
         if (tagCount != 1) throw new SNbtDeserializeException("Encountered multiple top tags, only one expected");
-        INbtTag tag;
+        NbtTag tag;
         if (s.startsWith("{")) tag = this.parse("tag", s);
         else tag = this.parse(this.find(s, true, false), this.find(s, false, false));
         return tag;
     }
 
     @Override
-    public INbtTag deserializeValue(String s) throws SNbtDeserializeException {
+    public NbtTag deserializeValue(String s) throws SNbtDeserializeException {
         return this.parse("tag", s);
     }
 
@@ -46,7 +46,7 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
      * @return The parsed component
      * @throws SNbtDeserializeException If the component could not be parsed
      */
-    private INbtTag parse(final String name, String value) throws SNbtDeserializeException {
+    private NbtTag parse(final String name, String value) throws SNbtDeserializeException {
         value = value.trim();
         this.getTagCount(value);
 
@@ -75,7 +75,7 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
             if (!value.endsWith("]")) throw new SNbtDeserializeException("Unable to locate ending bracket ] for: " + value);
 
             value = value.substring(1, value.length() - 1);
-            ListTag<INbtTag> list = new ListTag<>();
+            ListTag<NbtTag> list = new ListTag<>();
             while (!value.isEmpty()) {
                 String pair = this.findPair(value, true);
                 if (!pair.isEmpty()) {
@@ -101,7 +101,7 @@ public class SNbtDeserializer_v1_7 implements ISNbtDeserializer<INbtTag> {
         }
     }
 
-    private INbtTag parsePrimitive(String value) {
+    private NbtTag parsePrimitive(String value) {
         try {
             if (value.matches(DOUBLE_PATTERN)) {
                 return new DoubleTag(Double.parseDouble(value.substring(0, value.length() - 1)));

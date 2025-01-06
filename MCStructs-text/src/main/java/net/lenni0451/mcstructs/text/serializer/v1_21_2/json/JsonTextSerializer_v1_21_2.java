@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.text.serializer.v1_21_2.json;
 
 import com.google.gson.JsonElement;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.SelectorComponent;
 import net.lenni0451.mcstructs.text.serializer.subtypes.IStyleSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonTextSerializer_v1_20_3;
@@ -20,8 +20,8 @@ public class JsonTextSerializer_v1_21_2 extends JsonTextSerializer_v1_20_5 {
     }
 
     @Override
-    public ATextComponent deserialize(JsonElement object) {
-        ATextComponent textComponent = super.deserialize(object);
+    public TextComponent deserialize(JsonElement object) {
+        TextComponent textComponent = super.deserialize(object);
         if (textComponent instanceof SelectorComponent) {
             SelectorComponent selectorComponent = (SelectorComponent) textComponent;
             this.codec.verifyEntitySelector(selectorComponent.getSelector());

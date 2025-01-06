@@ -1,12 +1,12 @@
 package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class ScoreComponent extends ATextComponent {
+public class ScoreComponent extends TextComponent {
 
     private String name;
     private String objective;
@@ -84,12 +84,12 @@ public class ScoreComponent extends ATextComponent {
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         ScoreComponent copy = new ScoreComponent(this.name, this.objective);
         copy.value = this.value;
         return copy.setStyle(this.getStyle().copy());

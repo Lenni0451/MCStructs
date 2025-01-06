@@ -1,20 +1,20 @@
 package net.lenni0451.mcstructs.text.components;
 
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
 
-public abstract class NbtComponent extends ATextComponent {
+public abstract class NbtComponent extends TextComponent {
 
     private String component;
     private boolean resolve;
-    private ATextComponent separator;
+    private TextComponent separator;
 
     public NbtComponent(final String component, final boolean resolve) {
         this(component, resolve, null);
     }
 
-    public NbtComponent(final String component, final boolean resolve, @Nullable final ATextComponent separator) {
+    public NbtComponent(final String component, final boolean resolve, @Nullable final TextComponent separator) {
         this.component = component;
         this.resolve = resolve;
         this.separator = separator;
@@ -60,7 +60,7 @@ public abstract class NbtComponent extends ATextComponent {
      * @return The separator of this component
      */
     @Nullable
-    public ATextComponent getSeparator() {
+    public TextComponent getSeparator() {
         return this.separator;
     }
 
@@ -70,7 +70,7 @@ public abstract class NbtComponent extends ATextComponent {
      * @param separator The separator
      * @return This component
      */
-    public NbtComponent setSeparator(final ATextComponent separator) {
+    public NbtComponent setSeparator(final TextComponent separator) {
         this.separator = separator;
         return this;
     }

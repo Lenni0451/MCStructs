@@ -2,8 +2,8 @@ package net.lenni0451.mcstructs.text.events.hover.impl;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.text.ATextComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
@@ -12,13 +12,16 @@ import java.util.Objects;
 /**
  * The implementation for text hover events.
  */
-public class TextHoverEvent extends AHoverEvent {
+public class TextHoverEvent extends HoverEvent {
 
-    private ATextComponent text;
+    private TextComponent text;
 
-    public TextHoverEvent(final HoverEventAction action, final ATextComponent text) {
+    public TextHoverEvent(final TextComponent text) {
+        this(HoverEventAction.SHOW_TEXT, text);
+    }
+
+    public TextHoverEvent(final HoverEventAction action, final TextComponent text) {
         super(action);
-
         this.text = text;
     }
 
@@ -37,7 +40,7 @@ public class TextHoverEvent extends AHoverEvent {
     /**
      * @return The text of this hover event
      */
-    public ATextComponent getText() {
+    public TextComponent getText() {
         return this.text;
     }
 
@@ -47,12 +50,13 @@ public class TextHoverEvent extends AHoverEvent {
      * @param text The new text
      * @return This instance for chaining
      */
-    public TextHoverEvent setText(final ATextComponent text) {
+    public TextHoverEvent setText(final TextComponent text) {
         this.text = text;
         return this;
     }
 
     @Override
+    @Deprecated
     public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbtSerializer<?> sNbtSerializer) {
         return this;
     }

@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.text.ATextComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
@@ -25,10 +25,10 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
     private static final String VALUE = "value";
 
     private final TextComponentCodec_v1_20_5 codec;
-    private final ITypedSerializer<JsonElement, ATextComponent> textSerializer;
+    private final ITypedSerializer<JsonElement, TextComponent> textSerializer;
     private final SNbtSerializer<CompoundTag> sNbtSerializer;
 
-    public JsonHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<JsonElement, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+    public JsonHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<JsonElement, TextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
         super(codec, textSerializer, sNbtSerializer);
         this.codec = codec;
         this.textSerializer = textSerializer;
@@ -36,7 +36,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
     }
 
     @Override
-    public JsonElement serialize(AHoverEvent object) {
+    public JsonElement serialize(HoverEvent object) {
         JsonObject out = new JsonObject();
         out.addProperty(ACTION, object.getAction().getName());
         if (object instanceof TextHoverEvent) {
@@ -68,11 +68,11 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
     }
 
     @Override
-    public AHoverEvent deserialize(JsonElement object) {
+    public HoverEvent deserialize(JsonElement object) {
         if (!object.isJsonObject()) throw new IllegalArgumentException("Element must be a json object");
         JsonObject obj = object.getAsJsonObject();
 
-        HoverEventAction action = HoverEventAction.getByName(requiredString(obj, ACTION), false);
+        HoverEventAction action = HoverEventAction.byName(requiredString(obj, ACTION), false);
         if (action == null) throw new IllegalArgumentException("Unknown hover event action: " + obj.get(ACTION).getAsString());
         if (!action.isUserDefinable()) throw new IllegalArgumentException("Hover event action is not user definable: " + action);
 
@@ -107,7 +107,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                     Identifier type = Identifier.of(requiredString(contents, "type"));
                     this.codec.verifyEntity(type);
                     UUID id = this.getUUID(contents.get("id"));
-                    ATextComponent name;
+                    TextComponent name;
                     if (contents.has("name")) {
                         try {
                             name = this.textSerializer.deserialize(contents.get("name"));
@@ -123,7 +123,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                     throw new IllegalArgumentException("Unknown hover event action: " + action);
             }
         } else if (obj.has(VALUE)) {
-            ATextComponent value = this.textSerializer.deserialize(obj.get(VALUE));
+            TextComponent value = this.textSerializer.deserialize(obj.get(VALUE));
             try {
                 switch (action) {
                     case SHOW_TEXT:
@@ -143,7 +143,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                         );
                     case SHOW_ENTITY:
                         parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
-                        ATextComponent name = this.codec.deserializeJson(parsed.getString("name"));
+                        TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));
                         return new EntityHoverEvent(action, type, uuid, name);

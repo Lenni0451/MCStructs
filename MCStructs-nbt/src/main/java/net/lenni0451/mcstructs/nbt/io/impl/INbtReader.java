@@ -1,6 +1,6 @@
-package net.lenni0451.mcstructs.nbt.io.types;
+package net.lenni0451.mcstructs.nbt.io.impl;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
@@ -47,7 +47,7 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    default INbtTag read(final NbtType type, final DataInput in, final NbtReadTracker readTracker) throws IOException {
+    default NbtTag read(final NbtType type, final DataInput in, final NbtReadTracker readTracker) throws IOException {
         switch (type) {
             case BYTE:
                 return this.readByte(in, readTracker);
@@ -87,7 +87,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    ByteTag readByte(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default ByteTag readByte(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support byte tags");
+    }
 
     /**
      * Read a short tag.
@@ -98,7 +100,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    ShortTag readShort(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default ShortTag readShort(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support short tags");
+    }
 
     /**
      * Read a int tag.
@@ -109,7 +113,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    IntTag readInt(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default IntTag readInt(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support int tags");
+    }
 
     /**
      * Read a long tag.
@@ -120,7 +126,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    LongTag readLong(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default LongTag readLong(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support long tags");
+    }
 
     /**
      * Read a float tag.
@@ -131,7 +139,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    FloatTag readFloat(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default FloatTag readFloat(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support float tags");
+    }
 
     /**
      * Read a double tag.
@@ -142,7 +152,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    DoubleTag readDouble(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default DoubleTag readDouble(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support double tags");
+    }
 
     /**
      * Read a byte array tag.
@@ -153,7 +165,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    ByteArrayTag readByteArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default ByteArrayTag readByteArray(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support byte array tags");
+    }
 
     /**
      * Read a string tag.
@@ -164,7 +178,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    StringTag readString(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default StringTag readString(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support string tags");
+    }
 
     /**
      * Read a list tag.
@@ -175,7 +191,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    ListTag<?> readList(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default ListTag<?> readList(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support list tags");
+    }
 
     /**
      * Read a compound tag.
@@ -186,7 +204,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    CompoundTag readCompound(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default CompoundTag readCompound(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support compound tags");
+    }
 
     /**
      * Read a int array tag.
@@ -197,7 +217,9 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    IntArrayTag readIntArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default IntArrayTag readIntArray(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support int array tags");
+    }
 
     /**
      * Read a long array tag.
@@ -208,6 +230,8 @@ public interface INbtReader {
      * @throws IOException If an I/O error occurs
      */
     @Nonnull
-    LongArrayTag readLongArray(final DataInput in, final NbtReadTracker readTracker) throws IOException;
+    default LongArrayTag readLongArray(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support long array tags");
+    }
 
 }

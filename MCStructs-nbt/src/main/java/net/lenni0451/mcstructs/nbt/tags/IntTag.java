@@ -1,24 +1,23 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtNumber;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.util.Objects;
 
-public class IntTag implements INbtNumber {
+public class IntTag implements NbtNumber {
 
     private int value;
 
     /**
-     * Create a int tag with the value 0.
+     * Create an int tag with the value 0.
      */
     public IntTag() {
         this(0);
     }
 
     /**
-     * Create a int tag with the given value.
+     * Create an int tag with the given value.
      *
      * @param value The value
      */
@@ -85,7 +84,7 @@ public class IntTag implements INbtNumber {
     }
 
     @Override
-    public INbtTag copy() {
+    public IntTag copy() {
         return new IntTag(this.value);
     }
 

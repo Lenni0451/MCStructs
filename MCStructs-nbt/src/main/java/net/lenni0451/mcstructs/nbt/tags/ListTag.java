@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import javax.annotation.Nullable;
@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
+public class ListTag<T extends NbtTag> implements NbtTag, Iterable<T> {
 
     private NbtType type;
     private List<T> value;
@@ -138,7 +138,7 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
      * @param tag The tag
      * @return True if the tag can be added
      */
-    public boolean canAdd(final INbtTag tag) {
+    public boolean canAdd(final NbtTag tag) {
         if (this.type == null || this.value.isEmpty()) return true;
         return this.type.equals(tag.getNbtType());
     }
@@ -195,8 +195,8 @@ public class ListTag<T extends INbtTag> implements INbtTag, Iterable<T> {
     }
 
     @Override
-    public INbtTag copy() {
-        List<INbtTag> value = new ArrayList<>();
+    public ListTag copy() {
+        List<NbtTag> value = new ArrayList<>();
         for (T val : this.value) value.add(val.copy());
         return new ListTag<>(value);
     }

@@ -1,6 +1,6 @@
-package net.lenni0451.mcstructs.nbt.io.types;
+package net.lenni0451.mcstructs.nbt.io.impl;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.tags.*;
@@ -38,7 +38,7 @@ public interface INbtWriter {
      * @param tag The tag
      * @throws IOException If an I/O error occurs
      */
-    default void write(final DataOutput out, final INbtTag tag) throws IOException {
+    default void write(final DataOutput out, final NbtTag tag) throws IOException {
         if (tag instanceof ByteTag) this.writeByte(out, (ByteTag) tag);
         else if (tag instanceof ShortTag) this.writeShort(out, (ShortTag) tag);
         else if (tag instanceof IntTag) this.writeInt(out, (IntTag) tag);
@@ -61,7 +61,9 @@ public interface INbtWriter {
      * @param tag The byte tag
      * @throws IOException If an I/O error occurs
      */
-    void writeByte(final DataOutput out, final ByteTag tag) throws IOException;
+    default void writeByte(final DataOutput out, final ByteTag tag) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support byte tags");
+    }
 
     /**
      * Write a short tag.
@@ -70,7 +72,9 @@ public interface INbtWriter {
      * @param tag The short tag
      * @throws IOException If an I/O error occurs
      */
-    void writeShort(final DataOutput out, final ShortTag tag) throws IOException;
+    default void writeShort(final DataOutput out, final ShortTag tag) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support short tags");
+    }
 
     /**
      * Write an int tag.
@@ -79,7 +83,9 @@ public interface INbtWriter {
      * @param value The int tag
      * @throws IOException If an I/O error occurs
      */
-    void writeInt(final DataOutput out, final IntTag value) throws IOException;
+    default void writeInt(final DataOutput out, final IntTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support int tags");
+    }
 
     /**
      * Write a long tag.
@@ -88,7 +94,9 @@ public interface INbtWriter {
      * @param value The long tag
      * @throws IOException If an I/O error occurs
      */
-    void writeLong(final DataOutput out, final LongTag value) throws IOException;
+    default void writeLong(final DataOutput out, final LongTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support long tags");
+    }
 
     /**
      * Write a float tag.
@@ -97,7 +105,9 @@ public interface INbtWriter {
      * @param value The float tag
      * @throws IOException If an I/O error occurs
      */
-    void writeFloat(final DataOutput out, final FloatTag value) throws IOException;
+    default void writeFloat(final DataOutput out, final FloatTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support float tags");
+    }
 
     /**
      * Write a double tag.
@@ -106,7 +116,9 @@ public interface INbtWriter {
      * @param value The double tag
      * @throws IOException If an I/O error occurs
      */
-    void writeDouble(final DataOutput out, final DoubleTag value) throws IOException;
+    default void writeDouble(final DataOutput out, final DoubleTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support double tags");
+    }
 
     /**
      * Write a byte array tag.
@@ -115,7 +127,9 @@ public interface INbtWriter {
      * @param value The byte array tag
      * @throws IOException If an I/O error occurs
      */
-    void writeByteArray(final DataOutput out, final ByteArrayTag value) throws IOException;
+    default void writeByteArray(final DataOutput out, final ByteArrayTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support byte array tags");
+    }
 
     /**
      * Write a string tag.
@@ -124,7 +138,9 @@ public interface INbtWriter {
      * @param value The string tag
      * @throws IOException If an I/O error occurs
      */
-    void writeString(final DataOutput out, final StringTag value) throws IOException;
+    default void writeString(final DataOutput out, final StringTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support string tags");
+    }
 
     /**
      * Write a list tag.
@@ -133,7 +149,9 @@ public interface INbtWriter {
      * @param value The list tag
      * @throws IOException If an I/O error occurs
      */
-    void writeList(final DataOutput out, final ListTag<?> value) throws IOException;
+    default void writeList(final DataOutput out, final ListTag<?> value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support list tags");
+    }
 
     /**
      * Write a compound tag.
@@ -142,7 +160,9 @@ public interface INbtWriter {
      * @param value The compound tag
      * @throws IOException If an I/O error occurs
      */
-    void writeCompound(final DataOutput out, final CompoundTag value) throws IOException;
+    default void writeCompound(final DataOutput out, final CompoundTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support compound tags");
+    }
 
     /**
      * Write an int array tag.
@@ -151,7 +171,9 @@ public interface INbtWriter {
      * @param value The int array tag
      * @throws IOException If an I/O error occurs
      */
-    void writeIntArray(final DataOutput out, final IntArrayTag value) throws IOException;
+    default void writeIntArray(final DataOutput out, final IntArrayTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support int array tags");
+    }
 
     /**
      * Write a long array tag.<br>
@@ -161,6 +183,8 @@ public interface INbtWriter {
      * @param value The long array tag
      * @throws IOException If an I/O error occurs
      */
-    void writeLongArray(final DataOutput out, final LongArrayTag value) throws IOException;
+    default void writeLongArray(final DataOutput out, final LongArrayTag value) throws IOException {
+        throw new UnsupportedOperationException("This Nbt version does not support long array tags");
+    }
 
 }

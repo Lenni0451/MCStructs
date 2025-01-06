@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.nbt;
 /**
  * An interface for all numeric Nbt tags.
  */
-public interface INbtNumber extends INbtTag {
+public interface NbtNumber extends NbtTag {
 
     /**
      * @return The value of this tag as a byte

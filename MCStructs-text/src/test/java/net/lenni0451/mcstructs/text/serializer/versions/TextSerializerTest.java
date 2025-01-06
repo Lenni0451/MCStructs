@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.text.serializer.versions;
 
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class TextSerializerTest {
 
-    protected static ATextComponent DESERIALIZE_FAIL = new FailedComponent();
+    protected static TextComponent DESERIALIZE_FAIL = new FailedComponent();
     private static final String[] DESERIALIZE_TESTS = {
             "{\"text\":\"test\"}",
             "{\"text\":\n//test\n\"test\"}",
@@ -28,25 +28,25 @@ public abstract class TextSerializerTest {
     };
 
     protected static String SERIALIZE_FAIL = "--test fail--";
-    private static final ATextComponent[] SERIALIZE_TESTS = {
+    private static final TextComponent[] SERIALIZE_TESTS = {
             new StringComponent("test")
     };
 
 
-    protected abstract ATextComponent deserialize(final String json);
+    protected abstract TextComponent deserialize(final String json);
 
-    protected abstract String serialize(final ATextComponent component);
+    protected abstract String serialize(final TextComponent component);
 
     @Test
     protected abstract void runTests();
 
-    protected void executeDeserializeTests(final ATextComponent... deserializeResults) {
+    protected void executeDeserializeTests(final TextComponent... deserializeResults) {
         for (int i = 0; i < DESERIALIZE_TESTS.length; i++) {
             String test = DESERIALIZE_TESTS[i];
-            ATextComponent expected = deserializeResults[i];
+            TextComponent expected = deserializeResults[i];
 
             try {
-                ATextComponent deserialized = this.deserialize(test);
+                TextComponent deserialized = this.deserialize(test);
                 assertEquals(expected, deserialized, "Test " + i + " failed: " + test);
             } catch (Exception e) {
                 assertEquals(expected, DESERIALIZE_FAIL, "Test " + i + " failed: " + test);
@@ -56,7 +56,7 @@ public abstract class TextSerializerTest {
 
     protected void executeSerializeTests(final String... serializeResults) {
         for (int i = 0; i < SERIALIZE_TESTS.length; i++) {
-            ATextComponent test = SERIALIZE_TESTS[i];
+            TextComponent test = SERIALIZE_TESTS[i];
             String expected = serializeResults[i];
 
             try {
@@ -69,14 +69,14 @@ public abstract class TextSerializerTest {
     }
 
 
-    private static class FailedComponent extends ATextComponent {
+    private static class FailedComponent extends TextComponent {
         @Override
         public String asSingleString() {
             return "failed";
         }
 
         @Override
-        public ATextComponent copy() {
+        public TextComponent copy() {
             return this;
         }
 

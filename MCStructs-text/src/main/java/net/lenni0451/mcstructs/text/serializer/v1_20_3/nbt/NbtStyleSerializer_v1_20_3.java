@@ -1,29 +1,29 @@
 package net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt;
 
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.core.TextFormatting;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.subtypes.IStyleSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
 import java.util.function.Function;
 
-public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<INbtTag>, CodecUtils_v1_20_3 {
+public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, CodecUtils_v1_20_3 {
 
-    private final ITypedSerializer<INbtTag, AHoverEvent> hoverEventSerializer;
+    private final ITypedSerializer<NbtTag, HoverEvent> hoverEventSerializer;
 
-    public NbtStyleSerializer_v1_20_3(final Function<NbtStyleSerializer_v1_20_3, ITypedSerializer<INbtTag, AHoverEvent>> hoverEventSerializer) {
+    public NbtStyleSerializer_v1_20_3(final Function<NbtStyleSerializer_v1_20_3, ITypedSerializer<NbtTag, HoverEvent>> hoverEventSerializer) {
         this.hoverEventSerializer = hoverEventSerializer.apply(this);
     }
 
     @Override
-    public INbtTag serialize(Style object) {
+    public NbtTag serialize(Style object) {
         CompoundTag out = new CompoundTag();
         if (object.getColor() != null) out.addString("color", object.getColor().serialize());
         if (object.getBold() != null) out.addBoolean("bold", object.isBold());
@@ -44,7 +44,7 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<INbtTag>, Co
     }
 
     @Override
-    public Style deserialize(INbtTag object) {
+    public Style deserialize(NbtTag object) {
         if (!object.isCompoundTag()) throw new IllegalArgumentException("Nbt tag is not a compound tag");
         CompoundTag tag = object.asCompoundTag();
 
@@ -65,7 +65,7 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<INbtTag>, Co
         style.setObfuscated(optionalBoolean(tag, "obfuscated"));
         if (tag.contains("clickEvent")) {
             CompoundTag clickEvent = requiredCompound(tag, "clickEvent");
-            ClickEventAction action = ClickEventAction.getByName(requiredString(clickEvent, "action"), false);
+            ClickEventAction action = ClickEventAction.byName(requiredString(clickEvent, "action"), false);
             if (action == null || ClickEventAction.TWITCH_USER_INFO.equals(action)) {
                 throw new IllegalArgumentException("Unknown click event action: " + clickEvent.getString("action"));
             }

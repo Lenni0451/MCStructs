@@ -13,7 +13,7 @@ public class SNbtServers {
 
     public static void main(String[] args) throws Throwable {
         CompoundTag serversTag = SNbtSerializer.V1_8.deserialize("{servers:[{name:localhost,ip:127.0.0.1:25565}]}");
-        NbtIO.JAVA.writeFile(new File("newServers.dat"), "", serversTag);
+        NbtIO.LATEST.writeFile(new File("newServers.dat"), "", serversTag);
     }
 
 }

@@ -1,14 +1,14 @@
 package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class KeybindComponent extends ATextComponent {
+public class KeybindComponent extends TextComponent {
 
     private static final Function<String, String> DEFAULT_TRANSLATOR = s -> s;
 
@@ -60,12 +60,12 @@ public class KeybindComponent extends ATextComponent {
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         KeybindComponent copy = new KeybindComponent(this.keybind);
         copy.translator = this.translator;
         return copy.setStyle(this.getStyle().copy());

@@ -1,9 +1,10 @@
 package net.lenni0451.mcstructs.text.components.nbt;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.NbtComponent;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class BlockNbtComponent extends NbtComponent {
@@ -15,7 +16,7 @@ public class BlockNbtComponent extends NbtComponent {
         this.pos = pos;
     }
 
-    public BlockNbtComponent(final String rawComponent, final boolean resolve, final ATextComponent separator, final String pos) {
+    public BlockNbtComponent(final String rawComponent, final boolean resolve, @Nullable final TextComponent separator, final String pos) {
         super(rawComponent, resolve, separator);
         this.pos = pos;
     }
@@ -39,12 +40,12 @@ public class BlockNbtComponent extends NbtComponent {
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         if (this.getSeparator() == null) return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.pos).setStyle(this.getStyle().copy());
         else return new BlockNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator().copy(), this.pos).setStyle(this.getStyle().copy());
     }

@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.text.utils;
 
-import net.lenni0451.mcstructs.core.TextFormatting;
+import net.lenni0451.mcstructs.core.utils.ToString;
+import net.lenni0451.mcstructs.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -143,14 +144,6 @@ public class LegacyStringUtils {
         }
 
         @Override
-        public String toString() {
-            return "LegacyStyle{" +
-                    "color=" + this.color +
-                    ", styles=" + this.styles +
-                    '}';
-        }
-
-        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -161,6 +154,14 @@ public class LegacyStringUtils {
         @Override
         public int hashCode() {
             return Objects.hash(this.color, this.styles);
+        }
+
+        @Override
+        public String toString() {
+            return ToString.of(this)
+                    .add("color", this.color)
+                    .add("styles", this.styles)
+                    .toString();
         }
     }
 

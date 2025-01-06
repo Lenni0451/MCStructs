@@ -1,6 +1,6 @@
-package net.lenni0451.mcstructs.snbt;
+package net.lenni0451.mcstructs.snbt.impl;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 
 /**
@@ -8,10 +8,10 @@ import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
  *
  * @param <T> The output type of the deserializer
  */
-public interface ISNbtDeserializer<T extends INbtTag> {
+public interface ISNbtDeserializer<T extends NbtTag> {
 
     T deserialize(final String s) throws SNbtDeserializeException;
 
-    INbtTag deserializeValue(final String s) throws SNbtDeserializeException;
+    NbtTag deserializeValue(final String s) throws SNbtDeserializeException;
 
 }

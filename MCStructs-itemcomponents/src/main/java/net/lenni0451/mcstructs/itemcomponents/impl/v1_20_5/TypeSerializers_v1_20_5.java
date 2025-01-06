@@ -12,11 +12,11 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.TypeSerializers;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.StringTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.Map;
@@ -55,7 +55,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
             @Override
             public <T> Result<CompoundTag> deserialize(DataConverter<T> converter, T data) {
-                INbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
+                NbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
                 if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
                 return Result.success(tag.asCompoundTag());
             }
@@ -73,7 +73,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
                     @Override
                     public <T> Result<CompoundTag> deserialize(DataConverter<T> converter, T data) {
-                        INbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
+                        NbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
                         if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
                         return Result.success(tag.asCompoundTag());
                     }
@@ -97,10 +97,10 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         }).map(pos -> new int[]{pos.getX(), pos.getY(), pos.getZ()}, array -> new BlockPos(array[0], array[1], array[2])));
     }
 
-    public Codec<ATextComponent> rawTextComponent() {
-        return this.init(RAW_TEXT_COMPONENT, () -> new Codec<ATextComponent>() {
+    public Codec<TextComponent> rawTextComponent() {
+        return this.init(RAW_TEXT_COMPONENT, () -> new Codec<TextComponent>() {
             @Override
-            public <S> Result<S> serialize(DataConverter<S> converter, ATextComponent element) {
+            public <S> Result<S> serialize(DataConverter<S> converter, TextComponent element) {
                 S test = converter.createString("");
                 if (test instanceof StringTag) {
                     try {
@@ -120,10 +120,10 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
             }
 
             @Override
-            public <S> Result<ATextComponent> deserialize(DataConverter<S> converter, S data) {
-                if (data instanceof INbtTag) {
+            public <S> Result<TextComponent> deserialize(DataConverter<S> converter, S data) {
+                if (data instanceof NbtTag) {
                     try {
-                        return Result.success(TextComponentCodec.V1_20_5.deserializeNbtTree((INbtTag) data));
+                        return Result.success(TextComponentCodec.V1_20_5.deserializeNbtTree((NbtTag) data));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
@@ -140,7 +140,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         });
     }
 
-    public Codec<ATextComponent> textComponent(final int maxLength) {
+    public Codec<TextComponent> textComponent(final int maxLength) {
         return Codec.sizedString(0, maxLength).mapThrowing(TextComponentCodec.V1_20_5::serializeJsonString, TextComponentCodec.V1_20_5::deserializeJson);
     }
 

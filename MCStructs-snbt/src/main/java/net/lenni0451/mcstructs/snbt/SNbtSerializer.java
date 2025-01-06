@@ -1,9 +1,11 @@
 package net.lenni0451.mcstructs.snbt;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
+import net.lenni0451.mcstructs.snbt.impl.ISNbtDeserializer;
+import net.lenni0451.mcstructs.snbt.impl.ISNbtSerializer;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtDeserializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtSerializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_13.SNbtDeserializer_v1_13;
@@ -23,12 +25,12 @@ import java.util.function.Supplier;
  *
  * @param <T> The output type of the deserializer
  */
-public class SNbtSerializer<T extends INbtTag> {
+public class SNbtSerializer<T extends NbtTag> {
 
     /**
      * The SNbt serializer for minecraft 1.7.
      */
-    public static final SNbtSerializer<INbtTag> V1_7 = new SNbtSerializer<>(SNbtSerializer_v1_7::new, SNbtDeserializer_v1_7::new);
+    public static final SNbtSerializer<NbtTag> V1_7 = new SNbtSerializer<>(SNbtSerializer_v1_7::new, SNbtDeserializer_v1_7::new);
     /**
      * The SNbt serializer for minecraft 1.8 - 1.11.
      */
@@ -84,7 +86,7 @@ public class SNbtSerializer<T extends INbtTag> {
      * @return The serialized tag
      * @throws SNbtSerializeException If the tag could not be serialized
      */
-    public String serialize(final INbtTag tag) throws SNbtSerializeException {
+    public String serialize(final NbtTag tag) throws SNbtSerializeException {
         return this.getSerializer().serialize(tag);
     }
 
@@ -95,7 +97,7 @@ public class SNbtSerializer<T extends INbtTag> {
      * @return The serialized tag or null if the tag could not be serialized
      */
     @Nullable
-    public String trySerialize(final INbtTag tag) {
+    public String trySerialize(final NbtTag tag) {
         try {
             return this.serialize(tag);
         } catch (SNbtSerializeException t) {

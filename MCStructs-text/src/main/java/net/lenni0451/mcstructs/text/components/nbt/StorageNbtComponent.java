@@ -2,9 +2,10 @@ package net.lenni0451.mcstructs.text.components.nbt;
 
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.NbtComponent;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class StorageNbtComponent extends NbtComponent {
@@ -16,7 +17,7 @@ public class StorageNbtComponent extends NbtComponent {
         this.id = id;
     }
 
-    public StorageNbtComponent(final String component, final boolean resolve, final ATextComponent separator, final Identifier id) {
+    public StorageNbtComponent(final String component, final boolean resolve, @Nullable final TextComponent separator, final Identifier id) {
         super(component, resolve, separator);
         this.id = id;
     }
@@ -40,12 +41,12 @@ public class StorageNbtComponent extends NbtComponent {
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         if (this.getSeparator() == null) return new StorageNbtComponent(this.getComponent(), this.isResolve(), null, this.id).setStyle(this.getStyle().copy());
         else return new StorageNbtComponent(this.getComponent(), this.isResolve(), this.getSeparator(), this.id).setStyle(this.getStyle().copy());
     }

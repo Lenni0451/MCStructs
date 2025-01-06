@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.converter;
 
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ public class NbtConverterTest {
                 .add(new CompoundTag().addBoolean("", true))
                 .add(new CompoundTag().addString("test", "string"));
 
-        List<INbtTag> tags = CONVERTER.asList(markers).get();
+        List<NbtTag> tags = CONVERTER.asList(markers).get();
         assertEquals(3, tags.size());
         assertEquals(new IntTag(12), tags.get(0));
         assertEquals(new ByteTag(true), tags.get(1));
@@ -34,7 +34,7 @@ public class NbtConverterTest {
         int[] intArray = new int[]{0, 1, 2, 3, 4, 5};
         long[] longArray = new long[]{0, 1, 2, 3, 4, 5};
 
-        INbtTag[] input = new INbtTag[]{
+        NbtTag[] input = new NbtTag[]{
                 new ByteArrayTag(byteArray),
                 new IntArrayTag(intArray),
                 new LongArrayTag(longArray),
@@ -45,7 +45,7 @@ public class NbtConverterTest {
                 this.mark(new IntArrayTag(intArray).toListTag()),
                 this.mark(new LongArrayTag(longArray).toListTag()),
         };
-        for (INbtTag tag : input) {
+        for (NbtTag tag : input) {
             assertArrayEquals(byteArray, CONVERTER.asByteArray(tag).get());
             assertArrayEquals(intArray, CONVERTER.asIntArray(tag).get());
             assertArrayEquals(longArray, CONVERTER.asLongArray(tag).get());
@@ -54,7 +54,7 @@ public class NbtConverterTest {
 
     @Test
     void testToMarker() {
-        INbtTag list = CONVERTER.emptyList();
+        NbtTag list = CONVERTER.emptyList();
         list = CONVERTER.mergeList(list, new IntTag(12)).get();
         list = CONVERTER.mergeList(list, new ByteTag(true)).get();
         list = CONVERTER.mergeList(list, new CompoundTag().addString("test", "string")).get();
@@ -68,22 +68,22 @@ public class NbtConverterTest {
 
     @Test
     void listMerge() {
-        INbtTag byteList = CONVERTER.emptyList();
+        NbtTag byteList = CONVERTER.emptyList();
         for (int i = 0; i < 5; i++) byteList = CONVERTER.mergeList(byteList, new ByteTag((byte) i)).get();
         assertArrayEquals(new byte[]{0, 1, 2, 3, 4}, CONVERTER.asByteArray(byteList).get());
 
-        INbtTag intList = CONVERTER.emptyList();
+        NbtTag intList = CONVERTER.emptyList();
         for (int i = 0; i < 5; i++) intList = CONVERTER.mergeList(intList, new IntTag(i)).get();
         assertArrayEquals(new int[]{0, 1, 2, 3, 4}, CONVERTER.asIntArray(intList).get());
 
-        INbtTag longList = CONVERTER.emptyList();
+        NbtTag longList = CONVERTER.emptyList();
         for (int i = 0; i < 5; i++) longList = CONVERTER.mergeList(longList, new LongTag(i)).get();
         assertArrayEquals(new long[]{0, 1, 2, 3, 4}, CONVERTER.asLongArray(longList).get());
     }
 
     private ListTag<CompoundTag> mark(final ListTag<?> list) {
         ListTag<CompoundTag> out = new ListTag<>();
-        for (INbtTag tag : list) {
+        for (NbtTag tag : list) {
             if (tag instanceof CompoundTag) out.add(tag.asCompoundTag());
             else out.add(new CompoundTag().add("", tag));
         }

@@ -69,7 +69,7 @@ public enum NbtType {
      * @return The type or null if not found
      */
     @Nullable
-    public static NbtType byClass(final Class<? extends INbtTag> tagClass) {
+    public static NbtType byClass(final Class<? extends NbtTag> tagClass) {
         for (NbtType type : NbtType.values()) {
             if (Objects.equals(type.getTagClass(), tagClass)) return type;
         }
@@ -92,11 +92,11 @@ public enum NbtType {
 
 
     private final int id;
-    private final Class<? extends INbtTag> tagClass;
+    private final Class<? extends NbtTag> tagClass;
     private final Supplier<?> tagSupplier;
     private final Class<?> dataType;
 
-    NbtType(final int id, final Class<? extends INbtTag> tagClass, final Supplier<?> tagSupplier, final Class<?> dataType) {
+    NbtType(final int id, final Class<? extends NbtTag> tagClass, final Supplier<?> tagSupplier, final Class<?> dataType) {
         this.id = id;
         this.tagClass = tagClass;
         this.tagSupplier = tagSupplier;
@@ -113,7 +113,7 @@ public enum NbtType {
     /**
      * @return The class of the type
      */
-    public Class<? extends INbtTag> getTagClass() {
+    public Class<? extends NbtTag> getTagClass() {
         return this.tagClass;
     }
 
@@ -121,9 +121,9 @@ public enum NbtType {
      * @return A new instance of the tag
      * @throws IllegalStateException If the type is {@link #END}
      */
-    public INbtTag newInstance() {
+    public NbtTag newInstance() {
         if (this.tagClass == null) throw new IllegalStateException("Unable to create a new instance of END tag");
-        return (INbtTag) this.tagSupplier.get();
+        return (NbtTag) this.tagSupplier.get();
     }
 
     /**

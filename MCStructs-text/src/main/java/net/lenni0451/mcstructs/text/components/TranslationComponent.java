@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TranslationComponent extends ATextComponent {
+public class TranslationComponent extends TextComponent {
 
     private static final Function<String, String> NULL_TRANSLATOR = s -> null;
     private static final Pattern ARG_PATTERN = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
@@ -102,8 +102,8 @@ public class TranslationComponent extends ATextComponent {
         return this;
     }
 
-    public ATextComponent resolveIntoComponents() {
-        List<ATextComponent> components = new ArrayList<>();
+    public TextComponent resolveIntoComponents() {
+        List<TextComponent> components = new ArrayList<>();
         String translated = this.translator.apply(this.key);
         if (translated == null) translated = this.fallback;
         if (translated == null) translated = this.key;
@@ -128,14 +128,14 @@ public class TranslationComponent extends ATextComponent {
                 else index = Integer.parseInt(rawIndex) - 1;
                 if (index < this.args.length) {
                     Object arg = this.args[index];
-                    if (arg instanceof ATextComponent) components.add((ATextComponent) arg);
+                    if (arg instanceof TextComponent) components.add((TextComponent) arg);
                     else if (arg == null) components.add(new StringComponent("null"));
                     else components.add(new StringComponent(arg.toString()));
                 }
             }
         }
         if (start < translated.length()) components.add(new StringComponent(String.format(translated.substring(start))));
-        ATextComponent out = new StringComponent();
+        TextComponent out = new StringComponent();
         out.setStyle(this.getStyle());
         components.forEach(out::append);
         return out;
@@ -152,16 +152,16 @@ public class TranslationComponent extends ATextComponent {
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         Object[] copyArgs = new Object[this.args.length];
         for (int i = 0; i < this.args.length; i++) {
             Object arg = this.args[i];
-            if (arg instanceof ATextComponent) copyArgs[i] = ((ATextComponent) arg).copy();
+            if (arg instanceof TextComponent) copyArgs[i] = ((TextComponent) arg).copy();
             else copyArgs[i] = arg;
         }
         TranslationComponent copy = new TranslationComponent(this.key, copyArgs);

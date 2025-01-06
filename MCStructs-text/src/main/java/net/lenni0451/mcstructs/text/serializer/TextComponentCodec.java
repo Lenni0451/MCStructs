@@ -3,12 +3,12 @@ package net.lenni0451.mcstructs.text.serializer;
 import com.google.gson.*;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.subtypes.ITextComponentSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonHoverEventSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonStyleSerializer_v1_20_3;
@@ -69,12 +69,12 @@ public class TextComponentCodec {
 
     private final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier;
     private final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier;
-    private final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<INbtTag>> nbtSerializerSupplier;
+    private final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<NbtTag>> nbtSerializerSupplier;
     private SNbtSerializer<CompoundTag> sNbtSerializer;
     private ITextComponentSerializer<JsonElement> jsonSerializer;
-    private ITextComponentSerializer<INbtTag> nbtSerializer;
+    private ITextComponentSerializer<NbtTag> nbtSerializer;
 
-    public TextComponentCodec(final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<INbtTag>> nbtSerializerSupplier) {
+    public TextComponentCodec(final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<NbtTag>> nbtSerializerSupplier) {
         this.sNbtSerializerSupplier = sNbtSerializerSupplier;
         this.jsonSerializerSupplier = jsonSerializerSupplier;
         this.nbtSerializerSupplier = nbtSerializerSupplier;
@@ -99,7 +99,7 @@ public class TextComponentCodec {
     /**
      * @return The used nbt serializer/deserializer
      */
-    public ITextComponentSerializer<INbtTag> getNbtSerializer() {
+    public ITextComponentSerializer<NbtTag> getNbtSerializer() {
         if (this.nbtSerializer == null) this.nbtSerializer = this.nbtSerializerSupplier.apply(this, this.getSNbtSerializer());
         return this.nbtSerializer;
     }
@@ -110,7 +110,7 @@ public class TextComponentCodec {
      * @param json The json string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeJson(final String json) {
+    public TextComponent deserializeJson(final String json) {
         return this.deserializeJsonTree(JsonParser.parseString(json));
     }
 
@@ -121,7 +121,7 @@ public class TextComponentCodec {
      * @param json The json string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeJsonReader(final String json) {
+    public TextComponent deserializeJsonReader(final String json) {
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(false);
         try {
@@ -138,7 +138,7 @@ public class TextComponentCodec {
      * @param json The json string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeLenientJson(final String json) {
+    public TextComponent deserializeLenientJson(final String json) {
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(true);
         return this.deserializeJsonTree(JsonParser.parseReader(reader));
@@ -150,7 +150,7 @@ public class TextComponentCodec {
      * @param nbt The nbt string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeNbt(final String nbt) {
+    public TextComponent deserializeNbt(final String nbt) {
         try {
             return this.deserialize(this.getSNbtSerializer().getDeserializer().deserializeValue(nbt));
         } catch (SNbtDeserializeException e) {
@@ -164,18 +164,18 @@ public class TextComponentCodec {
      * @param element The json element
      * @return The deserialized text component
      */
-    public ATextComponent deserializeJsonTree(@Nullable final JsonElement element) {
+    public TextComponent deserializeJsonTree(@Nullable final JsonElement element) {
         if (element == null) return null;
         return this.deserialize(element);
     }
 
     /**
-     * Deserialize a text component from a {@link INbtTag}.
+     * Deserialize a text component from a {@link NbtTag}.
      *
      * @param nbt The nbt tag
      * @return The deserialized text component
      */
-    public ATextComponent deserializeNbtTree(@Nullable final INbtTag nbt) {
+    public TextComponent deserializeNbtTree(@Nullable final NbtTag nbt) {
         if (nbt == null) return null;
         return this.deserialize(nbt);
     }
@@ -187,18 +187,18 @@ public class TextComponentCodec {
      * @param json The json element
      * @return The deserialized text component
      */
-    public ATextComponent deserialize(final JsonElement json) {
+    public TextComponent deserialize(final JsonElement json) {
         return this.getJsonSerializer().deserialize(json);
     }
 
     /**
-     * Deserialize a text component from a {@link INbtTag}.<br>
+     * Deserialize a text component from a {@link NbtTag}.<br>
      * This method does not check for null values.
      *
      * @param nbt The nbt tag
      * @return The deserialized text component
      */
-    public ATextComponent deserialize(final INbtTag nbt) {
+    public TextComponent deserialize(final NbtTag nbt) {
         return this.getNbtSerializer().deserialize(nbt);
     }
 
@@ -208,17 +208,17 @@ public class TextComponentCodec {
      * @param component The text component
      * @return The serialized json element
      */
-    public JsonElement serializeJsonTree(final ATextComponent component) {
+    public JsonElement serializeJsonTree(final TextComponent component) {
         return this.getJsonSerializer().serialize(component);
     }
 
     /**
-     * Serialize a text component to a {@link INbtTag}.
+     * Serialize a text component to a {@link NbtTag}.
      *
      * @param component The text component
      * @return The serialized nbt tag
      */
-    public INbtTag serializeNbt(final ATextComponent component) {
+    public NbtTag serializeNbt(final TextComponent component) {
         return this.getNbtSerializer().serialize(component);
     }
 
@@ -228,7 +228,7 @@ public class TextComponentCodec {
      * @param component The text component
      * @return The serialized json string
      */
-    public String serializeJsonString(final ATextComponent component) {
+    public String serializeJsonString(final TextComponent component) {
         return GSON.toJson(this.serializeJsonTree(component));
     }
 
@@ -238,7 +238,7 @@ public class TextComponentCodec {
      * @param component The text component
      * @return The serialized nbt string
      */
-    public String serializeNbtString(final ATextComponent component) {
+    public String serializeNbtString(final TextComponent component) {
         try {
             return this.getSNbtSerializer().serialize(this.serializeNbt(component));
         } catch (SNbtSerializeException e) {
@@ -251,8 +251,8 @@ public class TextComponentCodec {
      */
     public TextComponentSerializer asSerializer() {
         return new TextComponentSerializer(this, () -> new GsonBuilder()
-                .registerTypeHierarchyAdapter(ATextComponent.class, (JsonSerializer<ATextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
-                .registerTypeHierarchyAdapter(ATextComponent.class, (JsonDeserializer<ATextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
+                .registerTypeHierarchyAdapter(TextComponent.class, (JsonSerializer<TextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
+                .registerTypeHierarchyAdapter(TextComponent.class, (JsonDeserializer<TextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
                 .disableHtmlEscaping()
                 .create());
     }

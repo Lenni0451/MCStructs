@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
@@ -13,7 +13,7 @@ import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import java.lang.reflect.Type;
 
-public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
+public class HoverEventSerializer_v1_16 implements JsonSerializer<HoverEvent> {
 
     private final TextComponentSerializer textComponentSerializer;
     private final SNbtSerializer<?> sNbtSerializer;
@@ -24,7 +24,7 @@ public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
     }
 
     @Override
-    public JsonElement serialize(AHoverEvent src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(HoverEvent src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject serializedHoverEvent = new JsonObject();
 
         serializedHoverEvent.addProperty("action", src.getAction().getName());

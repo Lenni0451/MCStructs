@@ -1,14 +1,14 @@
 package net.lenni0451.mcstructs.text.utils;
 
-import net.lenni0451.mcstructs.core.TextFormatting;
-import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 
 /**
  * Utility class to color strings with a gradient.<br>
  * RGB Colors are used which only work in Minecraft 1.16+.<br>
- * If you want to translate the colors to the old format use {@link TextUtils#replaceRGBColors(ATextComponent)}, but keep in mind that many details will be lost.
+ * If you want to translate the colors to the old format use {@link TextUtils#replaceRGBColors(TextComponent)}, but keep in mind that many details will be lost.
  */
 public class TextColorUtils {
 
@@ -22,11 +22,11 @@ public class TextColorUtils {
      * @param colors The colors to use
      * @return The colored string
      */
-    public static ATextComponent gradient(final String s, final TextFormatting... colors) {
+    public static TextComponent gradient(final String s, final TextFormatting... colors) {
         if (colors.length == 0) return new StringComponent(s);
         else if (colors.length == 1) return new StringComponent(s).setStyle(new Style().setFormatting(colors[0]));
 
-        ATextComponent out = new StringComponent("");
+        TextComponent out = new StringComponent("");
         float[] fractions = new float[colors.length];
         for (int i = 0; i < colors.length; i++) fractions[i] = (float) i / (float) (colors.length - 1);
         char[] chars = s.toCharArray();
@@ -55,7 +55,7 @@ public class TextColorUtils {
      * @param s The string to color
      * @return The colored string
      */
-    public static ATextComponent rainbow(final String s) {
+    public static TextComponent rainbow(final String s) {
         return gradient(
                 s,
                 new TextFormatting(0xFF0000),

@@ -1,10 +1,10 @@
 package net.lenni0451.mcstructs.text.serializer.v1_21_4.nbt;
 
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtNumber;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.Style;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtStyleSerializer_v1_20_3;
 
@@ -13,27 +13,27 @@ import java.util.function.Function;
 
 public class NbtStyleSerializer_v1_21_4 extends NbtStyleSerializer_v1_20_3 {
 
-    public NbtStyleSerializer_v1_21_4(final Function<NbtStyleSerializer_v1_20_3, ITypedSerializer<INbtTag, AHoverEvent>> hoverEventSerializer) {
+    public NbtStyleSerializer_v1_21_4(final Function<NbtStyleSerializer_v1_20_3, ITypedSerializer<NbtTag, HoverEvent>> hoverEventSerializer) {
         super(hoverEventSerializer);
     }
 
     @Override
-    public INbtTag serialize(Style object) {
+    public NbtTag serialize(Style object) {
         CompoundTag out = super.serialize(object).asCompoundTag();
         if (object.getShadowColor() != null) out.addInt("shadow_color", object.getShadowColor());
         return out;
     }
 
     @Override
-    public Style deserialize(INbtTag object) {
+    public Style deserialize(NbtTag object) {
         Style style = super.deserialize(object);
         CompoundTag tag = object.asCompoundTag();
         if (tag.contains("shadow_color")) style.setShadowColor(this.getShadowColor(tag.get("shadow_color")));
         return style;
     }
 
-    protected int getShadowColor(final INbtTag tag) {
-        if (tag instanceof INbtNumber) {
+    protected int getShadowColor(final NbtTag tag) {
+        if (tag instanceof NbtNumber) {
             return tag.asNumberTag().intValue();
         } else {
             List<Number> numbers = this.asNumberStream(tag);

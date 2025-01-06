@@ -2,8 +2,8 @@ package net.lenni0451.mcstructs.text.serializer.v1_17;
 
 import com.google.gson.*;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.*;
 import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
@@ -14,18 +14,18 @@ import java.lang.reflect.Type;
 import static net.lenni0451.mcstructs.text.utils.JsonUtils.getBoolean;
 import static net.lenni0451.mcstructs.text.utils.JsonUtils.getString;
 
-public class TextDeserializer_v1_17 implements JsonDeserializer<ATextComponent> {
+public class TextDeserializer_v1_17 implements JsonDeserializer<TextComponent> {
 
     @Override
-    public ATextComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public TextComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (json.isJsonPrimitive()) {
             return new StringComponent(json.getAsString());
         } else if (json.isJsonArray()) {
             JsonArray array = json.getAsJsonArray();
-            ATextComponent component = null;
+            TextComponent component = null;
 
             for (JsonElement element : array) {
-                ATextComponent serializedElement = this.deserialize(element, element.getClass(), context);
+                TextComponent serializedElement = this.deserialize(element, element.getClass(), context);
                 if (component == null) component = serializedElement;
                 else component.append(serializedElement);
             }
@@ -33,7 +33,7 @@ public class TextDeserializer_v1_17 implements JsonDeserializer<ATextComponent> 
             return component;
         } else if (json.isJsonObject()) {
             JsonObject rawComponent = json.getAsJsonObject();
-            ATextComponent component;
+            TextComponent component;
 
             if (rawComponent.has("text")) {
                 component = new StringComponent(getString(rawComponent, "text"));
@@ -43,7 +43,7 @@ public class TextDeserializer_v1_17 implements JsonDeserializer<ATextComponent> 
                     JsonArray with = rawComponent.getAsJsonArray("with");
                     Object[] args = new Object[with.size()];
                     for (int i = 0; i < with.size(); i++) {
-                        ATextComponent element = this.deserialize(with.get(i), typeOfT, context);
+                        TextComponent element = this.deserialize(with.get(i), typeOfT, context);
                         args[i] = element;
                         if (element instanceof StringComponent) {
                             StringComponent stringComponent = (StringComponent) element;
@@ -70,7 +70,7 @@ public class TextDeserializer_v1_17 implements JsonDeserializer<ATextComponent> 
             } else if (rawComponent.has("nbt")) {
                 String nbt = getString(rawComponent, "nbt");
                 boolean interpret = getBoolean(rawComponent, "interpret", false);
-                ATextComponent separator = null;
+                TextComponent separator = null;
                 if (rawComponent.has("separator")) separator = this.deserialize(rawComponent.get("separator"), typeOfT, context);
                 if (rawComponent.has("block")) component = new BlockNbtComponent(nbt, interpret, separator, getString(rawComponent, "block"));
                 else if (rawComponent.has("entity")) component = new EntityNbtComponent(nbt, interpret, separator, getString(rawComponent, "entity"));

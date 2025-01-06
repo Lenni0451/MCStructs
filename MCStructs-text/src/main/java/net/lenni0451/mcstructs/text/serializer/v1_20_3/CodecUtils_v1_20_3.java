@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.text.serializer.v1_20_3;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.ListTag;
@@ -26,13 +26,13 @@ public interface CodecUtils_v1_20_3 {
      * @param list The list to unwrap
      * @return The unwrapped list
      */
-    default List<INbtTag> unwrapMarkers(final ListTag<?> list) {
-        List<INbtTag> tags = new ArrayList<>(list.getValue());
+    default List<NbtTag> unwrapMarkers(final ListTag<?> list) {
+        List<NbtTag> tags = new ArrayList<>(list.getValue());
         if (NbtType.COMPOUND.equals(list.getType())) {
             for (int i = 0; i < tags.size(); i++) {
                 CompoundTag compound = (CompoundTag) tags.get(i);
                 if (compound.size() == 1) {
-                    INbtTag wrapped = compound.get("");
+                    NbtTag wrapped = compound.get("");
                     if (wrapped != null) tags.set(i, wrapped);
                 }
             }
@@ -47,15 +47,15 @@ public interface CodecUtils_v1_20_3 {
      * @param tag The tag to convert
      * @return The list of numbers
      */
-    default List<Number> asNumberStream(final INbtTag tag) {
+    default List<Number> asNumberStream(final NbtTag tag) {
         List<Number> numbers = new ArrayList<>();
         ListTag<?> list;
         if (tag.isArrayTag()) list = tag.asArrayTag().toListTag();
         else if (tag.isListTag()) list = tag.asListTag();
         else throw new IllegalArgumentException("Expected list or array tag");
 
-        List<INbtTag> unwrapped = this.unwrapMarkers(list);
-        for (INbtTag number : unwrapped) {
+        List<NbtTag> unwrapped = this.unwrapMarkers(list);
+        for (NbtTag number : unwrapped) {
             if (number.isNumberTag()) numbers.add(number.asNumberTag().numberValue());
             else throw new IllegalArgumentException("Expected number tag");
         }

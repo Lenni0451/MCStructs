@@ -1,12 +1,11 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtNumber;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.util.Objects;
 
-public class ShortTag implements INbtNumber {
+public class ShortTag implements NbtNumber {
 
     private short value;
 
@@ -85,7 +84,7 @@ public class ShortTag implements INbtNumber {
     }
 
     @Override
-    public INbtTag copy() {
+    public ShortTag copy() {
         return new ShortTag(this.value);
     }
 

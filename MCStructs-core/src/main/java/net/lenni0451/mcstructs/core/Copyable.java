@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.core;
 
-public interface ICopyable<T> {
+public interface Copyable<T> {
 
     /**
      * Create a copy of this object.<br>

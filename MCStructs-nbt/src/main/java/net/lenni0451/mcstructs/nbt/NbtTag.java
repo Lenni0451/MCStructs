@@ -1,12 +1,12 @@
 package net.lenni0451.mcstructs.nbt;
 
-import net.lenni0451.mcstructs.core.ICopyable;
+import net.lenni0451.mcstructs.core.Copyable;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
 /**
  * The base interface for all Nbt tags.
  */
-public interface INbtTag extends ICopyable<INbtTag> {
+public interface NbtTag extends Copyable<NbtTag> {
 
     /**
      * @return The type of this tag
@@ -14,7 +14,7 @@ public interface INbtTag extends ICopyable<INbtTag> {
     NbtType getNbtType();
 
     @Override
-    INbtTag copy();
+    NbtTag copy();
 
     /**
      * @return If this tag is a byte tag
@@ -166,7 +166,7 @@ public interface INbtTag extends ICopyable<INbtTag> {
      * @return This tag as a list tag
      * @throws ClassCastException If this tag is not a list tag
      */
-    default <T extends INbtTag> ListTag<T> asListTag() {
+    default <T extends NbtTag> ListTag<T> asListTag() {
         return (ListTag<T>) this;
     }
 
@@ -225,7 +225,7 @@ public interface INbtTag extends ICopyable<INbtTag> {
      * @return If this tag is a number tag
      */
     default boolean isNumberTag() {
-        return this instanceof INbtNumber;
+        return this instanceof NbtNumber;
     }
 
     /**
@@ -234,15 +234,15 @@ public interface INbtTag extends ICopyable<INbtTag> {
      * @return This tag as a number tag
      * @throws ClassCastException If this tag is not a number tag
      */
-    default INbtNumber asNumberTag() {
-        return (INbtNumber) this;
+    default NbtNumber asNumberTag() {
+        return (NbtNumber) this;
     }
 
     /**
      * @return If this tag is an array tag
      */
     default boolean isArrayTag() {
-        return this instanceof INbtArray;
+        return this instanceof NbtArray;
     }
 
     /**
@@ -251,8 +251,8 @@ public interface INbtTag extends ICopyable<INbtTag> {
      * @return This tag as an array tag
      * @throws ClassCastException If this tag is not an array tag
      */
-    default INbtArray<?, ?, ?, ?> asArrayTag() {
-        return (INbtArray<?, ?, ?, ?>) this;
+    default NbtArray<?, ?, ?, ?> asArrayTag() {
+        return (NbtArray<?, ?, ?, ?>) this;
     }
 
     boolean equals(final Object o);

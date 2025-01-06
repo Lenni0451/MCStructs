@@ -1,6 +1,6 @@
-package net.lenni0451.mcstructs.snbt;
+package net.lenni0451.mcstructs.snbt.impl;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 
 /**
@@ -8,6 +8,6 @@ import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
  */
 public interface ISNbtSerializer {
 
-    String serialize(final INbtTag tag) throws SNbtSerializeException;
+    String serialize(final NbtTag tag) throws SNbtSerializeException;
 
 }

@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.text.utils;
 
-import net.lenni0451.mcstructs.core.TextFormatting;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

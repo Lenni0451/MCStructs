@@ -8,7 +8,7 @@ import net.lenni0451.mcstructs.converter.codec.Either;
 import net.lenni0451.mcstructs.converter.codec.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class Types_v1_21 {
             public static final String COMPARATOR_OUTPUT = "comparator_output";
 
             private Either<Identifier, Types_v1_20_5.SoundEvent> soundEvent;
-            private ATextComponent description;
+            private TextComponent description;
             private float lengthInSeconds;
             private int comparatorOutput;
         }

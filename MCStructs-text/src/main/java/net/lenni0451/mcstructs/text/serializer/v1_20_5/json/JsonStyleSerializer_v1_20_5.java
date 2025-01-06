@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.text.serializer.v1_20_5.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonStyleSerializer_v1_20_3;
 
@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class JsonStyleSerializer_v1_20_5 extends JsonStyleSerializer_v1_20_3 {
 
-    public JsonStyleSerializer_v1_20_5(final Function<JsonStyleSerializer_v1_20_3, ITypedSerializer<JsonElement, AHoverEvent>> hoverEventSerializer) {
+    public JsonStyleSerializer_v1_20_5(final Function<JsonStyleSerializer_v1_20_3, ITypedSerializer<JsonElement, HoverEvent>> hoverEventSerializer) {
         super(hoverEventSerializer);
     }
 

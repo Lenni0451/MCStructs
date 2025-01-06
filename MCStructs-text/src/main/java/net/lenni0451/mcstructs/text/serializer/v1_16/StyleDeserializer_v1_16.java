@@ -2,11 +2,11 @@ package net.lenni0451.mcstructs.text.serializer.v1_16;
 
 import com.google.gson.*;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 
 import java.lang.reflect.Type;
 
@@ -35,13 +35,13 @@ public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
 
             ClickEventAction action = null;
             String value = getString(rawClickEvent, "value");
-            if (rawAction != null) action = ClickEventAction.getByName(rawAction);
+            if (rawAction != null) action = ClickEventAction.byName(rawAction);
 
             if (action != null && value != null && action.isUserDefinable()) style.setClickEvent(new ClickEvent(action, value));
         }
         if (rawStyle.has("hoverEvent")) {
             JsonObject rawHoverEvent = getJsonObject(rawStyle, "hoverEvent");
-            AHoverEvent hoverEvent = context.deserialize(rawHoverEvent, AHoverEvent.class);
+            HoverEvent hoverEvent = context.deserialize(rawHoverEvent, HoverEvent.class);
             if (hoverEvent != null && hoverEvent.getAction().isUserDefinable()) style.setHoverEvent(hoverEvent);
         }
         if (rawStyle.has("font")) {

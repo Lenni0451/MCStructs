@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.text.serializer.v1_20_5;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
@@ -29,7 +29,7 @@ public class TextComponentCodec_v1_20_5 extends TextComponentCodec {
         );
     }
 
-    protected TextComponentCodec_v1_20_5(final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<INbtTag>> nbtSerializerSupplier) {
+    protected TextComponentCodec_v1_20_5(final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<NbtTag>> nbtSerializerSupplier) {
         super(sNbtSerializerSupplier, jsonSerializerSupplier, nbtSerializerSupplier);
     }
 
@@ -58,7 +58,7 @@ public class TextComponentCodec_v1_20_5 extends TextComponentCodec {
      *
      * @param tag The tag to verify
      */
-    public void verifyItemComponents(final INbtTag tag) {
+    public void verifyItemComponents(final NbtTag tag) {
     }
 
     /**

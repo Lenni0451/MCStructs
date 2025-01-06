@@ -1,9 +1,9 @@
-package net.lenni0451.mcstructs.nbt.io.impl;
+package net.lenni0451.mcstructs.nbt.io.impl.v1_0_0;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
-import net.lenni0451.mcstructs.nbt.io.types.INbtWriter;
+import net.lenni0451.mcstructs.nbt.io.impl.INbtWriter;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -15,7 +15,7 @@ import java.util.Map;
  * The Nbt writer implementation for the Java Edition Nbt format.
  */
 @ParametersAreNonnullByDefault
-public class JavaNbtWriter implements INbtWriter {
+public class NbtWriter_v1_0_0 implements INbtWriter {
 
     @Override
     public void writeType(DataOutput out, NbtType type) throws IOException {
@@ -78,28 +78,16 @@ public class JavaNbtWriter implements INbtWriter {
         if (value.getType() == null) out.writeByte(NbtType.END.getId());
         else out.writeByte(value.getType().getId());
         out.writeInt(value.size());
-        for (INbtTag tag : value.getValue()) this.write(out, tag);
+        for (NbtTag tag : value.getValue()) this.write(out, tag);
     }
 
     @Override
     public void writeCompound(DataOutput out, CompoundTag value) throws IOException {
-        for (Map.Entry<String, INbtTag> entry : value.getValue().entrySet()) {
+        for (Map.Entry<String, NbtTag> entry : value.getValue().entrySet()) {
             this.writeHeader(out, new NbtHeader(entry.getValue().getNbtType(), entry.getKey()));
             this.write(out, entry.getValue());
         }
         this.writeHeader(out, NbtHeader.END);
-    }
-
-    @Override
-    public void writeIntArray(DataOutput out, IntArrayTag value) throws IOException {
-        out.writeInt(value.getLength());
-        for (int i : value.getValue()) out.writeInt(i);
-    }
-
-    @Override
-    public void writeLongArray(DataOutput out, LongArrayTag value) throws IOException {
-        out.writeInt(value.getLength());
-        for (long l : value.getValue()) out.writeLong(l);
     }
 
 }

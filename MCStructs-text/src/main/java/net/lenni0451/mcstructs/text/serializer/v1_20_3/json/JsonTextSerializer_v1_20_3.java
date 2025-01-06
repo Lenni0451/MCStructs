@@ -5,8 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.*;
 import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
@@ -31,7 +31,7 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
     }
 
     @Override
-    public JsonElement serialize(ATextComponent object) {
+    public JsonElement serialize(TextComponent object) {
         JsonObject out = new JsonObject();
         if (object instanceof StringComponent) {
             StringComponent component = (StringComponent) object;
@@ -86,7 +86,7 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
 
         if (!object.getSiblings().isEmpty()) {
             JsonArray siblings = new JsonArray();
-            for (ATextComponent sibling : object.getSiblings()) siblings.add(this.serialize(sibling));
+            for (TextComponent sibling : object.getSiblings()) siblings.add(this.serialize(sibling));
             out.add("extra", siblings);
         }
 
@@ -97,23 +97,23 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
         if (object instanceof Boolean) return new JsonPrimitive((Boolean) object);
         else if (object instanceof Number) return new JsonPrimitive((Number) object);
         else if (object instanceof String) return new JsonPrimitive((String) object);
-        else if (object instanceof ATextComponent) return this.serialize((ATextComponent) object);
+        else if (object instanceof TextComponent) return this.serialize((TextComponent) object);
         else throw new IllegalArgumentException("Unknown object type: " + object.getClass().getName());
     }
 
     @Override
-    public ATextComponent deserialize(JsonElement object) {
+    public TextComponent deserialize(JsonElement object) {
         if (isString(object)) {
             return new StringComponent(object.getAsString());
         } else if (object.isJsonArray()) {
             if (object.getAsJsonArray().isEmpty()) throw new IllegalArgumentException("Empty json array");
             JsonArray array = object.getAsJsonArray();
-            ATextComponent[] components = new ATextComponent[array.size()];
+            TextComponent[] components = new TextComponent[array.size()];
             for (int i = 0; i < array.size(); i++) components[i] = this.deserialize(array.get(i));
             if (components.length == 1) {
                 return components[0];
             } else {
-                ATextComponent parent = components[0];
+                TextComponent parent = components[0];
                 for (int i = 1; i < components.length; i++) parent.append(components[i]);
                 return parent;
             }
@@ -121,7 +121,7 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
             throw new IllegalArgumentException("Unknown component type: " + object.getClass().getSimpleName());
         }
 
-        ATextComponent component = null;
+        TextComponent component = null;
         JsonObject obj = object.getAsJsonObject();
         String type = optionalString(obj, "type");
         if (containsString(obj, "text") && (type == null || type.equals("text"))) {
@@ -157,13 +157,13 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
             component = new ScoreComponent(name, objective);
         } else if (containsString(obj, "selector") && (type == null || type.equals("selector"))) {
             String selector = obj.get("selector").getAsString();
-            ATextComponent separator = null;
+            TextComponent separator = null;
             if (obj.has("separator")) separator = this.deserialize(obj.get("separator"));
             component = new SelectorComponent(selector, separator);
         } else if (containsString(obj, "nbt") && (type == null || type.equals("nbt"))) {
             String nbt = obj.get("nbt").getAsString();
             boolean interpret = Boolean.TRUE.equals(optionalBoolean(obj, "interpret"));
-            ATextComponent separator = null;
+            TextComponent separator = null;
             if (obj.has("separator")) {
                 try {
                     separator = this.deserialize(obj.get("separator"));
@@ -201,8 +201,8 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
             JsonArray extraList = obj.getAsJsonArray("extra");
             if (extraList.isEmpty()) throw new IllegalArgumentException("Empty extra json array");
 
-            ATextComponent[] extra;
-            extra = new ATextComponent[extraList.size()];
+            TextComponent[] extra;
+            extra = new TextComponent[extraList.size()];
             for (int i = 0; i < extraList.size(); i++) extra[i] = this.deserialize(extraList.get(i));
             component.append(extra);
         }

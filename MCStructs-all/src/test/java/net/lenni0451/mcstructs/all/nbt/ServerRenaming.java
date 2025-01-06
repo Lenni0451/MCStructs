@@ -21,11 +21,11 @@ public class ServerRenaming {
             return;
         }
 
-        CompoundTag serversTag = (CompoundTag) NbtIO.JAVA.read(exampleServers, false, NbtReadTracker.unlimited());
+        CompoundTag serversTag = (CompoundTag) NbtIO.LATEST.read(exampleServers, false, NbtReadTracker.unlimited());
         ListTag<CompoundTag> servers = serversTag.getList("servers", NbtType.COMPOUND);
         int i = 0;
         for (CompoundTag server : servers) server.addString("name", "Server #" + ++i);
-        NbtIO.JAVA.writeFile(new File("newServers.dat"), "", serversTag);
+        NbtIO.LATEST.writeFile(new File("newServers.dat"), "", serversTag);
     }
 
 }

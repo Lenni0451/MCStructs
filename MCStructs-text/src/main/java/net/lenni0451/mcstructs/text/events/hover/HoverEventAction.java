@@ -1,5 +1,8 @@
 package net.lenni0451.mcstructs.text.events.hover;
 
+import javax.annotation.Nullable;
+import java.util.function.BiPredicate;
+
 /**
  * The hover event actions.<br>
  * Hover events have been added in Minecraft 1.7.
@@ -10,24 +13,24 @@ public enum HoverEventAction {
     SHOW_ACHIEVEMENT("show_achievement", true),
     SHOW_ITEM("show_item", true),
     /**
-     * This action has been added in minecraft 1.8.
+     * Added in minecraft 1.8.
      */
     SHOW_ENTITY("show_entity", true);
 
-    public static HoverEventAction getByName(final String name) {
-        for (HoverEventAction hoverEventAction : values()) {
-            if (hoverEventAction.getName().equalsIgnoreCase(name)) return hoverEventAction;
-        }
-        return null;
+    @Nullable
+    public static HoverEventAction byName(final String name) {
+        return byName(name, true);
     }
 
-    public static HoverEventAction getByName(final String name, final boolean ignoreCase) {
+    @Nullable
+    public static HoverEventAction byName(final String name, final boolean ignoreCase) {
+        return byName(name, ignoreCase ? String::equalsIgnoreCase : String::equals);
+    }
+
+    @Nullable
+    public static HoverEventAction byName(final String name, final BiPredicate<String, String> predicate) {
         for (HoverEventAction hoverEventAction : values()) {
-            if (ignoreCase) {
-                if (hoverEventAction.getName().equalsIgnoreCase(name)) return hoverEventAction;
-            } else {
-                if (hoverEventAction.getName().equals(name)) return hoverEventAction;
-            }
+            if (predicate.test(name, hoverEventAction.getName())) return hoverEventAction;
         }
         return null;
     }

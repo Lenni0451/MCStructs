@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.serializer.LegacyStringDeserializer;
@@ -126,7 +126,7 @@ public class Test_v1_20_5 {
             map.set(cast(entry.getKey()), entry.getValue());
         }
 
-        INbtTag tag = map.to(NbtConverter_v1_20_3.INSTANCE);
+        NbtTag tag = map.to(NbtConverter_v1_20_3.INSTANCE);
         ItemComponentMap deserialized = ItemComponentRegistry.V1_20_5.mapFrom(NbtConverter_v1_20_3.INSTANCE, tag);
         assertEquals(map.size(), deserialized.size());
         for (Map.Entry<ItemComponent<?>, ?> entry : deserialized.getValues().entrySet()) {

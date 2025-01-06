@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt;
 
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.IntArrayTag;
@@ -9,8 +9,8 @@ import net.lenni0451.mcstructs.nbt.tags.ListTag;
 import net.lenni0451.mcstructs.nbt.tags.StringTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.text.ATextComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
@@ -22,24 +22,24 @@ import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 import java.util.List;
 import java.util.UUID;
 
-public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag, AHoverEvent>, CodecUtils_v1_20_3 {
+public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag, HoverEvent>, CodecUtils_v1_20_3 {
 
     private static final String ACTION = "action";
     private static final String CONTENTS = "contents";
     private static final String VALUE = "value";
 
     private final TextComponentCodec codec;
-    private final ITypedSerializer<INbtTag, ATextComponent> textSerializer;
+    private final ITypedSerializer<NbtTag, TextComponent> textSerializer;
     private final SNbtSerializer<CompoundTag> sNbtSerializer;
 
-    public NbtHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<INbtTag, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+    public NbtHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<NbtTag, TextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
         this.codec = codec;
         this.textSerializer = textSerializer;
         this.sNbtSerializer = sNbtSerializer;
     }
 
     @Override
-    public INbtTag serialize(AHoverEvent object) {
+    public NbtTag serialize(HoverEvent object) {
         CompoundTag out = new CompoundTag();
         out.addString(ACTION, object.getAction().getName());
         if (object instanceof TextHoverEvent) {
@@ -77,11 +77,11 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
     }
 
     @Override
-    public AHoverEvent deserialize(INbtTag object) {
+    public HoverEvent deserialize(NbtTag object) {
         if (!object.isCompoundTag()) throw new IllegalArgumentException("Nbt tag is not a compound tag");
         CompoundTag tag = object.asCompoundTag();
 
-        HoverEventAction action = HoverEventAction.getByName(requiredString(tag, ACTION), false);
+        HoverEventAction action = HoverEventAction.byName(requiredString(tag, ACTION), false);
         if (action == null) throw new IllegalArgumentException("Unknown hover event action: " + tag.getString(ACTION));
         if (!action.isUserDefinable()) throw new IllegalArgumentException("Hover event action is not user definable: " + action);
 
@@ -115,14 +115,14 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
                     CompoundTag contents = requiredCompound(tag, CONTENTS);
                     Identifier type = Identifier.of(requiredString(contents, "type"));
                     UUID id = this.getUUID(contents.get("id"));
-                    ATextComponent name = contents.contains("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
+                    TextComponent name = contents.contains("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
                     return new EntityHoverEvent(action, type, id, name);
 
                 default:
                     throw new IllegalArgumentException("Unknown hover event action: " + action);
             }
         } else if (tag.contains(VALUE)) {
-            ATextComponent value = this.textSerializer.deserialize(tag.get(VALUE));
+            TextComponent value = this.textSerializer.deserialize(tag.get(VALUE));
             try {
                 switch (action) {
                     case SHOW_TEXT:
@@ -135,7 +135,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
                         return new ItemHoverEvent(action, id, count, itemTag);
                     case SHOW_ENTITY:
                         parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
-                        ATextComponent name = this.codec.deserializeJson(parsed.getString("name"));
+                        TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));
                         return new EntityHoverEvent(action, type, uuid, name);
@@ -155,7 +155,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
         throw (T) t;
     }
 
-    protected UUID getUUID(final INbtTag tag) {
+    protected UUID getUUID(final NbtTag tag) {
         if (!(tag instanceof IntArrayTag) && !(tag instanceof ListTag) && !(tag instanceof StringTag)) {
             throw new IllegalArgumentException("Expected int array, list or string tag for 'id' tag");
         }
@@ -169,7 +169,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<INbtTag
             ListTag<?> list = tag.asListTag();
             if (list.size() != 4) throw new IllegalArgumentException("Expected list with 4 values for 'id' tag");
             if (!list.getType().isNumber()) throw new IllegalArgumentException("Expected list with number values for 'id' tag");
-            List<INbtTag> values = unwrapMarkers(list);
+            List<NbtTag> values = unwrapMarkers(list);
             value = new int[4];
             for (int i = 0; i < 4; i++) {
                 value[i] = values.get(i).asNumberTag().intValue();

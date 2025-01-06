@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.text.utils;
 
 import com.google.gson.*;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
@@ -17,13 +17,13 @@ import java.util.Map;
 public class JsonNbtConverter {
 
     /**
-     * Convert a {@link INbtTag} to a {@link JsonElement}.
+     * Convert a {@link NbtTag} to a {@link JsonElement}.
      *
      * @param tag The tag to convert
      * @return The converted json element
      */
     @Nullable
-    public static JsonElement toJson(@Nullable final INbtTag tag) {
+    public static JsonElement toJson(@Nullable final NbtTag tag) {
         if (tag == null) return null;
         switch (tag.getNbtType()) {
             case END:
@@ -43,12 +43,12 @@ public class JsonNbtConverter {
                 return new JsonPrimitive(tag.asStringTag().getValue());
             case LIST:
                 JsonArray list = new JsonArray();
-                ListTag<INbtTag> listTag = tag.asListTag();
-                for (INbtTag tagInList : listTag.getValue()) {
+                ListTag<NbtTag> listTag = tag.asListTag();
+                for (NbtTag tagInList : listTag.getValue()) {
                     if (NbtType.COMPOUND.equals(listTag.getType())) {
                         CompoundTag compound = tagInList.asCompoundTag();
                         if (compound.size() == 1) {
-                            INbtTag wrappedTag = compound.get("");
+                            NbtTag wrappedTag = compound.get("");
                             if (wrappedTag != null) tagInList = wrappedTag;
                         }
                     }
@@ -57,7 +57,7 @@ public class JsonNbtConverter {
                 return list;
             case COMPOUND:
                 JsonObject compound = new JsonObject();
-                for (Map.Entry<String, INbtTag> entry : tag.asCompoundTag().getValue().entrySet()) compound.add(entry.getKey(), toJson(entry.getValue()));
+                for (Map.Entry<String, NbtTag> entry : tag.asCompoundTag().getValue().entrySet()) compound.add(entry.getKey(), toJson(entry.getValue()));
                 return compound;
             case INT_ARRAY:
                 JsonArray intArray = new JsonArray();
@@ -73,13 +73,13 @@ public class JsonNbtConverter {
     }
 
     /**
-     * Convert a {@link JsonElement} to a {@link INbtTag}.
+     * Convert a {@link JsonElement} to a {@link NbtTag}.
      *
      * @param element The element to convert
      * @return The converted nbt tag
      */
     @Nullable
-    public static INbtTag toNbt(@Nullable final JsonElement element) {
+    public static NbtTag toNbt(@Nullable final JsonElement element) {
         if (element == null) return null;
         if (element instanceof JsonObject) {
             JsonObject object = element.getAsJsonObject();
@@ -88,10 +88,10 @@ public class JsonNbtConverter {
             return compound;
         } else if (element instanceof JsonArray) {
             JsonArray array = element.getAsJsonArray();
-            List<INbtTag> nbtTags = new ArrayList<>();
+            List<NbtTag> nbtTags = new ArrayList<>();
             NbtType listType = null;
             for (JsonElement arrayElement : array) {
-                INbtTag tag = toNbt(arrayElement);
+                NbtTag tag = toNbt(arrayElement);
                 nbtTags.add(tag);
                 listType = getListType(listType, tag);
             }
@@ -99,7 +99,7 @@ public class JsonNbtConverter {
                 return new ListTag<>();
             } else if (listType == NbtType.END) { //Mixed list
                 ListTag<CompoundTag> list = new ListTag<>();
-                for (INbtTag tag : nbtTags) {
+                for (NbtTag tag : nbtTags) {
                     if (tag instanceof CompoundTag) list.add(tag.asCompoundTag());
                     else list.add(new CompoundTag().add("", tag));
                 }
@@ -146,7 +146,7 @@ public class JsonNbtConverter {
         }
     }
 
-    private static NbtType getListType(final NbtType current, final INbtTag tag) {
+    private static NbtType getListType(final NbtType current, final NbtTag tag) {
         if (current == null) return tag.getNbtType();
         if (current != tag.getNbtType()) return NbtType.END; //Placeholder for mixed lists
         return current;

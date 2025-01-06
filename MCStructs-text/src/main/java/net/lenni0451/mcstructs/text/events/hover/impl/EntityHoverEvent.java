@@ -5,9 +5,9 @@ import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
@@ -18,16 +18,19 @@ import java.util.UUID;
 /**
  * The implementation for entity hover events.
  */
-public class EntityHoverEvent extends AHoverEvent {
+public class EntityHoverEvent extends HoverEvent {
 
     private Identifier entityType;
     private UUID uuid;
     @Nullable
-    private ATextComponent name;
+    private TextComponent name;
 
-    public EntityHoverEvent(final HoverEventAction action, final Identifier entityType, final UUID uuid, @Nullable final ATextComponent name) {
+    public EntityHoverEvent(final Identifier entityType, final UUID uuid, @Nullable final TextComponent name) {
+        this(HoverEventAction.SHOW_ENTITY, entityType, uuid, name);
+    }
+
+    public EntityHoverEvent(final HoverEventAction action, final Identifier entityType, final UUID uuid, @Nullable final TextComponent name) {
         super(action);
-
         this.entityType = entityType;
         this.uuid = uuid;
         this.name = name;
@@ -73,7 +76,7 @@ public class EntityHoverEvent extends AHoverEvent {
      * @return The name of this hover event
      */
     @Nullable
-    public ATextComponent getName() {
+    public TextComponent getName() {
         return this.name;
     }
 
@@ -83,12 +86,13 @@ public class EntityHoverEvent extends AHoverEvent {
      * @param name The new name
      * @return This instance for chaining
      */
-    public EntityHoverEvent setName(@Nullable final ATextComponent name) {
+    public EntityHoverEvent setName(@Nullable final TextComponent name) {
         this.name = name;
         return this;
     }
 
     @Override
+    @Deprecated
     public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbtSerializer<?> sNbtSerializer) {
         CompoundTag tag = new CompoundTag();
         tag.addString("type", this.entityType.getValue());

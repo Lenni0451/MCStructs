@@ -1,11 +1,11 @@
-package net.lenni0451.mcstructs.nbt.io.impl;
+package net.lenni0451.mcstructs.nbt.io.impl.v1_0_0;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
-import net.lenni0451.mcstructs.nbt.io.types.INbtReader;
+import net.lenni0451.mcstructs.nbt.io.impl.INbtReader;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
 import javax.annotation.Nonnull;
@@ -21,7 +21,7 @@ import java.util.Map;
  * The Nbt reader implementation for the Java Edition Nbt format.
  */
 @ParametersAreNonnullByDefault
-public class JavaNbtReader implements INbtReader {
+public class NbtReader_v1_0_0 implements INbtReader {
 
     @Nonnull
     @Override
@@ -111,10 +111,10 @@ public class JavaNbtReader implements INbtReader {
         if (typeId == NbtType.END.getId() && count > 0) throw new NbtReadException("ListNbt with type END and count > 0");
         readTracker.read(4 * count);
         NbtType type = NbtType.byId(typeId);
-        List<INbtTag> value = new ArrayList<>(Math.min(count, 512));
+        List<NbtTag> value = new ArrayList<>(Math.min(count, 512));
         for (int i = 0; i < count; i++) {
             readTracker.pushDepth();
-            INbtTag tag = this.read(type, in, readTracker);
+            NbtTag tag = this.read(type, in, readTracker);
             readTracker.popDepth();
             value.add(tag);
         }
@@ -125,40 +125,18 @@ public class JavaNbtReader implements INbtReader {
     @Override
     public CompoundTag readCompound(DataInput in, NbtReadTracker readTracker) throws IOException {
         readTracker.read(48);
-        Map<String, INbtTag> value = new HashMap<>();
+        Map<String, NbtTag> value = new HashMap<>();
         while (true) {
             NbtHeader header = this.readHeader(in, readTracker);
             if (header.isEnd()) break;
             readTracker.read(28 + 2 * header.getName().length());
 
             readTracker.pushDepth();
-            INbtTag tag = this.read(header.getType(), in, readTracker);
+            NbtTag tag = this.read(header.getType(), in, readTracker);
             readTracker.popDepth();
             if (value.put(header.getName(), tag) != null) readTracker.read(36);
         }
         return new CompoundTag(value);
-    }
-
-    @Nonnull
-    @Override
-    public IntArrayTag readIntArray(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(24);
-        int length = in.readInt();
-        readTracker.read(4 * length);
-        int[] value = new int[length];
-        for (int i = 0; i < value.length; i++) value[i] = in.readInt();
-        return new IntArrayTag(value);
-    }
-
-    @Nonnull
-    @Override
-    public LongArrayTag readLongArray(DataInput in, NbtReadTracker readTracker) throws IOException {
-        readTracker.read(24);
-        int length = in.readInt();
-        readTracker.read(8 * length);
-        long[] value = new long[length];
-        for (int i = 0; i < value.length; i++) value[i] = in.readLong();
-        return new LongArrayTag(value);
     }
 
 }

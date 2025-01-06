@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.text.components.nbt;
 
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class StorageNbtComponentTest {
 
     @Test
     void copy() {
-        ATextComponent copy = component.copy();
+        TextComponent copy = component.copy();
         assertEquals(component, copy);
         assertNotSame(component, copy);
     }

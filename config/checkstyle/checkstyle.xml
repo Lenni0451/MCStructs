@@ -88,11 +88,11 @@
         <module name="OuterTypeFilename"/>
         <module name="UpperEll"/>
         <module name="ClassTypeParameterName">
-            <property name="format" value="^[A-Z0-9]+$"/>
+            <property name="format" value="^[A-Z0-9_]+$"/>
         </module>
         <!--<module name="ConstantName"/>-->
         <module name="InterfaceTypeParameterName">
-            <property name="format" value="^[A-Z0-9]+$"/>
+            <property name="format" value="^[A-Z0-9_]+$"/>
         </module>
         <module name="LambdaParameterName">
             <property name="format" value="^[a-z_$][a-zA-Z0-9_$]*$"/>

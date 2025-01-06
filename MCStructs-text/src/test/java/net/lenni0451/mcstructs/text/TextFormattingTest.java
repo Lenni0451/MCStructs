@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.core;
+package net.lenni0451.mcstructs.text;
 
 import org.junit.jupiter.api.Test;
 

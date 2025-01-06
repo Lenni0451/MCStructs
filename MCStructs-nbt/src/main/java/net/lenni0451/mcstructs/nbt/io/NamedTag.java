@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.nbt.io;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 /**
@@ -10,9 +10,9 @@ public class NamedTag {
 
     private final String name;
     private final NbtType type;
-    private final INbtTag tag;
+    private final NbtTag tag;
 
-    public NamedTag(final String name, final NbtType type, final INbtTag tag) {
+    public NamedTag(final String name, final NbtType type, final NbtTag tag) {
         this.name = name;
         this.type = type;
         this.tag = tag;
@@ -37,7 +37,7 @@ public class NamedTag {
      *
      * @return The tag
      */
-    public INbtTag getTag() {
+    public NbtTag getTag() {
         return this.tag;
     }
 

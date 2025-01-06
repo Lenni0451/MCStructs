@@ -1,13 +1,13 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.INbtArray;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtArray;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class LongArrayTag implements INbtTag, INbtArray<LongArrayTag, LongTag, long[], Long> {
+public class LongArrayTag implements NbtTag, NbtArray<LongArrayTag, LongTag, long[], Long> {
 
     private long[] value;
 
@@ -108,7 +108,7 @@ public class LongArrayTag implements INbtTag, INbtArray<LongArrayTag, LongTag, l
     }
 
     @Override
-    public INbtTag copy() {
+    public LongArrayTag copy() {
         return new LongArrayTag(this.value.clone());
     }
 

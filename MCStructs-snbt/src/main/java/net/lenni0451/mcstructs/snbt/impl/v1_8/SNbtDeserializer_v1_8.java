@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_8;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
-import net.lenni0451.mcstructs.snbt.ISNbtDeserializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
+import net.lenni0451.mcstructs.snbt.impl.ISNbtDeserializer;
 
 import java.util.Arrays;
 import java.util.Stack;
@@ -28,11 +28,11 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
     }
 
     @Override
-    public INbtTag deserializeValue(String s) throws SNbtDeserializeException {
+    public NbtTag deserializeValue(String s) throws SNbtDeserializeException {
         return this.parseTag(s);
     }
 
-    private INbtTag parseTag(String value) throws SNbtDeserializeException {
+    private NbtTag parseTag(String value) throws SNbtDeserializeException {
         value = value.trim();
         if (value.startsWith("{")) {
             value = value.substring(1, value.length() - 1);
@@ -55,7 +55,7 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
             return compound;
         } else if (value.startsWith("[") && !value.matches(ARRAY_PATTERN)) {
             value = value.substring(1, value.length() - 1);
-            ListTag<INbtTag> list = new ListTag<>();
+            ListTag<NbtTag> list = new ListTag<>();
 
             String pair;
             for (; value.length() > 0; value = value.substring(pair.length() + 1)) {
@@ -80,7 +80,7 @@ public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
         }
     }
 
-    private INbtTag parsePrimitive(String value) {
+    private NbtTag parsePrimitive(String value) {
         try {
             if (value.matches(DOUBLE_PATTERN)) return new DoubleTag(Double.parseDouble(value.substring(0, value.length() - 1)));
             else if (value.matches(FLOAT_PATTERN)) return new FloatTag(Float.parseFloat(value.substring(0, value.length() - 1)));

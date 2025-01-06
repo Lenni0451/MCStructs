@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.core;
+package net.lenni0451.mcstructs.text;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;

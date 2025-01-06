@@ -1,16 +1,16 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtNumber;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.exceptions.UnknownTagTypeException;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>> {
+public class CompoundTag implements NbtTag, Iterable<Map.Entry<String, NbtTag>> {
 
-    private Map<String, INbtTag> value;
+    private Map<String, NbtTag> value;
 
     /**
      * Create an empty compound tag.
@@ -24,14 +24,14 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      *
      * @param value The map
      */
-    public CompoundTag(final Map<String, INbtTag> value) {
+    public CompoundTag(final Map<String, NbtTag> value) {
         this.value = value;
     }
 
     /**
      * @return The map value
      */
-    public Map<String, INbtTag> getValue() {
+    public Map<String, NbtTag> getValue() {
         return this.value;
     }
 
@@ -41,7 +41,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @param value The new value
      * @return This tag
      */
-    public CompoundTag setValue(final Map<String, INbtTag> value) {
+    public CompoundTag setValue(final Map<String, NbtTag> value) {
         this.value = value;
         return this;
     }
@@ -72,14 +72,14 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
 
     /**
      * Get if the map contains a tag with the given name and type.<br>
-     * If the type is a {@link INbtNumber} any number type will be accepted.
+     * If the type is a {@link NbtNumber} any number type will be accepted.
      *
      * @param key  The key
      * @param type The type
      * @return If the map contains the given key and type
      */
     public boolean contains(final String key, final NbtType type) {
-        INbtTag tag = this.get(key);
+        NbtTag tag = this.get(key);
         if (tag == null) return false;
         if (type.isNumber() && tag.getNbtType().isNumber()) return true;
         return tag.getNbtType().equals(type);
@@ -93,7 +93,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return If the map contains the given key and type
      */
     public boolean containsExact(final String key, final NbtType type) {
-        INbtTag tag = this.get(key);
+        NbtTag tag = this.get(key);
         if (tag == null) return false;
         return tag.getNbtType().equals(type);
     }
@@ -106,7 +106,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The tag or null if the map does not contain the given key
      */
     @Nullable
-    public <T extends INbtTag> T get(final String key) {
+    public <T extends NbtTag> T get(final String key) {
         return (T) this.value.get(key);
     }
 
@@ -118,7 +118,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @param <T> The tag type
      * @return The tag or the default value if the map does not contain the given key
      */
-    public <T extends INbtTag> T get(final String key, final T def) {
+    public <T extends NbtTag> T get(final String key, final T def) {
         T t = this.get(key);
         if (t == null) return def;
         return t;
@@ -131,7 +131,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @param tag The tag
      * @return This tag
      */
-    public CompoundTag add(final String key, final INbtTag tag) {
+    public CompoundTag add(final String key, final NbtTag tag) {
         this.value.put(key, tag);
         return this;
     }
@@ -166,7 +166,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The removed tag or null if the map does not contain the given key
      */
     @Nullable
-    public INbtTag remove(final String key) {
+    public NbtTag remove(final String key) {
         return this.value.remove(key);
     }
 
@@ -178,7 +178,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The boolean or false if the map does not contain the given key or the tag is not a number
      */
     public boolean getBoolean(final String key) {
-        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue() != 0;
+        if (this.contains(key, NbtType.BYTE)) return this.<NbtNumber>get(key).byteValue() != 0;
         return false;
     }
 
@@ -191,7 +191,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The boolean or the default value if the map does not contain the given key or the tag is not a number
      */
     public boolean getBoolean(final String key, final boolean def) {
-        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue() != 0;
+        if (this.contains(key, NbtType.BYTE)) return this.<NbtNumber>get(key).byteValue() != 0;
         return def;
     }
 
@@ -214,7 +214,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The byte or 0 if the map does not contain the given key or the tag is not a number
      */
     public byte getByte(final String key) {
-        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue();
+        if (this.contains(key, NbtType.BYTE)) return this.<NbtNumber>get(key).byteValue();
         return 0;
     }
 
@@ -226,7 +226,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The byte or the default value if the map does not contain the given key or the tag is not a number
      */
     public byte getByte(final String key, final byte def) {
-        if (this.contains(key, NbtType.BYTE)) return this.<INbtNumber>get(key).byteValue();
+        if (this.contains(key, NbtType.BYTE)) return this.<NbtNumber>get(key).byteValue();
         return def;
     }
 
@@ -248,7 +248,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The short or 0 if the map does not contain the given key or the tag is not a number
      */
     public short getShort(final String key) {
-        if (this.contains(key, NbtType.SHORT)) return this.<INbtNumber>get(key).shortValue();
+        if (this.contains(key, NbtType.SHORT)) return this.<NbtNumber>get(key).shortValue();
         return 0;
     }
 
@@ -260,7 +260,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The short or the default value if the map does not contain the given key or the tag is not a number
      */
     public short getShort(final String key, final short def) {
-        if (this.contains(key, NbtType.SHORT)) return this.<INbtNumber>get(key).shortValue();
+        if (this.contains(key, NbtType.SHORT)) return this.<NbtNumber>get(key).shortValue();
         return def;
     }
 
@@ -282,7 +282,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The int or 0 if the map does not contain the given key or the tag is not a number
      */
     public int getInt(final String key) {
-        if (this.contains(key, NbtType.INT)) return this.<INbtNumber>get(key).intValue();
+        if (this.contains(key, NbtType.INT)) return this.<NbtNumber>get(key).intValue();
         return 0;
     }
 
@@ -294,7 +294,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The int or the default value if the map does not contain the given key or the tag is not a number
      */
     public int getInt(final String key, final int def) {
-        if (this.contains(key, NbtType.INT)) return this.<INbtNumber>get(key).intValue();
+        if (this.contains(key, NbtType.INT)) return this.<NbtNumber>get(key).intValue();
         return def;
     }
 
@@ -316,7 +316,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The long or 0 if the map does not contain the given key or the tag is not a number
      */
     public long getLong(final String key) {
-        if (this.contains(key, NbtType.LONG)) return this.<INbtNumber>get(key).longValue();
+        if (this.contains(key, NbtType.LONG)) return this.<NbtNumber>get(key).longValue();
         return 0;
     }
 
@@ -328,7 +328,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The long or the default value if the map does not contain the given key or the tag is not a number
      */
     public long getLong(final String key, final long def) {
-        if (this.contains(key, NbtType.LONG)) return this.<INbtNumber>get(key).longValue();
+        if (this.contains(key, NbtType.LONG)) return this.<NbtNumber>get(key).longValue();
         return def;
     }
 
@@ -350,7 +350,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The float or 0 if the map does not contain the given key or the tag is not a number
      */
     public float getFloat(final String key) {
-        if (this.contains(key, NbtType.FLOAT)) return this.<INbtNumber>get(key).floatValue();
+        if (this.contains(key, NbtType.FLOAT)) return this.<NbtNumber>get(key).floatValue();
         return 0;
     }
 
@@ -362,7 +362,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The float or the default value if the map does not contain the given key or the tag is not a number
      */
     public float getFloat(final String key, final float def) {
-        if (this.contains(key, NbtType.FLOAT)) return this.<INbtNumber>get(key).floatValue();
+        if (this.contains(key, NbtType.FLOAT)) return this.<NbtNumber>get(key).floatValue();
         return def;
     }
 
@@ -384,7 +384,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The double or 0 if the map does not contain the given key or the tag is not a number
      */
     public double getDouble(final String key) {
-        if (this.contains(key, NbtType.DOUBLE)) return this.<INbtNumber>get(key).doubleValue();
+        if (this.contains(key, NbtType.DOUBLE)) return this.<NbtNumber>get(key).doubleValue();
         return 0;
     }
 
@@ -396,7 +396,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @return The double or the default value if the map does not contain the given key or the tag is not a number
      */
     public double getDouble(final String key, final double def) {
-        if (this.contains(key, NbtType.DOUBLE)) return this.<INbtNumber>get(key).doubleValue();
+        if (this.contains(key, NbtType.DOUBLE)) return this.<NbtNumber>get(key).doubleValue();
         return def;
     }
 
@@ -486,7 +486,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @param <T> The type of the list
      * @return The list or <code>new ListTag{@literal <}{@literal >}()</code> if the map does not contain the given key or the tag is not a list
      */
-    public <T extends INbtTag> ListTag<T> getList(final String key) {
+    public <T extends NbtTag> ListTag<T> getList(final String key) {
         if (this.contains(key, NbtType.LIST)) return this.get(key);
         return new ListTag<>();
     }
@@ -499,7 +499,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @param <T> The type of the list
      * @return The list or the default value if the map does not contain the given key or the tag is not a list
      */
-    public <T extends INbtTag> ListTag<T> getList(final String key, final ListTag<T> def) {
+    public <T extends NbtTag> ListTag<T> getList(final String key, final ListTag<T> def) {
         if (this.contains(key, NbtType.LIST)) return this.get(key);
         return def;
     }
@@ -513,7 +513,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @param <T>  The type of the list
      * @return The list or <code>new ListTag{@literal <}{@literal >}()</code> if the map does not contain the given key or the tag is not a list
      */
-    public <T extends INbtTag> ListTag<T> getList(final String key, final NbtType type) {
+    public <T extends NbtTag> ListTag<T> getList(final String key, final NbtType type) {
         if (this.contains(key, NbtType.LIST)) {
             ListTag<T> list = this.get(key);
             if (!list.canAdd(type)) return new ListTag<>(type);
@@ -532,7 +532,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @param <T>  The type of the list
      * @return The list or the default value if the map does not contain the given key or the tag is not a list
      */
-    public <T extends INbtTag> ListTag<T> getList(final String key, final NbtType type, final ListTag<T> def) {
+    public <T extends NbtTag> ListTag<T> getList(final String key, final NbtType type, final ListTag<T> def) {
         if (this.contains(key, NbtType.LIST)) {
             ListTag<T> list = this.get(key);
             if (!list.canAdd(type)) return def;
@@ -560,11 +560,11 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
      * @param <T>   The type of the items
      * @throws IllegalArgumentException If the type of the items is mixed
      */
-    public <T extends INbtTag> void addList(final String key, final T... items) {
+    public <T extends NbtTag> void addList(final String key, final T... items) {
         if (items.length == 0) {
             this.add(key, new ListTag<>());
         } else {
-            List<INbtTag> list = new ArrayList<>();
+            List<NbtTag> list = new ArrayList<>();
             Collections.addAll(list, items);
             this.add(key, new ListTag<>(list));
         }
@@ -583,7 +583,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         if (items.length == 0) {
             this.add(key, new ListTag<>());
         } else {
-            List<INbtTag> list = new ArrayList<>();
+            List<NbtTag> list = new ArrayList<>();
             for (Object item : items) list.add(this.wrap(item));
             this.add(key, new ListTag<>(list));
         }
@@ -700,7 +700,7 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     public boolean trim() {
         if (this.value.isEmpty()) return true;
         this.value.entrySet().removeIf(entry -> {
-            INbtTag tag = entry.getValue();
+            NbtTag tag = entry.getValue();
             if (tag instanceof ByteTag) return ((ByteTag) tag).getValue() == 0;
             else if (tag instanceof ShortTag) return ((ShortTag) tag).getValue() == 0;
             else if (tag instanceof IntTag) return ((IntTag) tag).getValue() == 0;
@@ -718,9 +718,9 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
         return this.value.isEmpty();
     }
 
-    private INbtTag wrap(final Object o) {
+    private NbtTag wrap(final Object o) {
         if (o == null) return null;
-        if (o instanceof INbtTag) return (INbtTag) o;
+        if (o instanceof NbtTag) return (NbtTag) o;
         if (o instanceof Byte) return new ByteTag((Byte) o);
         else if (o instanceof Short) return new ShortTag((Short) o);
         else if (o instanceof Integer) return new IntTag((Integer) o);
@@ -740,14 +740,14 @@ public class CompoundTag implements INbtTag, Iterable<Map.Entry<String, INbtTag>
     }
 
     @Override
-    public INbtTag copy() {
-        Map<String, INbtTag> value = new HashMap<>();
-        for (Map.Entry<String, INbtTag> entry : this.value.entrySet()) value.put(entry.getKey(), entry.getValue().copy());
+    public CompoundTag copy() {
+        Map<String, NbtTag> value = new HashMap<>();
+        for (Map.Entry<String, NbtTag> entry : this.value.entrySet()) value.put(entry.getKey(), entry.getValue().copy());
         return new CompoundTag(value);
     }
 
     @Override
-    public Iterator<Map.Entry<String, INbtTag>> iterator() {
+    public Iterator<Map.Entry<String, NbtTag>> iterator() {
         return this.value.entrySet().iterator();
     }
 

@@ -1,22 +1,22 @@
 package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class SelectorComponent extends ATextComponent {
+public class SelectorComponent extends TextComponent {
 
     private String selector;
     @Nullable
-    private ATextComponent separator;
+    private TextComponent separator;
 
     public SelectorComponent(final String selector) {
         this(selector, null);
     }
 
-    public SelectorComponent(final String selector, @Nullable final ATextComponent separator) {
+    public SelectorComponent(final String selector, @Nullable final TextComponent separator) {
         this.selector = selector;
         this.separator = separator;
     }
@@ -43,7 +43,7 @@ public class SelectorComponent extends ATextComponent {
      * @return The separator of this component
      */
     @Nullable
-    public ATextComponent getSeparator() {
+    public TextComponent getSeparator() {
         return this.separator;
     }
 
@@ -53,7 +53,7 @@ public class SelectorComponent extends ATextComponent {
      * @param separator The separator
      * @return This component
      */
-    public SelectorComponent setSeparator(@Nullable final ATextComponent separator) {
+    public SelectorComponent setSeparator(@Nullable final TextComponent separator) {
         this.separator = separator;
         return this;
     }
@@ -64,12 +64,12 @@ public class SelectorComponent extends ATextComponent {
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         if (this.separator == null) return new SelectorComponent(this.selector, null).setStyle(this.getStyle().copy());
         else return new SelectorComponent(this.selector, this.separator.copy()).setStyle(this.getStyle().copy());
     }

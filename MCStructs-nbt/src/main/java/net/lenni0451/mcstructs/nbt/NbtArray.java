@@ -5,17 +5,17 @@ import net.lenni0451.mcstructs.nbt.tags.ListTag;
 /**
  * An interface for all Nbt array tags.
  *
- * @param <T> The nbt type of the tag
- * @param <N> The nbt type of the array elements
- * @param <A> The array type
- * @param <P> The primitive type of the array
+ * @param <TYPE> The nbt type of the tag
+ * @param <PRIMITIVE_TAG> The nbt type of the array elements
+ * @param <ARRAY> The array type
+ * @param <PRIMITIVE> The primitive type of the array
  */
-public interface INbtArray<T extends INbtArray<T, N, A, P>, N extends INbtTag, A, P> extends Iterable<P> {
+public interface NbtArray<TYPE extends NbtArray<TYPE, PRIMITIVE_TAG, ARRAY, PRIMITIVE>, PRIMITIVE_TAG extends NbtTag, ARRAY, PRIMITIVE> extends Iterable<PRIMITIVE> {
 
     /**
      * @return The array value
      */
-    A getValue();
+    ARRAY getValue();
 
     /**
      * Set the array value.
@@ -23,7 +23,7 @@ public interface INbtArray<T extends INbtArray<T, N, A, P>, N extends INbtTag, A
      * @param value The new value
      * @return This tag
      */
-    T setValue(final A value);
+    TYPE setValue(final ARRAY value);
 
     /**
      * @return The length of the array
@@ -38,6 +38,6 @@ public interface INbtArray<T extends INbtArray<T, N, A, P>, N extends INbtTag, A
     /**
      * @return The array as a {@link ListTag}
      */
-    ListTag<N> toListTag();
+    ListTag<PRIMITIVE_TAG> toListTag();
 
 }

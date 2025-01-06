@@ -12,10 +12,10 @@ import java.util.function.Consumer;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class INbtTagTest {
+class NbtTagTest {
 
-    private static final List<INbtTag> tags = new ArrayList<>();
-    private static final Map<NbtType, Consumer<INbtTag>> asFunctions = new EnumMap<>(NbtType.class);
+    private static final List<NbtTag> tags = new ArrayList<>();
+    private static final Map<NbtType, Consumer<NbtTag>> asFunctions = new EnumMap<>(NbtType.class);
 
     static {
         tags.add(new ByteTag());
@@ -31,24 +31,24 @@ class INbtTagTest {
         tags.add(new IntArrayTag());
         tags.add(new LongArrayTag());
 
-        asFunctions.put(NbtType.BYTE, INbtTag::asByteTag);
-        asFunctions.put(NbtType.SHORT, INbtTag::asShortTag);
-        asFunctions.put(NbtType.INT, INbtTag::asIntTag);
-        asFunctions.put(NbtType.LONG, INbtTag::asLongTag);
-        asFunctions.put(NbtType.FLOAT, INbtTag::asFloatTag);
-        asFunctions.put(NbtType.DOUBLE, INbtTag::asDoubleTag);
-        asFunctions.put(NbtType.BYTE_ARRAY, INbtTag::asByteArrayTag);
-        asFunctions.put(NbtType.STRING, INbtTag::asStringTag);
-        asFunctions.put(NbtType.LIST, INbtTag::asListTag);
-        asFunctions.put(NbtType.COMPOUND, INbtTag::asCompoundTag);
-        asFunctions.put(NbtType.INT_ARRAY, INbtTag::asIntArrayTag);
-        asFunctions.put(NbtType.LONG_ARRAY, INbtTag::asLongArrayTag);
+        asFunctions.put(NbtType.BYTE, NbtTag::asByteTag);
+        asFunctions.put(NbtType.SHORT, NbtTag::asShortTag);
+        asFunctions.put(NbtType.INT, NbtTag::asIntTag);
+        asFunctions.put(NbtType.LONG, NbtTag::asLongTag);
+        asFunctions.put(NbtType.FLOAT, NbtTag::asFloatTag);
+        asFunctions.put(NbtType.DOUBLE, NbtTag::asDoubleTag);
+        asFunctions.put(NbtType.BYTE_ARRAY, NbtTag::asByteArrayTag);
+        asFunctions.put(NbtType.STRING, NbtTag::asStringTag);
+        asFunctions.put(NbtType.LIST, NbtTag::asListTag);
+        asFunctions.put(NbtType.COMPOUND, NbtTag::asCompoundTag);
+        asFunctions.put(NbtType.INT_ARRAY, NbtTag::asIntArrayTag);
+        asFunctions.put(NbtType.LONG_ARRAY, NbtTag::asLongArrayTag);
     }
 
     @Test
     void testAsFunctions() {
-        for (INbtTag tag : tags) {
-            for (Map.Entry<NbtType, Consumer<INbtTag>> entry : asFunctions.entrySet()) {
+        for (NbtTag tag : tags) {
+            for (Map.Entry<NbtType, Consumer<NbtTag>> entry : asFunctions.entrySet()) {
                 if (entry.getKey().equals(tag.getNbtType())) assertDoesNotThrow(() -> entry.getValue().accept(tag));
                 else assertThrows(ClassCastException.class, () -> entry.getValue().accept(tag));
             }

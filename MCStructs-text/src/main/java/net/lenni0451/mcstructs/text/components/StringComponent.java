@@ -1,11 +1,11 @@
 package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 
 import java.util.Objects;
 
-public class StringComponent extends ATextComponent {
+public class StringComponent extends TextComponent {
 
     private String text;
 
@@ -41,12 +41,12 @@ public class StringComponent extends ATextComponent {
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         return new StringComponent(this.text).setStyle(this.getStyle().copy());
     }
 

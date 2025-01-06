@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import net.lenni0451.mcstructs.converter.codec.Either;
 import net.lenni0451.mcstructs.converter.codec.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,13 +31,13 @@ public class Types_v1_20_5 {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Lore {
-        private List<ATextComponent> lines = new ArrayList<>();
+        private List<TextComponent> lines = new ArrayList<>();
 
-        public void addLine(final ATextComponent line) {
+        public void addLine(final TextComponent line) {
             this.lines.add(line);
         }
 
-        public void removeLine(final ATextComponent line) {
+        public void removeLine(final TextComponent line) {
             this.lines.remove(line);
         }
     }
@@ -420,7 +420,7 @@ public class Types_v1_20_5 {
         private RawFilteredPair<String> title;
         private String author;
         private int generation = 0;
-        private List<RawFilteredPair<ATextComponent>> pages = new ArrayList<>();
+        private List<RawFilteredPair<TextComponent>> pages = new ArrayList<>();
         private boolean resolved = false;
 
         public WrittenBook(final RawFilteredPair<String> title, final String author) {
@@ -630,7 +630,7 @@ public class Types_v1_20_5 {
         private Identifier ingredient;
         private float itemModelIndex;
         private Map<Identifier, String> overrideArmorMaterials;
-        private ATextComponent description;
+        private TextComponent description;
     }
 
     @Data
@@ -644,10 +644,10 @@ public class Types_v1_20_5 {
 
         private Identifier assetId;
         private Identifier templateItem;
-        private ATextComponent description;
+        private TextComponent description;
         private boolean decal = false;
 
-        public ArmorTrimPattern(final Identifier assetId, final Identifier templateItem, final ATextComponent description) {
+        public ArmorTrimPattern(final Identifier assetId, final Identifier templateItem, final TextComponent description) {
             this.assetId = assetId;
             this.templateItem = templateItem;
             this.description = description;

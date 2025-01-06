@@ -8,8 +8,8 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.text.ATextComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
@@ -20,24 +20,24 @@ import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
 import java.util.UUID;
 
-public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonElement, AHoverEvent>, CodecUtils_v1_20_3 {
+public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonElement, HoverEvent>, CodecUtils_v1_20_3 {
 
     private static final String ACTION = "action";
     private static final String CONTENTS = "contents";
     private static final String VALUE = "value";
 
     private final TextComponentCodec codec;
-    private final ITypedSerializer<JsonElement, ATextComponent> textSerializer;
+    private final ITypedSerializer<JsonElement, TextComponent> textSerializer;
     private final SNbtSerializer<CompoundTag> sNbtSerializer;
 
-    public JsonHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<JsonElement, ATextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+    public JsonHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<JsonElement, TextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
         this.codec = codec;
         this.textSerializer = textSerializer;
         this.sNbtSerializer = sNbtSerializer;
     }
 
     @Override
-    public JsonElement serialize(AHoverEvent object) {
+    public JsonElement serialize(HoverEvent object) {
         JsonObject out = new JsonObject();
         out.addProperty(ACTION, object.getAction().getName());
         if (object instanceof TextHoverEvent) {
@@ -75,11 +75,11 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
     }
 
     @Override
-    public AHoverEvent deserialize(JsonElement object) {
+    public HoverEvent deserialize(JsonElement object) {
         if (!object.isJsonObject()) throw new IllegalArgumentException("Element must be a json object");
         JsonObject obj = object.getAsJsonObject();
 
-        HoverEventAction action = HoverEventAction.getByName(requiredString(obj, ACTION), false);
+        HoverEventAction action = HoverEventAction.byName(requiredString(obj, ACTION), false);
         if (action == null) throw new IllegalArgumentException("Unknown hover event action: " + obj.get(ACTION).getAsString());
         if (!action.isUserDefinable()) throw new IllegalArgumentException("Hover event action is not user definable: " + action);
 
@@ -113,14 +113,14 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                     JsonObject contents = requiredObject(obj, CONTENTS);
                     Identifier type = Identifier.of(requiredString(contents, "type"));
                     UUID id = this.getUUID(contents.get("id"));
-                    ATextComponent name = contents.has("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
+                    TextComponent name = contents.has("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
                     return new EntityHoverEvent(action, type, id, name);
 
                 default:
                     throw new IllegalArgumentException("Unknown hover event action: " + action);
             }
         } else if (obj.has(VALUE)) {
-            ATextComponent value = this.textSerializer.deserialize(obj.get(VALUE));
+            TextComponent value = this.textSerializer.deserialize(obj.get(VALUE));
             try {
                 switch (action) {
                     case SHOW_TEXT:
@@ -133,7 +133,7 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                         return new ItemHoverEvent(action, id, count, itemTag);
                     case SHOW_ENTITY:
                         parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
-                        ATextComponent name = this.codec.deserializeJson(parsed.getString("name"));
+                        TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));
                         return new EntityHoverEvent(action, type, uuid, name);

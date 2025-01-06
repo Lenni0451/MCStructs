@@ -1,13 +1,13 @@
 package net.lenni0451.mcstructs.text.utils;
 
-import net.lenni0451.mcstructs.core.TextFormatting;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.components.KeybindComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 
@@ -29,7 +29,7 @@ public class TextUtils {
      * @param component The component to make clickable
      * @return The component with clickable URLs
      */
-    public static ATextComponent makeURLsClickable(final ATextComponent component) {
+    public static TextComponent makeURLsClickable(final TextComponent component) {
         return replace(component, URL_PATTERN, comp -> {
             comp.getStyle().setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL, comp.asSingleString()));
             return comp;
@@ -44,18 +44,18 @@ public class TextUtils {
      * @param replaceFunction The function that will be called for every component
      * @return A new component with the replaced components
      */
-    public static ATextComponent replace(final ATextComponent component, final Function<ATextComponent, ATextComponent> replaceFunction) {
-        ATextComponent out = component.shallowCopy();
+    public static TextComponent replace(final TextComponent component, final Function<TextComponent, TextComponent> replaceFunction) {
+        TextComponent out = component.shallowCopy();
         out = replaceFunction.apply(out);
         if (out instanceof TranslationComponent) {
             Object[] args = ((TranslationComponent) out).getArgs();
             for (int i = 0; i < args.length; i++) {
-                if (args[i] instanceof ATextComponent) {
-                    args[i] = replace((ATextComponent) args[i], replaceFunction);
+                if (args[i] instanceof TextComponent) {
+                    args[i] = replace((TextComponent) args[i], replaceFunction);
                 }
             }
         }
-        for (ATextComponent sibling : component.getSiblings()) out.append(replace(sibling, replaceFunction));
+        for (TextComponent sibling : component.getSiblings()) out.append(replace(sibling, replaceFunction));
         return out;
     }
 
@@ -68,27 +68,27 @@ public class TextUtils {
      * @param replaceFunction The function that will be called for every match
      * @return A new component with the replaced text
      */
-    public static ATextComponent replace(final ATextComponent component, final String searchRegex, final Function<ATextComponent, ATextComponent> replaceFunction) {
-        ATextComponent out;
+    public static TextComponent replace(final TextComponent component, final String searchRegex, final Function<TextComponent, TextComponent> replaceFunction) {
+        TextComponent out;
         Pattern pattern = Pattern.compile(searchRegex);
         if (component instanceof StringComponent) {
             String text = component.asSingleString();
             Matcher matcher = pattern.matcher(text);
-            List<ATextComponent> parts = new ArrayList<>();
+            List<TextComponent> parts = new ArrayList<>();
             int last = 0;
             while (matcher.find()) {
                 int start = matcher.start();
                 String match = matcher.group();
 
                 if (start > last) parts.add(new StringComponent(text.substring(last, start)).setStyle(component.getStyle().copy()));
-                ATextComponent replace = replaceFunction.apply(new StringComponent(match).setStyle(component.getStyle().copy()));
+                TextComponent replace = replaceFunction.apply(new StringComponent(match).setStyle(component.getStyle().copy()));
                 if (replace != null) parts.add(replace);
                 last = matcher.end();
             }
             if (last < text.length()) parts.add(new StringComponent(text.substring(last)).setStyle(component.getStyle().copy()));
             if (parts.size() > 1) {
                 out = new StringComponent("");
-                for (ATextComponent part : parts) out.append(part);
+                for (TextComponent part : parts) out.append(part);
             } else {
                 if (parts.size() == 1) out = parts.get(0).shallowCopy();
                 else out = component.shallowCopy();
@@ -96,8 +96,8 @@ public class TextUtils {
         } else {
             out = component.shallowCopy();
         }
-        for (ATextComponent sibling : component.getSiblings()) {
-            ATextComponent replace = replace(sibling, searchRegex, replaceFunction);
+        for (TextComponent sibling : component.getSiblings()) {
+            TextComponent replace = replace(sibling, searchRegex, replaceFunction);
             out.append(replace);
         }
 
@@ -112,8 +112,8 @@ public class TextUtils {
      * @param component The component to replace in
      * @return A new component with the replaced text
      */
-    public static ATextComponent replaceRGBColors(final ATextComponent component) {
-        ATextComponent out = component.copy();
+    public static TextComponent replaceRGBColors(final TextComponent component) {
+        TextComponent out = component.copy();
         out.forEach(comp -> {
             if (comp.getStyle().getColor() != null && comp.getStyle().getColor().isRGBColor()) {
                 comp.getStyle().setFormatting(TextFormatting.getClosestFormattingColor(comp.getStyle().getColor().getRgbValue()));
@@ -132,12 +132,12 @@ public class TextUtils {
      * @param components The components
      * @return The joined component
      */
-    public static ATextComponent join(final ATextComponent separator, final ATextComponent... components) {
+    public static TextComponent join(final TextComponent separator, final TextComponent... components) {
         if (components.length == 0) return new StringComponent("");
         if (components.length == 1) return components[0].copy();
 
-        ATextComponent out = null;
-        for (ATextComponent component : components) {
+        TextComponent out = null;
+        for (TextComponent component : components) {
             if (out == null) out = new StringComponent("").append(component.copy());
             else out.append(separator.copy()).append(component.copy());
         }
@@ -150,26 +150,26 @@ public class TextUtils {
      *
      * @param component The component to iterate over
      * @param consumer  The consumer that will be called for every component
-     * @see ATextComponent#forEach(Consumer)
+     * @see TextComponent#forEach(Consumer)
      */
-    public static void iterateAll(final ATextComponent component, final Consumer<ATextComponent> consumer) {
+    public static void iterateAll(final TextComponent component, final Consumer<TextComponent> consumer) {
         consumer.accept(component);
         if (component instanceof TranslationComponent) {
             TranslationComponent translationComponent = (TranslationComponent) component;
             for (Object arg : translationComponent.getArgs()) {
-                if (arg instanceof ATextComponent) iterateAll((ATextComponent) arg, consumer);
+                if (arg instanceof TextComponent) iterateAll((TextComponent) arg, consumer);
             }
         }
         if (component.getStyle().getHoverEvent() != null) {
-            AHoverEvent hoverEvent = component.getStyle().getHoverEvent();
+            HoverEvent hoverEvent = component.getStyle().getHoverEvent();
             if (hoverEvent instanceof TextHoverEvent) {
                 iterateAll(((TextHoverEvent) hoverEvent).getText(), consumer);
             } else if (hoverEvent instanceof EntityHoverEvent) {
-                ATextComponent name = ((EntityHoverEvent) hoverEvent).getName();
+                TextComponent name = ((EntityHoverEvent) hoverEvent).getName();
                 if (name != null) iterateAll(name, consumer);
             }
         }
-        for (ATextComponent sibling : component.getSiblings()) {
+        for (TextComponent sibling : component.getSiblings()) {
             iterateAll(sibling, consumer);
         }
     }
@@ -181,7 +181,7 @@ public class TextUtils {
      * @param component  The component to set the translator for
      * @param translator The translator function
      */
-    public static void setTranslator(final ATextComponent component, @Nullable final Function<String, String> translator) {
+    public static void setTranslator(final TextComponent component, @Nullable final Function<String, String> translator) {
         setTranslator(component, translator, translator);
     }
 
@@ -193,7 +193,7 @@ public class TextUtils {
      * @param textTranslator The translator function for text components
      * @param keyTranslator  The translator function for keybind components
      */
-    public static void setTranslator(final ATextComponent component, @Nullable final Function<String, String> textTranslator, @Nullable final Function<String, String> keyTranslator) {
+    public static void setTranslator(final TextComponent component, @Nullable final Function<String, String> textTranslator, @Nullable final Function<String, String> keyTranslator) {
         iterateAll(component, comp -> {
             if (comp instanceof TranslationComponent) {
                 TranslationComponent translationComponent = (TranslationComponent) comp;
@@ -216,22 +216,22 @@ public class TextUtils {
      * @param resolveTranslations If translations should be resolved before splitting
      * @return An array of components
      */
-    public static ATextComponent[] split(final ATextComponent component, final String split, final boolean resolveTranslations) {
-        ATextComponent rootCopy = component.copy();
-        rootCopy.applyParentStyle(); //Make sure all siblings have the correct style
+    public static TextComponent[] split(final TextComponent component, final String split, final boolean resolveTranslations) {
+        TextComponent rootCopy = component.copy();
+        rootCopy.mergeSiblingParentStyle(); //Make sure all siblings have the correct style
         //This allows us to handle every component independently without having to worry about the hierarchy
         //Using this approach is kind of cheating, but it's by far the easiest way
 
-        List<ATextComponent> components = new ArrayList<>();
-        List<ATextComponent> current = new ArrayList<>();
+        List<TextComponent> components = new ArrayList<>();
+        List<TextComponent> current = new ArrayList<>();
         Runnable addCurrent = () -> {
             boolean wasEmpty = current.isEmpty();
             current.removeIf(comp -> comp instanceof StringComponent && comp.asSingleString().isEmpty()); //Remove empty components to reduce the amount of components
             if (current.size() == 1) {
                 components.add(current.get(0));
             } else if (!wasEmpty) {
-                ATextComponent part = new StringComponent("");
-                for (ATextComponent textComponent : current) part.append(textComponent);
+                TextComponent part = new StringComponent("");
+                for (TextComponent textComponent : current) part.append(textComponent);
                 components.add(part);
             }
             current.clear();
@@ -243,7 +243,7 @@ public class TextUtils {
                     String[] parts = text.split(split, -1 /*Keep empty parts*/);
                     for (int i = 0; i < parts.length; i++) {
                         String part = parts[i];
-                        ATextComponent partComp = new StringComponent(part).setStyle(comp.getStyle().copy());
+                        TextComponent partComp = new StringComponent(part).setStyle(comp.getStyle().copy());
                         current.add(partComp);
 
                         if (i != parts.length - 1) addCurrent.run(); //Don't add the last part since more text will follow
@@ -256,7 +256,7 @@ public class TextUtils {
             }
         });
         addCurrent.run();
-        return components.toArray(new ATextComponent[0]);
+        return components.toArray(new TextComponent[0]);
     }
 
 }

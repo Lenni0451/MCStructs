@@ -3,8 +3,8 @@ package net.lenni0451.mcstructs.text.serializer.v1_18;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.text.ATextComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
@@ -18,11 +18,11 @@ public class HoverEventDeserializer_v1_18 extends HoverEventDeserializer_v1_16 {
         super(textComponentSerializer, sNbtSerializer);
     }
 
-    protected AHoverEvent deserializeLegacy(final HoverEventAction action, final ATextComponent text) {
+    protected HoverEvent deserializeLegacy(final HoverEventAction action, final TextComponent text) {
         if (action == HoverEventAction.SHOW_ENTITY) {
             try {
                 CompoundTag rawEntity = (CompoundTag) this.sNbtSerializer.deserialize(text.asUnformattedString());
-                ATextComponent name = this.textComponentSerializer.deserialize(rawEntity.getString("name"));
+                TextComponent name = this.textComponentSerializer.deserialize(rawEntity.getString("name"));
                 Identifier entityType = Identifier.of(rawEntity.getString("type"));
                 UUID uuid = UUID.fromString(rawEntity.getString("id"));
                 return new EntityHoverEvent(action, entityType, uuid, name);

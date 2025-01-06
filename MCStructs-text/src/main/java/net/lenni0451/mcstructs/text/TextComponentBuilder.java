@@ -1,9 +1,8 @@
 package net.lenni0451.mcstructs.text;
 
-import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 
 import java.awt.*;
 
@@ -19,7 +18,7 @@ public class TextComponentBuilder {
      * - {@link TextFormatting}: Add a new formatting to the current style<br>
      * - {@link Color}: Add a new rgb color to the current style<br>
      * - {@link ClickEvent}: Add a new click event to the current style<br>
-     * - {@link AHoverEvent}: Add a new hover event to the current style<br>
+     * - {@link HoverEvent}: Add a new hover event to the current style<br>
      * - {@link Style}: Set the current style<br>
      * <br>
      * All other objects will be converted to a string and added to the current component.<br>
@@ -33,7 +32,7 @@ public class TextComponentBuilder {
      * @param parts The parts of the text component
      * @return The built text component
      */
-    public static ATextComponent build(final Object... parts) {
+    public static TextComponent build(final Object... parts) {
         StringComponent out = new StringComponent("");
 
         StringComponent current = null;
@@ -49,17 +48,17 @@ public class TextComponentBuilder {
                 style.setFormatting(new TextFormatting(((Color) part).getRGB()));
             } else if (part instanceof ClickEvent) {
                 style.setClickEvent((ClickEvent) part);
-            } else if (part instanceof AHoverEvent) {
-                style.setHoverEvent((AHoverEvent) part);
+            } else if (part instanceof HoverEvent) {
+                style.setHoverEvent((HoverEvent) part);
             } else if (part instanceof Style) {
                 style = (Style) part;
-            } else if (part instanceof ATextComponent) {
+            } else if (part instanceof TextComponent) {
                 if (checkAppend(out, current, style)) {
                     current = null;
                     style = new Style();
                 }
                 if (current == null) current = (StringComponent) part;
-                else current.append((ATextComponent) part);
+                else current.append((TextComponent) part);
             } else {
                 if (checkAppend(out, current, style)) {
                     current = null;
@@ -77,7 +76,7 @@ public class TextComponentBuilder {
         return out;
     }
 
-    private static boolean checkAppend(final ATextComponent out, final ATextComponent current, final Style style) {
+    private static boolean checkAppend(final TextComponent out, final TextComponent current, final Style style) {
         if (current == null) return !style.isEmpty();
         if (style.isEmpty()) return false;
         out.append(current.setStyle(style));

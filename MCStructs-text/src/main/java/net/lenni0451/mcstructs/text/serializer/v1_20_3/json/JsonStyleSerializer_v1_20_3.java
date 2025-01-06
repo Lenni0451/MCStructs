@@ -3,11 +3,11 @@ package net.lenni0451.mcstructs.text.serializer.v1_20_3.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.subtypes.IStyleSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
@@ -16,9 +16,9 @@ import java.util.function.Function;
 
 public class JsonStyleSerializer_v1_20_3 implements IStyleSerializer<JsonElement>, CodecUtils_v1_20_3 {
 
-    private final ITypedSerializer<JsonElement, AHoverEvent> hoverEventSerializer;
+    private final ITypedSerializer<JsonElement, HoverEvent> hoverEventSerializer;
 
-    public JsonStyleSerializer_v1_20_3(final Function<JsonStyleSerializer_v1_20_3, ITypedSerializer<JsonElement, AHoverEvent>> hoverEventSerializer) {
+    public JsonStyleSerializer_v1_20_3(final Function<JsonStyleSerializer_v1_20_3, ITypedSerializer<JsonElement, HoverEvent>> hoverEventSerializer) {
         this.hoverEventSerializer = hoverEventSerializer.apply(this);
     }
 
@@ -65,7 +65,7 @@ public class JsonStyleSerializer_v1_20_3 implements IStyleSerializer<JsonElement
         style.setObfuscated(optionalBoolean(obj, "obfuscated"));
         if (obj.has("clickEvent")) {
             JsonObject clickEvent = requiredObject(obj, "clickEvent");
-            ClickEventAction action = ClickEventAction.getByName(requiredString(clickEvent, "action"), false);
+            ClickEventAction action = ClickEventAction.byName(requiredString(clickEvent, "action"), false);
             if (action == null || ClickEventAction.TWITCH_USER_INFO.equals(action)) {
                 throw new IllegalArgumentException("Unknown click event action: " + clickEvent.get("action").getAsString());
             }
