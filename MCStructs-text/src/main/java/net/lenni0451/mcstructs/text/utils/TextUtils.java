@@ -10,6 +10,7 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
+import net.lenni0451.mcstructs.text.translation.Translator;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -181,7 +182,7 @@ public class TextUtils {
      * @param component  The component to set the translator for
      * @param translator The translator function
      */
-    public static void setTranslator(final TextComponent component, @Nullable final Function<String, String> translator) {
+    public static void setTranslator(final TextComponent component, @Nullable final Translator translator) {
         setTranslator(component, translator, translator);
     }
 
@@ -193,7 +194,7 @@ public class TextUtils {
      * @param textTranslator The translator function for text components
      * @param keyTranslator  The translator function for keybind components
      */
-    public static void setTranslator(final TextComponent component, @Nullable final Function<String, String> textTranslator, @Nullable final Function<String, String> keyTranslator) {
+    public static void setTranslator(final TextComponent component, @Nullable final Translator textTranslator, @Nullable final Translator keyTranslator) {
         iterateAll(component, comp -> {
             if (comp instanceof TranslationComponent) {
                 TranslationComponent translationComponent = (TranslationComponent) comp;

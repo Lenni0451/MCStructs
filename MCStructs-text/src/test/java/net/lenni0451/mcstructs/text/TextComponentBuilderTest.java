@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text;
 
+import net.lenni0451.mcstructs.text.utils.TextComponentBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

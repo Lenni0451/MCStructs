@@ -1,5 +1,8 @@
-package net.lenni0451.mcstructs.text;
+package net.lenni0451.mcstructs.text.utils;
 
+import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
@@ -32,7 +35,7 @@ public class TextComponentBuilder {
      * @param parts The parts of the text component
      * @return The built text component
      */
-    public static TextComponent build(final Object... parts) {
+    public static net.lenni0451.mcstructs.text.TextComponent build(final Object... parts) {
         StringComponent out = new StringComponent("");
 
         StringComponent current = null;
@@ -52,13 +55,13 @@ public class TextComponentBuilder {
                 style.setHoverEvent((HoverEvent) part);
             } else if (part instanceof Style) {
                 style = (Style) part;
-            } else if (part instanceof TextComponent) {
+            } else if (part instanceof net.lenni0451.mcstructs.text.TextComponent) {
                 if (checkAppend(out, current, style)) {
                     current = null;
                     style = new Style();
                 }
                 if (current == null) current = (StringComponent) part;
-                else current.append((TextComponent) part);
+                else current.append((net.lenni0451.mcstructs.text.TextComponent) part);
             } else {
                 if (checkAppend(out, current, style)) {
                     current = null;
@@ -76,7 +79,7 @@ public class TextComponentBuilder {
         return out;
     }
 
-    private static boolean checkAppend(final TextComponent out, final TextComponent current, final Style style) {
+    private static boolean checkAppend(final net.lenni0451.mcstructs.text.TextComponent out, final TextComponent current, final Style style) {
         if (current == null) return !style.isEmpty();
         if (style.isEmpty()) return false;
         out.append(current.setStyle(style));

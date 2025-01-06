@@ -2,26 +2,25 @@ package net.lenni0451.mcstructs.text.components;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.translation.Translator;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TranslationComponent extends TextComponent {
 
-    private static final Function<String, String> NULL_TRANSLATOR = s -> null;
     private static final Pattern ARG_PATTERN = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
     private String key;
     private Object[] args;
     @Nullable
     private String fallback;
-    private Function<String, String> translator = NULL_TRANSLATOR;
+    private Translator translator = Translator.GLOBAL;
 
     public TranslationComponent(final String key, final List<?> args) {
         this.key = key;
@@ -96,15 +95,15 @@ public class TranslationComponent extends TextComponent {
      * @param translator The translator function
      * @return This component
      */
-    public TranslationComponent setTranslator(@Nullable final Function<String, String> translator) {
-        if (translator == null) this.translator = NULL_TRANSLATOR;
+    public TranslationComponent setTranslator(@Nullable final Translator translator) {
+        if (translator == null) this.translator = Translator.GLOBAL;
         else this.translator = translator;
         return this;
     }
 
     public TextComponent resolveIntoComponents() {
         List<TextComponent> components = new ArrayList<>();
-        String translated = this.translator.apply(this.key);
+        String translated = this.translator.translate(this.key);
         if (translated == null) translated = this.fallback;
         if (translated == null) translated = this.key;
         Matcher matcher = ARG_PATTERN.matcher(translated);
@@ -191,7 +190,7 @@ public class TranslationComponent extends TextComponent {
                 .add("style", this.getStyle(), style -> !style.isEmpty())
                 .add("key", this.key)
                 .add("args", this.args, args -> args.length > 0, Arrays::toString)
-                .add("translator", this.translator, translator -> translator != NULL_TRANSLATOR)
+                .add("translator", this.translator, translator -> translator != Translator.GLOBAL)
                 .toString();
     }
 
