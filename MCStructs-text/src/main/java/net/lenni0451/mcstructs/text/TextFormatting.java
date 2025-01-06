@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.text;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
+
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -283,7 +285,12 @@ public class TextFormatting {
 
     @Override
     public String toString() {
-        return "TextFormatting{type=" + this.type + ", name='" + this.name + '\'' + ", code=" + this.code + ", rgbValue=" + this.rgbValue + "}";
+        return ToString.of(this)
+                .add("type", this.type)
+                .add("name", this.name, s -> !this.type.equals(Type.RGB))
+                .add("code", this.code, c -> !this.type.equals(Type.RGB))
+                .add("rgbValue", this.rgbValue, i -> this.type.equals(Type.RGB), i -> String.format("#%06X", i))
+                .toString();
     }
 
 

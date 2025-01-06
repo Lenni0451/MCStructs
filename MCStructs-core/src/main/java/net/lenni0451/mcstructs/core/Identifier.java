@@ -102,10 +102,7 @@ public class Identifier {
 
     @Override
     public String toString() {
-        return "Identifier{" +
-                "key='" + this.key + '\'' +
-                ", value='" + this.value + '\'' +
-                '}';
+        return this.get();
     }
 
 }

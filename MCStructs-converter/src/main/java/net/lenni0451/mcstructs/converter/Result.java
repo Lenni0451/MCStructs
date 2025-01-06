@@ -1,9 +1,11 @@
 package net.lenni0451.mcstructs.converter;
 
 import lombok.SneakyThrows;
+import net.lenni0451.mcstructs.core.utils.ToString;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class Result<T> {
@@ -97,7 +99,10 @@ public class Result<T> {
 
     @Override
     public String toString() {
-        return "Result{" + (this.error == null ? "result=" + this.result : "error=" + this.error) + "}";
+        return ToString.of(this)
+                .add("result", this.result, r -> this.error == null)
+                .add("error", this.error, Objects::nonNull)
+                .toString();
     }
 
 }
