@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.text.stringformat.StringFormat;
 /**
  * Option to modify the behavior of how unknown formatting codes are handled in a {@link StringFormat} during serialization.
  *
- * @see StringFormat#toString(TextComponent, SerializerUnknownHandling)
+ * @see StringFormat#toString(TextComponent, ColorHandling, SerializerUnknownHandling)
  */
 @FunctionalInterface
 public interface SerializerUnknownHandling {

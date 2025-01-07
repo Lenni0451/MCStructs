@@ -14,7 +14,7 @@ public interface DeserializerUnknownHandling {
 
     /**
      * Treat unknown formatting codes as white.<br>
-     * This is the default behavior for Minecraft {@code <=} 1.12.2.
+     * This is the default behavior for Minecraft {@literal <=} 1.12.2.
      */
     DeserializerUnknownHandling WHITE = (resolved, currentText) -> TextFormatting.WHITE;
     /**
