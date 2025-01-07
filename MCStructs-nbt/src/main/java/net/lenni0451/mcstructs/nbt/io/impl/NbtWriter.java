@@ -10,7 +10,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 @ParametersAreNonnullByDefault
-public interface INbtWriter {
+public interface NbtWriter {
 
     /**
      * Write a Nbt type.

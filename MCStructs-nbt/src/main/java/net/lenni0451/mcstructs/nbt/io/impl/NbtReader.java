@@ -12,7 +12,7 @@ import java.io.DataInput;
 import java.io.IOException;
 
 @ParametersAreNonnullByDefault
-public interface INbtReader {
+public interface NbtReader {
 
     /**
      * Read a Nbt type.

@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.nbt.io.internal;
 
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
-import net.lenni0451.mcstructs.nbt.io.impl.INbtWriter;
+import net.lenni0451.mcstructs.nbt.io.impl.NbtWriter;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.WillClose;
@@ -17,7 +17,7 @@ import java.util.zip.GZIPOutputStream;
 @ParametersAreNonnullByDefault
 public interface NbtWriteWrapper {
 
-    INbtWriter getWriter();
+    NbtWriter getWriter();
 
     /**
      * Write and uncompressed Nbt tag to a file.

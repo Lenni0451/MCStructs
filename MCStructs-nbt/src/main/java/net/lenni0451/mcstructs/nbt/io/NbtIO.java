@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.nbt.io;
 
-import net.lenni0451.mcstructs.nbt.io.impl.INbtReader;
-import net.lenni0451.mcstructs.nbt.io.impl.INbtWriter;
+import net.lenni0451.mcstructs.nbt.io.impl.NbtReader;
+import net.lenni0451.mcstructs.nbt.io.impl.NbtWriter;
 import net.lenni0451.mcstructs.nbt.io.impl.v1_0_0.NbtReader_v1_0_0;
 import net.lenni0451.mcstructs.nbt.io.impl.v1_0_0.NbtWriter_v1_0_0;
 import net.lenni0451.mcstructs.nbt.io.impl.v1_12.NbtReader_v1_12;
@@ -33,10 +33,10 @@ public class NbtIO implements NbtReadWrapper, NbtWriteWrapper {
     public static final NbtIO LATEST = V1_12;
 
 
-    private final INbtReader reader;
-    private final INbtWriter writer;
+    private final NbtReader reader;
+    private final NbtWriter writer;
 
-    public NbtIO(final INbtReader reader, final INbtWriter writer) {
+    public NbtIO(final NbtReader reader, final NbtWriter writer) {
         this.reader = reader;
         this.writer = writer;
     }
@@ -45,7 +45,7 @@ public class NbtIO implements NbtReadWrapper, NbtWriteWrapper {
      * @return The Nbt reader
      */
     @Override
-    public INbtReader getReader() {
+    public NbtReader getReader() {
         return this.reader;
     }
 
@@ -53,7 +53,7 @@ public class NbtIO implements NbtReadWrapper, NbtWriteWrapper {
      * @return The Nbt writer
      */
     @Override
-    public INbtWriter getWriter() {
+    public NbtWriter getWriter() {
         return this.writer;
     }
 

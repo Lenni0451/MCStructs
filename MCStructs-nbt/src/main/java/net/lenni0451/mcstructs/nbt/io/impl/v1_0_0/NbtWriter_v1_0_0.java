@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.nbt.io.impl.v1_0_0;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
-import net.lenni0451.mcstructs.nbt.io.impl.INbtWriter;
+import net.lenni0451.mcstructs.nbt.io.impl.NbtWriter;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -15,7 +15,7 @@ import java.util.Map;
  * The Nbt writer implementation for the Java Edition Nbt format.
  */
 @ParametersAreNonnullByDefault
-public class NbtWriter_v1_0_0 implements INbtWriter {
+public class NbtWriter_v1_0_0 implements NbtWriter {
 
     @Override
     public void writeType(DataOutput out, NbtType type) throws IOException {

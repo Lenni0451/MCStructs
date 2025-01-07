@@ -5,7 +5,7 @@ import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.io.NamedTag;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
-import net.lenni0451.mcstructs.nbt.io.impl.INbtReader;
+import net.lenni0451.mcstructs.nbt.io.impl.NbtReader;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,7 +20,7 @@ import java.util.zip.GZIPInputStream;
 @ParametersAreNonnullByDefault
 public interface NbtReadWrapper {
 
-    INbtReader getReader();
+    NbtReader getReader();
 
     /**
      * Read an uncompressed Nbt tag from a file.

@@ -5,7 +5,7 @@ import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
-import net.lenni0451.mcstructs.nbt.io.impl.INbtReader;
+import net.lenni0451.mcstructs.nbt.io.impl.NbtReader;
 import net.lenni0451.mcstructs.nbt.tags.*;
 
 import javax.annotation.Nonnull;
@@ -21,7 +21,7 @@ import java.util.Map;
  * The Nbt reader implementation for the Java Edition Nbt format.
  */
 @ParametersAreNonnullByDefault
-public class NbtReader_v1_0_0 implements INbtReader {
+public class NbtReader_v1_0_0 implements NbtReader {
 
     @Nonnull
     @Override
