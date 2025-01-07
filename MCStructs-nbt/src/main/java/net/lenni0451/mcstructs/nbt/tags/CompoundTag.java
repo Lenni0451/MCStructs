@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.nbt.NbtNumber;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.exceptions.UnknownTagTypeException;
+import net.lenni0451.mcstructs.nbt.utils.ObjectTagConverter;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -145,7 +146,7 @@ public class CompoundTag implements NbtTag, Iterable<Map.Entry<String, NbtTag>> 
      * @throws UnknownTagTypeException If the raw value can not be converted to a tag
      */
     public CompoundTag add(final String key, final Object o) {
-        return this.add(key, this.wrap(o));
+        return this.add(key, ObjectTagConverter.convert(o));
     }
 
     /**
@@ -584,7 +585,7 @@ public class CompoundTag implements NbtTag, Iterable<Map.Entry<String, NbtTag>> 
             this.add(key, new ListTag<>());
         } else {
             List<NbtTag> list = new ArrayList<>();
-            for (Object item : items) list.add(this.wrap(item));
+            for (Object item : items) list.add(ObjectTagConverter.convert(item));
             this.add(key, new ListTag<>(list));
         }
         return this;
@@ -716,22 +717,6 @@ public class CompoundTag implements NbtTag, Iterable<Map.Entry<String, NbtTag>> 
             return false;
         });
         return this.value.isEmpty();
-    }
-
-    private NbtTag wrap(final Object o) {
-        if (o == null) return null;
-        if (o instanceof NbtTag) return (NbtTag) o;
-        if (o instanceof Byte) return new ByteTag((Byte) o);
-        else if (o instanceof Short) return new ShortTag((Short) o);
-        else if (o instanceof Integer) return new IntTag((Integer) o);
-        else if (o instanceof Long) return new LongTag((Long) o);
-        else if (o instanceof Float) return new FloatTag((Float) o);
-        else if (o instanceof Double) return new DoubleTag((Double) o);
-        else if (o instanceof byte[]) return new ByteArrayTag((byte[]) o);
-        else if (o instanceof String) return new StringTag((String) o);
-        else if (o instanceof int[]) return new IntArrayTag((int[]) o);
-        else if (o instanceof long[]) return new LongArrayTag((long[]) o);
-        throw new UnknownTagTypeException(o.getClass());
     }
 
     @Override
