@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.text.events.hover.impl;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
@@ -57,7 +57,7 @@ public class TextHoverEvent extends HoverEvent {
 
     @Override
     @Deprecated
-    public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbtSerializer<?> sNbtSerializer) {
+    public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbt<?> sNbt) {
         return this;
     }
 

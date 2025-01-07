@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
@@ -28,12 +28,12 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
 
     private final TextComponentCodec codec;
     private final ITypedSerializer<JsonElement, TextComponent> textSerializer;
-    private final SNbtSerializer<CompoundTag> sNbtSerializer;
+    private final SNbt<CompoundTag> sNbt;
 
-    public JsonHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<JsonElement, TextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+    public JsonHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<JsonElement, TextComponent> textSerializer, final SNbt<CompoundTag> sNbt) {
         this.codec = codec;
         this.textSerializer = textSerializer;
-        this.sNbtSerializer = sNbtSerializer;
+        this.sNbt = sNbt;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
             if (itemHoverEvent.getCount() != 1) contents.addProperty("count", itemHoverEvent.getCount());
             if (itemHoverEvent.getNbt() != null) {
                 try {
-                    contents.addProperty("tag", this.sNbtSerializer.serialize(itemHoverEvent.getNbt()));
+                    contents.addProperty("tag", this.sNbt.serialize(itemHoverEvent.getNbt()));
                 } catch (SNbtSerializeException e) {
                     throw new IllegalStateException("Failed to serialize nbt", e);
                 }
@@ -101,7 +101,7 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                                     action,
                                     Identifier.of(id),
                                     count == null ? 1 : count,
-                                    itemTag == null ? null : this.sNbtSerializer.deserialize(itemTag)
+                                    itemTag == null ? null : this.sNbt.deserialize(itemTag)
                             );
                         } catch (Throwable t) {
                             this.sneak(t);
@@ -126,13 +126,13 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                     case SHOW_TEXT:
                         return new TextHoverEvent(action, value);
                     case SHOW_ITEM:
-                        CompoundTag parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
+                        CompoundTag parsed = this.sNbt.deserialize(value.asUnformattedString());
                         Identifier id = Identifier.of(parsed.getString("id"));
                         int count = parsed.getByte("Count");
                         CompoundTag itemTag = parsed.getCompound("tag", null);
                         return new ItemHoverEvent(action, id, count, itemTag);
                     case SHOW_ENTITY:
-                        parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
+                        parsed = this.sNbt.deserialize(value.asUnformattedString());
                         TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));

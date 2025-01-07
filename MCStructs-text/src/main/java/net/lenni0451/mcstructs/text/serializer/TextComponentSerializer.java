@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.text.serializer;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
@@ -58,7 +58,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_7())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_7())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_7())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_7(TextComponentSerializer.V1_7, SNbtSerializer.V1_7))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_7(TextComponentSerializer.V1_7, SNbt.V1_7))
             .create(), true);
     /**
      * The text component serializer for 1.8.<br>
@@ -68,7 +68,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_8())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_8, SNbtSerializer.V1_8))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_8, SNbt.V1_8))
             .create(), true);
     /**
      * The text component serializer for 1.9 - 1.11.<br>
@@ -78,7 +78,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_9())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_8())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_9, SNbtSerializer.V1_8))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_9, SNbt.V1_8))
             .create(), true);
     /**
      * The text component serializer for 1.12 - 1.13.<br>
@@ -88,7 +88,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_12())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_12())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_12, SNbtSerializer.V1_12))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_12, SNbt.V1_12))
             .create());
     /**
      * The text component serializer for 1.14.<br>
@@ -98,7 +98,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_14())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_14())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_14, SNbtSerializer.V1_14))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_14, SNbt.V1_14))
             .disableHtmlEscaping()
             .create());
     /**
@@ -109,7 +109,7 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_15())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_15())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_15, SNbtSerializer.V1_14))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_15, SNbt.V1_14))
             .disableHtmlEscaping()
             .create());
     /**
@@ -121,8 +121,8 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
-            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
-            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16, SNbtSerializer.V1_14))
+            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbt.V1_14))
+            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16, SNbt.V1_14))
             .disableHtmlEscaping()
             .create());
     /**
@@ -134,8 +134,8 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_17())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
-            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
-            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17, SNbtSerializer.V1_14))
+            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbt.V1_14))
+            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17, SNbt.V1_14))
             .disableHtmlEscaping()
             .create());
     /**
@@ -147,8 +147,8 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_17())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
-            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
-            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18, SNbtSerializer.V1_14))
+            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbt.V1_14))
+            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18, SNbt.V1_14))
             .disableHtmlEscaping()
             .create());
     /**
@@ -160,8 +160,8 @@ public class TextComponentSerializer {
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_19_4())
             .registerTypeAdapter(Style.class, new StyleDeserializer_v1_16())
             .registerTypeAdapter(Style.class, new StyleSerializer_v1_16())
-            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_19_4, SNbtSerializer.V1_14))
-            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_19_4, SNbtSerializer.V1_14))
+            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_19_4, SNbt.V1_14))
+            .registerTypeHierarchyAdapter(HoverEvent.class, new HoverEventSerializer_v1_16(TextComponentSerializer.V1_19_4, SNbt.V1_14))
             .disableHtmlEscaping()
             .create());
     /**

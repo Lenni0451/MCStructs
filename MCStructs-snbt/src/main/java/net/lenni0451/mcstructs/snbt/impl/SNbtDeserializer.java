@@ -8,7 +8,7 @@ import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
  *
  * @param <T> The output type of the deserializer
  */
-public interface ISNbtDeserializer<T extends NbtTag> {
+public interface SNbtDeserializer<T extends NbtTag> {
 
     T deserialize(final String s) throws SNbtDeserializeException;
 

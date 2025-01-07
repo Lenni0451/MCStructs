@@ -4,7 +4,7 @@ import com.google.gson.*;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
@@ -23,11 +23,11 @@ import static net.lenni0451.mcstructs.text.utils.JsonUtils.getString;
 public class HoverEventDeserializer_v1_16 implements JsonDeserializer<HoverEvent> {
 
     protected final TextComponentSerializer textComponentSerializer;
-    protected final SNbtSerializer<?> sNbtSerializer;
+    protected final SNbt<?> sNbt;
 
-    public HoverEventDeserializer_v1_16(final TextComponentSerializer textComponentSerializer, final SNbtSerializer<?> sNbtSerializer) {
+    public HoverEventDeserializer_v1_16(final TextComponentSerializer textComponentSerializer, final SNbt<?> sNbt) {
         this.textComponentSerializer = textComponentSerializer;
-        this.sNbtSerializer = sNbtSerializer;
+        this.sNbt = sNbt;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<HoverEvent
                 int count = JsonUtils.getInt(rawItem, "count", 1);
                 if (rawItem.has("tag")) {
                     String rawTag = getString(rawItem, "tag");
-                    return new ItemHoverEvent(action, item, count, (CompoundTag) this.sNbtSerializer.tryDeserialize(rawTag));
+                    return new ItemHoverEvent(action, item, count, (CompoundTag) this.sNbt.tryDeserialize(rawTag));
                 }
                 return new ItemHoverEvent(action, item, count, null);
             case SHOW_ENTITY:
@@ -78,7 +78,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<HoverEvent
             case SHOW_TEXT:
                 return new TextHoverEvent(action, text);
             case SHOW_ITEM:
-                CompoundTag rawTag = (CompoundTag) this.sNbtSerializer.tryDeserialize(text.asUnformattedString());
+                CompoundTag rawTag = (CompoundTag) this.sNbt.tryDeserialize(text.asUnformattedString());
                 if (rawTag == null) return null;
                 Identifier id = Identifier.of(rawTag.getString("id"));
                 int count = rawTag.getByte("count");
@@ -87,7 +87,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<HoverEvent
                 return new ItemHoverEvent(action, id, count, tag);
             case SHOW_ENTITY:
                 try {
-                    CompoundTag rawEntity = (CompoundTag) this.sNbtSerializer.deserialize(text.asUnformattedString());
+                    CompoundTag rawEntity = (CompoundTag) this.sNbt.deserialize(text.asUnformattedString());
                     TextComponent name = this.textComponentSerializer.deserialize(rawEntity.getString("name"));
                     Identifier entityType = Identifier.of(rawEntity.getString("type"));
                     UUID uuid = UUID.fromString(rawEntity.getString("id"));

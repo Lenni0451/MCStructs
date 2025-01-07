@@ -3,7 +3,7 @@ package net.lenni0451.mcstructs.text.events.hover.impl;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
@@ -92,13 +92,13 @@ public class ItemHoverEvent extends HoverEvent {
 
     @Override
     @Deprecated
-    public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbtSerializer<?> sNbtSerializer) {
+    public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbt<?> sNbt) {
         CompoundTag tag = new CompoundTag();
         tag.addString("id", this.item.getValue());
         tag.addByte("Count", (byte) this.count);
         if (this.nbt != null) tag.addCompound("tag", this.nbt);
         try {
-            return new TextHoverEvent(this.getAction(), new StringComponent(sNbtSerializer.serialize(tag)));
+            return new TextHoverEvent(this.getAction(), new StringComponent(sNbt.serialize(tag)));
         } catch (SNbtSerializeException e) {
             throw new RuntimeException("This should never happen! Please report to the developer immediately!", e);
         }

@@ -3,12 +3,12 @@ package net.lenni0451.mcstructs.snbt.impl.v1_12;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.snbt.impl.ISNbtSerializer;
+import net.lenni0451.mcstructs.snbt.impl.SNbtSerializer;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class SNbtSerializer_v1_12 implements ISNbtSerializer {
+public class SNbtSerializer_v1_12 implements SNbtSerializer {
 
     private static final Pattern ESCAPE_PATTERN = Pattern.compile("[A-Za-z0-9._+-]+");
 

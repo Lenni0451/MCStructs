@@ -4,11 +4,11 @@ import net.lenni0451.mcstructs.nbt.NbtNumber;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
-import net.lenni0451.mcstructs.snbt.impl.ISNbtDeserializer;
+import net.lenni0451.mcstructs.snbt.impl.SNbtDeserializer;
 
 import java.util.regex.Pattern;
 
-public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
+public class SNbtDeserializer_v1_12 implements SNbtDeserializer<CompoundTag> {
 
     private static final Pattern BYTE_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)b", Pattern.CASE_INSENSITIVE);
     private static final Pattern SHORT_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)s", Pattern.CASE_INSENSITIVE);

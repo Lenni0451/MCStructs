@@ -38,7 +38,7 @@ public class SNbtDeserializerTest {
             "{test:\"Test\\String\"}"
     };
 
-    protected static void executeTests(final SNbtSerializer<?> serializer, final String[] expectedResults) {
+    protected static void executeTests(final SNbt<?> serializer, final String[] expectedResults) {
         assertEquals(TESTS.length, expectedResults.length);
 
         for (int i = 0; i < TESTS.length; i++) {

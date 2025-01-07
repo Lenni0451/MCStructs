@@ -5,6 +5,9 @@ import javax.annotation.Nullable;
 @FunctionalInterface
 public interface Translator {
 
+    /**
+     * The global translator that is used by default.
+     */
     BasicTranslator GLOBAL = new BasicTranslator();
 
     /**

@@ -4,8 +4,8 @@ import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.snbt.impl.ISNbtDeserializer;
-import net.lenni0451.mcstructs.snbt.impl.ISNbtSerializer;
+import net.lenni0451.mcstructs.snbt.impl.SNbtDeserializer;
+import net.lenni0451.mcstructs.snbt.impl.SNbtSerializer;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtDeserializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtSerializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_13.SNbtDeserializer_v1_13;
@@ -25,40 +25,40 @@ import java.util.function.Supplier;
  *
  * @param <T> The output type of the deserializer
  */
-public class SNbtSerializer<T extends NbtTag> {
+public class SNbt<T extends NbtTag> {
 
     /**
      * The SNbt serializer for minecraft 1.7.
      */
-    public static final SNbtSerializer<NbtTag> V1_7 = new SNbtSerializer<>(SNbtSerializer_v1_7::new, SNbtDeserializer_v1_7::new);
+    public static final SNbt<NbtTag> V1_7 = new SNbt<>(SNbtSerializer_v1_7::new, SNbtDeserializer_v1_7::new);
     /**
      * The SNbt serializer for minecraft 1.8 - 1.11.
      */
-    public static final SNbtSerializer<CompoundTag> V1_8 = new SNbtSerializer<>(SNbtSerializer_v1_8::new, SNbtDeserializer_v1_8::new);
+    public static final SNbt<CompoundTag> V1_8 = new SNbt<>(SNbtSerializer_v1_8::new, SNbtDeserializer_v1_8::new);
     /**
      * The SNbt serializer for minecraft 1.12.
      */
-    public static final SNbtSerializer<CompoundTag> V1_12 = new SNbtSerializer<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_12::new);
+    public static final SNbt<CompoundTag> V1_12 = new SNbt<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_12::new);
     /**
      * The SNbt serializer for minecraft 1.13.
      */
-    public static final SNbtSerializer<CompoundTag> V1_13 = new SNbtSerializer<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_13::new);
+    public static final SNbt<CompoundTag> V1_13 = new SNbt<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_13::new);
     /**
      * The SNbt serializer for minecraft 1.14 - 1.19.
      */
-    public static final SNbtSerializer<CompoundTag> V1_14 = new SNbtSerializer<>(SNbtSerializer_v1_14::new, SNbtDeserializer_v1_14::new);
+    public static final SNbt<CompoundTag> V1_14 = new SNbt<>(SNbtSerializer_v1_14::new, SNbtDeserializer_v1_14::new);
     /**
      * The latest SNbt serializer.
      */
-    public static final SNbtSerializer<CompoundTag> LATEST = V1_14;
+    public static final SNbt<CompoundTag> LATEST = V1_14;
 
 
-    private final Supplier<ISNbtSerializer> serializerSupplier;
-    private final Supplier<ISNbtDeserializer<T>> deserializerSupplier;
-    private ISNbtSerializer serializer;
-    private ISNbtDeserializer<T> deserializer;
+    private final Supplier<SNbtSerializer> serializerSupplier;
+    private final Supplier<SNbtDeserializer<T>> deserializerSupplier;
+    private SNbtSerializer serializer;
+    private SNbtDeserializer<T> deserializer;
 
-    public SNbtSerializer(final Supplier<ISNbtSerializer> serializerSupplier, final Supplier<ISNbtDeserializer<T>> deserializerSupplier) {
+    public SNbt(final Supplier<SNbtSerializer> serializerSupplier, final Supplier<SNbtDeserializer<T>> deserializerSupplier) {
         this.serializerSupplier = serializerSupplier;
         this.deserializerSupplier = deserializerSupplier;
     }
@@ -66,7 +66,7 @@ public class SNbtSerializer<T extends NbtTag> {
     /**
      * @return The serializer instance
      */
-    public ISNbtSerializer getSerializer() {
+    public SNbtSerializer getSerializer() {
         if (this.serializer == null) this.serializer = this.serializerSupplier.get();
         return this.serializer;
     }
@@ -74,7 +74,7 @@ public class SNbtSerializer<T extends NbtTag> {
     /**
      * @return The deserializer instance
      */
-    public ISNbtDeserializer<T> getDeserializer() {
+    public SNbtDeserializer<T> getDeserializer() {
         if (this.deserializer == null) this.deserializer = this.deserializerSupplier.get();
         return this.deserializer;
     }

@@ -3,11 +3,11 @@ package net.lenni0451.mcstructs.snbt.impl.v1_8;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.snbt.impl.ISNbtSerializer;
+import net.lenni0451.mcstructs.snbt.impl.SNbtSerializer;
 
 import java.util.Map;
 
-public class SNbtSerializer_v1_8 implements ISNbtSerializer {
+public class SNbtSerializer_v1_8 implements SNbtSerializer {
 
     @Override
     public String serialize(NbtTag tag) throws SNbtSerializeException {

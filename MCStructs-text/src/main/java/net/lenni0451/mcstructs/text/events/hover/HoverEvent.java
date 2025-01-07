@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.text.events.hover;
 
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
@@ -27,11 +27,11 @@ public abstract class HoverEvent {
      * Converts this hover event to a legacy text hover event.
      *
      * @param textComponentSerializer The serializer to use for text components
-     * @param sNbtSerializer          The serializer to use for nbt tags
+     * @param sNbt          The serializer to use for nbt tags
      * @return The converted hover event
      */
     @Deprecated //TODO: Remove
-    public abstract TextHoverEvent toLegacy(final TextComponentSerializer textComponentSerializer, final SNbtSerializer<?> sNbtSerializer);
+    public abstract TextHoverEvent toLegacy(final TextComponentSerializer textComponentSerializer, final SNbt<?> sNbt);
 
     @Override
     public abstract boolean equals(final Object o);

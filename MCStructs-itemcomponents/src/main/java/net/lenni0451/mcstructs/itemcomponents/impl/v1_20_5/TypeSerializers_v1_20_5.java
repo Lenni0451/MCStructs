@@ -15,7 +15,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.TypeSerializers;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.StringTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
@@ -64,7 +64,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public Codec<CompoundTag> stringOrRawCompoundTag() {
         return this.init(STRING_OR_RAW_COMPOUND_TAG, () -> Codec.oneOf(
-                Codec.STRING.mapThrowing(SNbtSerializer.V1_14::serialize, SNbtSerializer.V1_14::deserialize),
+                Codec.STRING.mapThrowing(SNbt.V1_14::serialize, SNbt.V1_14::deserialize),
                 new Codec<CompoundTag>() {
                     @Override
                     public <T> Result<T> serialize(DataConverter<T> converter, CompoundTag component) {

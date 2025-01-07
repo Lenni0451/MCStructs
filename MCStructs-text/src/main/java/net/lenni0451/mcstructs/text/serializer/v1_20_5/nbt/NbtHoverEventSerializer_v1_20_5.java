@@ -5,7 +5,7 @@ import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.IntArrayTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
@@ -26,13 +26,13 @@ public class NbtHoverEventSerializer_v1_20_5 extends NbtHoverEventSerializer_v1_
 
     private final TextComponentCodec_v1_20_5 codec;
     private final ITypedSerializer<NbtTag, TextComponent> textSerializer;
-    private final SNbtSerializer<CompoundTag> sNbtSerializer;
+    private final SNbt<CompoundTag> sNbt;
 
-    public NbtHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<NbtTag, TextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
-        super(codec, textSerializer, sNbtSerializer);
+    public NbtHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<NbtTag, TextComponent> textSerializer, final SNbt<CompoundTag> sNbt) {
+        super(codec, textSerializer, sNbt);
         this.codec = codec;
         this.textSerializer = textSerializer;
-        this.sNbtSerializer = sNbtSerializer;
+        this.sNbt = sNbt;
     }
 
     @Override
@@ -119,9 +119,9 @@ public class NbtHoverEventSerializer_v1_20_5 extends NbtHoverEventSerializer_v1_
                     case SHOW_TEXT:
                         return new TextHoverEvent(action, value);
                     case SHOW_ITEM:
-                        return this.parseItemHoverEvent(action, this.sNbtSerializer.deserialize(value.asUnformattedString()));
+                        return this.parseItemHoverEvent(action, this.sNbt.deserialize(value.asUnformattedString()));
                     case SHOW_ENTITY:
-                        CompoundTag parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
+                        CompoundTag parsed = this.sNbt.deserialize(value.asUnformattedString());
                         TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));

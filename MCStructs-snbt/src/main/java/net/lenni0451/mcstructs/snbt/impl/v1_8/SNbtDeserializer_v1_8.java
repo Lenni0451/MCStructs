@@ -3,12 +3,12 @@ package net.lenni0451.mcstructs.snbt.impl.v1_8;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
-import net.lenni0451.mcstructs.snbt.impl.ISNbtDeserializer;
+import net.lenni0451.mcstructs.snbt.impl.SNbtDeserializer;
 
 import java.util.Arrays;
 import java.util.Stack;
 
-public class SNbtDeserializer_v1_8 implements ISNbtDeserializer<CompoundTag> {
+public class SNbtDeserializer_v1_8 implements SNbtDeserializer<CompoundTag> {
 
     private static final String ARRAY_PATTERN = "\\[[-+\\d|,\\s]+]";
     private static final String BYTE_PATTERN = "[-+]?[0-9]+[b|B]";

@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.IntArrayTag;
 import net.lenni0451.mcstructs.nbt.tags.ListTag;
 import net.lenni0451.mcstructs.nbt.tags.StringTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
@@ -30,12 +30,12 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
 
     private final TextComponentCodec codec;
     private final ITypedSerializer<NbtTag, TextComponent> textSerializer;
-    private final SNbtSerializer<CompoundTag> sNbtSerializer;
+    private final SNbt<CompoundTag> sNbt;
 
-    public NbtHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<NbtTag, TextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
+    public NbtHoverEventSerializer_v1_20_3(final TextComponentCodec codec, final ITypedSerializer<NbtTag, TextComponent> textSerializer, final SNbt<CompoundTag> sNbt) {
         this.codec = codec;
         this.textSerializer = textSerializer;
-        this.sNbtSerializer = sNbtSerializer;
+        this.sNbt = sNbt;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
             if (itemHoverEvent.getCount() != 1) contents.addInt("count", itemHoverEvent.getCount());
             if (itemHoverEvent.getNbt() != null) {
                 try {
-                    contents.addString("tag", this.sNbtSerializer.serialize(itemHoverEvent.getNbt()));
+                    contents.addString("tag", this.sNbt.serialize(itemHoverEvent.getNbt()));
                 } catch (SNbtSerializeException e) {
                     throw new IllegalStateException("Failed to serialize nbt", e);
                 }
@@ -103,7 +103,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
                                     action,
                                     Identifier.of(id),
                                     count == null ? 1 : count,
-                                    itemTag == null ? null : this.sNbtSerializer.deserialize(itemTag)
+                                    itemTag == null ? null : this.sNbt.deserialize(itemTag)
                             );
                         } catch (Throwable t) {
                             this.sneak(t);
@@ -128,13 +128,13 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
                     case SHOW_TEXT:
                         return new TextHoverEvent(action, value);
                     case SHOW_ITEM:
-                        CompoundTag parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
+                        CompoundTag parsed = this.sNbt.deserialize(value.asUnformattedString());
                         Identifier id = Identifier.of(parsed.getString("id"));
                         int count = parsed.getByte("Count");
                         CompoundTag itemTag = parsed.getCompound("tag", null);
                         return new ItemHoverEvent(action, id, count, itemTag);
                     case SHOW_ENTITY:
-                        parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
+                        parsed = this.sNbt.deserialize(value.asUnformattedString());
                         TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));

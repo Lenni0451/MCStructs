@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.nbt.NbtNumber;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.*;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -200,7 +200,7 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
     public NbtTag createUnsafeMap(Map<NbtTag, NbtTag> values) {
         CompoundTag compound = new CompoundTag();
         for (Map.Entry<NbtTag, NbtTag> entry : values.entrySet()) {
-            compound.add(SNbtSerializer.V1_14.trySerialize(entry.getKey()), entry.getValue());
+            compound.add(SNbt.V1_14.trySerialize(entry.getKey()), entry.getValue());
         }
         return compound;
     }

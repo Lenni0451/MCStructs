@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
@@ -26,13 +26,13 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
 
     private final TextComponentCodec_v1_20_5 codec;
     private final ITypedSerializer<JsonElement, TextComponent> textSerializer;
-    private final SNbtSerializer<CompoundTag> sNbtSerializer;
+    private final SNbt<CompoundTag> sNbt;
 
-    public JsonHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<JsonElement, TextComponent> textSerializer, final SNbtSerializer<CompoundTag> sNbtSerializer) {
-        super(codec, textSerializer, sNbtSerializer);
+    public JsonHoverEventSerializer_v1_20_5(final TextComponentCodec_v1_20_5 codec, final ITypedSerializer<JsonElement, TextComponent> textSerializer, final SNbt<CompoundTag> sNbt) {
+        super(codec, textSerializer, sNbt);
         this.codec = codec;
         this.textSerializer = textSerializer;
-        this.sNbtSerializer = sNbtSerializer;
+        this.sNbt = sNbt;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                     case SHOW_TEXT:
                         return new TextHoverEvent(action, value);
                     case SHOW_ITEM:
-                        CompoundTag parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
+                        CompoundTag parsed = this.sNbt.deserialize(value.asUnformattedString());
                         Identifier id = Identifier.of(requiredString(parsed, "id"));
                         this.verifyItem(id);
                         Integer count = optionalInt(parsed, "count");
@@ -142,7 +142,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                                 components
                         );
                     case SHOW_ENTITY:
-                        parsed = this.sNbtSerializer.deserialize(value.asUnformattedString());
+                        parsed = this.sNbt.deserialize(value.asUnformattedString());
                         TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));

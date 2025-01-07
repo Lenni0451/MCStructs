@@ -5,7 +5,7 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.ListTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -66,7 +66,7 @@ class TextComponentCodecTest {
                 .addByte("Count", (byte) 5);
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
-                        .setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_ITEM, new StringComponent(SNbtSerializer.LATEST.serialize(legacyNbt))))
+                        .setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_ITEM, new StringComponent(SNbt.LATEST.serialize(legacyNbt))))
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
@@ -86,7 +86,7 @@ class TextComponentCodecTest {
                 .add("id", randomUUID.toString());
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
-                        .setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_ENTITY, new StringComponent(SNbtSerializer.LATEST.serialize(legacyNbt))))
+                        .setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_ENTITY, new StringComponent(SNbt.LATEST.serialize(legacyNbt))))
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
