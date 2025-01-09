@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_21;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
-import net.lenni0451.mcstructs.converter.codec.MapCodec;
+import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.TypeSerializers_v1_20_5;
@@ -29,9 +29,9 @@ public class TypeSerializers_v1_21 extends TypeSerializers_v1_20_5 {
     }
 
     public Codec<ItemStack> singleItemStack() {
-        return this.init(SINGLE_ITEM_STACK, () -> MapCodec.of(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ItemStack.ID), ItemStack::getId,
-                this.registry.getMapCodec().mapCodec(ItemStack.COMPONENTS).defaulted(() -> new ItemComponentMap(this.registry), ItemComponentMap::isEmpty), ItemStack::getComponents,
+        return this.init(SINGLE_ITEM_STACK, () -> MapCodecMerger.codec(
+                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ItemStack.ID).required(), ItemStack::getId,
+                this.registry.getMapCodec().mapCodec(ItemStack.COMPONENTS).optional().defaulted(ItemComponentMap::isEmpty, () -> new ItemComponentMap(this.registry)), ItemStack::getComponents,
                 (id, components) -> new ItemStack(id, 1, components)
         ));
     }
@@ -43,15 +43,15 @@ public class TypeSerializers_v1_21 extends TypeSerializers_v1_20_5 {
     }
 
     public Codec<AttributeModifier> attributeModifier_v1_21() {
-        return this.init(ATTRIBUTE_MODIFIER, () -> MapCodec.of(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().attributeModifier).mapCodec(AttributeModifier.TYPE), AttributeModifier::getType,
-                MapCodec.of(
-                        Codec.STRING_IDENTIFIER.mapCodec(AttributeModifier.EntityAttribute.ID), AttributeModifier.EntityAttribute::getId,
-                        Codec.DOUBLE.mapCodec(AttributeModifier.EntityAttribute.AMOUNT), AttributeModifier.EntityAttribute::getAmount,
-                        Codec.named(AttributeModifier.EntityAttribute.Operation.values()).mapCodec(AttributeModifier.EntityAttribute.OPERATION), AttributeModifier.EntityAttribute::getOperation,
+        return this.init(ATTRIBUTE_MODIFIER, () -> MapCodecMerger.codec(
+                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().attributeModifier).mapCodec(AttributeModifier.TYPE).required(), AttributeModifier::getType,
+                MapCodecMerger.mapCodec(
+                        Codec.STRING_IDENTIFIER.mapCodec(AttributeModifier.EntityAttribute.ID).required(), AttributeModifier.EntityAttribute::getId,
+                        Codec.DOUBLE.mapCodec(AttributeModifier.EntityAttribute.AMOUNT).required(), AttributeModifier.EntityAttribute::getAmount,
+                        Codec.named(AttributeModifier.EntityAttribute.Operation.values()).mapCodec(AttributeModifier.EntityAttribute.OPERATION).required(), AttributeModifier.EntityAttribute::getOperation,
                         AttributeModifier.EntityAttribute::new
-                ).mapCodec(), AttributeModifier::getModifier,
-                Codec.named(Types_v1_20_5.AttributeModifier.Slot.values()).mapCodec(AttributeModifier.SLOT).optionalDefault(() -> Types_v1_20_5.AttributeModifier.Slot.ANY), AttributeModifier::getSlot,
+                ), AttributeModifier::getModifier,
+                Codec.named(Types_v1_20_5.AttributeModifier.Slot.values()).mapCodec(AttributeModifier.SLOT).optional().defaulted(Types_v1_20_5.AttributeModifier.Slot.ANY), AttributeModifier::getSlot,
                 AttributeModifier::new
         ));
     }

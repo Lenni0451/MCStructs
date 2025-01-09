@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.converter;
+package net.lenni0451.mcstructs.converter.model;
 
 import lombok.SneakyThrows;
 import net.lenni0451.mcstructs.core.utils.ToString;
@@ -72,8 +72,13 @@ public class Result<T> {
     }
 
     public <N> Result<N> map(final Function<T, N> mapper) {
-        if (this.isError()) return new Result<>(null, this.error);
+        if (this.isError()) return this.mapError();
         return Result.success(mapper.apply(this.result));
+    }
+
+    public <N> Result<N> mapResult(final Function<T, Result<N>> mapper) {
+        if (this.isError()) return this.mapError();
+        return mapper.apply(this.result);
     }
 
     public <N> Result<N> mapError() {

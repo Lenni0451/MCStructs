@@ -1,8 +1,8 @@
 package net.lenni0451.mcstructs.itemcomponents.impl;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 
 import java.util.HashMap;

@@ -1,0 +1,63 @@
+package net.lenni0451.mcstructs.converter.codec.map;
+
+import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.model.Result;
+
+import java.util.Map;
+import java.util.function.Function;
+
+public class MapCodecMerger {
+
+    {{#each this}}
+    public static <{{#vars}}{{.}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, O> MapCodec<O> mapCodec(
+            {{#vars}}
+            final MapCodec<{{.}}> codec{{iterIndex}}, final Function<O, {{.}}> getter{{iterIndex}},
+            {{/vars}}
+            final I{{count}}<{{#vars}}{{.}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, O> constructor
+    ) {
+        return new MapCodec<O>() {
+            @Override
+            public <S> Result<Map<S, S>> serialize(DataConverter<S> converter, Map<S, S> map, O element) {
+                {{#vars}}
+                {{#iterIsFirst}}
+                Result<Map<S, S>> result = codec{{iterIndex}}.serialize(converter, map, getter{{iterIndex}}.apply(element));
+                if (result.isError()) return result.mapError();
+                {{/iterIsFirst}}
+                {{^iterIsFirst}}
+                result = codec{{iterIndex}}.serialize(converter, result.get(), getter{{iterIndex}}.apply(element));
+                if (result.isError()) return result.mapError();
+                {{/iterIsFirst}}
+                {{/vars}}
+                return result;
+            }
+
+            @Override
+            public <S> Result<O> deserialize(DataConverter<S> converter, Map<S, S> map) {
+                {{#vars}}
+                Result<{{.}}> result{{iterIndex}} = codec{{iterIndex}}.deserialize(converter, map);
+                if (result{{iterIndex}}.isError()) return result{{iterIndex}}.mapError();
+                {{/vars}}
+                return Result.success(constructor.apply({{#vars}}result{{iterIndex}}.get(){{#iterHasNext}}, {{/iterHasNext}}{{/vars}}));
+            }
+        };
+    }
+
+    public static <{{#vars}}{{.}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, O> Codec<O> codec(
+            {{#vars}}
+            final MapCodec<{{.}}> codec{{iterIndex}}, final Function<O, {{.}}> getter{{iterIndex}},
+            {{/vars}}
+            final I{{count}}<{{#vars}}{{.}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, O> constructor
+    ) {
+        return mapCodec({{#vars}}codec{{iterIndex}}, getter{{iterIndex}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, constructor).asCodec();
+    }
+
+    {{/each}}
+    {{#each this}}
+    @FunctionalInterface
+    public interface I{{count}}<{{#vars}}{{.}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, O> {
+        O apply({{#vars}}final {{.}} {{lower .}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}});
+    }
+
+    {{/each}}
+}

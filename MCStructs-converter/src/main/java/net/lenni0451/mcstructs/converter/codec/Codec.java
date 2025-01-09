@@ -1,7 +1,11 @@
 package net.lenni0451.mcstructs.converter.codec;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.Result;
+import net.lenni0451.mcstructs.converter.codec.map.impl.FieldMapCodec;
+import net.lenni0451.mcstructs.converter.codec.types.IdentifiedType;
+import net.lenni0451.mcstructs.converter.codec.types.NamedType;
+import net.lenni0451.mcstructs.converter.model.Either;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 
 import java.util.*;
@@ -535,16 +539,8 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
-    default <K> MapCodec<K, T> mapCodec() {
-        return this.mapCodec(null, null);
-    }
-
-    default MapCodec<String, T> mapCodec(final String key) {
-        return this.mapCodec(STRING, key);
-    }
-
-    default <K> MapCodec<K, T> mapCodec(final Codec<K> keyCodec, final K key) {
-        return MapCodec.of(key, keyCodec, this);
+    default FieldMapCodec.Builder.Stage1<T> mapCodec(final String key) {
+        return FieldMapCodec.builder(this, key);
     }
 
 }

@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.converter.impl.v1_20_3;
 
 import com.google.gson.*;
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.Result;
+import net.lenni0451.mcstructs.converter.model.Result;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;

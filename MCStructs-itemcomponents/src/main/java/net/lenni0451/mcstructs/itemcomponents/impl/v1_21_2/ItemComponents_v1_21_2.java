@@ -1,8 +1,8 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
-import net.lenni0451.mcstructs.converter.codec.Either;
-import net.lenni0451.mcstructs.converter.codec.MapCodec;
+import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
+import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
@@ -20,63 +20,63 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
     private final TypeSerializers_v1_21_2 typeSerializers = new TypeSerializers_v1_21_2(this);
 
     public final ItemComponent<PotionContents> POTION_CONTENTS = this.register("potion_contents", Codec.oneOf(
-            MapCodec.of(
-                    Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).mapCodec(PotionContents.POTION).optionalDefault(() -> null), PotionContents::getPotion,
-                    Codec.INTEGER.mapCodec(PotionContents.CUSTOM_COLOR).optionalDefault(() -> null), PotionContents::getCustomColor,
-                    this.typeSerializers.statusEffect().listOf().mapCodec(PotionContents.CUSTOM_EFFECTS).defaulted(ArrayList::new, List::isEmpty), PotionContents::getCustomEffects,
-                    Codec.STRING.mapCodec(PotionContents.CUSTOM_NAME).optionalDefault(() -> null), PotionContents::getCustomName,
+            MapCodecMerger.codec(
+                    Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).mapCodec(PotionContents.POTION).optional().defaulted(null), PotionContents::getPotion,
+                    Codec.INTEGER.mapCodec(PotionContents.CUSTOM_COLOR).optional().defaulted(null), PotionContents::getCustomColor,
+                    this.typeSerializers.statusEffect().listOf().mapCodec(PotionContents.CUSTOM_EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), PotionContents::getCustomEffects,
+                    Codec.STRING.mapCodec(PotionContents.CUSTOM_NAME).optional().defaulted(null), PotionContents::getCustomName,
                     PotionContents::new
             ),
             Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).map(PotionContents::getPotion, id -> new PotionContents(id, null, new ArrayList<>(), null))
     ));
     public final ItemComponent<Identifier> ITEM_MODEL = this.register("item_model", Codec.STRING_IDENTIFIER);
-    public final ItemComponent<Food> FOOD = this.register("food", MapCodec.of(
-            Codec.minInt(0).mapCodec(NUTRITION), Food::getNutrition,
-            Codec.FLOAT.mapCodec(SATURATION), Food::getSaturation,
-            Codec.BOOLEAN.mapCodec(CAN_ALWAYS_EAT).optionalDefault(() -> false), Food::isCanAlwaysEat,
+    public final ItemComponent<Food> FOOD = this.register("food", MapCodecMerger.codec(
+            Codec.minInt(0).mapCodec(NUTRITION).required(), Food::getNutrition,
+            Codec.FLOAT.mapCodec(SATURATION).required(), Food::getSaturation,
+            Codec.BOOLEAN.mapCodec(CAN_ALWAYS_EAT).optional().defaulted(false), Food::isCanAlwaysEat,
             Food::new
     ));
-    public final ItemComponent<Consumable> CONSUMABLE = this.register("consumable", MapCodec.of(
-            Codec.minFloat(0).mapCodec(Consumable.CONSUME_SECONDS).optionalDefault(() -> 1.6F), Consumable::getConsumeSeconds,
-            Codec.named(Consumable.ItemUseAnimation.values()).mapCodec(Consumable.ANIMATION).optionalDefault(() -> Consumable.ItemUseAnimation.EAT), Consumable::getAnimation,
-            this.typeSerializers.soundEvent().mapCodec(Consumable.SOUND).optionalDefault(() -> Either.left(Identifier.of("entity.generic.eat"))), Consumable::getSound,
-            Codec.BOOLEAN.mapCodec(Consumable.HAS_CONSUME_PARTICLES).optionalDefault(() -> true), Consumable::isHasConsumeParticles,
-            this.typeSerializers.consumeEffect().listOf().mapCodec(Consumable.ON_CONSUME_EFFECTS).optionalDefault(ArrayList::new), Consumable::getOnConsumeEffects,
+    public final ItemComponent<Consumable> CONSUMABLE = this.register("consumable", MapCodecMerger.codec(
+            Codec.minFloat(0).mapCodec(Consumable.CONSUME_SECONDS).optional().defaulted(1.6F), Consumable::getConsumeSeconds,
+            Codec.named(Consumable.ItemUseAnimation.values()).mapCodec(Consumable.ANIMATION).optional().defaulted(Consumable.ItemUseAnimation.EAT), Consumable::getAnimation,
+            this.typeSerializers.soundEvent().mapCodec(Consumable.SOUND).optional().defaulted(Either.left(Identifier.of("entity.generic.eat"))), Consumable::getSound,
+            Codec.BOOLEAN.mapCodec(Consumable.HAS_CONSUME_PARTICLES).optional().defaulted(true), Consumable::isHasConsumeParticles,
+            this.typeSerializers.consumeEffect().listOf().mapCodec(Consumable.ON_CONSUME_EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), Consumable::getOnConsumeEffects,
             Consumable::new
     ));
     public final ItemComponent<Types_v1_20_5.ItemStack> USE_REMAINDER = this.register("use_remainder", this.typeSerializers.itemStack());
-    public final ItemComponent<UseCooldown> USE_COOLDOWN = this.register("use_cooldown", MapCodec.of(
-            Codec.minExclusiveFloat(0).mapCodec(UseCooldown.SECONDS), UseCooldown::getSeconds,
-            Codec.STRING_IDENTIFIER.mapCodec(UseCooldown.COOLDOWN_GROUP).optionalDefault(() -> null), UseCooldown::getCooldownGroup,
+    public final ItemComponent<UseCooldown> USE_COOLDOWN = this.register("use_cooldown", MapCodecMerger.codec(
+            Codec.minExclusiveFloat(0).mapCodec(UseCooldown.SECONDS).required(), UseCooldown::getSeconds,
+            Codec.STRING_IDENTIFIER.mapCodec(UseCooldown.COOLDOWN_GROUP).optional().defaulted(null), UseCooldown::getCooldownGroup,
             UseCooldown::new
     ));
-    public final ItemComponent<DamageResistant> DAMAGE_RESISTANT = this.register("damage_resistant", MapCodec.of(
-            this.typeSerializers.tag(this.registryVerifier.damageTypeTag).mapCodec(DamageResistant.TYPES), DamageResistant::getTypes,
+    public final ItemComponent<DamageResistant> DAMAGE_RESISTANT = this.register("damage_resistant", MapCodecMerger.codec(
+            this.typeSerializers.tag(this.registryVerifier.damageTypeTag).mapCodec(DamageResistant.TYPES).required(), DamageResistant::getTypes,
             DamageResistant::new
     ));
-    public final ItemComponent<Enchantable> ENCHANTABLE = this.register("enchantable", MapCodec.of(
-            Codec.minInt(1).mapCodec(Enchantable.VALUE), Enchantable::getValue,
+    public final ItemComponent<Enchantable> ENCHANTABLE = this.register("enchantable", MapCodecMerger.codec(
+            Codec.minInt(1).mapCodec(Enchantable.VALUE).required(), Enchantable::getValue,
             Enchantable::new
     ));
-    public final ItemComponent<Equippable> EQUIPPABLE = this.register("equippable", MapCodec.of(
-            Codec.named(EquipmentSlot.values()).mapCodec(Equippable.SLOT), Equippable::getSlot,
-            this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optionalDefault(() -> Either.left(Identifier.of("item.armor.equip_generic"))), Equippable::getEquipSound,
-            Codec.STRING_IDENTIFIER.mapCodec(Equippable.MODEL).optionalDefault(() -> null), Equippable::getModel,
-            Codec.STRING_IDENTIFIER.mapCodec(Equippable.CAMERA_OVERLAY).optionalDefault(() -> null), Equippable::getCameraOverlay,
-            this.typeSerializers.tagEntryList(this.registryVerifier.entityTypeTag, this.registryVerifier.entityType).mapCodec(Equippable.ALLOWED_ENTITIES).optionalDefault(() -> null), Equippable::getAllowedEntities,
-            Codec.BOOLEAN.mapCodec(Equippable.DISPENSABLE).optionalDefault(() -> true), Equippable::isDispensable,
-            Codec.BOOLEAN.mapCodec(Equippable.SWAPPABLE).optionalDefault(() -> true), Equippable::isSwappable,
-            Codec.BOOLEAN.mapCodec(Equippable.DAMAGE_ON_HURT).optionalDefault(() -> true), Equippable::isDamageOnHurt,
+    public final ItemComponent<Equippable> EQUIPPABLE = this.register("equippable", MapCodecMerger.codec(
+            Codec.named(EquipmentSlot.values()).mapCodec(Equippable.SLOT).required(), Equippable::getSlot,
+            this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optional().defaulted(Either.left(Identifier.of("item.armor.equip_generic"))), Equippable::getEquipSound,
+            Codec.STRING_IDENTIFIER.mapCodec(Equippable.MODEL).optional().defaulted(null), Equippable::getModel,
+            Codec.STRING_IDENTIFIER.mapCodec(Equippable.CAMERA_OVERLAY).optional().defaulted(null), Equippable::getCameraOverlay,
+            this.typeSerializers.tagEntryList(this.registryVerifier.entityTypeTag, this.registryVerifier.entityType).mapCodec(Equippable.ALLOWED_ENTITIES).optional().defaulted(null), Equippable::getAllowedEntities,
+            Codec.BOOLEAN.mapCodec(Equippable.DISPENSABLE).optional().defaulted(true), Equippable::isDispensable,
+            Codec.BOOLEAN.mapCodec(Equippable.SWAPPABLE).optional().defaulted(true), Equippable::isSwappable,
+            Codec.BOOLEAN.mapCodec(Equippable.DAMAGE_ON_HURT).optional().defaulted(true), Equippable::isDamageOnHurt,
             Equippable::new
     ));
-    public final ItemComponent<Repairable> REPAIRABLE = this.register("repairable", MapCodec.of(
-            this.typeSerializers.tagEntryList(this.registryVerifier.itemTag, this.registryVerifier.item).mapCodec(Repairable.ITEMS), Repairable::getItems,
+    public final ItemComponent<Repairable> REPAIRABLE = this.register("repairable", MapCodecMerger.codec(
+            this.typeSerializers.tagEntryList(this.registryVerifier.itemTag, this.registryVerifier.item).mapCodec(Repairable.ITEMS).required(), Repairable::getItems,
             Repairable::new
     ));
     public final ItemComponent<Boolean> GLIDER = this.register("glider", Codec.UNIT);
     public final ItemComponent<Identifier> TOOLTIP_STYLE = this.register("tooltip_style", Codec.STRING_IDENTIFIER);
-    public final ItemComponent<DeathProtection> DEATH_PROTECTION = this.register("death_protection", MapCodec.of(
-            this.typeSerializers.consumeEffect().listOf().mapCodec(DeathProtection.DEATH_EFFECTS).optionalDefault(ArrayList::new), DeathProtection::getDeathEffects,
+    public final ItemComponent<DeathProtection> DEATH_PROTECTION = this.register("death_protection", MapCodecMerger.codec(
+            this.typeSerializers.consumeEffect().listOf().mapCodec(DeathProtection.DEATH_EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), DeathProtection::getDeathEffects,
             DeathProtection::new
     ));
     public final ItemComponent<ItemPredicate> LOCK = this.register("lock", this.typeSerializers.itemPredicate());

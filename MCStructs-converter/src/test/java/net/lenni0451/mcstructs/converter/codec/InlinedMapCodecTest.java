@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import net.lenni0451.mcstructs.converter.codec.map.MapCodec;
+import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import org.junit.jupiter.api.Test;
@@ -15,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InlinedMapCodecTest {
 
-    private static final Codec<C1> codec = MapCodec.of(
-            Codec.STRING.mapCodec("s1"), C1::getS1,
-            Codec.<C2>recursive(c -> MapCodec.of(
-                    Codec.STRING.mapCodec("s2"), C2::getS,
-                    c.mapCodec("extra").optionalDefault(() -> null), C2::getExtra,
+    private static final Codec<C1> codec = MapCodecMerger.codec(
+            Codec.STRING.mapCodec("s1").required(), C1::getS1,
+            MapCodec.recursive(c -> MapCodecMerger.mapCodec(
+                    Codec.STRING.mapCodec("s2").required(), C2::getS,
+                    c.mapCodec("extra").optional().defaulted(null), C2::getExtra,
                     C2::new
-            )).mapCodec(), C1::asC2,
+            )), C1::asC2,
             C1::new
     );
 

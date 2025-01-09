@@ -1,5 +1,6 @@
 plugins {
     id "io.freefair.lombok" version "8.11" apply false
+    id "net.lenni0451.template-processor" version "1.0.0" apply false
 }
 
 subprojects {
@@ -8,6 +9,7 @@ subprojects {
     apply plugin: "signing"
     apply plugin: "checkstyle"
     apply plugin: "io.freefair.lombok"
+    apply plugin: "net.lenni0451.template-processor"
 
     base {
         java.toolchain.languageVersion = JavaLanguageVersion.of(8)
@@ -52,6 +54,13 @@ subprojects {
         }
         maxParallelForks Runtime.runtime.availableProcessors()
     }
+
+    templateProcessor {
+        templateDir = project.file("src/main/templates")
+        outputDir = layout.buildDirectory.dir("generated/templates/main/java")
+        markAsSource(project.sourceSets.main)
+    }
+    tasks.delombok.dependsOn tasks.processTemplates
 
     artifacts {
         archives javadocJar, sourcesJar

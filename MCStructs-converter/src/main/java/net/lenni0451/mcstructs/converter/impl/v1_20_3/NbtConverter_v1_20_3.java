@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.converter.impl.v1_20_3;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.Result;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.nbt.NbtArray;
 import net.lenni0451.mcstructs.nbt.NbtNumber;
 import net.lenni0451.mcstructs.nbt.NbtTag;

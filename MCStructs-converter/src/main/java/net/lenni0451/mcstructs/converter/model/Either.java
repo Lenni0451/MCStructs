@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.converter.codec;
+package net.lenni0451.mcstructs.converter.model;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

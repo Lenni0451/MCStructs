@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.itemcomponents.impl;
 
-import net.lenni0451.mcstructs.converter.Result;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 
 import java.util.function.Function;

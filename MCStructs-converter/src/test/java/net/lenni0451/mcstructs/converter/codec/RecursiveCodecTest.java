@@ -2,8 +2,9 @@ package net.lenni0451.mcstructs.converter.codec;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import net.lenni0451.mcstructs.converter.Result;
+import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RecursiveCodecTest {
 
-    private static final Codec<Impl> IMPL = Codec.recursive(thiz -> MapCodec.of(
-            Codec.STRING.mapCodec("name"), Impl::getName,
-            thiz.mapCodec("hidden").optionalDefault(() -> null), Impl::getHidden,
+    private static final Codec<Impl> IMPL = Codec.recursive(thiz -> MapCodecMerger.codec(
+            Codec.STRING.mapCodec("name").required(), Impl::getName,
+            thiz.mapCodec("hidden").optional().defaulted(null), Impl::getHidden,
             Impl::new
     ));
 

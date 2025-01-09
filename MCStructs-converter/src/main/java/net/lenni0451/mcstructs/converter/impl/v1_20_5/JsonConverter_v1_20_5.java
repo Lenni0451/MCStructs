@@ -2,8 +2,8 @@ package net.lenni0451.mcstructs.converter.impl.v1_20_5;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.JsonConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.model.Result;
 
 public class JsonConverter_v1_20_5 extends JsonConverter_v1_20_3 {
 

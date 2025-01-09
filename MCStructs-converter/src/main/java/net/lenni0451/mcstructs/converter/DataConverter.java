@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.converter;
 
+import net.lenni0451.mcstructs.converter.model.Result;
+
 import javax.annotation.Nullable;
 import java.util.*;
 
