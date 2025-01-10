@@ -6,10 +6,11 @@ import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
-import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.api.Test;
+
+import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,7 +24,7 @@ class TextUtilsTest {
         component = TextUtils.makeURLsClickable(component);
         assertEquals(new StringComponent("")
                         .append("Check out my website: ")
-                        .append(new StringComponent(url).setStyle(new Style().setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL, url))))
+                        .append(new StringComponent(url).setStyle(new Style().setClickEvent(ClickEvent.openURL(URI.create(url)))))
                         .append(" it's awesome!"),
                 component);
     }

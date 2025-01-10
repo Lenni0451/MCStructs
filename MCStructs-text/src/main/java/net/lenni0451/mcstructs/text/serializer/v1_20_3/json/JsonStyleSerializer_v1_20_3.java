@@ -7,11 +7,13 @@ import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
+import net.lenni0451.mcstructs.text.events.click.types.*;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.subtypes.IStyleSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
+import java.net.URI;
 import java.util.function.Function;
 
 public class JsonStyleSerializer_v1_20_3 implements IStyleSerializer<JsonElement>, CodecUtils_v1_20_3 {
@@ -33,14 +35,34 @@ public class JsonStyleSerializer_v1_20_3 implements IStyleSerializer<JsonElement
         if (object.getObfuscated() != null) out.addProperty("obfuscated", object.isObfuscated());
         if (object.getClickEvent() != null) {
             JsonObject clickEvent = new JsonObject();
-            clickEvent.addProperty("action", object.getClickEvent().getAction().getName());
-            clickEvent.addProperty("value", object.getClickEvent().getValue());
+            this.serializeClickEvent(clickEvent, object.getClickEvent());
             out.add("clickEvent", clickEvent);
         }
         if (object.getHoverEvent() != null) out.add("hoverEvent", this.hoverEventSerializer.serialize(object.getHoverEvent()));
         if (object.getInsertion() != null) out.addProperty("insertion", object.getInsertion());
         if (object.getFont() != null) out.addProperty("font", object.getFont().get());
         return out;
+    }
+
+    private void serializeClickEvent(final JsonObject json, final ClickEvent clickEvent) {
+        json.addProperty("action", clickEvent.getAction().getName());
+        if (clickEvent instanceof LegacyClickEvent) {
+            json.addProperty("value", ((LegacyClickEvent) clickEvent).getValue());
+        } else if (clickEvent instanceof OpenURLClickEvent) {
+            json.addProperty("value", ((OpenURLClickEvent) clickEvent).getUrl().toString());
+        } else if (clickEvent instanceof OpenFileClickEvent) {
+            json.addProperty("value", ((OpenFileClickEvent) clickEvent).getPath());
+        } else if (clickEvent instanceof RunCommandClickEvent) {
+            json.addProperty("value", ((RunCommandClickEvent) clickEvent).getCommand());
+        } else if (clickEvent instanceof SuggestCommandClickEvent) {
+            json.addProperty("value", ((SuggestCommandClickEvent) clickEvent).getCommand());
+        } else if (clickEvent instanceof ChangePageClickEvent) {
+            json.addProperty("value", String.valueOf(((ChangePageClickEvent) clickEvent).getPage()));
+        } else if (clickEvent instanceof CopyToClipboardClickEvent) {
+            json.addProperty("value", ((CopyToClipboardClickEvent) clickEvent).getValue());
+        } else {
+            throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
+        }
     }
 
     @Override
@@ -70,12 +92,39 @@ public class JsonStyleSerializer_v1_20_3 implements IStyleSerializer<JsonElement
                 throw new IllegalArgumentException("Unknown click event action: " + clickEvent.get("action").getAsString());
             }
             if (!action.isUserDefinable()) throw new IllegalArgumentException("Click event action is not user definable: " + action);
-            style.setClickEvent(new ClickEvent(action, requiredString(clickEvent, "value")));
+            style.setClickEvent(this.deserializeClickEvent(action, requiredString(clickEvent, "value")));
         }
         if (obj.has("hoverEvent")) style.setHoverEvent(this.hoverEventSerializer.deserialize(requiredObject(obj, "hoverEvent")));
         style.setInsertion(optionalString(obj, "insertion"));
         if (obj.has("font")) style.setFont(Identifier.of(requiredString(obj, "font")));
         return style;
+    }
+
+    private ClickEvent deserializeClickEvent(final ClickEventAction action, final String value) {
+        switch (action) {
+            case OPEN_URL:
+                try {
+                    return ClickEvent.openURL(new URI(value));
+                } catch (Throwable t) {
+                    return new LegacyClickEvent(action, value);
+                }
+            case OPEN_FILE:
+                return ClickEvent.openFile(value);
+            case RUN_COMMAND:
+                return ClickEvent.runCommand(value);
+            case SUGGEST_COMMAND:
+                return ClickEvent.suggestCommand(value);
+            case CHANGE_PAGE:
+                try {
+                    return ClickEvent.changePage(Integer.parseInt(value));
+                } catch (Throwable t) {
+                    return new LegacyClickEvent(action, value);
+                }
+            case COPY_TO_CLIPBOARD:
+                return ClickEvent.copyToClipboard(value);
+            default:
+                throw new IllegalArgumentException("Unknown click event action: " + action.getName());
+        }
     }
 
 }

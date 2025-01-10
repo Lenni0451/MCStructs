@@ -3,13 +3,19 @@ package net.lenni0451.mcstructs.text.serializer;
 import com.google.gson.*;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
+import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.v1_20_5.JsonConverter_v1_20_5;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
+import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.subtypes.ITextComponentSerializer;
+import net.lenni0451.mcstructs.text.serializer.subtypes.adapter.CodecTextComponentSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonHoverEventSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonStyleSerializer_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonTextSerializer_v1_20_3;
@@ -19,6 +25,8 @@ import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtTextSerializer_v1_
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_2.TextComponentCodec_v1_21_2;
 import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextComponentCodec_v1_21_4;
+import net.lenni0451.mcstructs.text.serializer.v1_21_5.StyleCodecs_v1_21_5;
+import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -30,8 +38,8 @@ import java.util.function.Supplier;
  * The text component serializer and deserializer wrapper class for multiple types of input and output.<br>
  * Use the static default fields for a specific minecraft version or create your own serializer/deserializer.<br>
  * <br>
- * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link TextComponentSerializer} class because components can now be serialized to nbt.<br>
- * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link TextComponentSerializer} will still be updated using this wrapper method.
+ * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} class because components can now be serialized to nbt.<br>
+ * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} will still be updated using this wrapper method.
  */
 @ParametersAreNonnullByDefault
 @SuppressWarnings("StaticInitializerReferencesSubClass")
@@ -62,20 +70,31 @@ public class TextComponentCodec {
      */
     public static final TextComponentCodec_v1_21_4 V1_21_4 = new TextComponentCodec_v1_21_4();
     /**
+     * The text codec for 1.21.5.<br>
+     * TODO: Access to minecraft data
+     */
+    public static final TextComponentCodec V1_21_5 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_21_5.TEXT, () -> StyleCodecs_v1_21_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
+    /**
      * The latest text codec.
      */
-    public static final TextComponentCodec LATEST = V1_21_4;
+    public static final TextComponentCodec LATEST = V1_21_5;
 
 
-    private final Supplier<SNbt<CompoundTag>> sNbtSerializerSupplier;
+    private final Supplier<SNbt<CompoundTag>> sNbtSupplier;
     private final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier;
     private final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<NbtTag>> nbtSerializerSupplier;
     private SNbt<CompoundTag> sNbt;
     private ITextComponentSerializer<JsonElement> jsonSerializer;
     private ITextComponentSerializer<NbtTag> nbtSerializer;
 
-    public TextComponentCodec(final Supplier<SNbt<CompoundTag>> sNbtSerializerSupplier, final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<NbtTag>> nbtSerializerSupplier) {
-        this.sNbtSerializerSupplier = sNbtSerializerSupplier;
+    public TextComponentCodec(final Supplier<SNbt<CompoundTag>> sNbtSupplier, final Supplier<Codec<TextComponent>> textCodec, final Supplier<Codec<Style>> styleCodec, final DataConverter<JsonElement> jsonConverter, final DataConverter<NbtTag> nbtConverter) {
+        this.sNbtSupplier = sNbtSupplier;
+        this.jsonSerializerSupplier = (thiz, sNbt) -> new CodecTextComponentSerializer<>(textCodec.get(), jsonConverter, styleCodec.get());
+        this.nbtSerializerSupplier = (thiz, sNbt) -> new CodecTextComponentSerializer<>(textCodec.get(), nbtConverter, styleCodec.get());
+    }
+
+    public TextComponentCodec(final Supplier<SNbt<CompoundTag>> sNbtSupplier, final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<NbtTag>> nbtSerializerSupplier) {
+        this.sNbtSupplier = sNbtSupplier;
         this.jsonSerializerSupplier = jsonSerializerSupplier;
         this.nbtSerializerSupplier = nbtSerializerSupplier;
     }
@@ -84,13 +103,14 @@ public class TextComponentCodec {
      * @return The used snbt serializer
      */
     private SNbt<CompoundTag> getSNbtSerializer() {
-        if (this.sNbt == null) this.sNbt = this.sNbtSerializerSupplier.get();
-        return this.sNbtSerializerSupplier.get();
+        if (this.sNbt == null) this.sNbt = this.sNbtSupplier.get();
+        return this.sNbtSupplier.get();
     }
 
     /**
      * @return The used json serializer/deserializer
      */
+    @Deprecated
     public ITextComponentSerializer<JsonElement> getJsonSerializer() {
         if (this.jsonSerializer == null) this.jsonSerializer = this.jsonSerializerSupplier.apply(this, this.getSNbtSerializer());
         return this.jsonSerializer;
@@ -99,6 +119,7 @@ public class TextComponentCodec {
     /**
      * @return The used nbt serializer/deserializer
      */
+    @Deprecated
     public ITextComponentSerializer<NbtTag> getNbtSerializer() {
         if (this.nbtSerializer == null) this.nbtSerializer = this.nbtSerializerSupplier.apply(this, this.getSNbtSerializer());
         return this.nbtSerializer;
@@ -247,10 +268,10 @@ public class TextComponentCodec {
     }
 
     /**
-     * @return A wrapper for this codec to use it as a {@link TextComponentSerializer}.
+     * @return A wrapper for this codec to use it as a {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer}.
      */
-    public TextComponentSerializer asSerializer() {
-        return new TextComponentSerializer(this, () -> new GsonBuilder()
+    public net.lenni0451.mcstructs.text.serializer.TextComponentSerializer asSerializer() {
+        return new net.lenni0451.mcstructs.text.serializer.TextComponentSerializer(this, () -> new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, (JsonSerializer<TextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
                 .registerTypeHierarchyAdapter(TextComponent.class, (JsonDeserializer<TextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
                 .disableHtmlEscaping()

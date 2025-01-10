@@ -10,15 +10,11 @@ import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.TextFormatting;
-import net.lenni0451.mcstructs.text.components.ScoreComponent;
-import net.lenni0451.mcstructs.text.components.SelectorComponent;
-import net.lenni0451.mcstructs.text.components.StringComponent;
-import net.lenni0451.mcstructs.text.components.TranslationComponent;
-import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
-import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
-import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
+import net.lenni0451.mcstructs.text.components.*;
+import net.lenni0451.mcstructs.text.components.nbt.BlockNbtSource;
+import net.lenni0451.mcstructs.text.components.nbt.EntityNbtSource;
+import net.lenni0451.mcstructs.text.components.nbt.StorageNbtSource;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
-import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
@@ -26,6 +22,7 @@ import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,13 +34,13 @@ class TextComponentCodecTest {
             .append(new TranslationComponent("translation", "arg1", 2))
             .append(new ScoreComponent("name", "objective"))
             .append(new SelectorComponent("selector", new StringComponent("separator")))
-            .append(new BlockNbtComponent("raw", true, new StringComponent("separator"), "pos"))
-            .append(new EntityNbtComponent("raw", true, new StringComponent("separator"), "selector"))
-            .append(new StorageNbtComponent("raw", true, new StringComponent("separator"), Identifier.of("namespace", "id")))
+            .append(new NbtComponent("raw", true, new StringComponent("separator"), new BlockNbtSource("pos")))
+            .append(new NbtComponent("raw", true, new StringComponent("separator"), new EntityNbtSource("selector")))
+            .append(new NbtComponent("raw", true, new StringComponent("separator"), new StorageNbtSource(Identifier.of("namespace", "id"))))
             .append(new StringComponent("hover text").setStyle(new Style().setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_TEXT, new StringComponent("text")))))
             .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(HoverEventAction.SHOW_ITEM, Identifier.of("stone"), 64, new CompoundTag()))))
             .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(HoverEventAction.SHOW_ENTITY, Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))))
-            .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL, "https://example.com")).setFont(Identifier.of("font")).setInsertion("insertion")));
+            .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openURL(URI.create("https://example.com"))).setFont(Identifier.of("font")).setInsertion("insertion")));
 
     @Test
     void serializeDeserializeJson() {

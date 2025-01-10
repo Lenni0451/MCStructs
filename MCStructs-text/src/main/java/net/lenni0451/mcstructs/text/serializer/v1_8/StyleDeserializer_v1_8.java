@@ -6,10 +6,12 @@ import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
+import net.lenni0451.mcstructs.text.events.click.types.LegacyClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 
 import java.lang.reflect.Type;
+import java.net.URI;
 
 public class StyleDeserializer_v1_8 implements JsonDeserializer<Style> {
 
@@ -38,7 +40,7 @@ public class StyleDeserializer_v1_8 implements JsonDeserializer<Style> {
                 if (rawAction != null) action = ClickEventAction.byName(rawAction.getAsString());
                 if (rawValue != null) value = rawValue.getAsString();
 
-                if (action != null && value != null && action.isUserDefinable()) style.setClickEvent(new ClickEvent(action, value));
+                if (action != null && value != null && action.isUserDefinable()) style.setClickEvent(this.deserializeClickEvent(action, value));
             }
         }
         if (rawStyle.has("hoverEvent")) {
@@ -54,6 +56,33 @@ public class StyleDeserializer_v1_8 implements JsonDeserializer<Style> {
             }
         }
         return style;
+    }
+
+    private ClickEvent deserializeClickEvent(final ClickEventAction action, final String value) {
+        switch (action) {
+            case OPEN_URL:
+                try {
+                    return ClickEvent.openURL(new URI(value));
+                } catch (Throwable t) {
+                    return new LegacyClickEvent(action, value);
+                }
+            case OPEN_FILE:
+                return ClickEvent.openFile(value);
+            case RUN_COMMAND:
+                return ClickEvent.runCommand(value);
+            case TWITCH_USER_INFO:
+                return ClickEvent.twitchUserInfo(value);
+            case SUGGEST_COMMAND:
+                return ClickEvent.suggestCommand(value);
+            case CHANGE_PAGE:
+                try {
+                    return ClickEvent.changePage(Integer.parseInt(value));
+                } catch (Throwable t) {
+                    return new LegacyClickEvent(action, value);
+                }
+            default:
+                throw new IllegalArgumentException("Unknown click event action: " + action.getName());
+        }
     }
 
 }

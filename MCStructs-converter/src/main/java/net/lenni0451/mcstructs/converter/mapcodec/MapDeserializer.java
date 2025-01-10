@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.converter.codec.map;
+package net.lenni0451.mcstructs.converter.mapcodec;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.model.Result;

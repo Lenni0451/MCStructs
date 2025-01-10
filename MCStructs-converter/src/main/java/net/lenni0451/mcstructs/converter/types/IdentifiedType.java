@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.converter.codec.types;
+package net.lenni0451.mcstructs.converter.types;
 
 import net.lenni0451.mcstructs.core.Identifier;
 

@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import net.lenni0451.mcstructs.converter.codec.map.MapCodec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import org.junit.jupiter.api.Test;
 

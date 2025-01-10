@@ -6,13 +6,13 @@ import net.lenni0451.mcstructs.text.components.KeybindComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
-import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.translation.Translator;
 
 import javax.annotation.Nullable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,7 +32,7 @@ public class TextUtils {
      */
     public static TextComponent makeURLsClickable(final TextComponent component) {
         return replace(component, URL_PATTERN, comp -> {
-            comp.getStyle().setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL, comp.asSingleString()));
+            comp.getStyle().setClickEvent(ClickEvent.openURL(URI.create(comp.asSingleString())));
             return comp;
         });
     }

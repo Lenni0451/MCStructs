@@ -1,0 +1,35 @@
+package net.lenni0451.mcstructs.text.events.click.types;
+
+import lombok.EqualsAndHashCode;
+import net.lenni0451.mcstructs.core.utils.ToString;
+import net.lenni0451.mcstructs.text.events.click.ClickEvent;
+import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
+
+import java.net.URI;
+
+@EqualsAndHashCode
+public class OpenURLClickEvent extends ClickEvent {
+
+    private URI url;
+
+    public OpenURLClickEvent(final URI url) {
+        super(ClickEventAction.OPEN_URL);
+        this.url = url;
+    }
+
+    public URI getUrl() {
+        return this.url;
+    }
+
+    public void setUrl(final URI url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return ToString.of(this)
+                .add("url", this.url)
+                .toString();
+    }
+
+}

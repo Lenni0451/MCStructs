@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.text.events.click;
 
+import net.lenni0451.mcstructs.converter.types.NamedType;
+
 import javax.annotation.Nullable;
 import java.util.function.BiPredicate;
 
@@ -7,7 +9,7 @@ import java.util.function.BiPredicate;
  * The click event actions.<br>
  * Click events have been added in Minecraft 1.7.
  */
-public enum ClickEventAction {
+public enum ClickEventAction implements NamedType {
 
     OPEN_URL("open_url", true),
     OPEN_FILE("open_file", false),

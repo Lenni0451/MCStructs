@@ -14,7 +14,7 @@ public class Either<L, R> {
         return new Either<>(null, right);
     }
 
-    public static <T> T unwrap(final Either<T, T> either) {
+    public static <T> T unwrap(final Either<? extends T, ? extends T> either) {
         return either.isLeft() ? either.getLeft() : either.getRight();
     }
 

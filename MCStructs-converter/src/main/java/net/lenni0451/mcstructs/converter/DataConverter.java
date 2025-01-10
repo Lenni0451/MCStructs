@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.converter;
 
+import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.model.Result;
 
 import javax.annotation.Nullable;
@@ -125,5 +126,27 @@ public interface DataConverter<T> {
     T createLongArray(final long[] value);
 
     Result<long[]> asLongArray(final T element);
+
+    default Codec<T> toCodec() {
+        return new Codec<T>() {
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                try {
+                    return Result.success(converter.convertTo(DataConverter.this, data));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            }
+
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                try {
+                    return Result.success(converter.convertFrom(DataConverter.this, element));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            }
+        };
+    }
 
 }

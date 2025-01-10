@@ -5,9 +5,9 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.*;
-import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
-import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
-import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
+import net.lenni0451.mcstructs.text.components.nbt.BlockNbtSource;
+import net.lenni0451.mcstructs.text.components.nbt.EntityNbtSource;
+import net.lenni0451.mcstructs.text.components.nbt.StorageNbtSource;
 
 import java.lang.reflect.Type;
 
@@ -73,10 +73,15 @@ public class TextDeserializer_v1_19_4 implements JsonDeserializer<TextComponent>
                 boolean interpret = getBoolean(rawComponent, "interpret", false);
                 TextComponent separator = null;
                 if (rawComponent.has("separator")) separator = this.deserialize(rawComponent.get("separator"), typeOfT, context);
-                if (rawComponent.has("block")) component = new BlockNbtComponent(nbt, interpret, separator, getString(rawComponent, "block"));
-                else if (rawComponent.has("entity")) component = new EntityNbtComponent(nbt, interpret, separator, getString(rawComponent, "entity"));
-                else if (rawComponent.has("storage")) component = new StorageNbtComponent(nbt, interpret, separator, Identifier.of(getString(rawComponent, "storage")));
-                else throw new JsonParseException("Don't know how to turn " + json + " into a Component");
+                if (rawComponent.has("block")) {
+                    component = new NbtComponent(nbt, interpret, separator, new BlockNbtSource(getString(rawComponent, "block")));
+                } else if (rawComponent.has("entity")) {
+                    component = new NbtComponent(nbt, interpret, separator, new EntityNbtSource(getString(rawComponent, "entity")));
+                } else if (rawComponent.has("storage")) {
+                    component = new NbtComponent(nbt, interpret, separator, new StorageNbtSource(Identifier.of(getString(rawComponent, "storage"))));
+                } else {
+                    throw new JsonParseException("Don't know how to turn " + json + " into a Component");
+                }
             } else {
                 throw new JsonParseException("Don't know how to turn " + json + " into a Component");
             }

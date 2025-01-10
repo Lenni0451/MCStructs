@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.text.events.hover;
 
+import net.lenni0451.mcstructs.converter.types.NamedType;
+
 import javax.annotation.Nullable;
 import java.util.function.BiPredicate;
 
@@ -7,7 +9,7 @@ import java.util.function.BiPredicate;
  * The hover event actions.<br>
  * Hover events have been added in Minecraft 1.7.
  */
-public enum HoverEventAction {
+public enum HoverEventAction implements NamedType {
 
     SHOW_TEXT("show_text", true),
     SHOW_ACHIEVEMENT("show_achievement", true),

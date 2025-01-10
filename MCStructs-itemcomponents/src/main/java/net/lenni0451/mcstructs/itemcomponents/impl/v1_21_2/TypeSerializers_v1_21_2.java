@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.DynamicMapCodec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
+import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
@@ -96,26 +97,26 @@ public class TypeSerializers_v1_21_2 extends TypeSerializers_v1_21 {
 
     public Codec<ConsumeEffect> consumeEffect() {
         return this.init(CONSUME_EFFECT, () -> {
-            Map<ConsumeEffect.Type, Codec<? extends ConsumeEffect>> codecs = new EnumMap<>(ConsumeEffect.Type.class);
-            codecs.put(ConsumeEffect.Type.APPLY_EFFECTS, MapCodecMerger.codec(
+            Map<ConsumeEffect.Type, MapCodec<? extends ConsumeEffect>> codecs = new EnumMap<>(ConsumeEffect.Type.class);
+            codecs.put(ConsumeEffect.Type.APPLY_EFFECTS, MapCodecMerger.mapCodec(
                     this.statusEffect().listOf().mapCodec(ConsumeEffect.ApplyEffects.EFFECTS).required(), ConsumeEffect.ApplyEffects::getEffects,
                     Codec.rangedFloat(0, 1).mapCodec(ConsumeEffect.ApplyEffects.PROBABILITY).optional().defaulted(1F), ConsumeEffect.ApplyEffects::getProbability,
                     ConsumeEffect.ApplyEffects::new
             ));
-            codecs.put(ConsumeEffect.Type.REMOVE_EFFECTS, MapCodecMerger.codec(
+            codecs.put(ConsumeEffect.Type.REMOVE_EFFECTS, MapCodecMerger.mapCodec(
                     this.tagEntryList(this.registry.getRegistryVerifier().statusEffectTag, this.registry.getRegistryVerifier().statusEffect).mapCodec(ConsumeEffect.RemoveEffects.EFFECTS).required(), ConsumeEffect.RemoveEffects::getEffects,
                     ConsumeEffect.RemoveEffects::new
             ));
-            codecs.put(ConsumeEffect.Type.CLEAR_ALL_EFFECTS, Codec.unit(ConsumeEffect.ClearAllEffects::new));
-            codecs.put(ConsumeEffect.Type.TELEPORT_RANDOMLY, MapCodecMerger.codec(
+            codecs.put(ConsumeEffect.Type.CLEAR_ALL_EFFECTS, MapCodec.unit(ConsumeEffect.ClearAllEffects::new));
+            codecs.put(ConsumeEffect.Type.TELEPORT_RANDOMLY, MapCodecMerger.mapCodec(
                     Codec.minExclusiveFloat(0).mapCodec(ConsumeEffect.TeleportRandomly.DIAMETER).optional().defaulted(16F), ConsumeEffect.TeleportRandomly::getDiameter,
                     ConsumeEffect.TeleportRandomly::new
             ));
-            codecs.put(ConsumeEffect.Type.PLAY_SOUND, MapCodecMerger.codec(
+            codecs.put(ConsumeEffect.Type.PLAY_SOUND, MapCodecMerger.mapCodec(
                     this.soundEvent().mapCodec(ConsumeEffect.PlaySound.SOUND).required(), ConsumeEffect.PlaySound::getSound,
                     ConsumeEffect.PlaySound::new
             ));
-            return Codec.identified(ConsumeEffect.Type.values()).typed(ConsumeEffect::getType, type -> (Codec<ConsumeEffect>) codecs.get(type));
+            return Codec.identified(ConsumeEffect.Type.values()).typed(ConsumeEffect::getType, codecs::get);
         });
     }
 

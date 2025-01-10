@@ -1,15 +1,16 @@
 package net.lenni0451.mcstructs.text.components.nbt;
 
 import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.components.NbtComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-class EntityNbtComponentTest {
+class BlockNbtSourceTest {
 
-    private static final EntityNbtComponent component = new EntityNbtComponent("test", true, new StringComponent("separator"), "selector");
+    private static final NbtComponent component = new NbtComponent("test", true, new StringComponent("separator"), new BlockNbtSource("pos"));
 
     @Test
     void copy() {
@@ -20,7 +21,7 @@ class EntityNbtComponentTest {
 
     @Test
     void shallowCopy() {
-        EntityNbtComponent copy = (EntityNbtComponent) component.copy();
+        NbtComponent copy = (NbtComponent) component.copy();
         copy.append("Test");
         assertEquals(1, copy.getSiblings().size());
         assertEquals(0, copy.shallowCopy().getSiblings().size());

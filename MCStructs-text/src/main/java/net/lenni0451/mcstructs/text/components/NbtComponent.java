@@ -1,23 +1,28 @@
 package net.lenni0451.mcstructs.text.components;
 
+import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.components.nbt.NbtDataSource;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
-public abstract class NbtComponent extends TextComponent {
+public class NbtComponent extends TextComponent {
 
     private String component;
     private boolean resolve;
     private TextComponent separator;
+    private NbtDataSource dataSource;
 
-    public NbtComponent(final String component, final boolean resolve) {
-        this(component, resolve, null);
+    public NbtComponent(final String component, final boolean resolve, final NbtDataSource dataSource) {
+        this(component, resolve, null, dataSource);
     }
 
-    public NbtComponent(final String component, final boolean resolve, @Nullable final TextComponent separator) {
+    public NbtComponent(final String component, final boolean resolve, @Nullable final TextComponent separator, final NbtDataSource dataSource) {
         this.component = component;
         this.resolve = resolve;
         this.separator = separator;
+        this.dataSource = dataSource;
     }
 
     /**
@@ -75,9 +80,57 @@ public abstract class NbtComponent extends TextComponent {
         return this;
     }
 
+    /**
+     * @return The data source of this component
+     */
+    public NbtDataSource getDataSource() {
+        return this.dataSource;
+    }
+
+    /**
+     * Set the data source of this component.
+     *
+     * @param dataSource The data source
+     */
+    public void setDataSource(final NbtDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     @Override
     public String asSingleString() {
         return "";
+    }
+
+    @Override
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
+    }
+
+    @Override
+    public TextComponent shallowCopy() {
+        NbtComponent copy = new NbtComponent(this.component, this.resolve, this.separator, this.dataSource);
+        return copy.setStyle(this.getStyle().copy());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        NbtComponent that = (NbtComponent) o;
+        return resolve == that.resolve && Objects.equals(this.component, that.component) && Objects.equals(this.separator, that.separator) && Objects.equals(this.dataSource, that.dataSource);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.component, this.resolve, this.separator, this.dataSource);
+    }
+
+    @Override
+    public String toString() {
+        return ToString.of(this)
+                .add("component", this.component)
+                .add("resolve", this.resolve)
+                .add("separator", this.separator, Objects::nonNull)
+                .toString();
     }
 
 }

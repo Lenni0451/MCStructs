@@ -1,8 +1,8 @@
-package net.lenni0451.mcstructs.converter.codec.map.impl;
+package net.lenni0451.mcstructs.converter.mapcodec.impl;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
-import net.lenni0451.mcstructs.converter.codec.map.MapCodec;
+import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.model.Result;
 
 import java.util.Map;

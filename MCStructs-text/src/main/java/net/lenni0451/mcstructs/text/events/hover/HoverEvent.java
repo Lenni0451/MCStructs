@@ -6,7 +6,7 @@ import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 /**
  * The abstract class for hover events.<br>
- * Until minecraft 1.16 hover events always used the {@link TextHoverEvent} implementation.
+ * Until Minecraft 1.16 hover events always used the {@link TextHoverEvent} implementation.
  */
 public abstract class HoverEvent {
 
@@ -27,7 +27,7 @@ public abstract class HoverEvent {
      * Converts this hover event to a legacy text hover event.
      *
      * @param textComponentSerializer The serializer to use for text components
-     * @param sNbt          The serializer to use for nbt tags
+     * @param sNbt                    The serializer to use for nbt tags
      * @return The converted hover event
      */
     @Deprecated //TODO: Remove

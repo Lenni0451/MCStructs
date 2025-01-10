@@ -1,9 +1,9 @@
-package net.lenni0451.mcstructs.converter.codec.map;
+package net.lenni0451.mcstructs.converter.mapcodec;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
-import net.lenni0451.mcstructs.converter.codec.map.impl.FieldMapCodec;
-import net.lenni0451.mcstructs.converter.codec.map.impl.RecursiveMapCodec;
+import net.lenni0451.mcstructs.converter.mapcodec.impl.FieldMapCodec;
+import net.lenni0451.mcstructs.converter.mapcodec.impl.RecursiveMapCodec;
 import net.lenni0451.mcstructs.converter.model.Result;
 
 import java.util.HashMap;
@@ -14,6 +14,36 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public interface MapCodec<T> extends MapSerializer<T>, MapDeserializer<T> {
+
+    MapCodec<Boolean> UNIT = unit(() -> true);
+
+    static <N> MapCodec<N> unit(final Supplier<N> supplier) {
+        return new MapCodec<N>() {
+            @Override
+            public <S> Result<Map<S, S>> serialize(DataConverter<S> converter, Map<S, S> map, N element) {
+                return Result.success(map);
+            }
+
+            @Override
+            public <S> Result<N> deserialize(DataConverter<S> converter, Map<S, S> map) {
+                return Result.success(supplier.get());
+            }
+        };
+    }
+
+    static <N> MapCodec<N> failing(final String error) {
+        return new MapCodec<N>() {
+            @Override
+            public <S> Result<Map<S, S>> serialize(DataConverter<S> converter, Map<S, S> map, N element) {
+                return Result.error(error);
+            }
+
+            @Override
+            public <S> Result<N> deserialize(DataConverter<S> converter, Map<S, S> map) {
+                return Result.error(error);
+            }
+        };
+    }
 
     static <N> MapCodec<N> requiredKey(final Codec<N> codec, final String fieldName) {
         return new FieldMapCodec<>(codec, fieldName, false, false);
@@ -31,6 +61,10 @@ public interface MapCodec<T> extends MapSerializer<T>, MapDeserializer<T> {
         return new RecursiveMapCodec<>(creator);
     }
 
+
+    default FieldMapCodec.Builder.Stage1<T> field(final String fieldName) {
+        return this.asCodec().mapCodec(fieldName);
+    }
 
     default <N> MapCodec<N> map(final Function<N, T> serializer, final Function<T, N> deserializer) {
         return new MapCodec<N>() {

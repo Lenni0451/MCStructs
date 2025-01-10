@@ -1,20 +1,48 @@
 package net.lenni0451.mcstructs.text.events.click;
 
-import net.lenni0451.mcstructs.core.utils.ToString;
+import net.lenni0451.mcstructs.text.events.click.types.*;
 
-import java.util.Objects;
+import java.net.URI;
 
 /**
- * The implementation for click events.
+ * The abstract class for click events.<br>
+ * Until Minecraft 1.?? click events always used the TODO implementation.
  */
-public class ClickEvent {
+public abstract class ClickEvent {
 
-    private ClickEventAction action;
-    private String value;
+    public static OpenURLClickEvent openURL(final URI url) {
+        return new OpenURLClickEvent(url);
+    }
 
-    public ClickEvent(final ClickEventAction action, final String value) {
+    public static OpenFileClickEvent openFile(final String path) {
+        return new OpenFileClickEvent(path);
+    }
+
+    public static RunCommandClickEvent runCommand(final String command) {
+        return new RunCommandClickEvent(command);
+    }
+
+    public static TwitchUserInfoClickEvent twitchUserInfo(final String user) {
+        return new TwitchUserInfoClickEvent(user);
+    }
+
+    public static SuggestCommandClickEvent suggestCommand(final String command) {
+        return new SuggestCommandClickEvent(command);
+    }
+
+    public static ChangePageClickEvent changePage(final int page) {
+        return new ChangePageClickEvent(page);
+    }
+
+    public static CopyToClipboardClickEvent copyToClipboard(final String value) {
+        return new CopyToClipboardClickEvent(value);
+    }
+
+
+    protected ClickEventAction action;
+
+    public ClickEvent(final ClickEventAction action) {
         this.action = action;
-        this.value = value;
     }
 
     /**
@@ -24,54 +52,13 @@ public class ClickEvent {
         return this.action;
     }
 
-    /**
-     * Set the action of this click event.
-     *
-     * @param action The new action
-     * @return This instance for chaining
-     */
-    public ClickEvent setAction(final ClickEventAction action) {
-        this.action = action;
-        return this;
-    }
-
-    /**
-     * @return The value of this click event
-     */
-    public String getValue() {
-        return this.value;
-    }
-
-    /**
-     * Set the value of this click event.
-     *
-     * @param value The new value
-     * @return This instance for chaining
-     */
-    public ClickEvent setValue(final String value) {
-        this.value = value;
-        return this;
-    }
+    @Override
+    public abstract boolean equals(Object o);
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ClickEvent that = (ClickEvent) o;
-        return this.action == that.action && Objects.equals(this.value, that.value);
-    }
+    public abstract int hashCode();
 
     @Override
-    public int hashCode() {
-        return Objects.hash(this.action, this.value);
-    }
-
-    @Override
-    public String toString() {
-        return ToString.of(this)
-                .add("action", this.action)
-                .add("value", this.value)
-                .toString();
-    }
+    public abstract String toString();
 
 }

@@ -3,9 +3,9 @@ package net.lenni0451.mcstructs.text;
 import net.lenni0451.mcstructs.core.Copyable;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.text.components.*;
-import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
-import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
-import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
+import net.lenni0451.mcstructs.text.components.nbt.BlockNbtSource;
+import net.lenni0451.mcstructs.text.components.nbt.EntityNbtSource;
+import net.lenni0451.mcstructs.text.components.nbt.StorageNbtSource;
 import net.lenni0451.mcstructs.text.stringformat.StringFormat;
 import net.lenni0451.mcstructs.text.stringformat.handling.ColorHandling;
 import net.lenni0451.mcstructs.text.stringformat.handling.SerializerUnknownHandling;
@@ -26,9 +26,9 @@ import java.util.function.Consumer;
  * - {@link ScoreComponent}<br>
  * - {@link SelectorComponent}<br>
  * - {@link KeybindComponent}<br>
- * - {@link BlockNbtComponent}<br>
- * - {@link EntityNbtComponent}<br>
- * - {@link StorageNbtComponent}
+ * - {@link BlockNbtSource}<br>
+ * - {@link EntityNbtSource}<br>
+ * - {@link StorageNbtSource}
  */
 public abstract class TextComponent implements Copyable<TextComponent> {
 
@@ -300,28 +300,28 @@ public abstract class TextComponent implements Copyable<TextComponent> {
         return new KeybindComponent(keybind);
     }
 
-    public static BlockNbtComponent blockNbt(final String rawComponent, final boolean resolve, final String pos) {
-        return new BlockNbtComponent(rawComponent, resolve, pos);
+    public static NbtComponent blockNbt(final String rawComponent, final boolean resolve, final String pos) {
+        return new NbtComponent(rawComponent, resolve, new BlockNbtSource(pos));
     }
 
-    public static BlockNbtComponent blockNbt(final String rawComponent, final boolean resolve, @Nullable final TextComponent separator, final String pos) {
-        return new BlockNbtComponent(rawComponent, resolve, separator, pos);
+    public static NbtComponent blockNbt(final String rawComponent, final boolean resolve, @Nullable final TextComponent separator, final String pos) {
+        return new NbtComponent(rawComponent, resolve, separator, new BlockNbtSource(pos));
     }
 
-    public static EntityNbtComponent entityNbt(final String component, final boolean resolve, final String selector) {
-        return new EntityNbtComponent(component, resolve, selector);
+    public static NbtComponent entityNbt(final String component, final boolean resolve, final String selector) {
+        return new NbtComponent(component, resolve, new EntityNbtSource(selector));
     }
 
-    public static EntityNbtComponent entityNbt(final String component, final boolean resolve, @Nullable final TextComponent separator, final String selector) {
-        return new EntityNbtComponent(component, resolve, separator, selector);
+    public static NbtComponent entityNbt(final String component, final boolean resolve, @Nullable final TextComponent separator, final String selector) {
+        return new NbtComponent(component, resolve, separator, new EntityNbtSource(selector));
     }
 
-    public static StorageNbtComponent storageNbt(final String component, final boolean resolve, final Identifier id) {
-        return new StorageNbtComponent(component, resolve, id);
+    public static NbtComponent storageNbt(final String component, final boolean resolve, final Identifier id) {
+        return new NbtComponent(component, resolve, new StorageNbtSource(id));
     }
 
-    public static StorageNbtComponent storageNbt(final String component, final boolean resolve, @Nullable final TextComponent separator, final Identifier id) {
-        return new StorageNbtComponent(component, resolve, separator, id);
+    public static NbtComponent storageNbt(final String component, final boolean resolve, @Nullable final TextComponent separator, final Identifier id) {
+        return new NbtComponent(component, resolve, separator, new StorageNbtSource(id));
     }
 
 }

@@ -8,9 +8,9 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.*;
-import net.lenni0451.mcstructs.text.components.nbt.BlockNbtComponent;
-import net.lenni0451.mcstructs.text.components.nbt.EntityNbtComponent;
-import net.lenni0451.mcstructs.text.components.nbt.StorageNbtComponent;
+import net.lenni0451.mcstructs.text.components.nbt.BlockNbtSource;
+import net.lenni0451.mcstructs.text.components.nbt.EntityNbtSource;
+import net.lenni0451.mcstructs.text.components.nbt.StorageNbtSource;
 import net.lenni0451.mcstructs.text.serializer.subtypes.IStyleSerializer;
 import net.lenni0451.mcstructs.text.serializer.subtypes.ITextComponentSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
@@ -63,15 +63,15 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
             NbtComponent component = (NbtComponent) object;
             out.addProperty("nbt", component.getComponent());
             if (component.isResolve()) out.addProperty("interpret", true);
-            if (component instanceof EntityNbtComponent) {
-                EntityNbtComponent entityComponent = (EntityNbtComponent) component;
-                out.addProperty("entity", entityComponent.getSelector());
-            } else if (component instanceof BlockNbtComponent) {
-                BlockNbtComponent blockNbtComponent = (BlockNbtComponent) component;
-                out.addProperty("block", blockNbtComponent.getPos());
-            } else if (component instanceof StorageNbtComponent) {
-                StorageNbtComponent storageNbtComponent = (StorageNbtComponent) component;
-                out.addProperty("storage", storageNbtComponent.getId().get());
+            if (component.getDataSource() instanceof EntityNbtSource) {
+                EntityNbtSource entityNbtSource = (EntityNbtSource) component.getDataSource();
+                out.addProperty("entity", entityNbtSource.getSelector());
+            } else if (component.getDataSource() instanceof BlockNbtSource) {
+                BlockNbtSource blockNbtSource = (BlockNbtSource) component.getDataSource();
+                out.addProperty("block", blockNbtSource.getPos());
+            } else if (component.getDataSource() instanceof StorageNbtSource) {
+                StorageNbtSource storageNbtSource = (StorageNbtSource) component.getDataSource();
+                out.addProperty("storage", storageNbtSource.getId().get());
             } else {
                 throw new IllegalArgumentException("Unknown Nbt component type: " + component.getClass().getName());
             }
@@ -175,14 +175,14 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
 
             boolean typeFound = false;
             if (containsString(obj, "entity") && (source == null || source.equals("entity"))) {
-                component = new EntityNbtComponent(nbt, interpret, separator, obj.get("entity").getAsString());
+                component = new NbtComponent(nbt, interpret, separator, new EntityNbtSource(obj.get("entity").getAsString()));
                 typeFound = true;
             } else if (containsString(obj, "block") && (source == null || source.equals("block"))) {
-                component = new BlockNbtComponent(nbt, interpret, separator, obj.get("block").getAsString());
+                component = new NbtComponent(nbt, interpret, separator, new BlockNbtSource(obj.get("block").getAsString()));
                 typeFound = true;
             } else if (containsString(obj, "storage") && (source == null || source.equals("storage"))) {
                 try {
-                    component = new StorageNbtComponent(nbt, interpret, separator, Identifier.of(obj.get("storage").getAsString()));
+                    component = new NbtComponent(nbt, interpret, separator, new StorageNbtSource(Identifier.of(obj.get("storage").getAsString())));
                     typeFound = true;
                 } catch (Throwable ignored) {
                     //If the storage identifier fails to parse we just ignore it
