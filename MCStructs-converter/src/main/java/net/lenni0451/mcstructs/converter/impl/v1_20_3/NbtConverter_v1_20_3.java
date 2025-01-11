@@ -200,7 +200,10 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
     public NbtTag createUnsafeMap(Map<NbtTag, NbtTag> values) {
         CompoundTag compound = new CompoundTag();
         for (Map.Entry<NbtTag, NbtTag> entry : values.entrySet()) {
-            compound.add(SNbt.V1_14.trySerialize(entry.getKey()), entry.getValue());
+            String key;
+            if (entry.getKey().isStringTag()) key = entry.getKey().asStringTag().getValue();
+            else key = SNbt.V1_14.trySerialize(entry.getKey());
+            compound.add(key, entry.getValue());
         }
         return compound;
     }
