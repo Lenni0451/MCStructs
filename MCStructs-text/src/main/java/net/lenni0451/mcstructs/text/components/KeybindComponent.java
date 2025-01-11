@@ -8,7 +8,7 @@ import net.lenni0451.mcstructs.text.translation.Translator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class KeybindComponent extends TextComponent {
 
     private String keybind;

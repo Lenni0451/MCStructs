@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * The implementation for item hover events.
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class ItemHoverEvent extends HoverEvent {
 
     private Identifier item;

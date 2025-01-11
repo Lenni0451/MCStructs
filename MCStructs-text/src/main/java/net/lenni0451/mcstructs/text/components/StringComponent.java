@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.TextComponent;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class StringComponent extends TextComponent {
 
     private String text;

@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.text.TextComponent;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class SelectorComponent extends TextComponent {
 
     private String selector;

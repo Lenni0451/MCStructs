@@ -11,7 +11,7 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 
 import javax.annotation.Nullable;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class LegacyHoverEvent extends HoverEvent {
 
     private LegacyData data;

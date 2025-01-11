@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 
 import java.net.URI;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class OpenURLClickEvent extends ClickEvent {
 
     private URI url;

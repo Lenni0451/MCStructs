@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * The implementation for entity hover events.
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class EntityHoverEvent extends HoverEvent {
 
     private Identifier entityType;

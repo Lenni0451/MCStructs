@@ -5,7 +5,7 @@ import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class CopyToClipboardClickEvent extends ClickEvent {
 
     private String value;

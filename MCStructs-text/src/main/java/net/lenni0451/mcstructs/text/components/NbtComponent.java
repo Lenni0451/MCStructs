@@ -8,7 +8,7 @@ import net.lenni0451.mcstructs.text.components.nbt.NbtDataSource;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class NbtComponent extends TextComponent {
 
     private String component;

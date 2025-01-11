@@ -187,6 +187,7 @@ public abstract class StringFormat {
      * Some string formats may require a reset code at the end of the string. It is only inserted if {@link #shouldResetAtEnd()} return {@code true} and the last section had any formattings.
      *
      * @param component       The component to convert
+     * @param colorHandling   The color handling
      * @param unknownHandling The unknown handling
      * @return The converted string
      */

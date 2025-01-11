@@ -8,7 +8,7 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 /**
  * The implementation for text hover events.
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class AchievementHoverEvent extends HoverEvent {
 
     private String statistic;
