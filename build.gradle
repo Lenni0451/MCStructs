@@ -1,5 +1,4 @@
 plugins {
-    id "io.freefair.lombok" version "8.11" apply false
     id "net.lenni0451.template-processor" version "1.0.0" apply false
 }
 
@@ -8,7 +7,6 @@ subprojects {
     apply plugin: "maven-publish"
     apply plugin: "signing"
     apply plugin: "checkstyle"
-    apply plugin: "io.freefair.lombok"
     apply plugin: "net.lenni0451.template-processor"
 
     base {
@@ -30,11 +28,19 @@ subprojects {
 
     dependencies {
         compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+        compileOnly(annotationProcessor("org.projectlombok:lombok:1.18.36"))
 
-        testImplementation "com.google.code.findbugs:jsr305:3.0.2"
+        testCompileOnly "com.google.code.findbugs:jsr305:3.0.2"
         testImplementation(platform("org.junit:junit-bom:5.11.4"))
         testImplementation "org.junit.jupiter:junit-jupiter"
         testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+        testCompileOnly(testAnnotationProcessor("org.projectlombok:lombok:1.18.36"))
+    }
+
+    templateProcessor {
+        templateDir = project.file("src/main/templates")
+        outputDir = layout.buildDirectory.dir("generated/templates/main/java")
+        markAsSource(project.sourceSets.main)
     }
 
     java {
@@ -42,9 +48,8 @@ subprojects {
         withJavadocJar()
     }
 
-    sourcesJar {
-        from delombok
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    artifacts {
+        archives javadocJar, sourcesJar
     }
 
     test {
@@ -53,17 +58,6 @@ subprojects {
             events "passed", "skipped", "failed"
         }
         maxParallelForks Runtime.runtime.availableProcessors()
-    }
-
-    templateProcessor {
-        templateDir = project.file("src/main/templates")
-        outputDir = layout.buildDirectory.dir("generated/templates/main/java")
-        markAsSource(project.sourceSets.main)
-    }
-    tasks.delombok.dependsOn tasks.processTemplates
-
-    artifacts {
-        archives javadocJar, sourcesJar
     }
 
     publishing {
