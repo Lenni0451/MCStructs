@@ -26,7 +26,8 @@ public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
         if (src.getInsertion() != null) serializedStyle.add("insertion", context.serialize(src.getInsertion()));
         if (src.getClickEvent() != null) {
             JsonObject clickEvent = new JsonObject();
-            this.serializeClickEvent(clickEvent, src.getClickEvent());
+            clickEvent.addProperty("action", src.getClickEvent().getAction().getName());
+            clickEvent.addProperty("value", this.serializeClickEvent(src.getClickEvent()));
             serializedStyle.add("clickEvent", clickEvent);
         }
         if (src.getHoverEvent() != null) serializedStyle.add("hoverEvent", context.serialize(src.getHoverEvent()));
@@ -35,25 +36,30 @@ public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
         return serializedStyle;
     }
 
-    private void serializeClickEvent(final JsonObject json, final ClickEvent clickEvent) {
-        json.addProperty("action", clickEvent.getAction().getName());
-        if (clickEvent instanceof LegacyClickEvent) {
-            json.addProperty("value", ((LegacyClickEvent) clickEvent).getValue());
-        } else if (clickEvent instanceof OpenURLClickEvent) {
-            json.addProperty("value", ((OpenURLClickEvent) clickEvent).getUrl().toString());
+    private String serializeClickEvent(final ClickEvent clickEvent) {
+        if (clickEvent instanceof OpenURLClickEvent) {
+            return ((OpenURLClickEvent) clickEvent).getUrl().toString();
         } else if (clickEvent instanceof OpenFileClickEvent) {
-            json.addProperty("value", ((OpenFileClickEvent) clickEvent).getPath());
+            return ((OpenFileClickEvent) clickEvent).getPath();
         } else if (clickEvent instanceof RunCommandClickEvent) {
-            json.addProperty("value", ((RunCommandClickEvent) clickEvent).getCommand());
+            return ((RunCommandClickEvent) clickEvent).getCommand();
         } else if (clickEvent instanceof SuggestCommandClickEvent) {
-            json.addProperty("value", ((SuggestCommandClickEvent) clickEvent).getCommand());
+            return ((SuggestCommandClickEvent) clickEvent).getCommand();
         } else if (clickEvent instanceof ChangePageClickEvent) {
-            json.addProperty("value", String.valueOf(((ChangePageClickEvent) clickEvent).getPage()));
+            return String.valueOf(((ChangePageClickEvent) clickEvent).getPage());
         } else if (clickEvent instanceof CopyToClipboardClickEvent) {
-            json.addProperty("value", ((CopyToClipboardClickEvent) clickEvent).getValue());
-        } else {
-            throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
+            return ((CopyToClipboardClickEvent) clickEvent).getValue();
+        } else if (clickEvent instanceof LegacyClickEvent) {
+            LegacyClickEvent legacyClickEvent = (LegacyClickEvent) clickEvent;
+            if (legacyClickEvent.getData() instanceof LegacyClickEvent.LegacyUrlData) {
+                LegacyClickEvent.LegacyUrlData urlData = (LegacyClickEvent.LegacyUrlData) legacyClickEvent.getData();
+                return urlData.getUrl();
+            } else if (legacyClickEvent.getData() instanceof LegacyClickEvent.LegacyPageData) {
+                LegacyClickEvent.LegacyPageData pageData = (LegacyClickEvent.LegacyPageData) legacyClickEvent.getData();
+                return pageData.getPage();
+            }
         }
+        throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
     }
 
 }

@@ -79,7 +79,7 @@ public class StyleDeserializer_v1_8 implements JsonDeserializer<Style> {
                 try {
                     return ClickEvent.openURL(new URI(value));
                 } catch (Throwable t) {
-                    return new LegacyClickEvent(action, value);
+                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyUrlData(value));
                 }
             case OPEN_FILE:
                 return ClickEvent.openFile(value);
@@ -93,7 +93,7 @@ public class StyleDeserializer_v1_8 implements JsonDeserializer<Style> {
                 try {
                     return ClickEvent.changePage(Integer.parseInt(value));
                 } catch (Throwable t) {
-                    return new LegacyClickEvent(action, value);
+                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyPageData(value));
                 }
             default:
                 throw new IllegalArgumentException("Unknown click event action: " + action.getName());

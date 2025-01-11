@@ -55,9 +55,7 @@ public class StyleSerializer_v1_8 implements JsonSerializer<Style> {
     }
 
     protected String serializeClickEvent(final ClickEvent clickEvent) {
-        if (clickEvent instanceof LegacyClickEvent) {
-            return ((LegacyClickEvent) clickEvent).getValue();
-        } else if (clickEvent instanceof OpenURLClickEvent) {
+        if (clickEvent instanceof OpenURLClickEvent) {
             return ((OpenURLClickEvent) clickEvent).getUrl().toString();
         } else if (clickEvent instanceof OpenFileClickEvent) {
             return ((OpenFileClickEvent) clickEvent).getPath();
@@ -69,6 +67,15 @@ public class StyleSerializer_v1_8 implements JsonSerializer<Style> {
             return ((SuggestCommandClickEvent) clickEvent).getCommand();
         } else if (clickEvent instanceof ChangePageClickEvent) {
             return String.valueOf(((ChangePageClickEvent) clickEvent).getPage());
+        } else if (clickEvent instanceof LegacyClickEvent) {
+            LegacyClickEvent legacyClickEvent = (LegacyClickEvent) clickEvent;
+            if (legacyClickEvent.getData() instanceof LegacyClickEvent.LegacyUrlData) {
+                LegacyClickEvent.LegacyUrlData urlData = (LegacyClickEvent.LegacyUrlData) legacyClickEvent.getData();
+                return urlData.getUrl();
+            } else if (legacyClickEvent.getData() instanceof LegacyClickEvent.LegacyPageData) {
+                LegacyClickEvent.LegacyPageData pageData = (LegacyClickEvent.LegacyPageData) legacyClickEvent.getData();
+                return pageData.getPage();
+            }
         }
         throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
     }

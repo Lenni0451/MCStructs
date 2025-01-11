@@ -1,5 +1,7 @@
 package net.lenni0451.mcstructs.text.events.click.types;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
@@ -8,11 +10,11 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 @EqualsAndHashCode(callSuper = false)
 public class LegacyClickEvent extends ClickEvent {
 
-    private String value;
+    private LegacyData data;
 
-    public LegacyClickEvent(final ClickEventAction action, final String value) {
+    public LegacyClickEvent(final ClickEventAction action, final LegacyData data) {
         super(action);
-        this.value = value;
+        this.data = data;
     }
 
     public ClickEvent setAction(final ClickEventAction action) {
@@ -20,20 +22,36 @@ public class LegacyClickEvent extends ClickEvent {
         return this;
     }
 
-    public String getValue() {
-        return this.value;
+    public LegacyData getData() {
+        return this.data;
     }
 
-    public void setValue(final String value) {
-        this.value = value;
+    public void setData(final LegacyData data) {
+        this.data = data;
     }
 
     @Override
     public String toString() {
         return ToString.of(this)
                 .add("action", this.action)
-                .add("value", this.value)
+                .add("data", this.data)
                 .toString();
+    }
+
+
+    public interface LegacyData {
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class LegacyUrlData implements LegacyData {
+        private String url;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class LegacyPageData implements LegacyData {
+        private String page;
     }
 
 }

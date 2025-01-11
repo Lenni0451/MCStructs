@@ -35,7 +35,8 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, Cod
         if (object.getObfuscated() != null) out.addBoolean("obfuscated", object.isObfuscated());
         if (object.getClickEvent() != null) {
             CompoundTag clickEvent = new CompoundTag();
-            this.serializeClickEvent(clickEvent, object.getClickEvent());
+            clickEvent.addString("action", object.getClickEvent().getAction().getName());
+            clickEvent.addString("value", this.serializeClickEvent(object.getClickEvent()));
             out.add("clickEvent", clickEvent);
         }
         if (object.getHoverEvent() != null) out.add("hoverEvent", this.hoverEventSerializer.serialize(object.getHoverEvent()));
@@ -44,25 +45,30 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, Cod
         return out;
     }
 
-    private void serializeClickEvent(final CompoundTag tag, final ClickEvent clickEvent) {
-        tag.addString("action", clickEvent.getAction().getName());
-        if (clickEvent instanceof LegacyClickEvent) {
-            tag.addString("value", ((LegacyClickEvent) clickEvent).getValue());
-        } else if (clickEvent instanceof OpenURLClickEvent) {
-            tag.addString("value", ((OpenURLClickEvent) clickEvent).getUrl().toString());
+    private String serializeClickEvent(final ClickEvent clickEvent) {
+        if (clickEvent instanceof OpenURLClickEvent) {
+            return ((OpenURLClickEvent) clickEvent).getUrl().toString();
         } else if (clickEvent instanceof OpenFileClickEvent) {
-            tag.addString("value", ((OpenFileClickEvent) clickEvent).getPath());
+            return ((OpenFileClickEvent) clickEvent).getPath();
         } else if (clickEvent instanceof RunCommandClickEvent) {
-            tag.addString("value", ((RunCommandClickEvent) clickEvent).getCommand());
+            return ((RunCommandClickEvent) clickEvent).getCommand();
         } else if (clickEvent instanceof SuggestCommandClickEvent) {
-            tag.addString("value", ((SuggestCommandClickEvent) clickEvent).getCommand());
+            return ((SuggestCommandClickEvent) clickEvent).getCommand();
         } else if (clickEvent instanceof ChangePageClickEvent) {
-            tag.addString("value", String.valueOf(((ChangePageClickEvent) clickEvent).getPage()));
+            return String.valueOf(((ChangePageClickEvent) clickEvent).getPage());
         } else if (clickEvent instanceof CopyToClipboardClickEvent) {
-            tag.addString("value", ((CopyToClipboardClickEvent) clickEvent).getValue());
-        } else {
-            throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
+            return ((CopyToClipboardClickEvent) clickEvent).getValue();
+        } else if (clickEvent instanceof LegacyClickEvent) {
+            LegacyClickEvent legacyClickEvent = (LegacyClickEvent) clickEvent;
+            if (legacyClickEvent.getData() instanceof LegacyClickEvent.LegacyUrlData) {
+                LegacyClickEvent.LegacyUrlData urlData = (LegacyClickEvent.LegacyUrlData) legacyClickEvent.getData();
+                return urlData.getUrl();
+            } else if (legacyClickEvent.getData() instanceof LegacyClickEvent.LegacyPageData) {
+                LegacyClickEvent.LegacyPageData pageData = (LegacyClickEvent.LegacyPageData) legacyClickEvent.getData();
+                return pageData.getPage();
+            }
         }
+        throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
     }
 
     @Override
@@ -106,7 +112,7 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, Cod
                 try {
                     return ClickEvent.openURL(new URI(value));
                 } catch (Throwable t) {
-                    return new LegacyClickEvent(action, value);
+                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyUrlData(value));
                 }
             case OPEN_FILE:
                 return ClickEvent.openFile(value);
@@ -118,7 +124,7 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, Cod
                 try {
                     return ClickEvent.changePage(Integer.parseInt(value));
                 } catch (Throwable t) {
-                    return new LegacyClickEvent(action, value);
+                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyPageData(value));
                 }
             case COPY_TO_CLIPBOARD:
                 return ClickEvent.copyToClipboard(value);
