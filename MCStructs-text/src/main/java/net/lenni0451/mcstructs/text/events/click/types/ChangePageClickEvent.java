@@ -26,6 +26,7 @@ public class ChangePageClickEvent extends ClickEvent {
     @Override
     public String toString() {
         return ToString.of(this)
+                .add("action", this.action)
                 .add("page", this.page)
                 .toString();
     }

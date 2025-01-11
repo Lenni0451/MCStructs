@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.components;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.translation.Translator;
@@ -8,10 +9,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@EqualsAndHashCode
 public class TranslationComponent extends TextComponent {
 
     private static final Pattern ARG_PATTERN = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
@@ -166,21 +167,6 @@ public class TranslationComponent extends TextComponent {
         TranslationComponent copy = new TranslationComponent(this.key, copyArgs);
         copy.translator = this.translator;
         return copy.setStyle(this.getStyle().copy());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TranslationComponent that = (TranslationComponent) o;
-        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.key, that.key) && Arrays.equals(this.args, that.args) && Objects.equals(this.translator, that.translator);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(this.getSiblings(), this.getStyle(), this.key, this.translator);
-        result = 31 * result + Arrays.hashCode(this.args);
-        return result;
     }
 
     @Override

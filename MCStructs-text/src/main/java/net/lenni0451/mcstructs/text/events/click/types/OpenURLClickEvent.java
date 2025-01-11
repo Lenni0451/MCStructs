@@ -28,6 +28,7 @@ public class OpenURLClickEvent extends ClickEvent {
     @Override
     public String toString() {
         return ToString.of(this)
+                .add("action", this.action)
                 .add("url", this.url)
                 .toString();
     }

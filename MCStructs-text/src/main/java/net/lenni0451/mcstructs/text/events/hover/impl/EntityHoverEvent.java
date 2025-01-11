@@ -1,15 +1,11 @@
 package net.lenni0451.mcstructs.text.events.hover.impl;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbt;
-import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.TextComponent;
-import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -18,6 +14,7 @@ import java.util.UUID;
 /**
  * The implementation for entity hover events.
  */
+@EqualsAndHashCode
 public class EntityHoverEvent extends HoverEvent {
 
     private Identifier entityType;
@@ -26,11 +23,7 @@ public class EntityHoverEvent extends HoverEvent {
     private TextComponent name;
 
     public EntityHoverEvent(final Identifier entityType, final UUID uuid, @Nullable final TextComponent name) {
-        this(HoverEventAction.SHOW_ENTITY, entityType, uuid, name);
-    }
-
-    public EntityHoverEvent(final HoverEventAction action, final Identifier entityType, final UUID uuid, @Nullable final TextComponent name) {
-        super(action);
+        super(HoverEventAction.SHOW_ENTITY);
         this.entityType = entityType;
         this.uuid = uuid;
         this.name = name;
@@ -89,33 +82,6 @@ public class EntityHoverEvent extends HoverEvent {
     public EntityHoverEvent setName(@Nullable final TextComponent name) {
         this.name = name;
         return this;
-    }
-
-    @Override
-    @Deprecated
-    public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbt<?> sNbt) {
-        CompoundTag tag = new CompoundTag();
-        tag.addString("type", this.entityType.getValue());
-        tag.addString("id", this.uuid.toString());
-        tag.addString("name", textComponentSerializer.serialize(this.name == null ? new StringComponent("") : this.name));
-        try {
-            return new TextHoverEvent(this.getAction(), new StringComponent(sNbt.serialize(tag)));
-        } catch (SNbtSerializeException e) {
-            throw new RuntimeException("This should never happen! Please report to the developer immediately!", e);
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EntityHoverEvent that = (EntityHoverEvent) o;
-        return Objects.equals(this.entityType, that.entityType) && Objects.equals(this.uuid, that.uuid) && Objects.equals(this.name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.entityType, this.uuid, this.name);
     }
 
     @Override

@@ -28,6 +28,8 @@ import net.lenni0451.mcstructs.text.serializer.v1_8.StyleDeserializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.StyleSerializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.TextDeserializer_v1_8;
 import net.lenni0451.mcstructs.text.serializer.v1_8.TextSerializer_v1_8;
+import net.lenni0451.mcstructs.text.serializer.v1_9.StyleDeserializer_v1_9;
+import net.lenni0451.mcstructs.text.serializer.v1_9.StyleSerializer_v1_9;
 import net.lenni0451.mcstructs.text.serializer.v1_9.TextSerializer_v1_9;
 import net.lenni0451.mcstructs.text.utils.LegacyGson;
 
@@ -57,8 +59,8 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_7 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_7())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_7())
-            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_7())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_7(TextComponentSerializer.V1_7, SNbt.V1_7))
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_7(SNbt.V1_7))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_7(SNbt.V1_7))
             .create(), true);
     /**
      * The text component serializer for 1.8.<br>
@@ -67,8 +69,8 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_8 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_8())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_8, SNbt.V1_8))
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8(SNbt.V1_8))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(SNbt.V1_8))
             .create(), true);
     /**
      * The text component serializer for 1.9 - 1.11.<br>
@@ -77,8 +79,8 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_9 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_9())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_9, SNbt.V1_8))
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_9(SNbt.V1_8))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_9(SNbt.V1_8))
             .create(), true);
     /**
      * The text component serializer for 1.12 - 1.13.<br>
@@ -87,8 +89,8 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_12 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_12())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_12())
-            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_12, SNbt.V1_12))
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_9(SNbt.V1_12))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_9(SNbt.V1_12))
             .create());
     /**
      * The text component serializer for 1.14.<br>
@@ -97,8 +99,8 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_14 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_14())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_14())
-            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_14, SNbt.V1_14))
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_9(SNbt.V1_14))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_9(SNbt.V1_14))
             .disableHtmlEscaping()
             .create());
     /**
@@ -108,8 +110,8 @@ public class TextComponentSerializer {
     public static final TextComponentSerializer V1_15 = new TextComponentSerializer(() -> new GsonBuilder()
             .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_15())
             .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_15())
-            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_8())
-            .registerTypeAdapter(Style.class, new StyleSerializer_v1_8(TextComponentSerializer.V1_15, SNbt.V1_14))
+            .registerTypeAdapter(Style.class, new StyleDeserializer_v1_9(SNbt.V1_14))
+            .registerTypeAdapter(Style.class, new StyleSerializer_v1_9(SNbt.V1_14))
             .disableHtmlEscaping()
             .create());
     /**

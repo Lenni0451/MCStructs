@@ -88,11 +88,11 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
         if (tag.contains(CONTENTS)) {
             switch (action) {
                 case SHOW_TEXT:
-                    return new TextHoverEvent(action, this.textSerializer.deserialize(tag.get(CONTENTS)));
+                    return new TextHoverEvent(this.textSerializer.deserialize(tag.get(CONTENTS)));
                 case SHOW_ITEM:
                     //The item id does not have to be a valid item. Minecraft defaults to air if the item is invalid
                     if (tag.contains(CONTENTS, NbtType.STRING)) {
-                        return new ItemHoverEvent(action, Identifier.of(tag.getString(CONTENTS)), 1, null);
+                        return new ItemHoverEvent(Identifier.of(tag.getString(CONTENTS)), 1, null);
                     } else if (tag.contains(CONTENTS, NbtType.COMPOUND)) {
                         CompoundTag contents = tag.getCompound(CONTENTS);
                         String id = requiredString(contents, "id");
@@ -100,7 +100,6 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
                         String itemTag = optionalString(contents, "tag");
                         try {
                             return new ItemHoverEvent(
-                                    action,
                                     Identifier.of(id),
                                     count == null ? 1 : count,
                                     itemTag == null ? null : this.sNbt.deserialize(itemTag)
@@ -116,8 +115,7 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
                     Identifier type = Identifier.of(requiredString(contents, "type"));
                     UUID id = this.getUUID(contents.get("id"));
                     TextComponent name = contents.contains("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
-                    return new EntityHoverEvent(action, type, id, name);
-
+                    return new EntityHoverEvent(type, id, name);
                 default:
                     throw new IllegalArgumentException("Unknown hover event action: " + action);
             }
@@ -126,20 +124,19 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
             try {
                 switch (action) {
                     case SHOW_TEXT:
-                        return new TextHoverEvent(action, value);
+                        return new TextHoverEvent(value);
                     case SHOW_ITEM:
                         CompoundTag parsed = this.sNbt.deserialize(value.asUnformattedString());
                         Identifier id = Identifier.of(parsed.getString("id"));
                         int count = parsed.getByte("Count");
                         CompoundTag itemTag = parsed.getCompound("tag", null);
-                        return new ItemHoverEvent(action, id, count, itemTag);
+                        return new ItemHoverEvent(id, count, itemTag);
                     case SHOW_ENTITY:
                         parsed = this.sNbt.deserialize(value.asUnformattedString());
                         TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));
-                        return new EntityHoverEvent(action, type, uuid, name);
-
+                        return new EntityHoverEvent(type, uuid, name);
                     default:
                         throw new IllegalArgumentException("Unknown hover event action: " + action);
                 }

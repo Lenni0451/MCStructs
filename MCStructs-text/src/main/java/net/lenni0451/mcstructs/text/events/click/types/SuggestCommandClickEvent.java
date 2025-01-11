@@ -26,6 +26,7 @@ public class SuggestCommandClickEvent extends ClickEvent {
     @Override
     public String toString() {
         return ToString.of(this)
+                .add("action", this.action)
                 .add("command", this.command)
                 .toString();
     }

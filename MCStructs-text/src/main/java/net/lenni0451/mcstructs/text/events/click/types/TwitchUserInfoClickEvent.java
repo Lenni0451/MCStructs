@@ -1,14 +1,10 @@
 package net.lenni0451.mcstructs.text.events.click.types;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 
-@Getter
-@Setter
 @EqualsAndHashCode
 public class TwitchUserInfoClickEvent extends ClickEvent {
 
@@ -30,6 +26,7 @@ public class TwitchUserInfoClickEvent extends ClickEvent {
     @Override
     public String toString() {
         return ToString.of(this)
+                .add("action", this.action)
                 .add("user", this.user)
                 .toString();
     }

@@ -5,7 +5,6 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.ListTag;
-import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -19,6 +18,7 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.LegacyHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.api.Test;
 
@@ -37,9 +37,9 @@ class TextComponentCodecTest {
             .append(new NbtComponent("raw", true, new StringComponent("separator"), new BlockNbtSource("pos")))
             .append(new NbtComponent("raw", true, new StringComponent("separator"), new EntityNbtSource("selector")))
             .append(new NbtComponent("raw", true, new StringComponent("separator"), new StorageNbtSource(Identifier.of("namespace", "id"))))
-            .append(new StringComponent("hover text").setStyle(new Style().setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_TEXT, new StringComponent("text")))))
-            .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(HoverEventAction.SHOW_ITEM, Identifier.of("stone"), 64, new CompoundTag().add("display", new CompoundTag().add("Name", "name"))))))
-            .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(HoverEventAction.SHOW_ENTITY, Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))))
+            .append(new StringComponent("hover text").setStyle(new Style().setHoverEvent(new TextHoverEvent(new StringComponent("text")))))
+            .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(Identifier.of("stone"), 64, new CompoundTag().add("display", new CompoundTag().add("Name", "name"))))))
+            .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))))
             .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openURL(URI.create("https://example.com"))).setFont(Identifier.of("font")).setInsertion("insertion")));
 
     @Test
@@ -63,7 +63,7 @@ class TextComponentCodecTest {
                 .addByte("Count", (byte) 5);
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
-                        .setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_ITEM, new StringComponent(SNbt.LATEST.serialize(legacyNbt))))
+                        .setHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyStringItemData("stone", (byte) 5, (short) 0, null)))
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
@@ -83,7 +83,7 @@ class TextComponentCodecTest {
                 .add("id", randomUUID.toString());
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
-                        .setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_ENTITY, new StringComponent(SNbt.LATEST.serialize(legacyNbt))))
+                        .setHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ENTITY, new LegacyHoverEvent.LegacyEntityData("{\"text\":\"test\"}", "cow", randomUUID.toString())))
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);

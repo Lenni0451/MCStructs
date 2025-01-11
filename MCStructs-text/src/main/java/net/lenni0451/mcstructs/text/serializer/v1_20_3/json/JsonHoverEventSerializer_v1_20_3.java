@@ -86,11 +86,11 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
         if (obj.has(CONTENTS)) {
             switch (action) {
                 case SHOW_TEXT:
-                    return new TextHoverEvent(action, this.textSerializer.deserialize(obj.get(CONTENTS)));
+                    return new TextHoverEvent(this.textSerializer.deserialize(obj.get(CONTENTS)));
                 case SHOW_ITEM:
                     //The item id does not have to be a valid item. Minecraft defaults to air if the item is invalid
                     if (obj.has(CONTENTS) && isString(obj.get(CONTENTS))) {
-                        return new ItemHoverEvent(action, Identifier.of(obj.get(CONTENTS).getAsString()), 1, null);
+                        return new ItemHoverEvent(Identifier.of(obj.get(CONTENTS).getAsString()), 1, null);
                     } else if (obj.has(CONTENTS) && isObject(obj.get(CONTENTS))) {
                         JsonObject contents = obj.getAsJsonObject(CONTENTS);
                         String id = requiredString(contents, "id");
@@ -98,7 +98,6 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                         String itemTag = optionalString(contents, "tag");
                         try {
                             return new ItemHoverEvent(
-                                    action,
                                     Identifier.of(id),
                                     count == null ? 1 : count,
                                     itemTag == null ? null : this.sNbt.deserialize(itemTag)
@@ -114,7 +113,7 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
                     Identifier type = Identifier.of(requiredString(contents, "type"));
                     UUID id = this.getUUID(contents.get("id"));
                     TextComponent name = contents.has("name") ? this.textSerializer.deserialize(contents.get("name")) : null;
-                    return new EntityHoverEvent(action, type, id, name);
+                    return new EntityHoverEvent(type, id, name);
 
                 default:
                     throw new IllegalArgumentException("Unknown hover event action: " + action);
@@ -124,20 +123,19 @@ public class JsonHoverEventSerializer_v1_20_3 implements ITypedSerializer<JsonEl
             try {
                 switch (action) {
                     case SHOW_TEXT:
-                        return new TextHoverEvent(action, value);
+                        return new TextHoverEvent(value);
                     case SHOW_ITEM:
                         CompoundTag parsed = this.sNbt.deserialize(value.asUnformattedString());
                         Identifier id = Identifier.of(parsed.getString("id"));
                         int count = parsed.getByte("Count");
                         CompoundTag itemTag = parsed.getCompound("tag", null);
-                        return new ItemHoverEvent(action, id, count, itemTag);
+                        return new ItemHoverEvent(id, count, itemTag);
                     case SHOW_ENTITY:
                         parsed = this.sNbt.deserialize(value.asUnformattedString());
                         TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));
-                        return new EntityHoverEvent(action, type, uuid, name);
-
+                        return new EntityHoverEvent(type, uuid, name);
                     default:
                         throw new IllegalArgumentException("Unknown hover event action: " + action);
                 }

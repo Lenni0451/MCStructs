@@ -79,13 +79,13 @@ public class NbtHoverEventSerializer_v1_20_5 extends NbtHoverEventSerializer_v1_
         if (tag.contains(CONTENTS)) {
             switch (action) {
                 case SHOW_TEXT:
-                    return new TextHoverEvent(action, this.textSerializer.deserialize(tag.get(CONTENTS)));
+                    return new TextHoverEvent(this.textSerializer.deserialize(tag.get(CONTENTS)));
                 case SHOW_ITEM:
                     //If the item is not valid or air an exception will be thrown
                     if (tag.contains(CONTENTS, NbtType.STRING)) {
                         Identifier id = Identifier.of(tag.getString(CONTENTS));
                         this.verifyItem(id);
-                        return new ItemHoverEvent(action, id, 1, null);
+                        return new ItemHoverEvent(id, 1, null);
                     } else if (tag.contains(CONTENTS, NbtType.COMPOUND)) {
                         return this.parseItemHoverEvent(action, tag.getCompound(CONTENTS));
                     } else {
@@ -107,8 +107,7 @@ public class NbtHoverEventSerializer_v1_20_5 extends NbtHoverEventSerializer_v1_
                     } else {
                         name = null;
                     }
-                    return new EntityHoverEvent(action, type, id, name);
-
+                    return new EntityHoverEvent(type, id, name);
                 default:
                     throw new IllegalArgumentException("Unknown hover event action: " + action);
             }
@@ -117,7 +116,7 @@ public class NbtHoverEventSerializer_v1_20_5 extends NbtHoverEventSerializer_v1_
             try {
                 switch (action) {
                     case SHOW_TEXT:
-                        return new TextHoverEvent(action, value);
+                        return new TextHoverEvent(value);
                     case SHOW_ITEM:
                         return this.parseItemHoverEvent(action, this.sNbt.deserialize(value.asUnformattedString()));
                     case SHOW_ENTITY:
@@ -125,8 +124,7 @@ public class NbtHoverEventSerializer_v1_20_5 extends NbtHoverEventSerializer_v1_
                         TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));
-                        return new EntityHoverEvent(action, type, uuid, name);
-
+                        return new EntityHoverEvent(type, uuid, name);
                     default:
                         throw new IllegalArgumentException("Unknown hover event action: " + action);
                 }
@@ -145,7 +143,6 @@ public class NbtHoverEventSerializer_v1_20_5 extends NbtHoverEventSerializer_v1_
         CompoundTag components = optionalCompound(tag, "components");
         if (components != null) this.codec.verifyItemComponents(components);
         return new ItemHoverEvent(
-                action,
                 id,
                 count == null ? 1 : count,
                 components

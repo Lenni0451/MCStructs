@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text.components;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.nbt.NbtDataSource;
@@ -7,6 +8,7 @@ import net.lenni0451.mcstructs.text.components.nbt.NbtDataSource;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+@EqualsAndHashCode
 public class NbtComponent extends TextComponent {
 
     private String component;
@@ -110,18 +112,6 @@ public class NbtComponent extends TextComponent {
     public TextComponent shallowCopy() {
         NbtComponent copy = new NbtComponent(this.component, this.resolve, this.separator, this.dataSource);
         return copy.setStyle(this.getStyle().copy());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        NbtComponent that = (NbtComponent) o;
-        return resolve == that.resolve && Objects.equals(this.component, that.component) && Objects.equals(this.separator, that.separator) && Objects.equals(this.dataSource, that.dataSource);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.component, this.resolve, this.separator, this.dataSource);
     }
 
     @Override

@@ -50,24 +50,24 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<HoverEvent
     protected HoverEvent deserialize(final HoverEventAction action, final JsonElement contents) {
         switch (action) {
             case SHOW_TEXT:
-                return new TextHoverEvent(action, this.textComponentSerializer.deserialize(contents));
+                return new TextHoverEvent(this.textComponentSerializer.deserialize(contents));
             case SHOW_ITEM:
-                if (contents.isJsonPrimitive()) return new ItemHoverEvent(action, Identifier.of(contents.getAsString()), 1, null);
+                if (contents.isJsonPrimitive()) return new ItemHoverEvent(Identifier.of(contents.getAsString()), 1, null);
                 JsonObject rawItem = JsonUtils.getJsonObject(contents, "item");
                 Identifier item = Identifier.of(getString(rawItem, "id"));
                 int count = JsonUtils.getInt(rawItem, "count", 1);
                 if (rawItem.has("tag")) {
                     String rawTag = getString(rawItem, "tag");
-                    return new ItemHoverEvent(action, item, count, (CompoundTag) this.sNbt.tryDeserialize(rawTag));
+                    return new ItemHoverEvent(item, count, (CompoundTag) this.sNbt.tryDeserialize(rawTag));
                 }
-                return new ItemHoverEvent(action, item, count, null);
+                return new ItemHoverEvent(item, count, null);
             case SHOW_ENTITY:
                 if (!contents.isJsonObject()) return null;
                 JsonObject rawEntity = contents.getAsJsonObject();
                 Identifier entityType = Identifier.of(getString(rawEntity, "type"));
                 UUID uuid = UUID.fromString(getString(rawEntity, "id"));
                 TextComponent name = this.textComponentSerializer.deserialize(rawEntity.get("name"));
-                return new EntityHoverEvent(action, entityType, uuid, name);
+                return new EntityHoverEvent(entityType, uuid, name);
             default:
                 return null;
         }
@@ -76,7 +76,7 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<HoverEvent
     protected HoverEvent deserializeLegacy(final HoverEventAction action, final TextComponent text) {
         switch (action) {
             case SHOW_TEXT:
-                return new TextHoverEvent(action, text);
+                return new TextHoverEvent(text);
             case SHOW_ITEM:
                 CompoundTag rawTag = (CompoundTag) this.sNbt.tryDeserialize(text.asUnformattedString());
                 if (rawTag == null) return null;
@@ -84,14 +84,14 @@ public class HoverEventDeserializer_v1_16 implements JsonDeserializer<HoverEvent
                 int count = rawTag.getByte("count");
                 CompoundTag tag = null;
                 if (rawTag.contains("tag", NbtType.COMPOUND)) tag = rawTag.getCompound("tag");
-                return new ItemHoverEvent(action, id, count, tag);
+                return new ItemHoverEvent(id, count, tag);
             case SHOW_ENTITY:
                 try {
                     CompoundTag rawEntity = (CompoundTag) this.sNbt.deserialize(text.asUnformattedString());
                     TextComponent name = this.textComponentSerializer.deserialize(rawEntity.getString("name"));
                     Identifier entityType = Identifier.of(rawEntity.getString("type"));
                     UUID uuid = UUID.fromString(rawEntity.getString("id"));
-                    return new EntityHoverEvent(action, entityType, uuid, name);
+                    return new EntityHoverEvent(entityType, uuid, name);
                 } catch (SNbtDeserializeException | JsonSyntaxException ignored) {
                     return null;
                 }

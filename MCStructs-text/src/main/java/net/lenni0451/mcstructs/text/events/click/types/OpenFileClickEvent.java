@@ -26,6 +26,7 @@ public class OpenFileClickEvent extends ClickEvent {
     @Override
     public String toString() {
         return ToString.of(this)
+                .add("action", this.action)
                 .add("path", this.path)
                 .toString();
     }

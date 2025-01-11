@@ -4,21 +4,25 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.types.*;
-import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.AchievementHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.LegacyHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 
 import java.lang.reflect.Type;
 
 public class StyleSerializer_v1_7 implements JsonSerializer<Style> {
 
-    private final TextComponentSerializer textComponentSerializer;
     private final SNbt<?> sNbt;
 
-    public StyleSerializer_v1_7(final TextComponentSerializer textComponentSerializer, final SNbt<?> sNbt) {
-        this.textComponentSerializer = textComponentSerializer;
+    public StyleSerializer_v1_7(final SNbt<?> sNbt) {
         this.sNbt = sNbt;
     }
 
@@ -35,36 +39,57 @@ public class StyleSerializer_v1_7 implements JsonSerializer<Style> {
         if (src.getColor() != null && !src.getColor().isRGBColor()) serializedStyle.addProperty("color", src.getColor().serialize());
         if (src.getClickEvent() != null) {
             JsonObject clickEvent = new JsonObject();
-            this.serializeClickEvent(clickEvent, src.getClickEvent());
+            clickEvent.addProperty("action", src.getClickEvent().getAction().getName());
+            clickEvent.addProperty("value", this.serializeClickEvent(src.getClickEvent()));
             serializedStyle.add("clickEvent", clickEvent);
         }
         if (src.getHoverEvent() != null) {
             JsonObject hoverEvent = new JsonObject();
             hoverEvent.addProperty("action", src.getHoverEvent().getAction().getName());
-            hoverEvent.add("value", context.serialize(src.getHoverEvent().toLegacy(this.textComponentSerializer, this.sNbt).getText()));
+            hoverEvent.add("value", context.serialize(this.serializeHoverEvent(src.getHoverEvent())));
             serializedStyle.add("hoverEvent", hoverEvent);
         }
 
         return serializedStyle;
     }
 
-    private void serializeClickEvent(final JsonObject json, final ClickEvent clickEvent) {
-        json.addProperty("action", clickEvent.getAction().getName());
+    private String serializeClickEvent(final ClickEvent clickEvent) {
         if (clickEvent instanceof LegacyClickEvent) {
-            json.addProperty("value", ((LegacyClickEvent) clickEvent).getValue());
+            return ((LegacyClickEvent) clickEvent).getValue();
         } else if (clickEvent instanceof OpenURLClickEvent) {
-            json.addProperty("value", ((OpenURLClickEvent) clickEvent).getUrl().toString());
+            return ((OpenURLClickEvent) clickEvent).getUrl().toString();
         } else if (clickEvent instanceof OpenFileClickEvent) {
-            json.addProperty("value", ((OpenFileClickEvent) clickEvent).getPath());
+            return ((OpenFileClickEvent) clickEvent).getPath();
         } else if (clickEvent instanceof RunCommandClickEvent) {
-            json.addProperty("value", ((RunCommandClickEvent) clickEvent).getCommand());
+            return ((RunCommandClickEvent) clickEvent).getCommand();
         } else if (clickEvent instanceof SuggestCommandClickEvent) {
-            json.addProperty("value", ((SuggestCommandClickEvent) clickEvent).getCommand());
+            return ((SuggestCommandClickEvent) clickEvent).getCommand();
         } else if (clickEvent instanceof ChangePageClickEvent) {
-            json.addProperty("value", String.valueOf(((ChangePageClickEvent) clickEvent).getPage()));
-        } else {
-            throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
+            return String.valueOf(((ChangePageClickEvent) clickEvent).getPage());
         }
+        throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
+    }
+
+    private TextComponent serializeHoverEvent(final HoverEvent hoverEvent) {
+        if (hoverEvent instanceof TextHoverEvent) {
+            return ((TextHoverEvent) hoverEvent).getText();
+        } else if (hoverEvent instanceof AchievementHoverEvent) {
+            return new StringComponent(((AchievementHoverEvent) hoverEvent).getStatistic());
+        } else if (hoverEvent instanceof LegacyHoverEvent) {
+            LegacyHoverEvent legacyHoverEvent = (LegacyHoverEvent) hoverEvent;
+            if (legacyHoverEvent.getData() instanceof LegacyHoverEvent.LegacyInvalidData) {
+                return ((LegacyHoverEvent.LegacyInvalidData) legacyHoverEvent.getData()).getRaw();
+            } else if (legacyHoverEvent.getData() instanceof LegacyHoverEvent.LegacyIntItemData) {
+                LegacyHoverEvent.LegacyIntItemData itemData = (LegacyHoverEvent.LegacyIntItemData) legacyHoverEvent.getData();
+                CompoundTag itemTag = new CompoundTag();
+                itemTag.addShort("id", itemData.getId());
+                itemTag.addByte("Count", itemData.getCount());
+                itemTag.addShort("Damage", itemData.getDamage());
+                if (itemData.getTag() != null) itemTag.addCompound("tag", itemData.getTag());
+                return new StringComponent(this.sNbt.trySerialize(itemTag));
+            }
+        }
+        throw new IllegalArgumentException("Unknown hover event type: " + hoverEvent.getClass().getName());
     }
 
 }

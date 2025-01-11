@@ -39,12 +39,16 @@ public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
             String value = getString(rawClickEvent, "value");
             if (rawAction != null) action = ClickEventAction.byName(rawAction);
 
-            if (action != null && value != null && action.isUserDefinable()) style.setClickEvent(this.deserializeClickEvent(action, value));
+            if (action != null && value != null && action.isUserDefinable()) {
+                style.setClickEvent(this.deserializeClickEvent(action, value));
+            }
         }
         if (rawStyle.has("hoverEvent")) {
             JsonObject rawHoverEvent = getJsonObject(rawStyle, "hoverEvent");
             HoverEvent hoverEvent = context.deserialize(rawHoverEvent, HoverEvent.class);
-            if (hoverEvent != null && hoverEvent.getAction().isUserDefinable()) style.setHoverEvent(hoverEvent);
+            if (hoverEvent != null && hoverEvent.getAction().isUserDefinable()) {
+                style.setHoverEvent(hoverEvent);
+            }
         }
         if (rawStyle.has("font")) {
             String font = getString(rawStyle, "font");

@@ -1,11 +1,13 @@
 package net.lenni0451.mcstructs.text.components;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+@EqualsAndHashCode
 public class SelectorComponent extends TextComponent {
 
     private String selector;
@@ -72,19 +74,6 @@ public class SelectorComponent extends TextComponent {
     public TextComponent shallowCopy() {
         if (this.separator == null) return new SelectorComponent(this.selector, null).setStyle(this.getStyle().copy());
         else return new SelectorComponent(this.selector, this.separator.copy()).setStyle(this.getStyle().copy());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SelectorComponent that = (SelectorComponent) o;
-        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.selector, that.selector) && Objects.equals(this.separator, that.separator);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getSiblings(), this.getStyle(), this.selector, this.separator);
     }
 
     @Override

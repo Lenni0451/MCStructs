@@ -79,13 +79,13 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
         if (obj.has(CONTENTS)) {
             switch (action) {
                 case SHOW_TEXT:
-                    return new TextHoverEvent(action, this.textSerializer.deserialize(obj.get(CONTENTS)));
+                    return new TextHoverEvent(this.textSerializer.deserialize(obj.get(CONTENTS)));
                 case SHOW_ITEM:
                     //If the item is not valid or air an exception will be thrown
                     if (obj.has(CONTENTS) && isString(obj.get(CONTENTS))) {
                         Identifier id = Identifier.of(obj.get(CONTENTS).getAsString());
                         this.verifyItem(id);
-                        return new ItemHoverEvent(action, id, 1, null);
+                        return new ItemHoverEvent(id, 1, null);
                     } else if (obj.has(CONTENTS) && isObject(obj.get(CONTENTS))) {
                         JsonObject contents = obj.getAsJsonObject(CONTENTS);
                         Identifier id = Identifier.of(requiredString(contents, "id"));
@@ -93,7 +93,6 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                         Integer count = optionalInt(contents, "count");
                         JsonObject components = optionalObject(contents, "components");
                         return new ItemHoverEvent(
-                                action,
                                 id,
                                 count == null ? 1 : count,
                                 components == null ? null : this.codec.convertItemComponents(components)
@@ -117,8 +116,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                     } else {
                         name = null;
                     }
-                    return new EntityHoverEvent(action, type, id, name);
-
+                    return new EntityHoverEvent(type, id, name);
                 default:
                     throw new IllegalArgumentException("Unknown hover event action: " + action);
             }
@@ -127,7 +125,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
             try {
                 switch (action) {
                     case SHOW_TEXT:
-                        return new TextHoverEvent(action, value);
+                        return new TextHoverEvent(value);
                     case SHOW_ITEM:
                         CompoundTag parsed = this.sNbt.deserialize(value.asUnformattedString());
                         Identifier id = Identifier.of(requiredString(parsed, "id"));
@@ -136,7 +134,6 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                         CompoundTag components = optionalCompound(parsed, "components");
                         if (components != null) this.codec.verifyItemComponents(components);
                         return new ItemHoverEvent(
-                                action,
                                 id,
                                 count == null ? 1 : count,
                                 components
@@ -146,8 +143,7 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
                         TextComponent name = this.codec.deserializeJson(parsed.getString("name"));
                         Identifier type = Identifier.of(parsed.getString("type"));
                         UUID uuid = UUID.fromString(parsed.getString("id"));
-                        return new EntityHoverEvent(action, type, uuid, name);
-
+                        return new EntityHoverEvent(type, uuid, name);
                     default:
                         throw new IllegalArgumentException("Unknown hover event action: " + action);
                 }

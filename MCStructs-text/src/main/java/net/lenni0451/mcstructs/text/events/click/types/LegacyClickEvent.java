@@ -31,6 +31,7 @@ public class LegacyClickEvent extends ClickEvent {
     @Override
     public String toString() {
         return ToString.of(this)
+                .add("action", this.action)
                 .add("value", this.value)
                 .toString();
     }

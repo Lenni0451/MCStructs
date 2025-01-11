@@ -2,7 +2,6 @@ package net.lenni0451.mcstructs.text.events.hover.impl;
 
 import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 
@@ -10,30 +9,30 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
  * The implementation for text hover events.
  */
 @EqualsAndHashCode
-public class TextHoverEvent extends HoverEvent {
+public class AchievementHoverEvent extends HoverEvent {
 
-    private TextComponent text;
+    private String statistic;
 
-    public TextHoverEvent(final TextComponent text) {
+    public AchievementHoverEvent(final String statistic) {
         super(HoverEventAction.SHOW_TEXT);
-        this.text = text;
+        this.statistic = statistic;
     }
 
     /**
-     * @return The text of this hover event
+     * @return The statistic of this hover event
      */
-    public TextComponent getText() {
-        return this.text;
+    public String getStatistic() {
+        return this.statistic;
     }
 
     /**
-     * Set the text of this hover event.
+     * Set the statistic of this hover event.
      *
-     * @param text The new text
+     * @param statistic The new statistic
      * @return This instance for chaining
      */
-    public TextHoverEvent setText(final TextComponent text) {
-        this.text = text;
+    public AchievementHoverEvent setStatistic(final String statistic) {
+        this.statistic = statistic;
         return this;
     }
 
@@ -41,7 +40,7 @@ public class TextHoverEvent extends HoverEvent {
     public String toString() {
         return ToString.of(this)
                 .add("action", this.action)
-                .add("text", this.text)
+                .add("statistic", this.statistic)
                 .toString();
     }
 

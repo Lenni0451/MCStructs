@@ -161,7 +161,7 @@ class StyleTest {
     @Test
     @Order(0)
     void setHoverEvent() {
-        style.setHoverEvent(new ItemHoverEvent(HoverEventAction.SHOW_ITEM, Identifier.of("stone"), 1, new CompoundTag()));
+        style.setHoverEvent(new ItemHoverEvent(Identifier.of("stone"), 1, new CompoundTag()));
     }
 
     @Test

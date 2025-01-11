@@ -25,7 +25,7 @@ public class HoverEventDeserializer_v1_18 extends HoverEventDeserializer_v1_16 {
                 TextComponent name = this.textComponentSerializer.deserialize(rawEntity.getString("name"));
                 Identifier entityType = Identifier.of(rawEntity.getString("type"));
                 UUID uuid = UUID.fromString(rawEntity.getString("id"));
-                return new EntityHoverEvent(action, entityType, uuid, name);
+                return new EntityHoverEvent(entityType, uuid, name);
             } catch (Exception ignored) {
                 return null;
             }

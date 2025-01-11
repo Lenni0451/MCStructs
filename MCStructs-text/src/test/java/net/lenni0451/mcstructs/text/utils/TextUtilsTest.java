@@ -6,7 +6,6 @@ import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
-import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.api.Test;
 
@@ -63,7 +62,7 @@ class TextUtilsTest {
 
     @Test
     void iterateAll() {
-        TextComponent component = new TranslationComponent("%s", new StringComponent("A").append("B")).append("C").styled(style -> style.setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_TEXT, new StringComponent("D"))));
+        TextComponent component = new TranslationComponent("%s", new StringComponent("A").append("B")).append("C").styled(style -> style.setHoverEvent(new TextHoverEvent(new StringComponent("D"))));
         StringBuilder out = new StringBuilder();
         TextUtils.iterateAll(component, comp -> out.append(comp.asSingleString()));
         //'AB' from the translation component filled with the args

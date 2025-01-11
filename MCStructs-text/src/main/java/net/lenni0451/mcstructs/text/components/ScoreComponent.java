@@ -1,11 +1,13 @@
 package net.lenni0451.mcstructs.text.components;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+@EqualsAndHashCode
 public class ScoreComponent extends TextComponent {
 
     private String name;
@@ -93,19 +95,6 @@ public class ScoreComponent extends TextComponent {
         ScoreComponent copy = new ScoreComponent(this.name, this.objective);
         copy.value = this.value;
         return copy.setStyle(this.getStyle().copy());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ScoreComponent that = (ScoreComponent) o;
-        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.name, that.name) && Objects.equals(this.objective, that.objective) && Objects.equals(this.value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getSiblings(), this.getStyle(), this.name, this.objective, this.value);
     }
 
     @Override
