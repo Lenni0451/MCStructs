@@ -5,8 +5,7 @@ import net.lenni0451.mcstructs.text.events.click.types.*;
 import java.net.URI;
 
 /**
- * The abstract class for click events.<br>
- * Until Minecraft 1.?? click events always used the TODO implementation.
+ * The abstract class for click events.
  */
 public abstract class ClickEvent {
 

@@ -19,6 +19,7 @@ import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 
 import static net.lenni0451.mcstructs.text.serializer.v1_21_5.ExtraCodecs_v1_21_5.CHAT_STRING;
 import static net.lenni0451.mcstructs.text.serializer.v1_21_5.ExtraCodecs_v1_21_5.UNTRUSTED_URI;
+import static net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter.verify;
 
 public class StyleCodecs_v1_21_5 {
 
@@ -101,16 +102,34 @@ public class StyleCodecs_v1_21_5 {
                 TextHoverEvent::new
         );
         public static final MapCodec<ItemHoverEvent> ITEM = MapCodecMerger.mapCodec(
-                Codec.STRING_IDENTIFIER.verified(i -> null).mapCodec("id").required(), ItemHoverEvent::getItem, //TODO: Verify item in registry
+                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, (id, verifier) -> {
+                    if (!verifier.verifyRegistryItem(id)) {
+                        return Result.error("Unknown item: " + id);
+                    } else {
+                        return null;
+                    }
+                })).mapCodec("id").required(), ItemHoverEvent::getItem,
                 Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), ItemHoverEvent::getCount,
                 NbtConverter_v1_20_3.INSTANCE.toCodec().verified(tag -> {
                     if (!tag.isCompoundTag()) return Result.error("Expected a compound tag");
                     return null;
-                }).map(NbtTag::asCompoundTag, NbtTag::asCompoundTag).mapCodec("components").optional().defaulted(null), ItemHoverEvent::getNbt, //TODO: Verify data components
+                }).map(NbtTag::asCompoundTag, NbtTag::asCompoundTag).converterVerified(verify(TextVerifier_v1_21_5.class, (tag, verifier) -> {
+                    if (!verifier.verifyDataComponents(tag)) {
+                        return Result.error("Invalid data components: " + tag);
+                    } else {
+                        return null;
+                    }
+                })).mapCodec("components").optional().defaulted(null), ItemHoverEvent::getNbt, //TODO: Verify data components
                 ItemHoverEvent::new
         );
         public static final MapCodec<EntityHoverEvent> ENTITY = MapCodecMerger.mapCodec(
-                Codec.STRING_IDENTIFIER.mapCodec("id").required(), EntityHoverEvent::getEntityType, //TODO: Verify entity in registry
+                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, (id, verifier) -> {
+                    if (!verifier.verifyRegistryEntity(id)) {
+                        return Result.error("Unknown entity: " + id);
+                    } else {
+                        return null;
+                    }
+                })).mapCodec("id").required(), EntityHoverEvent::getEntityType,
                 ExtraCodecs_v1_21_5.LENIENT_UUID.mapCodec("uuid").required(), EntityHoverEvent::getUuid,
                 TextCodecs_v1_21_5.TEXT.mapCodec("name").optional().defaulted(null), EntityHoverEvent::getName,
                 EntityHoverEvent::new

@@ -27,6 +27,7 @@ import net.lenni0451.mcstructs.text.serializer.v1_21_2.TextComponentCodec_v1_21_
 import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextComponentCodec_v1_21_4;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.StyleCodecs_v1_21_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
+import net.lenni0451.mcstructs.text.serializer.verify.TextVerifier;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -97,6 +98,10 @@ public class TextComponentCodec {
         this.sNbtSupplier = sNbtSupplier;
         this.jsonSerializerSupplier = jsonSerializerSupplier;
         this.nbtSerializerSupplier = nbtSerializerSupplier;
+    }
+
+    public TextComponentCodec withVerifier(final TextVerifier verifier) {
+        return null; //new TextComponentCodec(this, verifier); TODO
     }
 
     /**

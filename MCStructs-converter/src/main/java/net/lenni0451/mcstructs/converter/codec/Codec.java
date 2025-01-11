@@ -11,6 +11,7 @@ import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -533,6 +534,26 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
                 Result<T> result = Codec.this.deserialize(converter, data);
                 if (result.isError()) return result;
                 Result<Void> verify = verifier.apply(result.get());
+                if (verify != null && verify.isError()) return verify.mapError();
+                return result;
+            }
+        };
+    }
+
+    default Codec<T> converterVerified(final BiFunction<DataConverter<?>, T, Result<Void>> verifier) {
+        return new Codec<T>() {
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                Result<Void> verify = verifier.apply(converter, element);
+                if (verify != null && verify.isError()) return verify.mapError();
+                return Codec.this.serialize(converter, element);
+            }
+
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                Result<T> result = Codec.this.deserialize(converter, data);
+                if (result.isError()) return result;
+                Result<Void> verify = verifier.apply(converter, result.get());
                 if (verify != null && verify.isError()) return verify.mapError();
                 return result;
             }

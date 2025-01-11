@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 /**
  * Deserialize a legacy formatted string to an {@link TextComponent}.
  */
+@Deprecated //for removal
 public class LegacyStringDeserializer {
 
     /**

@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import static net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter.verify;
+
 public class TextCodecs_v1_21_5 {
 
     public static final Codec<TextComponent> TEXT = new LazyInitCodec<>(() -> Codec.recursive(TextCodecs_v1_21_5::createCodec));
@@ -54,7 +56,13 @@ public class TextCodecs_v1_21_5 {
             ScoreComponent::new
     );
     public static final MapCodec<SelectorComponent> SELECTOR_COMPONENT = MapCodecMerger.mapCodec(
-            Codec.STRING.mapCodec("selector").required(), SelectorComponent::getSelector, //TODO: Verify selector
+            Codec.STRING.converterVerified(verify(TextVerifier_v1_21_5.class, (selector, verifier) -> {
+                if (!verifier.verifySelector(selector)) {
+                    return Result.error("Invalid selector: " + selector);
+                } else {
+                    return null;
+                }
+            })).mapCodec("selector").required(), SelectorComponent::getSelector,
             TEXT.mapCodec("separator").optional().defaulted(null), SelectorComponent::getSeparator,
             SelectorComponent::new
     );
