@@ -22,6 +22,22 @@ import static net.lenni0451.mcstructs.text.serializer.v1_21_5.ExtraCodecs_v1_21_
 
 public class StyleCodecs_v1_21_5 {
 
+    public static final MapCodec<Style> MAP_CODEC = MapCodecMerger.mapCodec(
+            TextFormattingCodec.CODEC.mapCodec("color").optional().defaulted(null), Style::getColor,
+            ExtraCodecs_v1_21_5.ARGB_COLOR.mapCodec("shadow_color").optional().defaulted(null), Style::getShadowColor,
+            Codec.BOOLEAN.mapCodec("obfuscated").optional().defaulted(null), Style::getObfuscated,
+            Codec.BOOLEAN.mapCodec("bold").optional().defaulted(null), Style::getBold,
+            Codec.BOOLEAN.mapCodec("strikethrough").optional().defaulted(null), Style::getStrikethrough,
+            Codec.BOOLEAN.mapCodec("underlined").optional().defaulted(null), Style::getUnderlined,
+            Codec.BOOLEAN.mapCodec("italic").optional().defaulted(null), Style::getItalic,
+            ClickEventCodec.CODEC.mapCodec("click_event").optional().defaulted(null), Style::getClickEvent,
+            HoverEventCodec.CODEC.mapCodec("hover_event").optional().defaulted(null), Style::getHoverEvent,
+            Codec.STRING.mapCodec("insertion").optional().defaulted(null), Style::getInsertion,
+            Codec.STRING_IDENTIFIER.mapCodec("font").optional().defaulted(null), Style::getFont,
+            Style::new
+    );
+    public static final Codec<Style> CODEC = MAP_CODEC.asCodec();
+
     public static class TextFormattingCodec {
         public static final Codec<TextFormatting> CODEC = Codec.STRING.flatMap(formatting -> Result.success(formatting.serialize()), s -> {
             TextFormatting formatting = TextFormatting.parse(s);
@@ -115,21 +131,5 @@ public class StyleCodecs_v1_21_5 {
             }
         });
     }
-
-    public static final MapCodec<Style> MAP_CODEC = MapCodecMerger.mapCodec(
-            TextFormattingCodec.CODEC.mapCodec("color").optional().defaulted(null), Style::getColor,
-            ExtraCodecs_v1_21_5.ARGB_COLOR.mapCodec("shadow_color").optional().defaulted(null), Style::getShadowColor,
-            Codec.BOOLEAN.mapCodec("obfuscated").optional().defaulted(null), Style::getObfuscated,
-            Codec.BOOLEAN.mapCodec("bold").optional().defaulted(null), Style::getBold,
-            Codec.BOOLEAN.mapCodec("strikethrough").optional().defaulted(null), Style::getStrikethrough,
-            Codec.BOOLEAN.mapCodec("underlined").optional().defaulted(null), Style::getUnderlined,
-            Codec.BOOLEAN.mapCodec("italic").optional().defaulted(null), Style::getItalic,
-            ClickEventCodec.CODEC.mapCodec("click_event").optional().defaulted(null), Style::getClickEvent,
-            HoverEventCodec.CODEC.mapCodec("hover_event").optional().defaulted(null), Style::getHoverEvent,
-            Codec.STRING.mapCodec("insertion").optional().defaulted(null), Style::getInsertion,
-            Codec.STRING_IDENTIFIER.mapCodec("font").optional().defaulted(null), Style::getFont,
-            Style::new
-    );
-    public static final Codec<Style> CODEC = MAP_CODEC.asCodec();
 
 }
