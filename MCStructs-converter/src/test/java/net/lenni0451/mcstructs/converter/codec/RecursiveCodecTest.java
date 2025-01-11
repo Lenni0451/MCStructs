@@ -24,7 +24,7 @@ public class RecursiveCodecTest {
     @Test
     void test() {
         CompoundTag tag = new CompoundTag();
-        tag.add("name", "Test");
+        tag.addString("name", "Test");
         tag.add("hidden", new CompoundTag().addString("name", "Hidden"));
 
         Result<Impl> result = IMPL.deserialize(NbtConverter_v1_20_3.INSTANCE, tag);

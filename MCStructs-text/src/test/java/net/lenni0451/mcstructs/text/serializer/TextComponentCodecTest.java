@@ -38,7 +38,7 @@ class TextComponentCodecTest {
             .append(new NbtComponent("raw", true, new StringComponent("separator"), new EntityNbtSource("selector")))
             .append(new NbtComponent("raw", true, new StringComponent("separator"), new StorageNbtSource(Identifier.of("namespace", "id"))))
             .append(new StringComponent("hover text").setStyle(new Style().setHoverEvent(new TextHoverEvent(new StringComponent("text")))))
-            .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(Identifier.of("stone"), 64, new CompoundTag().add("display", new CompoundTag().add("Name", "name"))))))
+            .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(Identifier.of("stone"), 64, new CompoundTag().add("display", new CompoundTag().addString("Name", "name"))))))
             .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))))
             .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openURL(URI.create("https://example.com"))).setFont(Identifier.of("font")).setInsertion("insertion")));
 
@@ -58,9 +58,6 @@ class TextComponentCodecTest {
 
     @Test
     void legacyItemDeserialization() throws SNbtSerializeException {
-        CompoundTag legacyNbt = new CompoundTag()
-                .add("id", "stone")
-                .addByte("Count", (byte) 5);
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
                         .setHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyStringItemData("stone", (byte) 5, (short) 0, null)))
@@ -77,10 +74,6 @@ class TextComponentCodecTest {
     @Test
     void legacyEntityDeserialization() throws SNbtSerializeException {
         UUID randomUUID = UUID.randomUUID();
-        CompoundTag legacyNbt = new CompoundTag()
-                .add("name", "{\"text\":\"test\"}")
-                .add("type", "cow")
-                .add("id", randomUUID.toString());
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
                         .setHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ENTITY, new LegacyHoverEvent.LegacyEntityData("{\"text\":\"test\"}", "cow", randomUUID.toString())))
