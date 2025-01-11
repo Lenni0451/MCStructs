@@ -159,6 +159,7 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         long leastSigBits = ((long) ints[2] << 32) | ints[3] & 0xFFFF_FFFFL;
         return new UUID(mostSigBits, leastSigBits);
     });
+    Codec<UUID> STRICT_STRING_UUID = Codec.STRING.mapThrowing(UUID::toString, UUID::fromString);
 
     static <T> Codec<T> unit(final Supplier<T> supplier) {
         return new Codec<T>() {

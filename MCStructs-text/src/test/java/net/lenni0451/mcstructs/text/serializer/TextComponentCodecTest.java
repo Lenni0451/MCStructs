@@ -31,14 +31,14 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 class TextComponentCodecTest {
 
     private final TextComponent text = new StringComponent("test")
-            .append(new TranslationComponent("translation", "arg1", 2))
+            .append(new TranslationComponent("translation", "arg1", (byte) 2))
             .append(new ScoreComponent("name", "objective"))
             .append(new SelectorComponent("selector", new StringComponent("separator")))
             .append(new NbtComponent("raw", true, new StringComponent("separator"), new BlockNbtSource("pos")))
             .append(new NbtComponent("raw", true, new StringComponent("separator"), new EntityNbtSource("selector")))
             .append(new NbtComponent("raw", true, new StringComponent("separator"), new StorageNbtSource(Identifier.of("namespace", "id"))))
             .append(new StringComponent("hover text").setStyle(new Style().setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_TEXT, new StringComponent("text")))))
-            .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(HoverEventAction.SHOW_ITEM, Identifier.of("stone"), 64, new CompoundTag()))))
+            .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(HoverEventAction.SHOW_ITEM, Identifier.of("stone"), 64, new CompoundTag().add("display", new CompoundTag().add("Name", "name"))))))
             .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(HoverEventAction.SHOW_ENTITY, Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))))
             .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openURL(URI.create("https://example.com"))).setFont(Identifier.of("font")).setInsertion("insertion")));
 
@@ -67,7 +67,7 @@ class TextComponentCodecTest {
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
-        TextComponent modernDeserialized = TextComponentCodec.LATEST.deserialize(legacyJson);
+        TextComponent modernDeserialized = TextComponentCodec.V1_21_4.deserialize(legacyJson);
         HoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         ItemHoverEvent itemHoverEvent = assertInstanceOf(ItemHoverEvent.class, hoverEvent);
         assertEquals(Identifier.of("stone"), itemHoverEvent.getItem());
@@ -87,7 +87,7 @@ class TextComponentCodecTest {
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
-        TextComponent modernDeserialized = TextComponentCodec.LATEST.deserialize(legacyJson);
+        TextComponent modernDeserialized = TextComponentCodec.V1_21_4.deserialize(legacyJson);
         HoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         EntityHoverEvent entityHoverEvent = assertInstanceOf(EntityHoverEvent.class, hoverEvent);
         assertEquals(new StringComponent("test"), entityHoverEvent.getName());

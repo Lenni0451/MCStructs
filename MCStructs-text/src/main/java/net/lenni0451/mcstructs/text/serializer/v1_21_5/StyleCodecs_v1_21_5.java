@@ -2,8 +2,10 @@ package net.lenni0451.mcstructs.text.serializer.v1_21_5;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
+import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
 import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.model.Result;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
@@ -57,7 +59,7 @@ public class StyleCodecs_v1_21_5 {
         public static final Codec<ClickEvent> CODEC = Codec.named(ClickEventAction.OPEN_URL, ClickEventAction.OPEN_FILE, ClickEventAction.RUN_COMMAND, ClickEventAction.SUGGEST_COMMAND, ClickEventAction.CHANGE_PAGE, ClickEventAction.COPY_TO_CLIPBOARD).verified(type -> {
             if (type.isUserDefinable()) return null;
             return Result.error("The action " + type.getName() + " is not user definable");
-        }).typed(ClickEvent::getAction, action -> {
+        }).typed("action", ClickEvent::getAction, action -> {
             switch (action) {
                 case OPEN_URL:
                     return OPEN_URL;
@@ -82,12 +84,25 @@ public class StyleCodecs_v1_21_5 {
                 TextCodecs_v1_21_5.TEXT.mapCodec("text").required(), TextHoverEvent::getText,
                 TextHoverEvent::new
         );
-        public static final MapCodec<ItemHoverEvent> ITEM = MapCodec.failing("TODO"); //TODO
-        public static final MapCodec<EntityHoverEvent> ENTITY = MapCodec.failing("TODO"); //TODO
+        public static final MapCodec<ItemHoverEvent> ITEM = MapCodecMerger.mapCodec(
+                Codec.STRING_IDENTIFIER.verified(i -> null).mapCodec("id").required(), ItemHoverEvent::getItem, //TODO: Verify item in registry
+                Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), ItemHoverEvent::getCount,
+                NbtConverter_v1_20_3.INSTANCE.toCodec().verified(tag -> {
+                    if (!tag.isCompoundTag()) return Result.error("Expected a compound tag");
+                    return null;
+                }).map(NbtTag::asCompoundTag, NbtTag::asCompoundTag).mapCodec("components").optional().defaulted(null), ItemHoverEvent::getNbt, //TODO: Verify data components
+                ItemHoverEvent::new
+        );
+        public static final MapCodec<EntityHoverEvent> ENTITY = MapCodecMerger.mapCodec(
+                Codec.STRING_IDENTIFIER.mapCodec("id").required(), EntityHoverEvent::getEntityType, //TODO: Verify entity in registry
+                ExtraCodecs_v1_21_5.LENIENT_UUID.mapCodec("uuid").required(), EntityHoverEvent::getUuid,
+                TextCodecs_v1_21_5.TEXT.mapCodec("name").optional().defaulted(null), EntityHoverEvent::getName,
+                EntityHoverEvent::new
+        );
         public static final Codec<HoverEvent> CODEC = Codec.named(HoverEventAction.SHOW_TEXT, HoverEventAction.SHOW_ITEM, HoverEventAction.SHOW_ENTITY).verified(action -> {
             if (action.isUserDefinable()) return null;
             return Result.error("The action " + action.getName() + " is not user definable");
-        }).typed(HoverEvent::getAction, action -> {
+        }).typed("action", HoverEvent::getAction, action -> {
             switch (action) {
                 case SHOW_TEXT:
                     return TEXT;
