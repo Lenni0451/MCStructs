@@ -1,10 +1,10 @@
 package net.lenni0451.mcstructs.text.components.nbt;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
 
-import java.util.Objects;
-
+@EqualsAndHashCode
 public class StorageNbtSource implements NbtDataSource {
 
     private Identifier id;
@@ -34,18 +34,6 @@ public class StorageNbtSource implements NbtDataSource {
     @Override
     public StorageNbtSource copy() {
         return new StorageNbtSource(this.id);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        StorageNbtSource that = (StorageNbtSource) o;
-        return Objects.equals(this.id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.id);
     }
 
     @Override

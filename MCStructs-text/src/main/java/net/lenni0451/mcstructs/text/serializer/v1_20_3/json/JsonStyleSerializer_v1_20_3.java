@@ -46,8 +46,8 @@ public class JsonStyleSerializer_v1_20_3 implements IStyleSerializer<JsonElement
     }
 
     private String serializeClickEvent(final ClickEvent clickEvent) {
-        if (clickEvent instanceof OpenURLClickEvent) {
-            return ((OpenURLClickEvent) clickEvent).getUrl().toString();
+        if (clickEvent instanceof OpenUrlClickEvent) {
+            return ((OpenUrlClickEvent) clickEvent).getUrl().toString();
         } else if (clickEvent instanceof OpenFileClickEvent) {
             return ((OpenFileClickEvent) clickEvent).getPath();
         } else if (clickEvent instanceof RunCommandClickEvent) {
@@ -110,7 +110,7 @@ public class JsonStyleSerializer_v1_20_3 implements IStyleSerializer<JsonElement
         switch (action) {
             case OPEN_URL:
                 try {
-                    return ClickEvent.openURL(new URI(value));
+                    return ClickEvent.openUrl(new URI(value));
                 } catch (Throwable t) {
                     return new LegacyClickEvent(action, new LegacyClickEvent.LegacyUrlData(value));
                 }

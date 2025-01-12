@@ -62,12 +62,20 @@ public class LegacyHoverEvent extends HoverEvent {
     public interface LegacyData {
     }
 
+    /**
+     * Used for 1.7 to 1.15.2 if the data of a hover event could not be parsed.<br>
+     * Since 1.16 legacy data will be completely ignored by the parser.
+     */
     @Data
     @AllArgsConstructor
     public static class LegacyInvalidData implements LegacyData {
         private TextComponent raw;
     }
 
+    /**
+     * Used for 1.7 only.<br>
+     * 1.8 still supports this, but it is not recommended to use it.
+     */
     @Data
     @AllArgsConstructor
     public static class LegacyIntItemData implements LegacyData {
@@ -77,6 +85,10 @@ public class LegacyHoverEvent extends HoverEvent {
         private CompoundTag tag;
     }
 
+    /**
+     * Used for 1.8 to 1.15.2.<br>
+     *  1.16 and higher uses {@link ItemHoverEvent}.
+     */
     @Data
     @AllArgsConstructor
     public static class LegacyStringItemData implements LegacyData {
@@ -86,6 +98,10 @@ public class LegacyHoverEvent extends HoverEvent {
         private CompoundTag tag;
     }
 
+    /**
+     * Used for 1.8 to 1.15.2.<br>
+     * 1.16 and higher uses {@link EntityHoverEvent}.
+     */
     @Data
     @AllArgsConstructor
     public static class LegacyEntityData implements LegacyData {

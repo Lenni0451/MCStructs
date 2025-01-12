@@ -1,12 +1,14 @@
 package net.lenni0451.mcstructs.text.serializer.v1_9;
 
-import net.lenni0451.mcstructs.nbt.NbtTag;
-import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.events.click.ClickEvent;
+import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.events.hover.impl.LegacyHoverEvent;
+import net.lenni0451.mcstructs.text.serializer.legacy.ClickEventSerializer;
+import net.lenni0451.mcstructs.text.serializer.legacy.HoverEventSerializer;
+import net.lenni0451.mcstructs.text.serializer.legacy.SerializerMap;
 import net.lenni0451.mcstructs.text.serializer.v1_8.StyleDeserializer_v1_8;
 
 public class StyleDeserializer_v1_9 extends StyleDeserializer_v1_8 {
@@ -15,45 +17,31 @@ public class StyleDeserializer_v1_9 extends StyleDeserializer_v1_8 {
         super(sNbt);
     }
 
-    protected HoverEvent deserializeHoverEvent(final HoverEventAction action, final TextComponent value) {
-        switch (action) {
-            case SHOW_TEXT:
-                return HoverEvent.text(value);
-            case SHOW_ACHIEVEMENT:
-                return HoverEvent.achievement(value.asUnformattedString());
-            case SHOW_ITEM:
-                try {
-                    NbtTag tag = this.sNbt.deserialize(value.asUnformattedString());
-                    if (tag.isCompoundTag()) {
-                        CompoundTag compoundTag = tag.asCompoundTag();
-                        String itemId = compoundTag.getString("id");
-                        byte itemCount = compoundTag.getByte("Count");
-                        short itemDamage = compoundTag.getShort("Damage");
-                        if (itemDamage < 0) itemDamage = 0;
-                        CompoundTag itemTag = compoundTag.getCompound("tag", null);
+    @Override
+    protected SerializerMap<ClickEvent, ClickEventAction, String> createClickEventSerializer(SerializerMap.Builder<ClickEvent, ClickEventAction, String> builder) {
+        return builder
+                .add(ClickEventSerializer.OPEN_URL)
+                .add(ClickEventSerializer.LEGACY_URL)
+                .add(ClickEventSerializer.OPEN_FILE)
+                .add(ClickEventSerializer.RUN_COMMAND)
+                .add(ClickEventSerializer.SUGGEST_COMMAND)
+                .add(ClickEventSerializer.CHANGE_PAGE)
+                .add(ClickEventSerializer.LEGACY_PAGE)
+                .finalize(ClickEvent::getAction, null, null);
+    }
 
-                        return new LegacyHoverEvent(action, new LegacyHoverEvent.LegacyStringItemData(itemId, itemCount, itemDamage, itemTag));
-                    }
-                } catch (Throwable ignored) {
-                }
-                return new LegacyHoverEvent(action, new LegacyHoverEvent.LegacyInvalidData(value));
-            case SHOW_ENTITY:
-                try {
-                    NbtTag tag = this.sNbt.deserialize(value.asUnformattedString());
-                    if (tag.isCompoundTag()) {
-                        CompoundTag compoundTag = tag.asCompoundTag();
-                        String entityName = compoundTag.getString("name");
-                        String entityType = compoundTag.getString("type", null);
-                        String entityId = compoundTag.getString("id");
-
-                        return new LegacyHoverEvent(action, new LegacyHoverEvent.LegacyEntityData(entityName, entityType, entityId));
-                    }
-                } catch (Throwable ignored) {
-                }
-                return new LegacyHoverEvent(action, new LegacyHoverEvent.LegacyInvalidData(value));
-            default:
-                throw new IllegalArgumentException("Unknown hover event action: " + action.getName());
-        }
+    @Override
+    protected SerializerMap<HoverEvent, HoverEventAction, TextComponent> createHoverEventSerializer(SerializerMap.Builder<HoverEvent, HoverEventAction, TextComponent> builder) {
+        return builder
+                .add(HoverEventSerializer.TEXT)
+                .add(HoverEventSerializer.ACHIEVEMENT)
+                .add(HoverEventSerializer.LEGACY_STRING_ITEM)
+                .add(HoverEventSerializer.LEGACY_ENTITY)
+                .finalize(
+                        HoverEvent::getAction,
+                        HoverEventSerializer.LEGACY_FALLBACK_SERIALIZER,
+                        HoverEventSerializer.LEGACY_FALLBACK_DESERIALIZER
+                );
     }
 
 }

@@ -32,7 +32,7 @@ public class TextUtils {
      */
     public static TextComponent makeURLsClickable(final TextComponent component) {
         return replace(component, URL_PATTERN, comp -> {
-            comp.getStyle().setClickEvent(ClickEvent.openURL(URI.create(comp.asSingleString())));
+            comp.getStyle().setClickEvent(ClickEvent.openUrl(URI.create(comp.asSingleString())));
             return comp;
         });
     }

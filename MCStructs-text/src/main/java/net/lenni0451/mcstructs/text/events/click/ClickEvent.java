@@ -9,8 +9,8 @@ import java.net.URI;
  */
 public abstract class ClickEvent {
 
-    public static OpenURLClickEvent openURL(final URI url) {
-        return new OpenURLClickEvent(url);
+    public static OpenUrlClickEvent openUrl(final URI url) {
+        return new OpenUrlClickEvent(url);
     }
 
     public static OpenFileClickEvent openFile(final String path) {

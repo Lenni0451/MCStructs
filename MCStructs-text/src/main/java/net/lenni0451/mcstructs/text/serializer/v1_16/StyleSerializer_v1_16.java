@@ -37,8 +37,8 @@ public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
     }
 
     private String serializeClickEvent(final ClickEvent clickEvent) {
-        if (clickEvent instanceof OpenURLClickEvent) {
-            return ((OpenURLClickEvent) clickEvent).getUrl().toString();
+        if (clickEvent instanceof OpenUrlClickEvent) {
+            return ((OpenUrlClickEvent) clickEvent).getUrl().toString();
         } else if (clickEvent instanceof OpenFileClickEvent) {
             return ((OpenFileClickEvent) clickEvent).getPath();
         } else if (clickEvent instanceof RunCommandClickEvent) {

@@ -8,11 +8,11 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import java.net.URI;
 
 @EqualsAndHashCode(callSuper = false)
-public class OpenURLClickEvent extends ClickEvent {
+public class OpenUrlClickEvent extends ClickEvent {
 
     private URI url;
 
-    public OpenURLClickEvent(final URI url) {
+    public OpenUrlClickEvent(final URI url) {
         super(ClickEventAction.OPEN_URL);
         this.url = url;
     }

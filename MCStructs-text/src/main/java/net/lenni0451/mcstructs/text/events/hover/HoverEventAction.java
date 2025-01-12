@@ -12,10 +12,13 @@ import java.util.function.BiPredicate;
 public enum HoverEventAction implements NamedType {
 
     SHOW_TEXT("show_text", true),
+    /**
+     * Removed in Minecraft 1.12.
+     */
     SHOW_ACHIEVEMENT("show_achievement", true),
     SHOW_ITEM("show_item", true),
     /**
-     * Added in minecraft 1.8.
+     * Added in Minecraft 1.8.
      */
     SHOW_ENTITY("show_entity", true);
 

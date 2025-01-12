@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.text.components.nbt;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
 
-import java.util.Objects;
-
+@EqualsAndHashCode
 public class EntityNbtSource implements NbtDataSource {
 
     private String selector;
@@ -33,18 +33,6 @@ public class EntityNbtSource implements NbtDataSource {
     @Override
     public EntityNbtSource copy() {
         return new EntityNbtSource(this.selector);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        EntityNbtSource that = (EntityNbtSource) o;
-        return Objects.equals(this.selector, that.selector);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.selector);
     }
 
     @Override

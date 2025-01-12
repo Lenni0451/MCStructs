@@ -23,7 +23,7 @@ class TextUtilsTest {
         component = TextUtils.makeURLsClickable(component);
         assertEquals(new StringComponent("")
                         .append("Check out my website: ")
-                        .append(new StringComponent(url).setStyle(new Style().setClickEvent(ClickEvent.openURL(URI.create(url)))))
+                        .append(new StringComponent(url).setStyle(new Style().setClickEvent(ClickEvent.openUrl(URI.create(url)))))
                         .append(" it's awesome!"),
                 component);
     }

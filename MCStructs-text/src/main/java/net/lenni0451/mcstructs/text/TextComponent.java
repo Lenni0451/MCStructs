@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.text;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.Copyable;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.text.components.*;
@@ -30,6 +31,7 @@ import java.util.function.Consumer;
  * - {@link EntityNbtSource}<br>
  * - {@link StorageNbtSource}
  */
+@EqualsAndHashCode
 public abstract class TextComponent implements Copyable<TextComponent> {
 
     private static final StringFormat LEGACY_FORMAT = StringFormat.vanilla('§', false);
@@ -226,10 +228,6 @@ public abstract class TextComponent implements Copyable<TextComponent> {
         copy.getSiblings().clear();
         return copy;
     }
-
-    public abstract boolean equals(final Object o);
-
-    public abstract int hashCode();
 
     public abstract String toString();
 

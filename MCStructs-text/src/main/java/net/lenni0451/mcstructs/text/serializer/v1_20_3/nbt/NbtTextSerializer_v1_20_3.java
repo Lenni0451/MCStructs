@@ -63,6 +63,7 @@ public class NbtTextSerializer_v1_20_3 implements ITextComponentSerializer<NbtTa
             NbtComponent component = (NbtComponent) object;
             out.addString("nbt", component.getComponent());
             if (component.isResolve()) out.addBoolean("interpret", true);
+            if (component.getSeparator() != null) out.add("separator", this.serialize(component.getSeparator()));
             if (component.getDataSource() instanceof EntityNbtSource) {
                 EntityNbtSource entityNbtSource = (EntityNbtSource) component.getDataSource();
                 out.addString("entity", entityNbtSource.getSelector());
@@ -203,13 +204,7 @@ public class NbtTextSerializer_v1_20_3 implements ITextComponentSerializer<NbtTa
             String nbt = tag.getString("nbt");
             boolean interpret = tag.getBoolean("interpret");
             TextComponent separator = null;
-            if (tag.contains("separator")) {
-                try {
-                    separator = this.deserialize(tag.get("separator"));
-                } catch (Throwable ignored) {
-                    //If the separator fails to parse we just ignore it
-                }
-            }
+            if (tag.contains("separator")) separator = this.deserialize(tag.get("separator"));
             String source = tag.getString("source", null);
 
             boolean typeFound = false;

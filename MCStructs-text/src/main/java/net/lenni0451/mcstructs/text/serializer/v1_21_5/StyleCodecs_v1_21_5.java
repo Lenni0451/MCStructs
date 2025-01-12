@@ -49,9 +49,9 @@ public class StyleCodecs_v1_21_5 {
     }
 
     public static class ClickEventCodec {
-        public static final MapCodec<OpenURLClickEvent> OPEN_URL = MapCodecMerger.mapCodec(
-                UNTRUSTED_URI.mapCodec("url").required(), OpenURLClickEvent::getUrl,
-                ClickEvent::openURL
+        public static final MapCodec<OpenUrlClickEvent> OPEN_URL = MapCodecMerger.mapCodec(
+                UNTRUSTED_URI.mapCodec("url").required(), OpenUrlClickEvent::getUrl,
+                ClickEvent::openUrl
         );
         public static final MapCodec<OpenFileClickEvent> OPEN_FILE = MapCodecMerger.mapCodec(
                 Codec.STRING.mapCodec("path").required(), OpenFileClickEvent::getPath,
@@ -119,7 +119,7 @@ public class StyleCodecs_v1_21_5 {
                     } else {
                         return null;
                     }
-                })).mapCodec("components").optional().defaulted(null), ItemHoverEvent::getNbt, //TODO: Verify data components
+                })).mapCodec("components").optional().defaulted(null), ItemHoverEvent::getNbt,
                 ItemHoverEvent::new
         );
         public static final MapCodec<EntityHoverEvent> ENTITY = MapCodecMerger.mapCodec(

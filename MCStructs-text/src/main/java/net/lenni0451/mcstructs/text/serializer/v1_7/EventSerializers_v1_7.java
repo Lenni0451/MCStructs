@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.text.serializer.v1_9;
+package net.lenni0451.mcstructs.text.serializer.v1_7;
 
 import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -7,13 +7,13 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.serializer.legacy.ClickEventSerializer;
+import net.lenni0451.mcstructs.text.serializer.legacy.EventSerializersBase;
 import net.lenni0451.mcstructs.text.serializer.legacy.HoverEventSerializer;
 import net.lenni0451.mcstructs.text.serializer.legacy.SerializerMap;
-import net.lenni0451.mcstructs.text.serializer.v1_8.StyleSerializer_v1_8;
 
-public class StyleSerializer_v1_9 extends StyleSerializer_v1_8 {
+public class EventSerializers_v1_7 extends EventSerializersBase {
 
-    public StyleSerializer_v1_9(final SNbt<?> sNbt) {
+    public EventSerializers_v1_7(final SNbt<?> sNbt) {
         super(sNbt);
     }
 
@@ -35,8 +35,7 @@ public class StyleSerializer_v1_9 extends StyleSerializer_v1_8 {
         return builder
                 .add(HoverEventSerializer.TEXT)
                 .add(HoverEventSerializer.ACHIEVEMENT)
-                .add(HoverEventSerializer.LEGACY_STRING_ITEM)
-                .add(HoverEventSerializer.LEGACY_ENTITY)
+                .add(HoverEventSerializer.LEGACY_INT_ITEM)
                 .finalize(
                         HoverEvent::getAction,
                         HoverEventSerializer.LEGACY_FALLBACK_SERIALIZER,

@@ -15,13 +15,14 @@ public enum ClickEventAction implements NamedType {
     OPEN_FILE("open_file", false),
     RUN_COMMAND("run_command", true),
     /**
-     * Removed in minecraft 1.9.
+     * Added in Minecraft 1.8.<br>
+     * Removed in Minecraft 1.9.
      */
     TWITCH_USER_INFO("twitch_user_info", false),
     SUGGEST_COMMAND("suggest_command", true),
     CHANGE_PAGE("change_page", true),
     /**
-     * Added in minecraft 1.16.
+     * Added in Minecraft 1.16.
      */
     COPY_TO_CLIPBOARD("copy_to_clipboard", true);
 

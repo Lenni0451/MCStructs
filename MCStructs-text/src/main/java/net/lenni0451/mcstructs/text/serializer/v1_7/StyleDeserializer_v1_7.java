@@ -1,28 +1,19 @@
 package net.lenni0451.mcstructs.text.serializer.v1_7;
 
 import com.google.gson.*;
-import net.lenni0451.mcstructs.nbt.NbtTag;
-import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.TextFormatting;
-import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.events.click.types.LegacyClickEvent;
-import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.events.hover.impl.LegacyHoverEvent;
 
 import java.lang.reflect.Type;
-import java.net.URI;
 
-public class StyleDeserializer_v1_7 implements JsonDeserializer<Style> {
-
-    private final SNbt<?> sNbt;
+public class StyleDeserializer_v1_7 extends EventSerializers_v1_7 implements JsonDeserializer<Style> {
 
     public StyleDeserializer_v1_7(final SNbt<?> sNbt) {
-        this.sNbt = sNbt;
+        super(sNbt);
     }
 
     @Override
@@ -49,7 +40,7 @@ public class StyleDeserializer_v1_7 implements JsonDeserializer<Style> {
                     if (rawValue != null) value = rawValue.getAsString();
 
                     if (action != null && value != null && action.isUserDefinable()) {
-                        style.setClickEvent(this.deserializeClickEvent(action, value));
+                        style.setClickEvent(this.clickEventSerializer.deserialize(action, value));
                     }
                 }
             }
@@ -63,65 +54,13 @@ public class StyleDeserializer_v1_7 implements JsonDeserializer<Style> {
                     if (rawAction != null) action = HoverEventAction.byName(rawAction.getAsString());
 
                     if (action != null && value != null && action.isUserDefinable()) {
-                        style.setHoverEvent(this.deserializeHoverEvent(action, value));
+                        style.setHoverEvent(this.hoverEventSerializer.deserialize(action, value));
                     }
                 }
             }
             return style;
         }
         return null;
-    }
-
-    private ClickEvent deserializeClickEvent(final ClickEventAction action, final String value) {
-        switch (action) {
-            case OPEN_URL:
-                try {
-                    return ClickEvent.openURL(new URI(value));
-                } catch (Throwable t) {
-                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyUrlData(value));
-                }
-            case OPEN_FILE:
-                return ClickEvent.openFile(value);
-            case RUN_COMMAND:
-                return ClickEvent.runCommand(value);
-            case SUGGEST_COMMAND:
-                return ClickEvent.suggestCommand(value);
-            case CHANGE_PAGE:
-                try {
-                    return ClickEvent.changePage(Integer.parseInt(value));
-                } catch (Throwable t) {
-                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyPageData(value));
-                }
-            default:
-                throw new IllegalArgumentException("Unknown click event action: " + action.getName());
-        }
-    }
-
-    private HoverEvent deserializeHoverEvent(final HoverEventAction action, final TextComponent value) {
-        switch (action) {
-            case SHOW_TEXT:
-                return HoverEvent.text(value);
-            case SHOW_ACHIEVEMENT:
-                return HoverEvent.achievement(value.asUnformattedString());
-            case SHOW_ITEM:
-                try {
-                    NbtTag tag = this.sNbt.deserialize(value.asUnformattedString());
-                    if (tag.isCompoundTag()) {
-                        CompoundTag compoundTag = tag.asCompoundTag();
-                        short itemId = compoundTag.getShort("id");
-                        byte itemCount = compoundTag.getByte("Count");
-                        short itemDamage = compoundTag.getShort("Damage");
-                        if (itemDamage < 0) itemDamage = 0;
-                        CompoundTag itemTag = compoundTag.getCompound("tag", null);
-
-                        return new LegacyHoverEvent(action, new LegacyHoverEvent.LegacyIntItemData(itemId, itemCount, itemDamage, itemTag));
-                    }
-                } catch (Throwable ignored) {
-                }
-                return new LegacyHoverEvent(action, new LegacyHoverEvent.LegacyInvalidData(value));
-            default:
-                throw new IllegalArgumentException("Unknown hover event action: " + action.getName());
-        }
     }
 
 }

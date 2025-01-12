@@ -8,7 +8,7 @@ import net.lenni0451.mcstructs.text.components.nbt.NbtDataSource;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class NbtComponent extends TextComponent {
 
     private String component;
@@ -117,6 +117,8 @@ public class NbtComponent extends TextComponent {
     @Override
     public String toString() {
         return ToString.of(this)
+                .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
+                .add("style", this.getStyle(), style -> !style.isEmpty())
                 .add("component", this.component)
                 .add("resolve", this.resolve)
                 .add("separator", this.separator, Objects::nonNull)

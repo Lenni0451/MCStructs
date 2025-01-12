@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.text.TextComponent;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class ScoreComponent extends TextComponent {
 
     private String name;

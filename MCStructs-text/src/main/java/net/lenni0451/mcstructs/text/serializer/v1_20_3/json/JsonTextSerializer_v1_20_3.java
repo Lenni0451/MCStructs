@@ -63,6 +63,7 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
             NbtComponent component = (NbtComponent) object;
             out.addProperty("nbt", component.getComponent());
             if (component.isResolve()) out.addProperty("interpret", true);
+            if (component.getSeparator() != null) out.add("separator", this.serialize(component.getSeparator()));
             if (component.getDataSource() instanceof EntityNbtSource) {
                 EntityNbtSource entityNbtSource = (EntityNbtSource) component.getDataSource();
                 out.addProperty("entity", entityNbtSource.getSelector());
@@ -164,13 +165,7 @@ public class JsonTextSerializer_v1_20_3 implements ITextComponentSerializer<Json
             String nbt = obj.get("nbt").getAsString();
             boolean interpret = Boolean.TRUE.equals(optionalBoolean(obj, "interpret"));
             TextComponent separator = null;
-            if (obj.has("separator")) {
-                try {
-                    separator = this.deserialize(obj.get("separator"));
-                } catch (Throwable ignored) {
-                    //If the separator fails to parse we just ignore it
-                }
-            }
+            if (obj.has("separator")) separator = this.deserialize(obj.get("separator"));
             String source = optionalString(obj, "source");
 
             boolean typeFound = false;

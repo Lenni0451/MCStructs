@@ -65,7 +65,7 @@ public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
         switch (action) {
             case OPEN_URL:
                 try {
-                    return ClickEvent.openURL(new URI(value));
+                    return ClickEvent.openUrl(new URI(value));
                 } catch (Throwable t) {
                     return new LegacyClickEvent(action, new LegacyClickEvent.LegacyUrlData(value));
                 }

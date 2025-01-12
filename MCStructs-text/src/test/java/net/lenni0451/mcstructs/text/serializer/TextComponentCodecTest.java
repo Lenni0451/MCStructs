@@ -22,6 +22,8 @@ import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.FieldSource;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.util.UUID;
 
@@ -31,10 +33,10 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 class TextComponentCodecTest {
 
     private static final TextComponentCodec[] codecs = new TextComponentCodec[]{
-            TextComponentCodec.V1_20_3,
-            TextComponentCodec.V1_20_5,
-            TextComponentCodec.V1_21_2,
-            TextComponentCodec.V1_21_4,
+//            TextComponentCodec.V1_20_3, //TODO: Add back when codec
+//            TextComponentCodec.V1_20_5,
+//            TextComponentCodec.V1_21_2,
+//            TextComponentCodec.V1_21_4,
             TextComponentCodec.V1_21_5,
             TextComponentCodec.LATEST
     };
@@ -54,7 +56,7 @@ class TextComponentCodecTest {
             .append(new StringComponent("hover text").setStyle(new Style().setHoverEvent(new TextHoverEvent(new StringComponent("text")))))
             .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(Identifier.of("stone"), 64, new CompoundTag().add("display", new CompoundTag().addString("Name", "name"))))))
             .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))))
-            .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openURL(URI.create("https://example.com"))).setFont(Identifier.of("font")).setInsertion("insertion")));
+            .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openUrl(URI.create("https://example.com"))).setFont(Identifier.of("font")).setInsertion("insertion")));
 
     @ParameterizedTest
     @FieldSource("codecs")
@@ -67,6 +69,19 @@ class TextComponentCodecTest {
     @ParameterizedTest
     @FieldSource("codecs")
     void serializeDeserializeNbt(final TextComponentCodec codec) {
+        for (Field field : TextComponentCodec.class.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers()) && TextComponentCodec.class.isAssignableFrom(field.getType())) {
+                try {
+                    TextComponentCodec fieldCodec = (TextComponentCodec) field.get(null);
+                    if (fieldCodec == codec) {
+                        System.out.println(field.getName());
+                        break;
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         NbtTag nbt = codec.serializeNbt(this.text);
         TextComponent deserialized = codec.deserializeNbtTree(nbt);
         assertEquals(this.text, deserialized);

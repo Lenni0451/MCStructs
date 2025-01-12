@@ -14,7 +14,7 @@ public class AchievementHoverEvent extends HoverEvent {
     private String statistic;
 
     public AchievementHoverEvent(final String statistic) {
-        super(HoverEventAction.SHOW_TEXT);
+        super(HoverEventAction.SHOW_ACHIEVEMENT);
         this.statistic = statistic;
     }
 
