@@ -98,7 +98,7 @@ public class StyleCodecs_v1_21_5 {
 
     public static class HoverEventCodec {
         public static final MapCodec<TextHoverEvent> TEXT = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_5.TEXT.mapCodec("text").required(), TextHoverEvent::getText,
+                TextCodecs_v1_21_5.TEXT.mapCodec("value").required(), TextHoverEvent::getText,
                 TextHoverEvent::new
         );
         public static final MapCodec<ItemHoverEvent> ITEM = MapCodecMerger.mapCodec(
