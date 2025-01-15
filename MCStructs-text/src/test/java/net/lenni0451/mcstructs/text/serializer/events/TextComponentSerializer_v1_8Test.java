@@ -24,14 +24,8 @@ public class TextComponentSerializer_v1_8Test extends TextComponentLegacyEventsT
 
         this.testSuccess(HOVER_TEXT);
         this.testSuccess(HOVER_ACHIEVEMENT);
-        this.testSuccess(HOVER_INT_ITEM_LEGACY
-                .withSerialized("{\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"{id:1s,Count:1b,tag:{test:\\\"test\\\"},Damage:1s}\"},\"text\":\"\"}"));
-        this.testSuccess(HOVER_STRING_ITEM_LEGACY
-                .withSerialized("{\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"{id:\\\"test\\\",Count:1b,tag:{test:\\\"test\\\"},Damage:1s}\"},\"text\":\"\"}"));
-        this.testSuccess(HOVER_INVALID_ITEM_LEGACY);
-        this.testSuccess(HOVER_ENTITY_LEGACY
-                .withSerialized("{\"hoverEvent\":{\"action\":\"show_entity\",\"value\":\"{name:\\\"test3\\\",id:\\\"test2\\\",type:\\\"test\\\"}\"},\"text\":\"\"}"));
-        this.testSuccess(HOVER_INVALID_ENTITY_LEGACY);
+        this.testSuccess(HOVER_ITEM_LEGACY);
+        this.testSuccess(HOVER_ENTITY_LEGACY);
     }
 
     @Test

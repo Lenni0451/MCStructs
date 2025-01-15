@@ -34,18 +34,16 @@ public class HoverEventSerializer_v1_16 implements JsonSerializer<HoverEvent> {
         } else if (src instanceof ItemHoverEvent) {
             ItemHoverEvent itemHoverEvent = (ItemHoverEvent) src;
             JsonObject serializedItem = new JsonObject();
-            serializedItem.addProperty("id", itemHoverEvent.asModernHolder().getId().get());
-            if (itemHoverEvent.asModernHolder().getCount() != 1) serializedItem.addProperty("count", itemHoverEvent.asModernHolder().getCount());
-            if (itemHoverEvent.asModernHolder().getTag() != null) serializedItem.addProperty("tag", this.sNbt.trySerialize(itemHoverEvent.asModernHolder().getTag()));
+            serializedItem.addProperty("id", itemHoverEvent.asModern().getId().get());
+            if (itemHoverEvent.asModern().getCount() != 1) serializedItem.addProperty("count", itemHoverEvent.asModern().getCount());
+            if (itemHoverEvent.asModern().getTag() != null) serializedItem.addProperty("tag", this.sNbt.trySerialize(itemHoverEvent.asModern().getTag()));
             serializedHoverEvent.add("contents", serializedItem);
         } else if (src instanceof EntityHoverEvent) {
             EntityHoverEvent entityHoverEvent = (EntityHoverEvent) src;
             JsonObject serializedEntity = new JsonObject();
-            serializedEntity.addProperty("type", entityHoverEvent.asModernHolder().getType().get());
-            serializedEntity.addProperty("id", entityHoverEvent.asModernHolder().getUuid().toString());
-            if (entityHoverEvent.asModernHolder().getName() != null) {
-                serializedEntity.add("name", this.textComponentSerializer.serializeJson(entityHoverEvent.asModernHolder().getName()));
-            }
+            serializedEntity.addProperty("type", entityHoverEvent.asModern().getType().get());
+            serializedEntity.addProperty("id", entityHoverEvent.asModern().getUuid().toString());
+            if (entityHoverEvent.asModern().getName() != null) serializedEntity.add("name", this.textComponentSerializer.serializeJson(entityHoverEvent.asModern().getName()));
             serializedHoverEvent.add("contents", serializedEntity);
         }
 

@@ -25,13 +25,9 @@ public class TextComponentSerializer_v1_9Test extends TextComponentLegacyEventsT
                 .withSerialized("{\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"test\"}},\"text\":\"\"}"));
         this.testSuccess(HOVER_ACHIEVEMENT
                 .withSerialized("{\"hoverEvent\":{\"action\":\"show_achievement\",\"value\":{\"text\":\"test\"}},\"text\":\"\"}"));
-        this.testSuccess(HOVER_STRING_ITEM_LEGACY
-                .withSerialized("{\"hoverEvent\":{\"action\":\"show_item\",\"value\":{\"text\":\"{id:\\\"test\\\",Count:1b,tag:{test:\\\"test\\\"},Damage:1s}\"}},\"text\":\"\"}"));
-        this.testSuccess(HOVER_INVALID_ITEM_LEGACY
+        this.testSuccess(HOVER_ITEM_LEGACY
                 .withSerialized("{\"hoverEvent\":{\"action\":\"show_item\",\"value\":{\"text\":\"test\"}},\"text\":\"\"}"));
         this.testSuccess(HOVER_ENTITY_LEGACY
-                .withSerialized("{\"hoverEvent\":{\"action\":\"show_entity\",\"value\":{\"text\":\"{name:\\\"test3\\\",id:\\\"test2\\\",type:\\\"test\\\"}\"}},\"text\":\"\"}"));
-        this.testSuccess(HOVER_INVALID_ENTITY_LEGACY
                 .withSerialized("{\"hoverEvent\":{\"action\":\"show_entity\",\"value\":{\"text\":\"test\"}},\"text\":\"\"}"));
     }
 
@@ -41,8 +37,6 @@ public class TextComponentSerializer_v1_9Test extends TextComponentLegacyEventsT
         this.testFailure(CLICK_COPY_TO_CLIPBOARD);
 
         this.testFailure(HOVER_ITEM); //Modern item hover events are just skipped
-        this.testFailure(HOVER_INT_ITEM_LEGACY
-                .withSerialized("{\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"{id:1s,Count:1b,tag:{test:\\\"test\\\"},Damage:1s}\"},\"text\":\"\"}"));
         this.testFailure(HOVER_ENTITY); //Modern entity hover events are just skipped
     }
 

@@ -108,8 +108,8 @@ public class StyleCodecs_v1_21_5 {
                     } else {
                         return null;
                     }
-                })).mapCodec("id").required(), hoverEvent -> hoverEvent.asModernHolder().getId(),
-                Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), hoverEvent -> hoverEvent.asModernHolder().getCount(),
+                })).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getId(),
+                Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), hoverEvent -> hoverEvent.asModern().getCount(),
                 NbtConverter_v1_20_3.INSTANCE.toCodec().verified(tag -> {
                     if (!tag.isCompoundTag()) return Result.error("Expected a compound tag");
                     return null;
@@ -119,7 +119,7 @@ public class StyleCodecs_v1_21_5 {
                     } else {
                         return null;
                     }
-                })).mapCodec("components").optional().defaulted(null), hoverEvent -> hoverEvent.asModernHolder().getTag(),
+                })).mapCodec("components").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getTag(),
                 ItemHoverEvent::new
         );
         public static final MapCodec<EntityHoverEvent> ENTITY = MapCodecMerger.mapCodec(
@@ -129,9 +129,9 @@ public class StyleCodecs_v1_21_5 {
                     } else {
                         return null;
                     }
-                })).mapCodec("id").required(), hoverEvent -> hoverEvent.asModernHolder().getType(),
-                ExtraCodecs_v1_21_5.LENIENT_UUID.mapCodec("uuid").required(), hoverEvent -> hoverEvent.asModernHolder().getUuid(),
-                TextCodecs_v1_21_5.TEXT.mapCodec("name").optional().defaulted(null), hoverEvent -> hoverEvent.asModernHolder().getName(),
+                })).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getType(),
+                ExtraCodecs_v1_21_5.LENIENT_UUID.mapCodec("uuid").required(), hoverEvent -> hoverEvent.asModern().getUuid(),
+                TextCodecs_v1_21_5.TEXT.mapCodec("name").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getName(),
                 EntityHoverEvent::new
         );
         public static final Codec<HoverEvent> CODEC = Codec.named(HoverEventAction.SHOW_TEXT, HoverEventAction.SHOW_ITEM, HoverEventAction.SHOW_ENTITY).verified(action -> {

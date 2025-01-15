@@ -34,10 +34,8 @@ public class EventSerializers_v1_8 extends EventSerializersBase {
         return builder
                 .add(HoverEventSerializer.TEXT)
                 .add(HoverEventSerializer.ACHIEVEMENT)
-                .add(HoverEventSerializer.LEGACY_INT_OR_STRING_ITEM)
-                .add(HoverEventSerializer.LEGACY_RAW_ITEM)
+                .add(HoverEventSerializer.LEGACY_ITEM)
                 .add(HoverEventSerializer.LEGACY_ENTITY)
-                .add(HoverEventSerializer.LEGACY_RAW_ENTITY)
                 .finalize(HoverEvent::getAction);
     }
 

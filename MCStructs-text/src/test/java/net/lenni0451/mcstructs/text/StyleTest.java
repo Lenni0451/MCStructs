@@ -170,9 +170,9 @@ class StyleTest {
         ItemHoverEvent itemHoverEvent = (ItemHoverEvent) style.getHoverEvent();
         assertNotNull(style.getHoverEvent());
         assertEquals(HoverEventAction.SHOW_ITEM, style.getHoverEvent().getAction());
-        assertEquals(Identifier.of("stone"), itemHoverEvent.asModernHolder().getId());
-        assertEquals(1, itemHoverEvent.asModernHolder().getCount());
-        assertNotNull(itemHoverEvent.asModernHolder().getTag());
+        assertEquals(Identifier.of("stone"), itemHoverEvent.asModern().getId());
+        assertEquals(1, itemHoverEvent.asModern().getCount());
+        assertNotNull(itemHoverEvent.asModern().getTag());
     }
 
     @Test

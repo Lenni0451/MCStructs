@@ -168,7 +168,7 @@ public class TextUtils {
             } else if (hoverEvent instanceof EntityHoverEvent) {
                 EntityHoverEvent entityHoverEvent = (EntityHoverEvent) hoverEvent;
                 if (entityHoverEvent.isModern()) {
-                    TextComponent name = entityHoverEvent.asModernHolder().getName();
+                    TextComponent name = entityHoverEvent.asModern().getName();
                     if (name != null) iterateAll(name, consumer);
                 }
             }

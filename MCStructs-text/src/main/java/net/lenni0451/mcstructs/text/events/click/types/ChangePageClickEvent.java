@@ -3,11 +3,9 @@ package net.lenni0451.mcstructs.text.events.click.types;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.utils.Compatibility;
 
 @EqualsAndHashCode(callSuper = false)
 public class ChangePageClickEvent extends ClickEvent {
@@ -64,7 +62,6 @@ public class ChangePageClickEvent extends ClickEvent {
 
 
     public interface PageHolder {
-        Compatibility[] getCompatibility();
     }
 
     @Data
@@ -73,33 +70,19 @@ public class ChangePageClickEvent extends ClickEvent {
         private String page;
 
         @Override
-        public Compatibility[] getCompatibility() {
-            return Compatibility.ranged(Compatibility.V1_7, Compatibility.V1_21_4);
-        }
-
-        @Override
         public String toString() {
-            return ToString.of(this)
-                    .add("page", this.page)
-                    .toString();
+            return this.page;
         }
     }
 
-    @Value
+    @Data
     @AllArgsConstructor
     public static class IntHolder implements PageHolder {
         private int page;
 
         @Override
-        public Compatibility[] getCompatibility() {
-            return Compatibility.ranged(Compatibility.V1_7, null);
-        }
-
-        @Override
         public String toString() {
-            return ToString.of(this)
-                    .add("page", this.page)
-                    .toString();
+            return String.valueOf(this.page);
         }
     }
 

@@ -5,6 +5,8 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.ListTag;
+import net.lenni0451.mcstructs.snbt.SNbt;
+import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.TextFormatting;
@@ -87,36 +89,43 @@ class TextComponentCodecTest {
 
     @ParameterizedTest
     @FieldSource("legacyCodecs")
-    void legacyItemDeserialization(final TextComponentCodec codec) {
+    void legacyItemDeserialization(final TextComponentCodec codec) throws SNbtSerializeException {
+        CompoundTag legacyNbt = new CompoundTag()
+                .add("id", "stone")
+                .addByte("Count", (byte) 5);
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
-                        .setHoverEvent(new ItemHoverEvent("stone", (byte) 5, (short) 0, null))
+                        .setHoverEvent(new ItemHoverEvent(SNbt.LATEST.serialize(legacyNbt)))
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
         TextComponent modernDeserialized = codec.deserialize(legacyJson);
         HoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         ItemHoverEvent itemHoverEvent = assertInstanceOf(ItemHoverEvent.class, hoverEvent);
-        assertEquals(Identifier.of("stone"), itemHoverEvent.asModernHolder().getId());
+        assertEquals(Identifier.of("stone"), itemHoverEvent.asModern().getId());
 //        assertEquals(5, itemHoverEvent.getCount()); //The 1.20.5 version broke the legacy deserialize. The count is now lowercase
     }
 
     @ParameterizedTest
     @FieldSource("legacyCodecs")
-    void legacyEntityDeserialization(final TextComponentCodec codec) {
+    void legacyEntityDeserialization(final TextComponentCodec codec) throws SNbtSerializeException {
         UUID randomUUID = UUID.randomUUID();
+        CompoundTag legacyNbt = new CompoundTag()
+                .add("name", "{\"text\":\"test\"}")
+                .add("type", "cow")
+                .add("id", randomUUID.toString());
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
-                        .setHoverEvent(new EntityHoverEvent("cow", randomUUID.toString(), "{\"text\":\"test\"}"))
+                        .setHoverEvent(new EntityHoverEvent(new StringComponent(SNbt.LATEST.serialize(legacyNbt))))
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
         TextComponent modernDeserialized = codec.deserialize(legacyJson);
         HoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         EntityHoverEvent entityHoverEvent = assertInstanceOf(EntityHoverEvent.class, hoverEvent);
-        assertEquals(new StringComponent("test"), entityHoverEvent.asModernHolder().getName());
-        assertEquals(Identifier.of("cow"), entityHoverEvent.asModernHolder().getType());
-        assertEquals(randomUUID, entityHoverEvent.asModernHolder().getUuid());
+        assertEquals(new StringComponent("test"), entityHoverEvent.asModern().getName());
+        assertEquals(Identifier.of("cow"), entityHoverEvent.asModern().getType());
+        assertEquals(randomUUID, entityHoverEvent.asModern().getUuid());
     }
 
     @ParameterizedTest

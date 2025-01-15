@@ -18,10 +18,8 @@ public class StyleSerializer_v1_12 extends StyleSerializer_v1_9 {
     protected SerializerMap<HoverEvent, HoverEventAction, TextComponent> createHoverEventSerializer(SerializerMap.Builder<HoverEvent, HoverEventAction, TextComponent> builder) {
         return builder
                 .add(HoverEventSerializer.TEXT)
-                .add(HoverEventSerializer.LEGACY_STRING_ITEM)
-                .add(HoverEventSerializer.LEGACY_RAW_ITEM)
+                .add(HoverEventSerializer.LEGACY_ITEM)
                 .add(HoverEventSerializer.LEGACY_ENTITY)
-                .add(HoverEventSerializer.LEGACY_RAW_ENTITY)
                 .finalize(HoverEvent::getAction);
     }
 

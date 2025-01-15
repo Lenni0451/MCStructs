@@ -1,7 +1,8 @@
 package net.lenni0451.mcstructs.text.events.click.types;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
@@ -25,6 +26,11 @@ public class OpenUrlClickEvent extends ClickEvent {
 
     public UrlHolder getHolder() {
         return this.url;
+    }
+
+    public OpenUrlClickEvent setHolder(final UrlHolder holder) {
+        this.url = holder;
+        return this;
     }
 
     public String asString() {
@@ -65,21 +71,25 @@ public class OpenUrlClickEvent extends ClickEvent {
     public interface UrlHolder {
     }
 
-    @Value
+    @Data
+    @AllArgsConstructor
     public static class StringHolder implements UrlHolder {
         private final String url;
 
-        public String getUrl() {
+        @Override
+        public String toString() {
             return this.url;
         }
     }
 
-    @Value
+    @Data
+    @AllArgsConstructor
     public static class UriHolder implements UrlHolder {
         private final URI uri;
 
-        public URI getUri() {
-            return this.uri;
+        @Override
+        public String toString() {
+            return this.uri.toString();
         }
     }
 

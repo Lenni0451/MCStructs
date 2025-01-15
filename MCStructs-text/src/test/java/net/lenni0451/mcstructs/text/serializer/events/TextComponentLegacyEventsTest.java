@@ -71,39 +71,24 @@ public abstract class TextComponentLegacyEventsTest {
             "{\"hoverEvent\":{\"action\":\"show_achievement\",\"value\":\"test\"},\"text\":\"\"}",
             HoverEventAction.SHOW_ACHIEVEMENT.isUserDefinable()
     );
+    protected static final TestComponent HOVER_ITEM_LEGACY = new TestComponent(
+            withHoverEvent(new ItemHoverEvent("test")),
+            "{\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"test\"},\"text\":\"\"}",
+            HoverEventAction.SHOW_ENTITY.isUserDefinable()
+    );
     protected static final TestComponent HOVER_ITEM = new TestComponent(
             withHoverEvent(new ItemHoverEvent(Identifier.of("test"), 1, new CompoundTag().addString("test", "test"))),
             "{\"hoverEvent\":{\"action\":\"show_item\",\"contents\":{\"id\":\"minecraft:test\",\"tag\":\"{test:\\\"test\\\"}\"}},\"text\":\"\"}",
             HoverEventAction.SHOW_ITEM.isUserDefinable()
     );
-    protected static final TestComponent HOVER_INT_ITEM_LEGACY = new TestComponent(
-            withHoverEvent(new ItemHoverEvent((short) 1, (byte) 1, (short) 1, new CompoundTag().addString("test", "test"))),
-            "{", //Placeholder: this has to be filled in the test directly because of snbt serialization changes
-            HoverEventAction.SHOW_ITEM.isUserDefinable()
-    );
-    protected static final TestComponent HOVER_STRING_ITEM_LEGACY = new TestComponent(
-            withHoverEvent(new ItemHoverEvent("test", (byte) 1, (short) 1, new CompoundTag().addString("test", "test"))),
-            "{", //Placeholder: this has to be filled in the test directly because of snbt serialization changes
-            HoverEventAction.SHOW_ITEM.isUserDefinable()
+    protected static final TestComponent HOVER_ENTITY_LEGACY = new TestComponent(
+            withHoverEvent(new EntityHoverEvent(new StringComponent("test"))),
+            "{\"hoverEvent\":{\"action\":\"show_entity\",\"value\":\"test\"},\"text\":\"\"}",
+            HoverEventAction.SHOW_ENTITY.isUserDefinable()
     );
     protected static final TestComponent HOVER_ENTITY = new TestComponent(
             withHoverEvent(new EntityHoverEvent(Identifier.of("test"), UUID.randomUUID(), new StringComponent("test"))),
             "{\"hoverEvent\":{\"action\":\"show_entity\",\"contents\":{\"id\":\"3ea69abb-e9a0-4fe4-82c7-459a20a12da2\",\"name\":{\"text\":\"test\"},\"type\":\"minecraft:test\"}},\"text\":\"\"}",
-            HoverEventAction.SHOW_ENTITY.isUserDefinable()
-    );
-    protected static final TestComponent HOVER_ENTITY_LEGACY = new TestComponent(
-            withHoverEvent(new EntityHoverEvent("test", "test2", "test3")),
-            "{", //Placeholder: this has to be filled in the test directly because of snbt serialization changes
-            HoverEventAction.SHOW_ENTITY.isUserDefinable()
-    );
-    protected static final TestComponent HOVER_INVALID_ITEM_LEGACY = new TestComponent(
-            withHoverEvent(new ItemHoverEvent("test")),
-            "{\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"test\"},\"text\":\"\"}",
-            HoverEventAction.SHOW_ENTITY.isUserDefinable()
-    );
-    protected static final TestComponent HOVER_INVALID_ENTITY_LEGACY = new TestComponent(
-            withHoverEvent(new EntityHoverEvent(new StringComponent("test"))),
-            "{\"hoverEvent\":{\"action\":\"show_entity\",\"value\":\"test\"},\"text\":\"\"}",
             HoverEventAction.SHOW_ENTITY.isUserDefinable()
     );
 

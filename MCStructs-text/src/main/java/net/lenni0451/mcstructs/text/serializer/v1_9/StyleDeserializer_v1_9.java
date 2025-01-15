@@ -33,10 +33,8 @@ public class StyleDeserializer_v1_9 extends StyleDeserializer_v1_8 {
         return builder
                 .add(HoverEventSerializer.TEXT)
                 .add(HoverEventSerializer.ACHIEVEMENT)
-                .add(HoverEventSerializer.LEGACY_STRING_ITEM)
-                .add(HoverEventSerializer.LEGACY_RAW_ITEM)
+                .add(HoverEventSerializer.LEGACY_ITEM)
                 .add(HoverEventSerializer.LEGACY_ENTITY)
-                .add(HoverEventSerializer.LEGACY_RAW_ENTITY)
                 .finalize(HoverEvent::getAction);
     }
 

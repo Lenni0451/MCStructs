@@ -8,7 +8,6 @@ import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.utils.Compatibility;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -21,19 +20,9 @@ public class ItemHoverEvent extends HoverEvent {
 
     private DataHolder data;
 
-    public ItemHoverEvent(final String data) {
+    public ItemHoverEvent(final String legacyData) {
         super(HoverEventAction.SHOW_ITEM);
-        this.data = new LegacyRawHolder(data);
-    }
-
-    public ItemHoverEvent(final short id, final byte count, final short damage, @Nullable final CompoundTag tag) {
-        super(HoverEventAction.SHOW_ITEM);
-        this.data = new LegacyShortHolder(id, count, damage, tag);
-    }
-
-    public ItemHoverEvent(final String id, final byte count, final short damage, @Nullable final CompoundTag tag) {
-        super(HoverEventAction.SHOW_ITEM);
-        this.data = new LegacyStringHolder(id, count, damage, tag);
+        this.data = new LegacyHolder(legacyData);
     }
 
     public ItemHoverEvent(final Identifier id, final int count, @Nullable final CompoundTag tag) {
@@ -41,51 +30,32 @@ public class ItemHoverEvent extends HoverEvent {
         this.data = new ModernHolder(id, count, tag);
     }
 
-    public boolean isLegacyRaw() {
-        return this.data instanceof LegacyRawHolder;
+    public DataHolder getData() {
+        return this.data;
     }
 
-    public boolean isLegacyShort() {
-        return this.data instanceof LegacyShortHolder;
+    public ItemHoverEvent setData(final String data) {
+        this.data = new LegacyHolder(data);
+        return this;
     }
 
-    public boolean isLegacyString() {
-        return this.data instanceof LegacyStringHolder;
+    public boolean isLegacy() {
+        return this.data instanceof LegacyHolder;
     }
 
     public boolean isModern() {
         return this.data instanceof ModernHolder;
     }
 
-    public DataHolder getData() {
-        return this.data;
-    }
-
-    public LegacyRawHolder asLegacyRawHolder() {
-        if (this.data instanceof LegacyRawHolder) {
-            return (LegacyRawHolder) this.data;
+    public LegacyHolder asLegacy() {
+        if (this.data instanceof LegacyHolder) {
+            return (LegacyHolder) this.data;
         } else {
             throw new UnsupportedOperationException("Data holder is not a legacy raw holder: " + this.data);
         }
     }
 
-    public LegacyShortHolder asLegacyShortHolder() {
-        if (this.data instanceof LegacyShortHolder) {
-            return (LegacyShortHolder) this.data;
-        } else {
-            throw new UnsupportedOperationException("Data holder is not a legacy short holder: " + this.data);
-        }
-    }
-
-    public LegacyStringHolder asLegacyStringHolder() {
-        if (this.data instanceof LegacyStringHolder) {
-            return (LegacyStringHolder) this.data;
-        } else {
-            throw new UnsupportedOperationException("Data holder is not a legacy string holder: " + this.data);
-        }
-    }
-
-    public ModernHolder asModernHolder() {
+    public ModernHolder asModern() {
         if (this.data instanceof ModernHolder) {
             return (ModernHolder) this.data;
         } else {
@@ -93,23 +63,8 @@ public class ItemHoverEvent extends HoverEvent {
         }
     }
 
-    public ItemHoverEvent setData(final String data) {
-        this.data = new LegacyRawHolder(data);
-        return this;
-    }
-
-    public ItemHoverEvent setLegacyRawData(final String data) {
-        this.data = new LegacyRawHolder(data);
-        return this;
-    }
-
-    public ItemHoverEvent setLegacyShortData(final short id, final byte count, final short damage, @Nullable final CompoundTag tag) {
-        this.data = new LegacyShortHolder(id, count, damage, tag);
-        return this;
-    }
-
-    public ItemHoverEvent setLegacyStringData(final String id, final byte count, final short damage, @Nullable final CompoundTag tag) {
-        this.data = new LegacyStringHolder(id, count, damage, tag);
+    public ItemHoverEvent setLegacyData(final String data) {
+        this.data = new LegacyHolder(data);
         return this;
     }
 
@@ -128,18 +83,12 @@ public class ItemHoverEvent extends HoverEvent {
 
 
     public interface DataHolder {
-        Compatibility[] getCompatibility();
     }
 
     @Data
     @AllArgsConstructor
-    public static class LegacyRawHolder implements DataHolder {
+    public static class LegacyHolder implements DataHolder {
         private String data;
-
-        @Override
-        public Compatibility[] getCompatibility() {
-            return Compatibility.ranged(Compatibility.V1_7, Compatibility.V1_15);
-        }
 
         @Override
         public String toString() {
@@ -151,66 +100,11 @@ public class ItemHoverEvent extends HoverEvent {
 
     @Data
     @AllArgsConstructor
-    public static class LegacyShortHolder implements DataHolder {
-        private short id;
-        private byte count;
-        private short damage;
-        @Nullable
-        private CompoundTag tag;
-
-        @Override
-        public Compatibility[] getCompatibility() {
-            return Compatibility.ranged(Compatibility.V1_7, Compatibility.V1_8);
-        }
-
-        @Override
-        public String toString() {
-            return ToString.of(this)
-                    .add("id", this.id)
-                    .add("count", this.count, c -> c != 1)
-                    .add("damage", this.damage, d -> d != 0)
-                    .add("tag", this.tag, Objects::nonNull)
-                    .toString();
-        }
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class LegacyStringHolder implements DataHolder {
-        private String id;
-        private byte count;
-        private short damage;
-        @Nullable
-        private CompoundTag tag;
-
-        @Override
-        public Compatibility[] getCompatibility() {
-            return Compatibility.ranged(Compatibility.V1_8, Compatibility.V1_15);
-        }
-
-        @Override
-        public String toString() {
-            return ToString.of(this)
-                    .add("id", this.id)
-                    .add("count", this.count, c -> c != 1)
-                    .add("damage", this.damage, d -> d != 0)
-                    .add("tag", this.tag, Objects::nonNull)
-                    .toString();
-        }
-    }
-
-    @Data
-    @AllArgsConstructor
     public static class ModernHolder implements DataHolder {
         private Identifier id;
         private int count;
         @Nullable
         private CompoundTag tag;
-
-        @Override
-        public Compatibility[] getCompatibility() {
-            return Compatibility.ranged(Compatibility.V1_16, null);
-        }
 
         @Override
         public String toString() {
