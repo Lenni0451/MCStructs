@@ -6,11 +6,11 @@ import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.events.click.types.LegacyClickEvent;
+import net.lenni0451.mcstructs.text.events.click.types.ChangePageClickEvent;
+import net.lenni0451.mcstructs.text.events.click.types.OpenUrlClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 
 import java.lang.reflect.Type;
-import java.net.URI;
 
 import static net.lenni0451.mcstructs.text.utils.JsonUtils.getJsonObject;
 import static net.lenni0451.mcstructs.text.utils.JsonUtils.getString;
@@ -64,11 +64,7 @@ public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
     private ClickEvent deserializeClickEvent(final ClickEventAction action, final String value) {
         switch (action) {
             case OPEN_URL:
-                try {
-                    return ClickEvent.openUrl(new URI(value));
-                } catch (Throwable t) {
-                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyUrlData(value));
-                }
+                return new OpenUrlClickEvent(value);
             case OPEN_FILE:
                 return ClickEvent.openFile(value);
             case RUN_COMMAND:
@@ -76,11 +72,7 @@ public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
             case SUGGEST_COMMAND:
                 return ClickEvent.suggestCommand(value);
             case CHANGE_PAGE:
-                try {
-                    return ClickEvent.changePage(Integer.parseInt(value));
-                } catch (Throwable t) {
-                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyPageData(value));
-                }
+                return new ChangePageClickEvent(value);
             case COPY_TO_CLIPBOARD:
                 return ClickEvent.copyToClipboard(value);
             default:

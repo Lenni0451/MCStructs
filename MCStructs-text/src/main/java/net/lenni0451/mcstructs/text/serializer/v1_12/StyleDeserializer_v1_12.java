@@ -19,12 +19,10 @@ public class StyleDeserializer_v1_12 extends StyleDeserializer_v1_9 {
         return builder
                 .add(HoverEventSerializer.TEXT)
                 .add(HoverEventSerializer.LEGACY_STRING_ITEM)
+                .add(HoverEventSerializer.LEGACY_RAW_ITEM)
                 .add(HoverEventSerializer.LEGACY_ENTITY)
-                .finalize(
-                        HoverEvent::getAction,
-                        HoverEventSerializer.LEGACY_FALLBACK_SERIALIZER,
-                        HoverEventSerializer.LEGACY_FALLBACK_DESERIALIZER
-                );
+                .add(HoverEventSerializer.LEGACY_RAW_ENTITY)
+                .finalize(HoverEvent::getAction);
     }
 
 }

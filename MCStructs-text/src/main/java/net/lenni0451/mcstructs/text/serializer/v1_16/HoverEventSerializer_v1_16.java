@@ -34,16 +34,18 @@ public class HoverEventSerializer_v1_16 implements JsonSerializer<HoverEvent> {
         } else if (src instanceof ItemHoverEvent) {
             ItemHoverEvent itemHoverEvent = (ItemHoverEvent) src;
             JsonObject serializedItem = new JsonObject();
-            serializedItem.addProperty("id", itemHoverEvent.getItem().get());
-            if (itemHoverEvent.getCount() != 1) serializedItem.addProperty("count", itemHoverEvent.getCount());
-            if (itemHoverEvent.getNbt() != null) serializedItem.addProperty("tag", this.sNbt.trySerialize(itemHoverEvent.getNbt()));
+            serializedItem.addProperty("id", itemHoverEvent.asModernHolder().getId().get());
+            if (itemHoverEvent.asModernHolder().getCount() != 1) serializedItem.addProperty("count", itemHoverEvent.asModernHolder().getCount());
+            if (itemHoverEvent.asModernHolder().getTag() != null) serializedItem.addProperty("tag", this.sNbt.trySerialize(itemHoverEvent.asModernHolder().getTag()));
             serializedHoverEvent.add("contents", serializedItem);
         } else if (src instanceof EntityHoverEvent) {
             EntityHoverEvent entityHoverEvent = (EntityHoverEvent) src;
             JsonObject serializedEntity = new JsonObject();
-            serializedEntity.addProperty("type", entityHoverEvent.getEntityType().get());
-            serializedEntity.addProperty("id", entityHoverEvent.getUuid().toString());
-            if (entityHoverEvent.getName() != null) serializedEntity.add("name", this.textComponentSerializer.serializeJson(entityHoverEvent.getName()));
+            serializedEntity.addProperty("type", entityHoverEvent.asModernHolder().getType().get());
+            serializedEntity.addProperty("id", entityHoverEvent.asModernHolder().getUuid().toString());
+            if (entityHoverEvent.asModernHolder().getName() != null) {
+                serializedEntity.add("name", this.textComponentSerializer.serializeJson(entityHoverEvent.asModernHolder().getName()));
+            }
             serializedHoverEvent.add("contents", serializedEntity);
         }
 

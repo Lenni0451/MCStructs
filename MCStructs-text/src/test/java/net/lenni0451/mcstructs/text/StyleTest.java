@@ -155,7 +155,7 @@ class StyleTest {
         assertNotNull(style.getClickEvent());
         assertEquals(ClickEventAction.CHANGE_PAGE, style.getClickEvent().getAction());
         assertInstanceOf(ChangePageClickEvent.class, style.getClickEvent());
-        assertEquals(1, ((ChangePageClickEvent) style.getClickEvent()).getPage());
+        assertEquals(1, ((ChangePageClickEvent) style.getClickEvent()).asInt());
     }
 
     @Test
@@ -170,9 +170,9 @@ class StyleTest {
         ItemHoverEvent itemHoverEvent = (ItemHoverEvent) style.getHoverEvent();
         assertNotNull(style.getHoverEvent());
         assertEquals(HoverEventAction.SHOW_ITEM, style.getHoverEvent().getAction());
-        assertEquals(Identifier.of("stone"), itemHoverEvent.getItem());
-        assertEquals(1, itemHoverEvent.getCount());
-        assertNotNull(itemHoverEvent.getNbt());
+        assertEquals(Identifier.of("stone"), itemHoverEvent.asModernHolder().getId());
+        assertEquals(1, itemHoverEvent.asModernHolder().getCount());
+        assertNotNull(itemHoverEvent.asModernHolder().getTag());
     }
 
     @Test

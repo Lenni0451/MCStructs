@@ -45,21 +45,21 @@ public class JsonHoverEventSerializer_v1_20_5 extends JsonHoverEventSerializer_v
         } else if (object instanceof ItemHoverEvent) {
             ItemHoverEvent itemHoverEvent = (ItemHoverEvent) object;
             JsonObject contents = new JsonObject();
-            contents.addProperty("id", itemHoverEvent.getItem().get());
-            if (itemHoverEvent.getCount() != 1) contents.addProperty("count", itemHoverEvent.getCount());
-            if (itemHoverEvent.getNbt() != null) contents.add("components", this.codec.convertItemComponents(itemHoverEvent.getNbt()));
+            contents.addProperty("id", itemHoverEvent.asModernHolder().getId().get());
+            if (itemHoverEvent.asModernHolder().getCount() != 1) contents.addProperty("count", itemHoverEvent.asModernHolder().getCount());
+            if (itemHoverEvent.asModernHolder().getTag() != null) contents.add("components", this.codec.convertItemComponents(itemHoverEvent.asModernHolder().getTag()));
             out.add(CONTENTS, contents);
         } else if (object instanceof EntityHoverEvent) {
             EntityHoverEvent entityHoverEvent = (EntityHoverEvent) object;
             JsonObject contents = new JsonObject();
-            contents.addProperty("type", entityHoverEvent.getEntityType().get());
+            contents.addProperty("type", entityHoverEvent.asModernHolder().getType().get());
             JsonArray id = new JsonArray();
-            id.add((int) (entityHoverEvent.getUuid().getMostSignificantBits() >> 32));
-            id.add((int) (entityHoverEvent.getUuid().getMostSignificantBits() & 0xFFFF_FFFFL));
-            id.add((int) (entityHoverEvent.getUuid().getLeastSignificantBits() >> 32));
-            id.add((int) (entityHoverEvent.getUuid().getLeastSignificantBits() & 0xFFFF_FFFFL));
+            id.add((int) (entityHoverEvent.asModernHolder().getUuid().getMostSignificantBits() >> 32));
+            id.add((int) (entityHoverEvent.asModernHolder().getUuid().getMostSignificantBits() & 0xFFFF_FFFFL));
+            id.add((int) (entityHoverEvent.asModernHolder().getUuid().getLeastSignificantBits() >> 32));
+            id.add((int) (entityHoverEvent.asModernHolder().getUuid().getLeastSignificantBits() & 0xFFFF_FFFFL));
             contents.add("id", id);
-            if (entityHoverEvent.getName() != null) contents.add("name", this.textSerializer.serialize(entityHoverEvent.getName()));
+            if (entityHoverEvent.asModernHolder().getName() != null) contents.add("name", this.textSerializer.serialize(entityHoverEvent.asModernHolder().getName()));
             out.add(CONTENTS, contents);
         } else {
             throw new IllegalArgumentException("Unknown hover event type: " + object.getClass().getName());

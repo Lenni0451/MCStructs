@@ -21,13 +21,11 @@ public class StyleDeserializer_v1_9 extends StyleDeserializer_v1_8 {
     protected SerializerMap<ClickEvent, ClickEventAction, String> createClickEventSerializer(SerializerMap.Builder<ClickEvent, ClickEventAction, String> builder) {
         return builder
                 .add(ClickEventSerializer.OPEN_URL)
-                .add(ClickEventSerializer.LEGACY_URL)
                 .add(ClickEventSerializer.OPEN_FILE)
                 .add(ClickEventSerializer.RUN_COMMAND)
                 .add(ClickEventSerializer.SUGGEST_COMMAND)
                 .add(ClickEventSerializer.CHANGE_PAGE)
-                .add(ClickEventSerializer.LEGACY_PAGE)
-                .finalize(ClickEvent::getAction, null, null);
+                .finalize(ClickEvent::getAction);
     }
 
     @Override
@@ -36,12 +34,10 @@ public class StyleDeserializer_v1_9 extends StyleDeserializer_v1_8 {
                 .add(HoverEventSerializer.TEXT)
                 .add(HoverEventSerializer.ACHIEVEMENT)
                 .add(HoverEventSerializer.LEGACY_STRING_ITEM)
+                .add(HoverEventSerializer.LEGACY_RAW_ITEM)
                 .add(HoverEventSerializer.LEGACY_ENTITY)
-                .finalize(
-                        HoverEvent::getAction,
-                        HoverEventSerializer.LEGACY_FALLBACK_SERIALIZER,
-                        HoverEventSerializer.LEGACY_FALLBACK_DESERIALIZER
-                );
+                .add(HoverEventSerializer.LEGACY_RAW_ENTITY)
+                .finalize(HoverEvent::getAction);
     }
 
 }

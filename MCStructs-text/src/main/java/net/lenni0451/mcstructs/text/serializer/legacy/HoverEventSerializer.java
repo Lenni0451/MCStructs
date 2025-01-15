@@ -8,7 +8,8 @@ import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.AchievementHoverEvent;
-import net.lenni0451.mcstructs.text.events.hover.impl.LegacyHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 
 import java.util.function.Predicate;
@@ -27,10 +28,19 @@ public class HoverEventSerializer<T extends HoverEvent> extends EventSerializer<
             HoverEventAction.SHOW_ACHIEVEMENT,
             statistic -> new AchievementHoverEvent(statistic.asUnformattedString())
     );
-    public static final HoverEventSerializer<LegacyHoverEvent> LEGACY_INT_ITEM = createSNbt(
-            hoverEvent -> hoverEvent instanceof LegacyHoverEvent && ((LegacyHoverEvent) hoverEvent).getData() instanceof LegacyHoverEvent.LegacyIntItemData,
+    public static final HoverEventSerializer<ItemHoverEvent> LEGACY_RAW_ITEM = createBasic(
+            hoverEvent -> hoverEvent instanceof ItemHoverEvent && ((ItemHoverEvent) hoverEvent).isLegacyRaw(),
+            hoverEvent -> {
+                ItemHoverEvent.LegacyRawHolder itemData = (ItemHoverEvent.LegacyRawHolder) hoverEvent.getData();
+                return new StringComponent(itemData.getData());
+            },
+            HoverEventAction.SHOW_ITEM,
+            value -> new ItemHoverEvent(value.asUnformattedString())
+    );
+    public static final HoverEventSerializer<ItemHoverEvent> LEGACY_INT_ITEM = createSNbt(
+            hoverEvent -> hoverEvent instanceof ItemHoverEvent && ((ItemHoverEvent) hoverEvent).isLegacyShort(),
             (sNbt, hoverEvent) -> {
-                LegacyHoverEvent.LegacyIntItemData itemData = (LegacyHoverEvent.LegacyIntItemData) hoverEvent.getData();
+                ItemHoverEvent.LegacyShortHolder itemData = (ItemHoverEvent.LegacyShortHolder) hoverEvent.getData();
                 CompoundTag itemTag = new CompoundTag();
                 itemTag.addShort("id", itemData.getId());
                 itemTag.addByte("Count", itemData.getCount());
@@ -49,15 +59,15 @@ public class HoverEventSerializer<T extends HoverEvent> extends EventSerializer<
                     if (itemDamage < 0) itemDamage = 0;
                     CompoundTag itemTag = compoundTag.getCompound("tag", null);
 
-                    return new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyIntItemData(itemId, itemCount, itemDamage, itemTag));
+                    return new ItemHoverEvent(itemId, itemCount, itemDamage, itemTag);
                 }
                 throw new UnsupportedOperationException();
             }
     );
-    public static final HoverEventSerializer<LegacyHoverEvent> LEGACY_STRING_ITEM = createSNbt(
-            hoverEvent -> hoverEvent instanceof LegacyHoverEvent && ((LegacyHoverEvent) hoverEvent).getData() instanceof LegacyHoverEvent.LegacyStringItemData,
+    public static final HoverEventSerializer<ItemHoverEvent> LEGACY_STRING_ITEM = createSNbt(
+            hoverEvent -> hoverEvent instanceof ItemHoverEvent && ((ItemHoverEvent) hoverEvent).isLegacyString(),
             (sNbt, hoverEvent) -> {
-                LegacyHoverEvent.LegacyStringItemData itemData = (LegacyHoverEvent.LegacyStringItemData) hoverEvent.getData();
+                ItemHoverEvent.LegacyStringHolder itemData = (ItemHoverEvent.LegacyStringHolder) hoverEvent.getData();
                 CompoundTag itemTag = new CompoundTag();
                 itemTag.addString("id", itemData.getId());
                 itemTag.addByte("Count", itemData.getCount());
@@ -76,18 +86,18 @@ public class HoverEventSerializer<T extends HoverEvent> extends EventSerializer<
                     if (itemDamage < 0) itemDamage = 0;
                     CompoundTag itemTag = compoundTag.getCompound("tag", null);
 
-                    return new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyStringItemData(itemId, itemCount, itemDamage, itemTag));
+                    return new ItemHoverEvent(itemId, itemCount, itemDamage, itemTag);
                 }
                 throw new UnsupportedOperationException();
             }
     );
-    public static final HoverEventSerializer<LegacyHoverEvent> LEGACY_INT_OR_STRING_ITEM = createSNbt(
-            hoverEvent -> hoverEvent instanceof LegacyHoverEvent && (((LegacyHoverEvent) hoverEvent).getData() instanceof LegacyHoverEvent.LegacyIntItemData || ((LegacyHoverEvent) hoverEvent).getData() instanceof LegacyHoverEvent.LegacyStringItemData),
+    public static final HoverEventSerializer<ItemHoverEvent> LEGACY_INT_OR_STRING_ITEM = createSNbt(
+            hoverEvent -> hoverEvent instanceof ItemHoverEvent && (((ItemHoverEvent) hoverEvent).isLegacyShort() || ((ItemHoverEvent) hoverEvent).isLegacyString()),
             (sNbt, hoverEvent) -> {
-                LegacyHoverEvent.LegacyData legacyData = hoverEvent.getData();
-                if (legacyData instanceof LegacyHoverEvent.LegacyIntItemData) {
+                ItemHoverEvent.DataHolder legacyData = hoverEvent.getData();
+                if (legacyData instanceof ItemHoverEvent.LegacyShortHolder) {
                     return LEGACY_INT_ITEM.serialize(sNbt, hoverEvent);
-                } else if (legacyData instanceof LegacyHoverEvent.LegacyStringItemData) {
+                } else if (legacyData instanceof ItemHoverEvent.LegacyStringHolder) {
                     return LEGACY_STRING_ITEM.serialize(sNbt, hoverEvent);
                 }
                 throw new UnsupportedOperationException();
@@ -106,10 +116,16 @@ public class HoverEventSerializer<T extends HoverEvent> extends EventSerializer<
                 throw new UnsupportedOperationException();
             }
     );
-    public static final HoverEventSerializer<LegacyHoverEvent> LEGACY_ENTITY = createSNbt(
-            hoverEvent -> hoverEvent instanceof LegacyHoverEvent && ((LegacyHoverEvent) hoverEvent).getData() instanceof LegacyHoverEvent.LegacyEntityData,
+    public static final HoverEventSerializer<EntityHoverEvent> LEGACY_RAW_ENTITY = createBasic(
+            hoverEvent -> hoverEvent instanceof EntityHoverEvent && ((EntityHoverEvent) hoverEvent).getData() instanceof EntityHoverEvent.LegacyRawHolder,
+            hoverEvent -> ((EntityHoverEvent.LegacyRawHolder) hoverEvent.getData()).getData(),
+            HoverEventAction.SHOW_ENTITY,
+            EntityHoverEvent::new
+    );
+    public static final HoverEventSerializer<EntityHoverEvent> LEGACY_ENTITY = createSNbt(
+            hoverEvent -> hoverEvent instanceof EntityHoverEvent && ((EntityHoverEvent) hoverEvent).getData() instanceof EntityHoverEvent.LegacyHolder,
             (sNbt, hoverEvent) -> {
-                LegacyHoverEvent.LegacyEntityData entityData = (LegacyHoverEvent.LegacyEntityData) hoverEvent.getData();
+                EntityHoverEvent.LegacyHolder entityData = (EntityHoverEvent.LegacyHolder) hoverEvent.getData();
                 CompoundTag entityTag = new CompoundTag();
                 entityTag.addString("name", entityData.getName());
                 if (entityData.getType() != null) entityTag.addString("type", entityData.getType());
@@ -126,21 +142,13 @@ public class HoverEventSerializer<T extends HoverEvent> extends EventSerializer<
                         String entityType = compoundTag.getString("type", null);
                         String entityId = compoundTag.getString("id");
 
-                        return new LegacyHoverEvent(HoverEventAction.SHOW_ENTITY, new LegacyHoverEvent.LegacyEntityData(entityName, entityType, entityId));
+                        return new EntityHoverEvent(entityType, entityId, entityName);
                     }
                 } catch (Throwable ignored) {
                 }
                 throw new UnsupportedOperationException();
             }
     );
-
-    public static final SerializerMap.FallbackSerializer<HoverEvent, TextComponent> LEGACY_FALLBACK_SERIALIZER = (sNbt, value) -> {
-        if (value instanceof LegacyHoverEvent && ((LegacyHoverEvent) value).getData() instanceof LegacyHoverEvent.LegacyInvalidData) {
-            return ((LegacyHoverEvent.LegacyInvalidData) ((LegacyHoverEvent) value).getData()).getRaw();
-        }
-        return null;
-    };
-    public static final SerializerMap.FallbackDeserializer<TextComponent, HoverEvent, HoverEventAction> LEGACY_FALLBACK_DESERIALIZER = (sNbt, action, value) -> new LegacyHoverEvent(action, new LegacyHoverEvent.LegacyInvalidData(value));
 
     private static <T extends HoverEvent> HoverEventSerializer<T> createBasic(final Predicate<HoverEvent> classMatcher, final BasicIOFunction<T, TextComponent> serializer, final HoverEventAction action, final BasicIOFunction<TextComponent, T> deserializer) {
         return new HoverEventSerializer<>(classMatcher, serializer, action, deserializer);

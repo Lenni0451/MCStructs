@@ -48,11 +48,11 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
         } else if (object instanceof ItemHoverEvent) {
             ItemHoverEvent itemHoverEvent = (ItemHoverEvent) object;
             CompoundTag contents = new CompoundTag();
-            contents.addString("id", itemHoverEvent.getItem().get());
-            if (itemHoverEvent.getCount() != 1) contents.addInt("count", itemHoverEvent.getCount());
-            if (itemHoverEvent.getNbt() != null) {
+            contents.addString("id", itemHoverEvent.asModernHolder().getId().get());
+            if (itemHoverEvent.asModernHolder().getCount() != 1) contents.addInt("count", itemHoverEvent.asModernHolder().getCount());
+            if (itemHoverEvent.asModernHolder().getTag() != null) {
                 try {
-                    contents.addString("tag", this.sNbt.serialize(itemHoverEvent.getNbt()));
+                    contents.addString("tag", this.sNbt.serialize(itemHoverEvent.asModernHolder().getTag()));
                 } catch (SNbtSerializeException e) {
                     throw new IllegalStateException("Failed to serialize nbt", e);
                 }
@@ -61,14 +61,14 @@ public class NbtHoverEventSerializer_v1_20_3 implements ITypedSerializer<NbtTag,
         } else if (object instanceof EntityHoverEvent) {
             EntityHoverEvent entityHoverEvent = (EntityHoverEvent) object;
             CompoundTag contents = new CompoundTag();
-            contents.addString("type", entityHoverEvent.getEntityType().get());
+            contents.addString("type", entityHoverEvent.asModernHolder().getType().get());
             contents.add("id", new IntArrayTag(new int[]{
-                    (int) (entityHoverEvent.getUuid().getMostSignificantBits() >> 32),
-                    (int) (entityHoverEvent.getUuid().getMostSignificantBits() & 0xFFFF_FFFFL),
-                    (int) (entityHoverEvent.getUuid().getLeastSignificantBits() >> 32),
-                    (int) (entityHoverEvent.getUuid().getLeastSignificantBits() & 0xFFFF_FFFFL)
+                    (int) (entityHoverEvent.asModernHolder().getUuid().getMostSignificantBits() >> 32),
+                    (int) (entityHoverEvent.asModernHolder().getUuid().getMostSignificantBits() & 0xFFFF_FFFFL),
+                    (int) (entityHoverEvent.asModernHolder().getUuid().getLeastSignificantBits() >> 32),
+                    (int) (entityHoverEvent.asModernHolder().getUuid().getLeastSignificantBits() & 0xFFFF_FFFFL)
             }));
-            if (entityHoverEvent.getName() != null) contents.add("name", this.textSerializer.serialize(entityHoverEvent.getName()));
+            if (entityHoverEvent.asModernHolder().getName() != null) contents.add("name", this.textSerializer.serialize(entityHoverEvent.asModernHolder().getName()));
             out.add(CONTENTS, contents);
         } else {
             throw new IllegalArgumentException("Unknown hover event type: " + object.getClass().getName());

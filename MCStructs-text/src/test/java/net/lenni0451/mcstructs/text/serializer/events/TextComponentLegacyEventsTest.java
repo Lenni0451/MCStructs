@@ -12,11 +12,13 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.click.types.*;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.events.hover.impl.*;
+import net.lenni0451.mcstructs.text.events.hover.impl.AchievementHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 import net.lenni0451.mcstructs.text.utils.JsonUtils;
 
-import java.net.URI;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,13 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public abstract class TextComponentLegacyEventsTest {
 
     protected static final TestComponent CLICK_OPEN_URL = new TestComponent(
-            withClickEvent(new OpenUrlClickEvent(URI.create("https://example.com"))),
+            withClickEvent(new OpenUrlClickEvent("https://example.com")),
             "{\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://example.com\"},\"text\":\"\"}",
-            ClickEventAction.OPEN_URL.isUserDefinable()
-    );
-    protected static final TestComponent CLICK_OPEN_URL_LEGACY = new TestComponent(
-            withClickEvent(new LegacyClickEvent(ClickEventAction.OPEN_URL, new LegacyClickEvent.LegacyUrlData("\\#?/%$§"))),
-            "{\"clickEvent\":{\"action\":\"open_url\",\"value\":\"\\\\#?/%$§\"},\"text\":\"\"}",
             ClickEventAction.OPEN_URL.isUserDefinable()
     );
     protected static final TestComponent CLICK_OPEN_FILE = new TestComponent(
@@ -54,13 +51,8 @@ public abstract class TextComponentLegacyEventsTest {
             ClickEventAction.SUGGEST_COMMAND.isUserDefinable()
     );
     protected static final TestComponent CLICK_CHANGE_PAGE = new TestComponent(
-            withClickEvent(new ChangePageClickEvent(2)),
+            withClickEvent(new ChangePageClickEvent("2")),
             "{\"clickEvent\":{\"action\":\"change_page\",\"value\":\"2\"},\"text\":\"\"}",
-            ClickEventAction.CHANGE_PAGE.isUserDefinable()
-    );
-    protected static final TestComponent CLICK_CHANGE_PAGE_LEGACY = new TestComponent(
-            withClickEvent(new LegacyClickEvent(ClickEventAction.CHANGE_PAGE, new LegacyClickEvent.LegacyPageData("test"))),
-            "{\"clickEvent\":{\"action\":\"change_page\",\"value\":\"test\"},\"text\":\"\"}",
             ClickEventAction.CHANGE_PAGE.isUserDefinable()
     );
     protected static final TestComponent CLICK_COPY_TO_CLIPBOARD = new TestComponent(
@@ -85,12 +77,12 @@ public abstract class TextComponentLegacyEventsTest {
             HoverEventAction.SHOW_ITEM.isUserDefinable()
     );
     protected static final TestComponent HOVER_INT_ITEM_LEGACY = new TestComponent(
-            withHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyIntItemData((short) 1, (byte) 1, (short) 1, new CompoundTag().addString("test", "test")))),
+            withHoverEvent(new ItemHoverEvent((short) 1, (byte) 1, (short) 1, new CompoundTag().addString("test", "test"))),
             "{", //Placeholder: this has to be filled in the test directly because of snbt serialization changes
             HoverEventAction.SHOW_ITEM.isUserDefinable()
     );
     protected static final TestComponent HOVER_STRING_ITEM_LEGACY = new TestComponent(
-            withHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyStringItemData("test", (byte) 1, (short) 1, new CompoundTag().addString("test", "test")))),
+            withHoverEvent(new ItemHoverEvent("test", (byte) 1, (short) 1, new CompoundTag().addString("test", "test"))),
             "{", //Placeholder: this has to be filled in the test directly because of snbt serialization changes
             HoverEventAction.SHOW_ITEM.isUserDefinable()
     );
@@ -100,17 +92,17 @@ public abstract class TextComponentLegacyEventsTest {
             HoverEventAction.SHOW_ENTITY.isUserDefinable()
     );
     protected static final TestComponent HOVER_ENTITY_LEGACY = new TestComponent(
-            withHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ENTITY, new LegacyHoverEvent.LegacyEntityData("test", "test2", "test3"))),
+            withHoverEvent(new EntityHoverEvent("test", "test2", "test3")),
             "{", //Placeholder: this has to be filled in the test directly because of snbt serialization changes
             HoverEventAction.SHOW_ENTITY.isUserDefinable()
     );
     protected static final TestComponent HOVER_INVALID_ITEM_LEGACY = new TestComponent(
-            withHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyInvalidData(new StringComponent("test")))),
+            withHoverEvent(new ItemHoverEvent("test")),
             "{\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"test\"},\"text\":\"\"}",
             HoverEventAction.SHOW_ENTITY.isUserDefinable()
     );
     protected static final TestComponent HOVER_INVALID_ENTITY_LEGACY = new TestComponent(
-            withHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ENTITY, new LegacyHoverEvent.LegacyInvalidData(new StringComponent("test")))),
+            withHoverEvent(new EntityHoverEvent(new StringComponent("test"))),
             "{\"hoverEvent\":{\"action\":\"show_entity\",\"value\":\"test\"},\"text\":\"\"}",
             HoverEventAction.SHOW_ENTITY.isUserDefinable()
     );

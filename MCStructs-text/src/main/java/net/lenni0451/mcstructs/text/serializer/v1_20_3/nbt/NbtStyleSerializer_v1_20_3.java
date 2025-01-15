@@ -13,7 +13,6 @@ import net.lenni0451.mcstructs.text.serializer.ITypedSerializer;
 import net.lenni0451.mcstructs.text.serializer.subtypes.IStyleSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.CodecUtils_v1_20_3;
 
-import java.net.URI;
 import java.util.function.Function;
 
 public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, CodecUtils_v1_20_3 {
@@ -47,7 +46,7 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, Cod
 
     private String serializeClickEvent(final ClickEvent clickEvent) {
         if (clickEvent instanceof OpenUrlClickEvent) {
-            return ((OpenUrlClickEvent) clickEvent).getUrl().toString();
+            return ((OpenUrlClickEvent) clickEvent).asString();
         } else if (clickEvent instanceof OpenFileClickEvent) {
             return ((OpenFileClickEvent) clickEvent).getPath();
         } else if (clickEvent instanceof RunCommandClickEvent) {
@@ -55,18 +54,9 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, Cod
         } else if (clickEvent instanceof SuggestCommandClickEvent) {
             return ((SuggestCommandClickEvent) clickEvent).getCommand();
         } else if (clickEvent instanceof ChangePageClickEvent) {
-            return String.valueOf(((ChangePageClickEvent) clickEvent).getPage());
+            return ((ChangePageClickEvent) clickEvent).asString();
         } else if (clickEvent instanceof CopyToClipboardClickEvent) {
             return ((CopyToClipboardClickEvent) clickEvent).getValue();
-        } else if (clickEvent instanceof LegacyClickEvent) {
-            LegacyClickEvent legacyClickEvent = (LegacyClickEvent) clickEvent;
-            if (legacyClickEvent.getData() instanceof LegacyClickEvent.LegacyUrlData) {
-                LegacyClickEvent.LegacyUrlData urlData = (LegacyClickEvent.LegacyUrlData) legacyClickEvent.getData();
-                return urlData.getUrl();
-            } else if (legacyClickEvent.getData() instanceof LegacyClickEvent.LegacyPageData) {
-                LegacyClickEvent.LegacyPageData pageData = (LegacyClickEvent.LegacyPageData) legacyClickEvent.getData();
-                return pageData.getPage();
-            }
         }
         throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
     }
@@ -109,11 +99,7 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, Cod
     private ClickEvent deserializeClickEvent(final ClickEventAction action, final String value) {
         switch (action) {
             case OPEN_URL:
-                try {
-                    return ClickEvent.openUrl(new URI(value));
-                } catch (Throwable t) {
-                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyUrlData(value));
-                }
+                return new OpenUrlClickEvent(value);
             case OPEN_FILE:
                 return ClickEvent.openFile(value);
             case RUN_COMMAND:
@@ -121,11 +107,7 @@ public class NbtStyleSerializer_v1_20_3 implements IStyleSerializer<NbtTag>, Cod
             case SUGGEST_COMMAND:
                 return ClickEvent.suggestCommand(value);
             case CHANGE_PAGE:
-                try {
-                    return ClickEvent.changePage(Integer.parseInt(value));
-                } catch (Throwable t) {
-                    return new LegacyClickEvent(action, new LegacyClickEvent.LegacyPageData(value));
-                }
+                return new ChangePageClickEvent(value);
             case COPY_TO_CLIPBOARD:
                 return ClickEvent.copyToClipboard(value);
             default:

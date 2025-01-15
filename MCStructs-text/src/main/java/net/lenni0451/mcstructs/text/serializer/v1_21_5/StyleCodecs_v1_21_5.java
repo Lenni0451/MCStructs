@@ -50,7 +50,7 @@ public class StyleCodecs_v1_21_5 {
 
     public static class ClickEventCodec {
         public static final MapCodec<OpenUrlClickEvent> OPEN_URL = MapCodecMerger.mapCodec(
-                UNTRUSTED_URI.mapCodec("url").required(), OpenUrlClickEvent::getUrl,
+                UNTRUSTED_URI.mapCodec("url").required(), OpenUrlClickEvent::asUri,
                 ClickEvent::openUrl
         );
         public static final MapCodec<OpenFileClickEvent> OPEN_FILE = MapCodecMerger.mapCodec(
@@ -66,7 +66,7 @@ public class StyleCodecs_v1_21_5 {
                 ClickEvent::suggestCommand
         );
         public static final MapCodec<ChangePageClickEvent> CHANGE_PAGE = MapCodecMerger.mapCodec(
-                Codec.minInt(1).mapCodec("page").required(), ChangePageClickEvent::getPage,
+                Codec.minInt(1).mapCodec("page").required(), ChangePageClickEvent::asInt,
                 ClickEvent::changePage
         );
         public static final MapCodec<CopyToClipboardClickEvent> COPY_TO_CLIPBOARD = MapCodecMerger.mapCodec(
@@ -108,8 +108,8 @@ public class StyleCodecs_v1_21_5 {
                     } else {
                         return null;
                     }
-                })).mapCodec("id").required(), ItemHoverEvent::getItem,
-                Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), ItemHoverEvent::getCount,
+                })).mapCodec("id").required(), hoverEvent -> hoverEvent.asModernHolder().getId(),
+                Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), hoverEvent -> hoverEvent.asModernHolder().getCount(),
                 NbtConverter_v1_20_3.INSTANCE.toCodec().verified(tag -> {
                     if (!tag.isCompoundTag()) return Result.error("Expected a compound tag");
                     return null;
@@ -119,7 +119,7 @@ public class StyleCodecs_v1_21_5 {
                     } else {
                         return null;
                     }
-                })).mapCodec("components").optional().defaulted(null), ItemHoverEvent::getNbt,
+                })).mapCodec("components").optional().defaulted(null), hoverEvent -> hoverEvent.asModernHolder().getTag(),
                 ItemHoverEvent::new
         );
         public static final MapCodec<EntityHoverEvent> ENTITY = MapCodecMerger.mapCodec(
@@ -129,9 +129,9 @@ public class StyleCodecs_v1_21_5 {
                     } else {
                         return null;
                     }
-                })).mapCodec("id").required(), EntityHoverEvent::getEntityType,
-                ExtraCodecs_v1_21_5.LENIENT_UUID.mapCodec("uuid").required(), EntityHoverEvent::getUuid,
-                TextCodecs_v1_21_5.TEXT.mapCodec("name").optional().defaulted(null), EntityHoverEvent::getName,
+                })).mapCodec("id").required(), hoverEvent -> hoverEvent.asModernHolder().getType(),
+                ExtraCodecs_v1_21_5.LENIENT_UUID.mapCodec("uuid").required(), hoverEvent -> hoverEvent.asModernHolder().getUuid(),
+                TextCodecs_v1_21_5.TEXT.mapCodec("name").optional().defaulted(null), hoverEvent -> hoverEvent.asModernHolder().getName(),
                 EntityHoverEvent::new
         );
         public static final Codec<HoverEvent> CODEC = Codec.named(HoverEventAction.SHOW_TEXT, HoverEventAction.SHOW_ITEM, HoverEventAction.SHOW_ENTITY).verified(action -> {

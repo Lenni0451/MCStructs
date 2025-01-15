@@ -38,7 +38,7 @@ public abstract class ClickEvent {
     }
 
 
-    protected ClickEventAction action;
+    protected final ClickEventAction action;
 
     public ClickEvent(final ClickEventAction action) {
         this.action = action;

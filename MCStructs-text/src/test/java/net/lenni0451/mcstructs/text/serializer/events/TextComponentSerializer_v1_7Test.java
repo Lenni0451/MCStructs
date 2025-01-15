@@ -2,8 +2,7 @@ package net.lenni0451.mcstructs.text.serializer.events;
 
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.components.StringComponent;
-import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.events.hover.impl.LegacyHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 import org.junit.jupiter.api.Test;
 
@@ -20,12 +19,10 @@ public class TextComponentSerializer_v1_7Test extends TextComponentLegacyEventsT
     @Test
     void testSuccess() {
         this.testSuccess(CLICK_OPEN_URL);
-        this.testSuccess(CLICK_OPEN_URL_LEGACY);
         this.testSuccess(CLICK_OPEN_FILE);
         this.testSuccess(CLICK_RUN_COMMAND);
         this.testSuccess(CLICK_SUGGEST_COMMAND);
         this.testSuccess(CLICK_CHANGE_PAGE);
-        this.testSuccess(CLICK_CHANGE_PAGE_LEGACY);
 
         this.testSuccess(HOVER_TEXT);
         this.testSuccess(HOVER_ACHIEVEMENT);
@@ -48,11 +45,13 @@ public class TextComponentSerializer_v1_7Test extends TextComponentLegacyEventsT
 
     @Test
     void testSkippedEvents() {
-        assertEquals( //Modern item hover
+        //Modern item hover
+        assertEquals(
                 new StringComponent(""),
                 this.getSerializer().deserialize("{\"hoverEvent\":{\"action\":\"show_item\",\"contents\":{\"id\":\"minecraft:test\",\"tag\":\"{test:\\\"test\\\"}\"}},\"text\":\"\"}")
         );
-        assertEquals( //Modern entity hover
+        //Modern entity hover
+        assertEquals(
                 new StringComponent(""),
                 this.getSerializer().deserialize("{\"hoverEvent\":{\"action\":\"show_entity\",\"contents\":{\"id\":\"1dcbdfea-2afe-464d-ba06-50f99f2db01a\",\"name\":{\"text\":\"test\"},\"type\":\"minecraft:test\"}},\"text\":\"\"}")
         );
@@ -65,7 +64,7 @@ public class TextComponentSerializer_v1_7Test extends TextComponentLegacyEventsT
         //Since the compound contains a string value, the default value of 0 is returned and the deserialization succeeds
         assertThrows(Throwable.class, () -> this.getSerializer().serialize(HOVER_STRING_ITEM_LEGACY.component));
         assertEquals(
-                new StringComponent("").styled(style -> style.setHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyIntItemData((short) 0, (byte) 1, (short) 1, new CompoundTag().addString("test", "test"))))),
+                new StringComponent("").styled(style -> style.setHoverEvent(new ItemHoverEvent((short) 0, (byte) 1, (short) 1, new CompoundTag().addString("test", "test")))),
                 this.getSerializer().deserialize("{\"hoverEvent\":{\"action\":\"show_item\",\"value\":\"{id:stone,Count:1b,tag:{test:\\\"test\\\",},Damage:1s,}\"},\"text\":\"\"}")
         );
     }

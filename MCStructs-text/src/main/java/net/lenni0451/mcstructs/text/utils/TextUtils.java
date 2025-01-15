@@ -166,8 +166,11 @@ public class TextUtils {
             if (hoverEvent instanceof TextHoverEvent) {
                 iterateAll(((TextHoverEvent) hoverEvent).getText(), consumer);
             } else if (hoverEvent instanceof EntityHoverEvent) {
-                TextComponent name = ((EntityHoverEvent) hoverEvent).getName();
-                if (name != null) iterateAll(name, consumer);
+                EntityHoverEvent entityHoverEvent = (EntityHoverEvent) hoverEvent;
+                if (entityHoverEvent.isModern()) {
+                    TextComponent name = entityHoverEvent.asModernHolder().getName();
+                    if (name != null) iterateAll(name, consumer);
+                }
             }
         }
         for (TextComponent sibling : component.getSiblings()) {

@@ -14,10 +14,8 @@ import net.lenni0451.mcstructs.text.components.nbt.EntityNbtSource;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtSource;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
-import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
-import net.lenni0451.mcstructs.text.events.hover.impl.LegacyHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.FieldSource;
@@ -92,14 +90,14 @@ class TextComponentCodecTest {
     void legacyItemDeserialization(final TextComponentCodec codec) {
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
-                        .setHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ITEM, new LegacyHoverEvent.LegacyStringItemData("stone", (byte) 5, (short) 0, null)))
+                        .setHoverEvent(new ItemHoverEvent("stone", (byte) 5, (short) 0, null))
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
         TextComponent modernDeserialized = codec.deserialize(legacyJson);
         HoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         ItemHoverEvent itemHoverEvent = assertInstanceOf(ItemHoverEvent.class, hoverEvent);
-        assertEquals(Identifier.of("stone"), itemHoverEvent.getItem());
+        assertEquals(Identifier.of("stone"), itemHoverEvent.asModernHolder().getId());
 //        assertEquals(5, itemHoverEvent.getCount()); //The 1.20.5 version broke the legacy deserialize. The count is now lowercase
     }
 
@@ -109,16 +107,16 @@ class TextComponentCodecTest {
         UUID randomUUID = UUID.randomUUID();
         TextComponent legacyComponent = new StringComponent("test")
                 .setStyle(new Style()
-                        .setHoverEvent(new LegacyHoverEvent(HoverEventAction.SHOW_ENTITY, new LegacyHoverEvent.LegacyEntityData("{\"text\":\"test\"}", "cow", randomUUID.toString())))
+                        .setHoverEvent(new EntityHoverEvent("cow", randomUUID.toString(), "{\"text\":\"test\"}"))
                 );
 
         JsonElement legacyJson = TextComponentSerializer.V1_12.serializeJson(legacyComponent);
         TextComponent modernDeserialized = codec.deserialize(legacyJson);
         HoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         EntityHoverEvent entityHoverEvent = assertInstanceOf(EntityHoverEvent.class, hoverEvent);
-        assertEquals(new StringComponent("test"), entityHoverEvent.getName());
-        assertEquals(Identifier.of("cow"), entityHoverEvent.getEntityType());
-        assertEquals(randomUUID, entityHoverEvent.getUuid());
+        assertEquals(new StringComponent("test"), entityHoverEvent.asModernHolder().getName());
+        assertEquals(Identifier.of("cow"), entityHoverEvent.asModernHolder().getType());
+        assertEquals(randomUUID, entityHoverEvent.asModernHolder().getUuid());
     }
 
     @ParameterizedTest

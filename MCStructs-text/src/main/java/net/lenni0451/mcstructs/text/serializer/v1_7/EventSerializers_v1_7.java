@@ -21,13 +21,11 @@ public class EventSerializers_v1_7 extends EventSerializersBase {
     protected SerializerMap<ClickEvent, ClickEventAction, String> createClickEventSerializer(SerializerMap.Builder<ClickEvent, ClickEventAction, String> builder) {
         return builder
                 .add(ClickEventSerializer.OPEN_URL)
-                .add(ClickEventSerializer.LEGACY_URL)
                 .add(ClickEventSerializer.OPEN_FILE)
                 .add(ClickEventSerializer.RUN_COMMAND)
                 .add(ClickEventSerializer.SUGGEST_COMMAND)
                 .add(ClickEventSerializer.CHANGE_PAGE)
-                .add(ClickEventSerializer.LEGACY_PAGE)
-                .finalize(ClickEvent::getAction, null, null);
+                .finalize(ClickEvent::getAction);
     }
 
     @Override
@@ -36,11 +34,8 @@ public class EventSerializers_v1_7 extends EventSerializersBase {
                 .add(HoverEventSerializer.TEXT)
                 .add(HoverEventSerializer.ACHIEVEMENT)
                 .add(HoverEventSerializer.LEGACY_INT_ITEM)
-                .finalize(
-                        HoverEvent::getAction,
-                        HoverEventSerializer.LEGACY_FALLBACK_SERIALIZER,
-                        HoverEventSerializer.LEGACY_FALLBACK_DESERIALIZER
-                );
+                .add(HoverEventSerializer.LEGACY_RAW_ITEM)
+                .finalize(HoverEvent::getAction);
     }
 
 }
