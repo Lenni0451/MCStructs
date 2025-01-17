@@ -7,7 +7,6 @@ import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.text.Style;
-import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.click.types.*;
@@ -16,6 +15,8 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.ExtraCodecs_v1_20_3;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.StyleCodecs_v1_20_3;
 
 import static net.lenni0451.mcstructs.text.serializer.v1_21_5.ExtraCodecs_v1_21_5.CHAT_STRING;
 import static net.lenni0451.mcstructs.text.serializer.v1_21_5.ExtraCodecs_v1_21_5.UNTRUSTED_URI;
@@ -24,7 +25,7 @@ import static net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter.
 public class StyleCodecs_v1_21_5 {
 
     public static final MapCodec<Style> MAP_CODEC = MapCodecMerger.mapCodec(
-            TextFormattingCodec.CODEC.mapCodec("color").optional().defaulted(null), Style::getColor,
+            StyleCodecs_v1_20_3.TextFormattingCodec.CODEC.mapCodec("color").optional().defaulted(null), Style::getColor,
             ExtraCodecs_v1_21_5.ARGB_COLOR.mapCodec("shadow_color").optional().defaulted(null), Style::getShadowColor,
             Codec.BOOLEAN.mapCodec("obfuscated").optional().defaulted(null), Style::getObfuscated,
             Codec.BOOLEAN.mapCodec("bold").optional().defaulted(null), Style::getBold,
@@ -38,15 +39,6 @@ public class StyleCodecs_v1_21_5 {
             Style::new
     );
     public static final Codec<Style> CODEC = MAP_CODEC.asCodec();
-
-    public static class TextFormattingCodec {
-        public static final Codec<TextFormatting> CODEC = Codec.STRING.flatMap(formatting -> Result.success(formatting.serialize()), s -> {
-            TextFormatting formatting = TextFormatting.parse(s);
-            if (formatting == null) return Result.error("Unknown formatting: " + s);
-            if (formatting.isRGBColor() && (formatting.getRgbValue() < 0 || formatting.getRgbValue() > 16777215)) return Result.error("Out of range RGB value: " + s);
-            return Result.success(formatting);
-        });
-    }
 
     public static class ClickEventCodec {
         public static final MapCodec<OpenUrlClickEvent> OPEN_URL = MapCodecMerger.mapCodec(
@@ -102,35 +94,17 @@ public class StyleCodecs_v1_21_5 {
                 TextHoverEvent::new
         );
         public static final MapCodec<ItemHoverEvent> ITEM = MapCodecMerger.mapCodec(
-                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, (id, verifier) -> {
-                    if (!verifier.verifyRegistryItem(id)) {
-                        return Result.error("Unknown item: " + id);
-                    } else {
-                        return null;
-                    }
-                })).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getId(),
+                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, TextVerifier_v1_21_5::verifyRegistryItem, "Invalid item")).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getId(),
                 Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), hoverEvent -> hoverEvent.asModern().getCount(),
                 NbtConverter_v1_20_3.INSTANCE.toCodec().verified(tag -> {
                     if (!tag.isCompoundTag()) return Result.error("Expected a compound tag");
                     return null;
-                }).map(NbtTag::asCompoundTag, NbtTag::asCompoundTag).converterVerified(verify(TextVerifier_v1_21_5.class, (tag, verifier) -> {
-                    if (!verifier.verifyDataComponents(tag)) {
-                        return Result.error("Invalid data components: " + tag);
-                    } else {
-                        return null;
-                    }
-                })).mapCodec("components").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getTag(),
+                }).map(NbtTag::asCompoundTag, NbtTag::asCompoundTag).converterVerified(verify(TextVerifier_v1_21_5.class, TextVerifier_v1_21_5::verifyDataComponents, "Invalid data components")).mapCodec("components").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getTag(),
                 ItemHoverEvent::new
         );
         public static final MapCodec<EntityHoverEvent> ENTITY = MapCodecMerger.mapCodec(
-                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, (id, verifier) -> {
-                    if (!verifier.verifyRegistryEntity(id)) {
-                        return Result.error("Unknown entity: " + id);
-                    } else {
-                        return null;
-                    }
-                })).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getType(),
-                ExtraCodecs_v1_21_5.LENIENT_UUID.mapCodec("uuid").required(), hoverEvent -> hoverEvent.asModern().getUuid(),
+                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, TextVerifier_v1_21_5::verifyRegistryEntity, "Invalid entity")).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getType(),
+                ExtraCodecs_v1_20_3.LENIENT_UUID.mapCodec("uuid").required(), hoverEvent -> hoverEvent.asModern().getUuid(),
                 TextCodecs_v1_21_5.TEXT.mapCodec("name").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getName(),
                 EntityHoverEvent::new
         );

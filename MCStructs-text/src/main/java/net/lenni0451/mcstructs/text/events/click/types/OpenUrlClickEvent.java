@@ -16,7 +16,11 @@ public class OpenUrlClickEvent extends ClickEvent {
 
     public OpenUrlClickEvent(final String url) {
         super(ClickEventAction.OPEN_URL);
-        this.url = new StringHolder(url);
+        try {
+            this.url = new UriHolder(URI.create(url));
+        } catch (Throwable t) {
+            this.url = new StringHolder(url);
+        }
     }
 
     public OpenUrlClickEvent(final URI url) {

@@ -428,6 +428,24 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
+    default <N> Codec<N> converterFlatMap(final BiFunction<DataConverter<?>, N, Result<T>> serializer, final BiFunction<DataConverter<?>, T, Result<N>> deserializer) {
+        return new Codec<N>() {
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, N element) {
+                Result<T> result = serializer.apply(converter, element);
+                if (result.isError()) return result.mapError();
+                return Codec.this.serialize(converter, result.get());
+            }
+
+            @Override
+            public <S> Result<N> deserialize(DataConverter<S> converter, S data) {
+                Result<T> result = Codec.this.deserialize(converter, data);
+                if (result.isError()) return result.mapError();
+                return deserializer.apply(converter, result.get());
+            }
+        };
+    }
+
     default <N> Codec<N> typed(final Function<N, T> typeMapper, final Function<T, MapCodec<? extends N>> continuation) {
         return this.typedMap(typeMapper, continuation).asCodec();
     }

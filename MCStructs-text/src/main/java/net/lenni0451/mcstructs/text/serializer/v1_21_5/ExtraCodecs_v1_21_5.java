@@ -6,7 +6,6 @@ import net.lenni0451.mcstructs.converter.model.Result;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.UUID;
 
 public class ExtraCodecs_v1_21_5 {
 
@@ -48,6 +47,5 @@ public class ExtraCodecs_v1_21_5 {
         }
         return null;
     });
-    public static final Codec<UUID> LENIENT_UUID = Codec.oneOf(Codec.INT_ARRAY_UUID, Codec.STRICT_STRING_UUID);
 
 }

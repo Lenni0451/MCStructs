@@ -14,7 +14,11 @@ public class ChangePageClickEvent extends ClickEvent {
 
     public ChangePageClickEvent(final String page) {
         super(ClickEventAction.CHANGE_PAGE);
-        this.page = new StringHolder(page);
+        try {
+            this.page = new IntHolder(Integer.parseInt(page));
+        } catch (Throwable t) {
+            this.page = new StringHolder(page);
+        }
     }
 
     public ChangePageClickEvent(final int page) {

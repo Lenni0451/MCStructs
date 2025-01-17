@@ -28,6 +28,10 @@ public class Style implements Copyable<Style> {
     public Style() {
     }
 
+    public Style(final TextFormatting color, final Boolean obfuscated, final Boolean bold, final Boolean strikethrough, final Boolean underlined, final Boolean italic, final ClickEvent clickEvent, final HoverEvent hoverEvent, final String insertion, final Identifier font) {
+        this(color, null, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, insertion, font);
+    }
+
     public Style(final TextFormatting color, final Integer shadowColor, final Boolean obfuscated, final Boolean bold, final Boolean strikethrough, final Boolean underlined, final Boolean italic, final ClickEvent clickEvent, final HoverEvent hoverEvent, final String insertion, final Identifier font) {
         if (color != null && !color.isColor()) throw new IllegalArgumentException("The color must be a color");
         this.color = color;

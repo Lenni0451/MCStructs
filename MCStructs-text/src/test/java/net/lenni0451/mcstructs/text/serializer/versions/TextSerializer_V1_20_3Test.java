@@ -35,7 +35,7 @@ public class TextSerializer_V1_20_3Test extends TextSerializerTest {
                 new TranslationComponent("test"),
                 new StringComponent("test1"),
                 new TranslationComponent("test2"),
-                new TranslationComponent("%s %s", "abc", 123),
+                new TranslationComponent("%s %s", "abc", (byte) 123),
                 new StringComponent("test").setStyle(new Style().setColor(0xFFF001)),
                 DESERIALIZE_FAIL,
                 DESERIALIZE_FAIL

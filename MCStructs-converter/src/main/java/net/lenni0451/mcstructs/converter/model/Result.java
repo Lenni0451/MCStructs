@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Result<T> {
 
@@ -23,7 +24,8 @@ public class Result<T> {
     }
 
     public static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
-        IllegalStateException exception = new IllegalStateException(error);
+        String errorMessages = errors.stream().filter(Result::isError).map(Result::error).map(s -> "[" + s + "]").collect(Collectors.joining(","));
+        IllegalStateException exception = new IllegalStateException(error + ": " + errorMessages);
         errors.stream().filter(Result::isError).map(r -> r.error).forEach(exception::addSuppressed);
         return new Result<>(null, exception);
     }

@@ -20,6 +20,11 @@ public class ItemHoverEvent extends HoverEvent {
 
     private DataHolder data;
 
+    public ItemHoverEvent(final DataHolder data) {
+        super(HoverEventAction.SHOW_ITEM);
+        this.data = data;
+    }
+
     public ItemHoverEvent(final String legacyData) {
         super(HoverEventAction.SHOW_ITEM);
         this.data = new LegacyHolder(legacyData);

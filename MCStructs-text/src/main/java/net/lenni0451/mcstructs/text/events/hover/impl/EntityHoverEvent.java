@@ -21,6 +21,11 @@ public class EntityHoverEvent extends HoverEvent {
 
     private DataHolder data;
 
+    public EntityHoverEvent(final DataHolder data) {
+        super(HoverEventAction.SHOW_ENTITY);
+        this.data = data;
+    }
+
     public EntityHoverEvent(final TextComponent legacyData) {
         super(HoverEventAction.SHOW_ENTITY);
         this.data = new LegacyHolder(legacyData);
