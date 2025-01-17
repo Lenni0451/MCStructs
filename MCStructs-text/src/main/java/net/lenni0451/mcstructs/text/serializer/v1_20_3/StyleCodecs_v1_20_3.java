@@ -94,61 +94,17 @@ public class StyleCodecs_v1_20_3 {
     public static class HoverEventCodec {
         private static final String CONTENTS = "contents";
 
-        public static final MapCodec<TextHoverEvent> TEXT = TextCodecs_v1_20_3.TEXT.mapCodec(CONTENTS).required().map(TextHoverEvent::getText, TextHoverEvent::new);
-        public static final MapCodec<TextHoverEvent> LEGACY_TEXT = createLegacy((converter, component) -> Result.success(new TextHoverEvent(component)));
-        public static final MapCodec<ItemHoverEvent> ITEM = MapCodecMerger.codec(
-                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryItem, "Invalid item")).mapCodec("id").required(), ItemHoverEvent.ModernHolder::getId,
-                Codec.INTEGER.mapCodec("count").optional().defaulted(1), ItemHoverEvent.ModernHolder::getCount,
-                ExtraCodecs_v1_20_3.STRING_COMPOUND.mapCodec("tag").optional().defaulted(null), ItemHoverEvent.ModernHolder::getTag,
-                ItemHoverEvent.ModernHolder::new
-        ).mapCodec(CONTENTS).required().map(ItemHoverEvent::asModern, ItemHoverEvent::new);
-        public static final MapCodec<ItemHoverEvent> LEGACY_ITEM = createLegacy((converter, component) -> {
-            try {
-                CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
-                Identifier id = Identifier.of(tag.getString("id"));
-                if (!isValid(converter, id, TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryItem)) {
-                    return Result.error("Invalid item: " + id);
-                }
-                int count = tag.getByte("Count");
-                CompoundTag nbt = tag.getCompound("tag", null);
-                return Result.success(new ItemHoverEvent(id, count, nbt));
-            } catch (Throwable t) {
-                return Result.error(t);
-            }
-        });
-        public static final MapCodec<EntityHoverEvent> ENTITY = MapCodecMerger.codec(
-                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryEntity, "Invalid entity")).mapCodec("type").required(), EntityHoverEvent.ModernHolder::getType,
-                ExtraCodecs_v1_20_3.LENIENT_UUID.mapCodec("id").required(), EntityHoverEvent.ModernHolder::getUuid,
-                TextCodecs_v1_20_3.TEXT.mapCodec("name").optional().defaulted(null), EntityHoverEvent.ModernHolder::getName,
-                EntityHoverEvent.ModernHolder::new
-        ).mapCodec(CONTENTS).required().map(EntityHoverEvent::asModern, EntityHoverEvent::new);
-        public static final MapCodec<EntityHoverEvent> LEGACY_ENTITY = createLegacy((converter, component) -> {
-            try {
-                CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
-                JsonElement rawName = JsonParser.parseString(tag.getString("name"));
-                TextComponent name = rawName == null ? null : TextCodecs_v1_20_3.TEXT.deserialize(JsonConverter_v1_20_3.INSTANCE, rawName).getOrThrow(JsonParseException::new);
-                Identifier type = Identifier.of(tag.getString("type"));
-                if (!isValid(converter, type, TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryEntity)) {
-                    return Result.error("Invalid entity: " + type);
-                }
-                UUID uuid = UUID.fromString(tag.getString("id"));
-                return Result.success(new EntityHoverEvent(type, uuid, name));
-            } catch (Throwable t) {
-                return Result.error(t);
-            }
-        });
-
         public static final Codec<HoverEvent> MODERN_CODEC = Codec.named(HoverEventAction.SHOW_TEXT, HoverEventAction.SHOW_ITEM, HoverEventAction.SHOW_ENTITY).verified(action -> {
             if (action.isUserDefinable()) return null;
             return Result.error("The action " + action.getName() + " is not user definable");
         }).typed("action", HoverEvent::getAction, action -> {
             switch (action) {
                 case SHOW_TEXT:
-                    return TEXT;
+                    return Text.MAP_CODEC;
                 case SHOW_ITEM:
-                    return ITEM;
+                    return Item.MAP_CODEC;
                 case SHOW_ENTITY:
-                    return ENTITY;
+                    return Entity.MAP_CODEC;
                 default:
                     return MapCodec.failing("Unknown hover event action: " + action);
             }
@@ -159,11 +115,11 @@ public class StyleCodecs_v1_20_3 {
         }).typed("action", HoverEvent::getAction, action -> {
             switch (action) {
                 case SHOW_TEXT:
-                    return LEGACY_TEXT;
+                    return Text.LEGACY_MAP_CODEC;
                 case SHOW_ITEM:
-                    return LEGACY_ITEM;
+                    return Item.LEGACY_MAP_CODEC;
                 case SHOW_ENTITY:
-                    return LEGACY_ENTITY;
+                    return Entity.LEGACY_MAP_CODEC;
                 default:
                     return MapCodec.failing("Unknown hover event action: " + action);
             }
@@ -171,7 +127,60 @@ public class StyleCodecs_v1_20_3 {
         public static final Codec<HoverEvent> CODEC = Codec.oneOf(MODERN_CODEC, LEGACY_CODEC);
 
         private static <T extends HoverEvent> MapCodec<T> createLegacy(final BiFunction<DataConverter<?>, TextComponent, Result<T>> constructor) {
-            return TextCodecs_v1_20_3.TEXT.converterFlatMap((dataConverter, t) -> Result.error("Legacy hover events can't be serialized"), constructor::apply).mapCodec("value").required();
+            return TextCodecs_v1_20_3.TEXT.converterFlatMap((dataConverter, t) -> Result.error("Legacy hover events can't be serialized"), constructor).mapCodec("value").required();
+        }
+
+
+        public static class Text {
+            public static final MapCodec<TextHoverEvent> MAP_CODEC = TextCodecs_v1_20_3.TEXT.mapCodec(CONTENTS).required().map(TextHoverEvent::getText, TextHoverEvent::new);
+            public static final MapCodec<TextHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> Result.success(new TextHoverEvent(component)));
+        }
+
+        public static class Item {
+            public static final MapCodec<ItemHoverEvent> MAP_CODEC = MapCodecMerger.codec(
+                    Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryItem, "Invalid item")).mapCodec("id").required(), ItemHoverEvent.ModernHolder::getId,
+                    Codec.INTEGER.mapCodec("count").optional().defaulted(1), ItemHoverEvent.ModernHolder::getCount,
+                    ExtraCodecs_v1_20_3.STRING_COMPOUND.mapCodec("tag").optional().defaulted(null), ItemHoverEvent.ModernHolder::getTag,
+                    ItemHoverEvent.ModernHolder::new
+            ).mapCodec(CONTENTS).required().map(ItemHoverEvent::asModern, ItemHoverEvent::new);
+            public static final MapCodec<ItemHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> {
+                try {
+                    CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
+                    Identifier id = Identifier.of(tag.getString("id"));
+                    if (!isValid(converter, id, TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryItem)) {
+                        return Result.error("Invalid item: " + id);
+                    }
+                    int count = tag.getByte("Count");
+                    CompoundTag nbt = tag.getCompound("tag", null);
+                    return Result.success(new ItemHoverEvent(id, count, nbt));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            });
+        }
+
+        public static class Entity {
+            public static final MapCodec<EntityHoverEvent> MAP_CODEC = MapCodecMerger.codec(
+                    Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryEntity, "Invalid entity")).mapCodec("type").required(), EntityHoverEvent.ModernHolder::getType,
+                    ExtraCodecs_v1_20_3.LENIENT_UUID.mapCodec("id").required(), EntityHoverEvent.ModernHolder::getUuid,
+                    TextCodecs_v1_20_3.TEXT.mapCodec("name").optional().defaulted(null), EntityHoverEvent.ModernHolder::getName,
+                    EntityHoverEvent.ModernHolder::new
+            ).mapCodec(CONTENTS).required().map(EntityHoverEvent::asModern, EntityHoverEvent::new);
+            public static final MapCodec<EntityHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> {
+                try {
+                    CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
+                    JsonElement rawName = JsonParser.parseString(tag.getString("name"));
+                    TextComponent name = rawName == null ? null : TextCodecs_v1_20_3.TEXT.deserialize(JsonConverter_v1_20_3.INSTANCE, rawName).getOrThrow(JsonParseException::new);
+                    Identifier type = Identifier.of(tag.getString("type"));
+                    if (!isValid(converter, type, TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryEntity)) {
+                        return Result.error("Invalid entity: " + type);
+                    }
+                    UUID uuid = UUID.fromString(tag.getString("id"));
+                    return Result.success(new EntityHoverEvent(type, uuid, name));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            });
         }
     }
 
