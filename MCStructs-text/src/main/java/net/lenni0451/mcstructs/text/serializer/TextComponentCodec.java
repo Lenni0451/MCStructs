@@ -19,6 +19,8 @@ import net.lenni0451.mcstructs.text.serializer.subtypes.ITextComponentSerializer
 import net.lenni0451.mcstructs.text.serializer.subtypes.adapter.CodecTextComponentSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.StyleCodecs_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.TextCodecs_v1_20_3;
+import net.lenni0451.mcstructs.text.serializer.v1_20_5.StyleCodecs_v1_20_5;
+import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextCodecs_v1_20_5;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_2.TextComponentCodec_v1_21_2;
 import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextComponentCodec_v1_21_4;
@@ -52,7 +54,7 @@ public class TextComponentCodec {
      * The text codec for 1.20.5.<br>
      * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_20_5} class yourself instead of using this codec.</b>
      */
-    public static final TextComponentCodec_v1_20_5 V1_20_5 = new TextComponentCodec_v1_20_5();
+    public static final TextComponentCodec V1_20_5 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_20_5.TEXT, () -> StyleCodecs_v1_20_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
      * The text codec for 1.21.2.<br>
      * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_21_2} class yourself instead of using this codec.</b>

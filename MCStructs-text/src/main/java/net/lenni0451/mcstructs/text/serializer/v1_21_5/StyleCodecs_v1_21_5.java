@@ -18,8 +18,6 @@ import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.ExtraCodecs_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.StyleCodecs_v1_20_3;
 
-import static net.lenni0451.mcstructs.text.serializer.v1_21_5.ExtraCodecs_v1_21_5.CHAT_STRING;
-import static net.lenni0451.mcstructs.text.serializer.v1_21_5.ExtraCodecs_v1_21_5.UNTRUSTED_URI;
 import static net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter.verify;
 
 public class StyleCodecs_v1_21_5 {
@@ -40,9 +38,10 @@ public class StyleCodecs_v1_21_5 {
     );
     public static final Codec<Style> CODEC = MAP_CODEC.asCodec();
 
+
     public static class ClickEventCodec {
         public static final MapCodec<OpenUrlClickEvent> OPEN_URL = MapCodecMerger.mapCodec(
-                UNTRUSTED_URI.mapCodec("url").required(), OpenUrlClickEvent::asUri,
+                ExtraCodecs_v1_21_5.UNTRUSTED_URI.mapCodec("url").required(), OpenUrlClickEvent::asUri,
                 ClickEvent::openUrl
         );
         public static final MapCodec<OpenFileClickEvent> OPEN_FILE = MapCodecMerger.mapCodec(
@@ -50,11 +49,11 @@ public class StyleCodecs_v1_21_5 {
                 ClickEvent::openFile
         );
         public static final MapCodec<RunCommandClickEvent> RUN_COMMAND = MapCodecMerger.mapCodec(
-                CHAT_STRING.mapCodec("command").required(), RunCommandClickEvent::getCommand,
+                ExtraCodecs_v1_21_5.CHAT_STRING.mapCodec("command").required(), RunCommandClickEvent::getCommand,
                 ClickEvent::runCommand
         );
         public static final MapCodec<SuggestCommandClickEvent> SUGGEST_COMMAND = MapCodecMerger.mapCodec(
-                CHAT_STRING.mapCodec("command").required(), SuggestCommandClickEvent::getCommand,
+                ExtraCodecs_v1_21_5.CHAT_STRING.mapCodec("command").required(), SuggestCommandClickEvent::getCommand,
                 ClickEvent::suggestCommand
         );
         public static final MapCodec<ChangePageClickEvent> CHANGE_PAGE = MapCodecMerger.mapCodec(

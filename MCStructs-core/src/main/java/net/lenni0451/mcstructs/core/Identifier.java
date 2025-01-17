@@ -1,10 +1,11 @@
 package net.lenni0451.mcstructs.core;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 /**
  * The identifier used for registries in minecraft.
  */
+@EqualsAndHashCode
 public class Identifier {
 
     public static final String VALID_KEY_CHARS = "[_\\-a-z0-9.]*";
@@ -87,17 +88,14 @@ public class Identifier {
         return this.value;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Identifier that = (Identifier) o;
-        return Objects.equals(this.key, that.key) && Objects.equals(this.value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.key, this.value);
+    /**
+     * Check if the key and value are equal to the given key and value.
+     * @param key   The key to check
+     * @param value The value to check
+     * @return If the key and value are equal
+     */
+    public boolean equals(final String key, final String value) {
+        return this.key.equals(key) && this.value.equals(value);
     }
 
     @Override

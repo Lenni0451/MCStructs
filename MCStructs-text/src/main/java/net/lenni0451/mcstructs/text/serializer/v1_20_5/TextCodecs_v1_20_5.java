@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.text.serializer.v1_20_3;
+package net.lenni0451.mcstructs.text.serializer.v1_20_5;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,12 +7,9 @@ import net.lenni0451.mcstructs.converter.codec.impl.LazyInitCodec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.JavaConverter_v1_20_3;
 import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
-import net.lenni0451.mcstructs.converter.mapcodec.impl.FuzzyMapCodec;
-import net.lenni0451.mcstructs.converter.mapcodec.impl.StrictSelectorMapCodec;
 import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.converter.types.NamedType;
-import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.*;
 import net.lenni0451.mcstructs.text.components.nbt.BlockNbtSource;
@@ -20,16 +17,16 @@ import net.lenni0451.mcstructs.text.components.nbt.EntityNbtSource;
 import net.lenni0451.mcstructs.text.components.nbt.NbtDataSource;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtSource;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
-public class TextCodecs_v1_20_3 {
+import static net.lenni0451.mcstructs.text.serializer.v1_20_3.TextCodecs_v1_20_3.*;
+
+public class TextCodecs_v1_20_5 {
 
     public static final Codec<TextComponent> TEXT = new LazyInitCodec<>(() -> {
-        return Codec.recursive(thiz -> createCodec(thiz, StyleCodecs_v1_20_3.MAP_CODEC, ComponentType.values(), ComponentType::forComponent));
+        return Codec.recursive(thiz -> createCodec(thiz, StyleCodecs_v1_20_5.MAP_CODEC, ComponentType.values(), ComponentType::forComponent));
     });
 
     public static final MapCodec<StringComponent> STRING_COMPONENT = MapCodecMerger.mapCodec(
@@ -77,59 +74,6 @@ public class TextCodecs_v1_20_3 {
             NbtComponent::new
     );
 
-    public static <T extends TextComponentType> Codec<TextComponent> createCodec(final Codec<TextComponent> codec, final MapCodec<Style> styleCodec, final T[] componentTypes, final Function<TextComponent, T> componentToType) {
-        MapCodec<TextComponent> typedComponentCodec = createLegacyComponentMatcher(componentTypes, T::getCodec, componentToType, "type");
-        Codec<TextComponent> styledCodec = MapCodecMerger.codec(
-                typedComponentCodec, Function.identity(),
-                codec.nonEmptyList().mapCodec("extra").optional().defaulted(List::isEmpty, ArrayList::new), TextComponent::getSiblings,
-                styleCodec, TextComponent::getStyle,
-                (textComponent, siblings, style) -> textComponent.append(siblings).setStyle(style)
-        );
-        return Codec.either(Codec.either(Codec.STRING, codec.nonEmptyList()), styledCodec).map(textComponent -> {
-            String collapsed = tryCollapse(textComponent);
-            if (collapsed != null) {
-                return Either.left(Either.left(collapsed));
-            } else {
-                return Either.right(textComponent);
-            }
-        }, stringListOrComponent -> stringListOrComponent.xmap(
-                stringOrList -> stringOrList.xmap(
-                        StringComponent::new,
-                        TextCodecs_v1_20_3::mergeComponents
-                ),
-                second -> second
-        ));
-    }
-
-    public static <T extends NamedType, E> MapCodec<E> createLegacyComponentMatcher(final T[] types, final Function<T, MapCodec<? extends E>> codecSupplier, final Function<E, T> typeSupplier, final String name) {
-        List<MapCodec<? extends E>> typeCodecs = new ArrayList<>();
-        for (T type : types) typeCodecs.add(codecSupplier.apply(type));
-        MapCodec<E> fuzzyCodec = new FuzzyMapCodec<>(typeCodecs, e -> codecSupplier.apply(typeSupplier.apply(e)));
-        Codec<T> typeCodec = Codec.named(types);
-        MapCodec<E> elementCodec = typeCodec.typedMap(name, typeSupplier, codecSupplier);
-        return new StrictSelectorMapCodec<>(name, elementCodec, fuzzyCodec);
-    }
-
-    @Nullable
-    public static String tryCollapse(final TextComponent component) {
-        if (component instanceof StringComponent && component.getSiblings().isEmpty() && component.getStyle().isEmpty()) {
-            return ((StringComponent) component).getText();
-        }
-        return null;
-    }
-
-    private static TextComponent mergeComponents(final List<TextComponent> components) {
-        TextComponent component = components.get(0);
-        for (int i = 1; i < components.size(); i++) {
-            component = component.append(components.get(i));
-        }
-        return component;
-    }
-
-
-    public interface TextComponentType extends NamedType {
-        MapCodec<? extends TextComponent> getCodec();
-    }
 
     @Getter
     @AllArgsConstructor
