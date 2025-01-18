@@ -155,9 +155,11 @@ public class Style implements Copyable<Style> {
      * Set the shadow color of this style.
      *
      * @param shadowColor The shadow color
+     * @return The current style
      */
-    public void setShadowColor(final Integer shadowColor) {
+    public Style setShadowColor(final Integer shadowColor) {
         this.shadowColor = shadowColor;
+        return this;
     }
 
     /**

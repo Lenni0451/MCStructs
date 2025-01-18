@@ -21,11 +21,10 @@ import net.lenni0451.mcstructs.text.serializer.v1_20_3.StyleCodecs_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.TextCodecs_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.StyleCodecs_v1_20_5;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextCodecs_v1_20_5;
-import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_2.StyleCodecs_v1_21_2;
 import net.lenni0451.mcstructs.text.serializer.v1_21_2.TextCodecs_v1_21_2;
-import net.lenni0451.mcstructs.text.serializer.v1_21_2.TextComponentCodec_v1_21_2;
-import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextComponentCodec_v1_21_4;
+import net.lenni0451.mcstructs.text.serializer.v1_21_4.StyleCodecs_v1_21_4;
+import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextCodecs_v1_21_4;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.StyleCodecs_v1_21_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
 import net.lenni0451.mcstructs.text.serializer.verify.TextVerifier;
@@ -44,7 +43,6 @@ import java.util.function.Supplier;
  * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} will still be updated using this wrapper method.
  */
 @ParametersAreNonnullByDefault
-@SuppressWarnings("StaticInitializerReferencesSubClass")
 public class TextComponentCodec {
 
     private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
@@ -53,20 +51,17 @@ public class TextComponentCodec {
      */
     public static final TextComponentCodec V1_20_3 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_20_3.TEXT, () -> StyleCodecs_v1_20_3.CODEC, JsonConverter_v1_20_3.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
-     * The text codec for 1.20.5.<br>
-     * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_20_5} class yourself instead of using this codec.</b>
+     * The text codec for 1.20.5.
      */
     public static final TextComponentCodec V1_20_5 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_20_5.TEXT, () -> StyleCodecs_v1_20_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
-     * The text codec for 1.21.2.<br>
-     * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_21_2} class yourself instead of using this codec.</b>
+     * The text codec for 1.21.2.
      */
     public static final TextComponentCodec V1_21_2 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_21_2.TEXT, () -> StyleCodecs_v1_21_2.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
-     * The text codec for 1.21.4.<br>
-     * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_21_4} class yourself instead of using this codec.</b>
+     * The text codec for 1.21.4.
      */
-    public static final TextComponentCodec_v1_21_4 V1_21_4 = new TextComponentCodec_v1_21_4();
+    public static final TextComponentCodec V1_21_4 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_21_4.TEXT, () -> StyleCodecs_v1_21_4.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
      * The text codec for 1.21.5.<br>
      * TODO: Access to minecraft data

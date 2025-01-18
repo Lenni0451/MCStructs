@@ -1,10 +1,10 @@
-package net.lenni0451.mcstructs.text.serializer.v1_21_5;
+package net.lenni0451.mcstructs.text.serializer.v1_21_4;
 
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.serializer.verify.TextVerifier;
 
-public interface TextVerifier_v1_21_5 extends TextVerifier {
+public interface TextVerifier_v1_21_4 extends TextVerifier {
 
     default boolean verifyRegistryItem(final Identifier id) {
         return true;
