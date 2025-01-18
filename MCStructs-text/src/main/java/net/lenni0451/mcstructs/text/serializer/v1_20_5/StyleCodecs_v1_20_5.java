@@ -15,6 +15,7 @@ import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.click.types.*;
@@ -23,8 +24,6 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.ExtraCodecs_v1_20_3;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.StyleCodecs_v1_20_3;
 
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -36,7 +35,7 @@ import static net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter.
 public class StyleCodecs_v1_20_5 {
 
     public static final MapCodec<Style> MAP_CODEC = MapCodecMerger.mapCodec(
-            StyleCodecs_v1_20_3.TextFormattingCodec.CODEC.mapCodec("color").optional().defaulted(null), Style::getColor,
+            TextFormattingCodec.CODEC.mapCodec("color").optional().defaulted(null), Style::getColor,
             Codec.BOOLEAN.mapCodec("obfuscated").optional().defaulted(null), Style::getObfuscated,
             Codec.BOOLEAN.mapCodec("bold").optional().defaulted(null), Style::getBold,
             Codec.BOOLEAN.mapCodec("strikethrough").optional().defaulted(null), Style::getStrikethrough,
@@ -50,6 +49,15 @@ public class StyleCodecs_v1_20_5 {
     );
     public static final Codec<Style> CODEC = MAP_CODEC.asCodec();
 
+
+    public static class TextFormattingCodec {
+        public static final Codec<TextFormatting> CODEC = Codec.STRING.flatMap(formatting -> Result.success(formatting.serialize()), s -> {
+            TextFormatting formatting = TextFormatting.parse(s);
+            if (formatting == null) return Result.error("Unknown formatting: " + s);
+            if (formatting.isRGBColor() && (formatting.getRgbValue() < 0 || formatting.getRgbValue() > 16777215)) return Result.error("Out of range RGB value: " + s);
+            return Result.success(formatting);
+        });
+    }
 
     public static class ClickEventCodec {
         public static final MapCodec<OpenUrlClickEvent> OPEN_URL = create(OpenUrlClickEvent::asString, OpenUrlClickEvent::new);
@@ -158,7 +166,7 @@ public class StyleCodecs_v1_20_5 {
         public static class Entity {
             public static final MapCodec<EntityHoverEvent> MAP_CODEC = MapCodecMerger.codec(
                     Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_5.class, TextVerifier_v1_20_5::verifyRegistryEntity, "Invalid entity")).mapCodec("type").required(), EntityHoverEvent.ModernHolder::getType,
-                    ExtraCodecs_v1_20_3.LENIENT_UUID.mapCodec("id").required(), EntityHoverEvent.ModernHolder::getUuid,
+                    ExtraCodecs_v1_20_5.LENIENT_UUID.mapCodec("id").required(), EntityHoverEvent.ModernHolder::getUuid,
                     TextCodecs_v1_20_5.TEXT.mapCodec("name").optional().defaulted(null), EntityHoverEvent.ModernHolder::getName,
                     EntityHoverEvent.ModernHolder::new
             ).mapCodec(CONTENTS).required().map(EntityHoverEvent::asModern, EntityHoverEvent::new);

@@ -33,8 +33,8 @@ class TextComponentCodecTest {
     private static final TextComponentCodec[] codecs = new TextComponentCodec[]{
             TextComponentCodec.V1_20_3,
             TextComponentCodec.V1_20_5,
-//            TextComponentCodec.V1_21_2, //TODO: Add back when codec
-//            TextComponentCodec.V1_21_4,
+            TextComponentCodec.V1_21_2,
+//            TextComponentCodec.V1_21_4, //TODO: Add back when codec
             TextComponentCodec.V1_21_5,
             TextComponentCodec.LATEST
     };

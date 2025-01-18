@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.text.serializer.v1_20_3;
+package net.lenni0451.mcstructs.text.serializer.v1_21_2;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -6,7 +6,8 @@ import com.google.gson.JsonParser;
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
-import net.lenni0451.mcstructs.converter.impl.v1_20_3.JsonConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.v1_20_5.JsonConverter_v1_20_5;
 import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
@@ -31,7 +32,7 @@ import java.util.function.Function;
 import static net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter.isValid;
 import static net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter.verify;
 
-public class StyleCodecs_v1_20_3 {
+public class StyleCodecs_v1_21_2 {
 
     public static final MapCodec<Style> MAP_CODEC = MapCodecMerger.mapCodec(
             TextFormattingCodec.CODEC.mapCodec("color").optional().defaulted(null), Style::getColor,
@@ -128,32 +129,34 @@ public class StyleCodecs_v1_20_3 {
         public static final Codec<HoverEvent> CODEC = Codec.oneOf(MODERN_CODEC, LEGACY_CODEC);
 
         private static <T extends HoverEvent> MapCodec<T> createLegacy(final BiFunction<DataConverter<?>, TextComponent, Result<T>> constructor) {
-            return TextCodecs_v1_20_3.TEXT.converterFlatMap((dataConverter, t) -> Result.error("Legacy hover events can't be serialized"), constructor).mapCodec("value").required();
+            return TextCodecs_v1_21_2.TEXT.converterFlatMap((dataConverter, t) -> Result.error("Legacy hover events can't be serialized"), constructor).mapCodec("value").required();
         }
 
 
         public static class Text {
-            public static final MapCodec<TextHoverEvent> MAP_CODEC = TextCodecs_v1_20_3.TEXT.mapCodec(CONTENTS).required().map(TextHoverEvent::getText, TextHoverEvent::new);
+            public static final MapCodec<TextHoverEvent> MAP_CODEC = TextCodecs_v1_21_2.TEXT.mapCodec(CONTENTS).required().map(TextHoverEvent::getText, TextHoverEvent::new);
             public static final MapCodec<TextHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> Result.success(new TextHoverEvent(component)));
         }
 
         public static class Item {
-            public static final MapCodec<ItemHoverEvent> MAP_CODEC = MapCodecMerger.codec(
-                    Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryItem, "Invalid item")).mapCodec("id").required(), ItemHoverEvent.ModernHolder::getId,
-                    Codec.INTEGER.mapCodec("count").optional().defaulted(1), ItemHoverEvent.ModernHolder::getCount,
-                    ExtraCodecs_v1_20_3.STRING_COMPOUND.mapCodec("tag").optional().defaulted(null), ItemHoverEvent.ModernHolder::getTag,
+            private static final Codec<Identifier> NON_AIR_ITEM = Codec.STRING_IDENTIFIER
+                    .converterVerified(verify(TextVerifier_v1_21_2.class, TextVerifier_v1_21_2::verifyRegistryItem, "Invalid item"))
+                    .verified(id -> {
+                        if (!id.equals("minecraft", "air")) return null;
+                        return Result.error("Item must not be minecraft:air");
+                    });
+            private static final Codec<ItemHoverEvent.ModernHolder> ITEM_STACK_CODEC = MapCodecMerger.codec(
+                    NON_AIR_ITEM.mapCodec("id").required(), ItemHoverEvent.ModernHolder::getId,
+                    Codec.minInt(1).mapCodec("count").optional().elseGet(() -> 1), ItemHoverEvent.ModernHolder::getCount,
+                    ExtraCodecs_v1_21_2.INLINED_COMPOUND_TAG.converterVerified(verify(TextVerifier_v1_21_2.class, TextVerifier_v1_21_2::verifyDataComponents, "Invalid data components")).mapCodec("components").optional().defaulted(null), ItemHoverEvent.ModernHolder::getTag,
                     ItemHoverEvent.ModernHolder::new
-            ).mapCodec(CONTENTS).required().map(ItemHoverEvent::asModern, ItemHoverEvent::new);
+            );
+            private static final Codec<ItemHoverEvent.ModernHolder> SIMPLE_ITEM_CODEC = NON_AIR_ITEM.map(ItemHoverEvent.ModernHolder::getId, id -> new ItemHoverEvent.ModernHolder(id, 1, null));
+            public static final MapCodec<ItemHoverEvent> MAP_CODEC = Codec.oneOf(ITEM_STACK_CODEC, SIMPLE_ITEM_CODEC).mapCodec(CONTENTS).required().map(ItemHoverEvent::asModern, ItemHoverEvent::new);
             public static final MapCodec<ItemHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> {
                 try {
                     CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
-                    Identifier id = Identifier.of(tag.getString("id"));
-                    if (!isValid(converter, id, TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryItem)) {
-                        return Result.error("Invalid item: " + id);
-                    }
-                    int count = tag.getByte("Count");
-                    CompoundTag nbt = tag.getCompound("tag", null);
-                    return Result.success(new ItemHoverEvent(id, count, nbt));
+                    return ITEM_STACK_CODEC.deserialize(NbtConverter_v1_20_3.INSTANCE, tag).map(ItemHoverEvent::new);
                 } catch (Throwable t) {
                     return Result.error(t);
                 }
@@ -162,18 +165,18 @@ public class StyleCodecs_v1_20_3 {
 
         public static class Entity {
             public static final MapCodec<EntityHoverEvent> MAP_CODEC = MapCodecMerger.codec(
-                    Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryEntity, "Invalid entity")).mapCodec("type").required(), EntityHoverEvent.ModernHolder::getType,
-                    ExtraCodecs_v1_20_3.LENIENT_UUID.mapCodec("id").required(), EntityHoverEvent.ModernHolder::getUuid,
-                    TextCodecs_v1_20_3.TEXT.mapCodec("name").optional().defaulted(null), EntityHoverEvent.ModernHolder::getName,
+                    Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_2.class, TextVerifier_v1_21_2::verifyRegistryEntity, "Invalid entity")).mapCodec("type").required(), EntityHoverEvent.ModernHolder::getType,
+                    ExtraCodecs_v1_21_2.LENIENT_UUID.mapCodec("id").required(), EntityHoverEvent.ModernHolder::getUuid,
+                    TextCodecs_v1_21_2.TEXT.mapCodec("name").optional().defaulted(null), EntityHoverEvent.ModernHolder::getName,
                     EntityHoverEvent.ModernHolder::new
             ).mapCodec(CONTENTS).required().map(EntityHoverEvent::asModern, EntityHoverEvent::new);
             public static final MapCodec<EntityHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> {
                 try {
                     CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
                     JsonElement rawName = JsonParser.parseString(tag.getString("name"));
-                    TextComponent name = rawName == null ? null : TextCodecs_v1_20_3.TEXT.deserialize(JsonConverter_v1_20_3.INSTANCE, rawName).getOrThrow(JsonParseException::new);
+                    TextComponent name = rawName == null ? null : TextCodecs_v1_21_2.TEXT.deserialize(JsonConverter_v1_20_5.INSTANCE, rawName).getOrThrow(JsonParseException::new);
                     Identifier type = Identifier.of(tag.getString("type"));
-                    if (!isValid(converter, type, TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryEntity)) {
+                    if (!isValid(converter, type, TextVerifier_v1_21_2.class, TextVerifier_v1_21_2::verifyRegistryEntity)) {
                         return Result.error("Invalid entity: " + type);
                     }
                     UUID uuid = UUID.fromString(tag.getString("id"));
