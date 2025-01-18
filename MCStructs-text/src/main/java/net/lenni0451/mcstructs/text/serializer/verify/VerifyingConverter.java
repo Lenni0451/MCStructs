@@ -40,7 +40,7 @@ public class VerifyingConverter<T> extends DelegatingConverter<T> {
     private final TextVerifier textVerifier;
 
     public VerifyingConverter(final DataConverter<T> delegate, final TextVerifier textVerifier) {
-        super(delegate);
+        super(delegate instanceof VerifyingConverter ? ((VerifyingConverter<T>) delegate).getDelegate() : delegate);
         this.textVerifier = textVerifier;
     }
 

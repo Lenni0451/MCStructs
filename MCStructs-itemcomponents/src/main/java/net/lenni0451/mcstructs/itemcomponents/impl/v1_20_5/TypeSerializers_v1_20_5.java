@@ -105,7 +105,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
                 S test = converter.createString("");
                 if (test instanceof StringTag) {
                     try {
-                        return Result.success((S) TextComponentCodec.V1_20_5.serializeNbt(element));
+                        return Result.success((S) TextComponentCodec.V1_20_5.serializeNbtTree(element));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }

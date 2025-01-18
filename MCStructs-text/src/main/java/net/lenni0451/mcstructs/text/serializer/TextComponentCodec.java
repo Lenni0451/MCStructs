@@ -15,8 +15,6 @@ import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
-import net.lenni0451.mcstructs.text.serializer.subtypes.ITextComponentSerializer;
-import net.lenni0451.mcstructs.text.serializer.subtypes.adapter.CodecTextComponentSerializer;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.StyleCodecs_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_3.TextCodecs_v1_20_3;
 import net.lenni0451.mcstructs.text.serializer.v1_20_5.StyleCodecs_v1_20_5;
@@ -28,11 +26,11 @@ import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextCodecs_v1_21_4;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.StyleCodecs_v1_21_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
 import net.lenni0451.mcstructs.text.serializer.verify.TextVerifier;
+import net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.StringReader;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
@@ -74,26 +72,20 @@ public class TextComponentCodec {
 
 
     private final Supplier<SNbt<CompoundTag>> sNbtSupplier;
-    private final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier;
-    private final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<NbtTag>> nbtSerializerSupplier;
+    private final Supplier<Codec<TextComponent>> textCodecSupplier;
+    private final Supplier<Codec<Style>> styleCodecSupplier;
+    private final DataConverter<JsonElement> jsonConverter;
+    private final DataConverter<NbtTag> nbtConverter;
     private SNbt<CompoundTag> sNbt;
-    private ITextComponentSerializer<JsonElement> jsonSerializer;
-    private ITextComponentSerializer<NbtTag> nbtSerializer;
+    private Codec<TextComponent> textCodec;
+    private Codec<Style> styleCodec;
 
     public TextComponentCodec(final Supplier<SNbt<CompoundTag>> sNbtSupplier, final Supplier<Codec<TextComponent>> textCodec, final Supplier<Codec<Style>> styleCodec, final DataConverter<JsonElement> jsonConverter, final DataConverter<NbtTag> nbtConverter) {
         this.sNbtSupplier = sNbtSupplier;
-        this.jsonSerializerSupplier = (thiz, sNbt) -> new CodecTextComponentSerializer<>(textCodec.get(), jsonConverter, styleCodec.get());
-        this.nbtSerializerSupplier = (thiz, sNbt) -> new CodecTextComponentSerializer<>(textCodec.get(), nbtConverter, styleCodec.get());
-    }
-
-    public TextComponentCodec(final Supplier<SNbt<CompoundTag>> sNbtSupplier, final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbt<CompoundTag>, ITextComponentSerializer<NbtTag>> nbtSerializerSupplier) {
-        this.sNbtSupplier = sNbtSupplier;
-        this.jsonSerializerSupplier = jsonSerializerSupplier;
-        this.nbtSerializerSupplier = nbtSerializerSupplier;
-    }
-
-    public TextComponentCodec withVerifier(final TextVerifier verifier) {
-        return null; //new TextComponentCodec(this, verifier); TODO
+        this.textCodecSupplier = textCodec;
+        this.styleCodecSupplier = styleCodec;
+        this.jsonConverter = jsonConverter;
+        this.nbtConverter = nbtConverter;
     }
 
     /**
@@ -107,19 +99,29 @@ public class TextComponentCodec {
     /**
      * @return The used json serializer/deserializer
      */
-    @Deprecated
-    public ITextComponentSerializer<JsonElement> getJsonSerializer() {
-        if (this.jsonSerializer == null) this.jsonSerializer = this.jsonSerializerSupplier.apply(this, this.getSNbtSerializer());
-        return this.jsonSerializer;
+    public Codec<TextComponent> getTextCodec() {
+        if (this.textCodec == null) this.textCodec = this.textCodecSupplier.get();
+        return this.textCodec;
     }
 
     /**
      * @return The used nbt serializer/deserializer
      */
-    @Deprecated
-    public ITextComponentSerializer<NbtTag> getNbtSerializer() {
-        if (this.nbtSerializer == null) this.nbtSerializer = this.nbtSerializerSupplier.apply(this, this.getSNbtSerializer());
-        return this.nbtSerializer;
+    public Codec<Style> getStyleCodec() {
+        if (this.styleCodec == null) this.styleCodec = this.styleCodecSupplier.get();
+        return this.styleCodec;
+    }
+
+    /**
+     * Create a new text component codec with the given text verifier.<br>
+     * The verifier is used to check if the text component is valid during serialization/deserialization.<br>
+     * By default, no verifier is used and all text components are valid.
+     *
+     * @param verifier The text verifier
+     * @return The new text component codec
+     */
+    public TextComponentCodec withVerifier(final TextVerifier verifier) {
+        return new TextComponentCodec(this.sNbtSupplier, this.textCodecSupplier, this.styleCodecSupplier, new VerifyingConverter<>(this.jsonConverter, verifier), new VerifyingConverter<>(this.nbtConverter, verifier));
     }
 
     /**
@@ -206,7 +208,7 @@ public class TextComponentCodec {
      * @return The deserialized text component
      */
     public TextComponent deserialize(final JsonElement json) {
-        return this.getJsonSerializer().deserialize(json);
+        return this.getTextCodec().deserialize(this.jsonConverter, json).getOrThrow(JsonParseException::new);
     }
 
     /**
@@ -217,7 +219,7 @@ public class TextComponentCodec {
      * @return The deserialized text component
      */
     public TextComponent deserialize(final NbtTag nbt) {
-        return this.getNbtSerializer().deserialize(nbt);
+        return this.getTextCodec().deserialize(this.nbtConverter, nbt).getOrThrow();
     }
 
     /**
@@ -227,7 +229,7 @@ public class TextComponentCodec {
      * @return The serialized json element
      */
     public JsonElement serializeJsonTree(final TextComponent component) {
-        return this.getJsonSerializer().serialize(component);
+        return this.getTextCodec().serialize(this.jsonConverter, component).getOrThrow(JsonParseException::new);
     }
 
     /**
@@ -236,8 +238,8 @@ public class TextComponentCodec {
      * @param component The text component
      * @return The serialized nbt tag
      */
-    public NbtTag serializeNbt(final TextComponent component) {
-        return this.getNbtSerializer().serialize(component);
+    public NbtTag serializeNbtTree(final TextComponent component) {
+        return this.getTextCodec().serialize(this.nbtConverter, component).getOrThrow();
     }
 
     /**
@@ -258,7 +260,7 @@ public class TextComponentCodec {
      */
     public String serializeNbtString(final TextComponent component) {
         try {
-            return this.getSNbtSerializer().serialize(this.serializeNbt(component));
+            return this.getSNbtSerializer().serialize(this.serializeNbtTree(component));
         } catch (SNbtSerializeException e) {
             throw new RuntimeException("Failed to serialize SNbt", e);
         }

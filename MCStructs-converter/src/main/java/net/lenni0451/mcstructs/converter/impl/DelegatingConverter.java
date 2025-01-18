@@ -16,6 +16,10 @@ public class DelegatingConverter<T> implements DataConverter<T> {
         this.delegate = delegate;
     }
 
+    public DataConverter<T> getDelegate() {
+        return this.delegate;
+    }
+
     @Override
     public <N> N convertTo(DataConverter<N> converter, @Nullable T element) {
         return this.delegate.convertTo(converter, element);

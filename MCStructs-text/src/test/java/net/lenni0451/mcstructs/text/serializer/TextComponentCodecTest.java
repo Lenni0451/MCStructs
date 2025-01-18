@@ -67,7 +67,7 @@ class TextComponentCodecTest {
     @ParameterizedTest
     @FieldSource("codecs")
     void serializeDeserializeNbt(final TextComponentCodec codec) {
-        NbtTag nbt = codec.serializeNbt(this.text);
+        NbtTag nbt = codec.serializeNbtTree(this.text);
         TextComponent deserialized = codec.deserializeNbtTree(nbt);
         assertEquals(this.text, deserialized);
     }

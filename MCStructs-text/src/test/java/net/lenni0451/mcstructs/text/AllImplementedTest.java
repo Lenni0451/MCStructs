@@ -19,8 +19,8 @@ public class AllImplementedTest {
             if (!field.getType().equals(TextComponentCodec.class)) continue;
             TextComponentCodec codec = (TextComponentCodec) field.get(null);
             if (codec == null) throw new NullPointerException("Codec " + field.getName() + " is null");
-            if (codec.getJsonSerializer() == null) throw new NullPointerException("JsonSerializer " + field.getName() + " is null");
-            if (codec.getNbtSerializer() == null) throw new NullPointerException("NbtSerializer " + field.getName() + " is null");
+            if (codec.getTextCodec() == null) throw new NullPointerException("JsonSerializer " + field.getName() + " is null");
+            if (codec.getStyleCodec() == null) throw new NullPointerException("NbtSerializer " + field.getName() + " is null");
         }
     }
 
