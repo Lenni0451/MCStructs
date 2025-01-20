@@ -38,6 +38,13 @@ public class RegistryVerifier {
     public final Checker<Identifier> entityTypeTag = new Checker<>("entity type tag", this::verifyEntityTypeTag);
     public final Checker<Identifier> entityType = new Checker<>("entity type", this::verifyEntityType);
     public final Checker<Identifier> damageTypeTag = new Checker<>("damage type tag", this::verifyDamageTypeTag);
+    public final Checker<Identifier> wolfVariant = new Checker<>("wolf variant", this::verifyWolfVariant);
+    public final Checker<Identifier> biomeTag = new Checker<>("biome tag", this::verifyBiomeTag);
+    public final Checker<Identifier> biome = new Checker<>("biome", this::verifyBiome);
+    public final Checker<Identifier> frogVariant = new Checker<>("frog variant", this::verifyFrogVariant);
+    public final Checker<Identifier> catVariant = new Checker<>("cat variant", this::verifyCatVariant);
+    public final Checker<Identifier> pigVariant = new Checker<>("pig variant", this::verifyPigVariant);
+    public final Checker<Identifier> paintingVariant = new Checker<>("painting variant", this::verifyPaintingVariant);
 
     /**
      * Verify the item tag in the item tag registry.
@@ -307,6 +314,76 @@ public class RegistryVerifier {
      * @return If the damage type tag is valid
      */
     public boolean verifyDamageTypeTag(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the wolf variant in the wolf variant registry.
+     *
+     * @param id The wolf variant id
+     * @return If the variant type is valid
+     */
+    public boolean verifyWolfVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the biome tag in the biome tag registry.
+     *
+     * @param id The biome tag id
+     * @return If the biome tag is valid
+     */
+    public boolean verifyBiomeTag(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the biome in the biome registry.
+     *
+     * @param id The biome id
+     * @return If the biome is valid
+     */
+    public boolean verifyBiome(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the frog variant in the frog variant registry.
+     *
+     * @param id The frog variant id
+     * @return If the frog variant is valid
+     */
+    public boolean verifyFrogVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the cat variant in the cat variant registry.
+     *
+     * @param id The cat variant id
+     * @return If the cat variant is valid
+     */
+    public boolean verifyCatVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the pig variant in the pig variant registry.
+     *
+     * @param id The pig variant id
+     * @return If the pig variant is valid
+     */
+    public boolean verifyPigVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the painting variant in the painting variant registry.
+     *
+     * @param id The painting variant id
+     * @return If the painting variant is valid
+     */
+    public boolean verifyPaintingVariant(final Identifier id) {
         return true;
     }
 
