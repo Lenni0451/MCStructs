@@ -9,13 +9,17 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.components.StringComponent;
-import net.lenni0451.mcstructs.text.serializer.LegacyStringDeserializer;
+import net.lenni0451.mcstructs.text.stringformat.StringFormat;
+import net.lenni0451.mcstructs.text.stringformat.handling.ColorHandling;
+import net.lenni0451.mcstructs.text.stringformat.handling.DeserializerUnknownHandling;
 
 import java.util.*;
 
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.*;
 
 public class Test_v1_20_5 extends ItemComponentTest<ItemComponents_v1_20_5> {
+
+    private static final StringFormat FORMAT = StringFormat.vanilla();
 
     @Override
     protected ItemComponents_v1_20_5 getRegistry() {
@@ -34,9 +38,9 @@ public class Test_v1_20_5 extends ItemComponentTest<ItemComponents_v1_20_5> {
         register(registry.MAX_DAMAGE, 123);
         register(registry.DAMAGE, 654);
         register(registry.UNBREAKABLE, new Unbreakable(false));
-        register(registry.CUSTOM_NAME, LegacyStringDeserializer.parse("§4§lThis is §8a §ktest", false));
-        register(registry.ITEM_NAME, LegacyStringDeserializer.parse("§oThis is another §3test", false));
-        register(registry.LORE, Arrays.asList(LegacyStringDeserializer.parse("§4test1", false), LegacyStringDeserializer.parse("§ctest2", false)));
+        register(registry.CUSTOM_NAME, FORMAT.fromString("§4§lThis is §8a §ktest", ColorHandling.RESET, DeserializerUnknownHandling.IGNORE));
+        register(registry.ITEM_NAME, FORMAT.fromString("§oThis is another §3test", ColorHandling.RESET, DeserializerUnknownHandling.IGNORE));
+        register(registry.LORE, Arrays.asList(FORMAT.fromString("§4test1", ColorHandling.RESET, DeserializerUnknownHandling.IGNORE), FORMAT.fromString("§ctest2", ColorHandling.RESET, DeserializerUnknownHandling.IGNORE)));
         register(registry.RARITY, Rarity.EPIC);
         register(registry.ENCHANTMENTS, new Enchantments(init(() -> {
             Map<Identifier, Integer> enchantments = new HashMap<>();

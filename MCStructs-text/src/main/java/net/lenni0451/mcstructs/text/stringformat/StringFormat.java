@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 /**
  * A class capable of reading and writing formatted strings in various formats.
@@ -299,6 +300,53 @@ public abstract class StringFormat {
         }
         if (target.shouldResetAtEnd() && !TextFormatting.RESET.equals(formatting)) target.write(out, TextFormatting.RESET);
         return out.toString();
+    }
+
+    /**
+     * Append a style to the given string.<br>
+     * This only works with formatting codes (colors, bold, italic, etc.).<br>
+     * If the style contains an unknown formatting code the {@link SerializerUnknownHandling} will be used to resolve it.
+     *
+     * @param s               The string to append the style to
+     * @param style           The style to append
+     * @param unknownHandling The unknown handling
+     * @return The string with the appended style
+     */
+    public String prependStyle(final String s, final Style style, final SerializerUnknownHandling unknownHandling) {
+        StringBuilder output = new StringBuilder();
+        for (TextFormatting formatting : style.getFormattings()) {
+            if (this.canWrite(formatting)) {
+                this.write(output, formatting);
+            } else {
+                TextFormatting resolved = unknownHandling.handle(formatting, output);
+                if (resolved != null && this.canWrite(resolved)) {
+                    this.write(output, resolved);
+                }
+            }
+        }
+        return output.append(s).toString();
+    }
+
+    /**
+     * Split a string by a given separator and keep the formatting of the previous part.<br>
+     * The color handling is used to determine if color codes should be treated as reset codes.<br>
+     * The unknown handling is used to determine what should happen if an unsupported formatting is encountered.
+     *
+     * @param s                           The string to split
+     * @param split                       The split string
+     * @param colorHandling               The color handling (for {@link #styleAt(String, int, ColorHandling, DeserializerUnknownHandling)})
+     * @param serializerUnknownHandling   The serializer unknown handling (for {@link #prependStyle(String, Style, SerializerUnknownHandling)})
+     * @param deserializerUnknownHandling The deserializer unknown handling (for {@link #styleAt(String, int, ColorHandling, DeserializerUnknownHandling)})
+     * @return The split string
+     */
+    public String[] split(final String s, final String split, final ColorHandling colorHandling, final SerializerUnknownHandling serializerUnknownHandling, final DeserializerUnknownHandling deserializerUnknownHandling) {
+        String[] parts = s.split(Pattern.quote(split));
+        for (int i = 1; i < parts.length; i++) {
+            String previous = parts[i - 1];
+            Style style = this.styleAt(previous, previous.length(), colorHandling, deserializerUnknownHandling);
+            parts[i] = this.prependStyle(parts[i], style, serializerUnknownHandling);
+        }
+        return parts;
     }
 
     /**

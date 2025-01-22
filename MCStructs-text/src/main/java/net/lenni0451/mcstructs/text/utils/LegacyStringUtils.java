@@ -2,6 +2,10 @@ package net.lenni0451.mcstructs.text.utils;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.TextFormatting;
+import net.lenni0451.mcstructs.text.stringformat.StringFormat;
+import net.lenni0451.mcstructs.text.stringformat.handling.ColorHandling;
+import net.lenni0451.mcstructs.text.stringformat.handling.DeserializerUnknownHandling;
+import net.lenni0451.mcstructs.text.stringformat.handling.SerializerUnknownHandling;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,20 +15,18 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+/**
+ * Replaced by {@link StringFormat}.
+ */
+@Deprecated //for removal
 public class LegacyStringUtils {
 
     /**
-     * Get the legacy style of a string at the given position.<br>
-     * If the position is negative the style will be empty.<br>
-     * If the position is greater than the length of the string the last style will be returned.<br>
-     * Minecraft 1.13+ ignores unknown formatting codes. Earlier versions will handle them like {@link TextFormatting#WHITE}.
-     *
-     * @param s            The string to get the style from
-     * @param position     The position to get the style at
-     * @param unknownWhite Handle unknown formatting codes as reset
-     * @return The style at the given position
+     * Replaced by {@link StringFormat#styleAt(String, int, ColorHandling, DeserializerUnknownHandling)}.
      */
+    @Deprecated
     public static LegacyStyle getStyleAt(final String s, final int position, final boolean unknownWhite) {
+        //return StringFormat.vanilla().styleAt(s, position, ColorHandling.RESET, unknownWhite ? DeserializerUnknownHandling.WHITE : DeserializerUnknownHandling.IGNORE);
         return getStyleAt(s, position, c -> {
             TextFormatting formatting = TextFormatting.getByCode(c);
             if (formatting == null) {
@@ -36,18 +38,11 @@ public class LegacyStringUtils {
     }
 
     /**
-     * Get the legacy style of a string at the given position.<br>
-     * If the position is negative the style will be empty.<br>
-     * If the position is greater than the length of the string the last style will be returned.<br>
-     * The {@code formattingResolver} should return a formatting for the given char or {@code null} if the previous formatting should be kept.<br>
-     * When returning a color the previous formattings like {@code bold, italic, etc.} will be reset.
-     *
-     * @param s                  The string to get the style from
-     * @param position           The position to get the style at
-     * @param formattingResolver The function that resolves the formatting for the given char
-     * @return The style at the given position
+     * Replaced by {@link StringFormat#styleAt(String, int, ColorHandling, DeserializerUnknownHandling)}.
      */
+    @Deprecated
     public static LegacyStyle getStyleAt(final String s, final int position, final Function<Character, TextFormatting> formattingResolver) {
+        //return StringFormat.vanilla().styleAt(s, position, ColorHandling.RESET, (resolved, currentText) -> formattingResolver.apply(resolved.raw().charAt(0)));
         char[] chars = s.toCharArray();
         LegacyStyle legacyStyle = new LegacyStyle();
 
@@ -75,15 +70,11 @@ public class LegacyStringUtils {
     }
 
     /**
-     * Split a string by a given split string and keep the legacy style of the previous part.<br>
-     * Minecraft 1.13+ ignores unknown formatting codes. Earlier versions will handle them like {@link TextFormatting#RESET}.
-     *
-     * @param s            The string to split
-     * @param split        The split string
-     * @param unknownWhite Handle unknown formatting codes as reset
-     * @return The split string
+     * Replaced by {@link StringFormat#split(String, String, ColorHandling, SerializerUnknownHandling, DeserializerUnknownHandling)}.
      */
+    @Deprecated
     public static String[] split(final String s, final String split, final boolean unknownWhite) {
+//        return StringFormat.vanilla().split(s, split, ColorHandling.RESET, SerializerUnknownHandling.THROW, unknownWhite ? DeserializerUnknownHandling.WHITE : DeserializerUnknownHandling.IGNORE);
         return split(s, split, (c) -> {
             TextFormatting formatting = TextFormatting.getByCode(c);
             if (formatting == null) {
@@ -95,16 +86,11 @@ public class LegacyStringUtils {
     }
 
     /**
-     * Split a string by a given split string and keep the legacy style of the previous part.<br>
-     * The {@code formattingResolver} should return a formatting for the given char or {@code null} if the previous formatting should be kept.<br>
-     * When returning a color the previous formattings like {@code bold, italic, etc.} will be reset.
-     *
-     * @param s                  The string to split
-     * @param split              The split string
-     * @param formattingResolver The function that resolves the formatting for the given char
-     * @return The split string
+     * Replaced by {@link StringFormat#split(String, String, ColorHandling, SerializerUnknownHandling, DeserializerUnknownHandling)}.
      */
+    @Deprecated
     public static String[] split(final String s, final String split, final Function<Character, TextFormatting> formattingResolver) {
+//        return StringFormat.vanilla().split(s, split, ColorHandling.RESET, SerializerUnknownHandling.THROW, (resolved, currentText) -> formattingResolver.apply(resolved.raw().charAt(0)));
         String[] parts = s.split(Pattern.quote(split));
         for (int i = 1; i < parts.length; i++) {
             String prev = parts[i - 1];
@@ -115,6 +101,7 @@ public class LegacyStringUtils {
     }
 
 
+    @Deprecated
     public static class LegacyStyle {
         private TextFormatting color = null;
         private final Set<TextFormatting> styles = new HashSet<>();

@@ -122,8 +122,19 @@ public class Style implements Copyable<Style> {
      * @return The formattings
      */
     public TextFormatting[] getFormattings() {
+        return this.getFormattings(true);
+    }
+
+    /**
+     * Get the formattings of this style.<br>
+     * The color will always be the first element in the array.
+     *
+     * @param includeColor If the color should be included
+     * @return The formattings
+     */
+    public TextFormatting[] getFormattings(final boolean includeColor) {
         List<TextFormatting> formattings = new ArrayList<>();
-        if (this.color != null) formattings.add(this.color);
+        if (includeColor && this.color != null) formattings.add(this.color);
         if (this.isObfuscated()) formattings.add(TextFormatting.OBFUSCATED);
         if (this.isBold()) formattings.add(TextFormatting.BOLD);
         if (this.isStrikethrough()) formattings.add(TextFormatting.STRIKETHROUGH);

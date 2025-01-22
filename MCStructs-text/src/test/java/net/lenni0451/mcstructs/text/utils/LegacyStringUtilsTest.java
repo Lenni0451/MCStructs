@@ -1,54 +1,62 @@
 package net.lenni0451.mcstructs.text.utils;
 
+import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextFormatting;
+import net.lenni0451.mcstructs.text.stringformat.StringFormat;
+import net.lenni0451.mcstructs.text.stringformat.handling.ColorHandling;
+import net.lenni0451.mcstructs.text.stringformat.handling.DeserializerUnknownHandling;
+import net.lenni0451.mcstructs.text.stringformat.handling.SerializerUnknownHandling;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class LegacyStringUtilsTest {
 
+    private static final StringFormat FORMAT = StringFormat.vanilla();
+
     @Test
     void getStyleAt() {
-        LegacyStringUtils.LegacyStyle style0 = LegacyStringUtils.getStyleAt("§4§kHello", 0, true);
+        Style style0 = FORMAT.styleAt("§4§kHello", 0, ColorHandling.RESET, DeserializerUnknownHandling.WHITE);
         assertNull(style0.getColor());
-        assertTrue(style0.getStyles().isEmpty());
+        assertEquals(0, style0.getFormattings(false).length);
 
-        LegacyStringUtils.LegacyStyle style2 = LegacyStringUtils.getStyleAt("§4§kHello", 2, true);
+        Style style2 = FORMAT.styleAt("§4§kHello", 2, ColorHandling.RESET, DeserializerUnknownHandling.WHITE);
         assertEquals(TextFormatting.DARK_RED, style2.getColor());
-        assertTrue(style2.getStyles().isEmpty());
+        assertEquals(0, style2.getFormattings(false).length);
 
-        LegacyStringUtils.LegacyStyle style3 = LegacyStringUtils.getStyleAt("§4§kHello", 3, true);
+        Style style3 = FORMAT.styleAt("§4§kHello", 3, ColorHandling.RESET, DeserializerUnknownHandling.WHITE);
         assertEquals(TextFormatting.DARK_RED, style3.getColor());
-        assertEquals(1, style3.getStyles().size());
-        assertTrue(style3.getStyles().contains(TextFormatting.OBFUSCATED));
+        assertEquals(1, style3.getFormattings(false).length);
+        assertEquals(TextFormatting.OBFUSCATED, style3.getFormattings(false)[0]);
 
-        LegacyStringUtils.LegacyStyle style40 = LegacyStringUtils.getStyleAt("§4§kHello", 40, true);
+        Style style40 = FORMAT.styleAt("§4§kHello", 40, ColorHandling.RESET, DeserializerUnknownHandling.WHITE);
         assertEquals(style3, style40);
 
-        LegacyStringUtils.LegacyStyle resetInvalidStyle4 = LegacyStringUtils.getStyleAt("§4H§zi", 4, true);
+        Style resetInvalidStyle4 = FORMAT.styleAt("§4H§zi", 4, ColorHandling.RESET, DeserializerUnknownHandling.WHITE);
         assertEquals(TextFormatting.WHITE, resetInvalidStyle4.getColor());
-        assertTrue(resetInvalidStyle4.getStyles().isEmpty());
+        assertEquals(0, resetInvalidStyle4.getFormattings(false).length);
 
-        LegacyStringUtils.LegacyStyle ignoreInvalidStyle6 = LegacyStringUtils.getStyleAt("§4H§zi", 6, false);
+        Style ignoreInvalidStyle6 = FORMAT.styleAt("§4H§zi", 6, ColorHandling.RESET, DeserializerUnknownHandling.IGNORE);
         assertEquals(TextFormatting.DARK_RED, ignoreInvalidStyle6.getColor());
-        assertTrue(ignoreInvalidStyle6.getStyles().isEmpty());
+        assertEquals(0, ignoreInvalidStyle6.getFormattings(false).length);
     }
 
     @Test
     void split() {
-        String[] parts = LegacyStringUtils.split("§4§kHello\nWorld\nTest", "\n", true);
+        String[] parts = FORMAT.split("§4§kHello\nWorld\nTest", "\n", ColorHandling.RESET, SerializerUnknownHandling.THROW, DeserializerUnknownHandling.THROW);
         assertEquals(3, parts.length);
         assertEquals("§4§kHello", parts[0]);
         assertEquals("§4§kWorld", parts[1]);
         assertEquals("§4§kTest", parts[2]);
 
-        parts = LegacyStringUtils.split("§4§k§bHi\nWorld\nTest", "\n", true);
+        parts = FORMAT.split("§4§k§bHi\nWorld\nTest", "\n", ColorHandling.RESET, SerializerUnknownHandling.THROW, DeserializerUnknownHandling.THROW);
         assertEquals(3, parts.length);
         assertEquals("§4§k§bHi", parts[0]);
         assertEquals("§bWorld", parts[1]);
         assertEquals("§bTest", parts[2]);
 
-        parts = LegacyStringUtils.split("§4Hello\n§eWorld\n§lTest\n3", "\n", true);
+        parts = FORMAT.split("§4Hello\n§eWorld\n§lTest\n3", "\n", ColorHandling.RESET, SerializerUnknownHandling.THROW, DeserializerUnknownHandling.THROW);
         assertEquals(4, parts.length);
         assertEquals("§4Hello", parts[0]);
         assertEquals("§4§eWorld", parts[1]);

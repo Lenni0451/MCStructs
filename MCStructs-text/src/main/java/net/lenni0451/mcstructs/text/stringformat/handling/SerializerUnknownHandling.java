@@ -20,7 +20,7 @@ public interface SerializerUnknownHandling {
      * Throw an exception when an unknown formatting is found.
      */
     SerializerUnknownHandling THROW = (formatting, output) -> {
-        throw new IllegalArgumentException("Unknown formatting code: " + formatting);
+        throw new IllegalArgumentException("Unknown formatting: " + formatting);
     };
 
 
