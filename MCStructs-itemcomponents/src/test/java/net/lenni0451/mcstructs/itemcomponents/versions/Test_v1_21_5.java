@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.itemcomponents.versions;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.NbtConverter_v1_21_5;
 import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
@@ -23,7 +23,7 @@ public class Test_v1_21_5 extends ItemComponentTest<ItemComponents_v1_21_5> {
 
     @Override
     protected DataConverter<NbtTag> getConverter() {
-        return NbtConverter_v1_20_3.INSTANCE;
+        return NbtConverter_v1_21_5.INSTANCE;
     }
 
     @Override

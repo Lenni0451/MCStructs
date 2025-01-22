@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.converter;
 
-import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.NbtConverter_v1_21_5;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NbtConverterTest {
 
-    private static final NbtConverter_v1_20_3 CONVERTER = new NbtConverter_v1_20_3();
+    private static final DataConverter<NbtTag> CONVERTER = new NbtConverter_v1_21_5();
 
     @Test
     void testMarkers() {

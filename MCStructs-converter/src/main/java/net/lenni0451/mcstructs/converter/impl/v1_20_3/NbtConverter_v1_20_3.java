@@ -15,7 +15,7 @@ import java.util.*;
 public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
 
     public static final NbtConverter_v1_20_3 INSTANCE = new NbtConverter_v1_20_3();
-    private static final String MARKER_KEY = "";
+    public static final String MARKER_KEY = "";
 
     @Override
     public <N> N convertTo(DataConverter<N> to, @Nullable NbtTag element) {
@@ -118,18 +118,18 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
     @Override
     public Result<NbtTag> mergeList(@Nullable NbtTag list, List<NbtTag> values) {
         if (list == null) list = new ListTag<>();
-        if (list.isByteArrayTag() && values.stream().allMatch(NbtTag::isByteArrayTag)) {
-            ByteArrayTag tag = new ByteArrayTag();
+        if (list.isByteArrayTag() && values.stream().allMatch(NbtTag::isByteTag)) {
+            ByteArrayTag tag = list.asByteArrayTag();
             byte[] bytes = Arrays.copyOf(tag.getValue(), tag.getLength() + values.size());
             for (int i = 0; i < values.size(); i++) bytes[tag.getLength() + i] = values.get(i).asNumberTag().byteValue();
             return Result.success(new ByteArrayTag(bytes));
-        } else if (list.isIntArrayTag() && values.stream().allMatch(NbtTag::isIntArrayTag)) {
-            IntArrayTag tag = new IntArrayTag();
+        } else if (list.isIntArrayTag() && values.stream().allMatch(NbtTag::isIntTag)) {
+            IntArrayTag tag = list.asIntArrayTag();
             int[] ints = Arrays.copyOf(tag.getValue(), tag.getLength() + values.size());
             for (int i = 0; i < values.size(); i++) ints[tag.getLength() + i] = values.get(i).asNumberTag().intValue();
             return Result.success(new IntArrayTag(ints));
-        } else if (list.isLongArrayTag() && values.stream().allMatch(NbtTag::isLongArrayTag)) {
-            LongArrayTag tag = new LongArrayTag();
+        } else if (list.isLongArrayTag() && values.stream().allMatch(NbtTag::isLongTag)) {
+            LongArrayTag tag = list.asLongArrayTag();
             long[] longs = Arrays.copyOf(tag.getValue(), tag.getLength() + values.size());
             for (int i = 0; i < values.size(); i++) longs[tag.getLength() + i] = values.get(i).asNumberTag().longValue();
             return Result.success(new LongArrayTag(longs));
@@ -164,7 +164,8 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
         } else if (NbtType.END.equals(listType)) {
             ListTag<CompoundTag> listTag = new ListTag<>();
             for (NbtTag tag : elements) {
-                if (tag.isCompoundTag()) listTag.add(tag.asCompoundTag());
+                boolean isMarker = tag.isCompoundTag() && tag.asCompoundTag().size() == 1 && tag.asCompoundTag().contains(MARKER_KEY);
+                if (tag.isCompoundTag() && !isMarker) listTag.add(tag.asCompoundTag());
                 else listTag.add(new CompoundTag().add(MARKER_KEY, tag));
             }
             return Result.success(listTag);

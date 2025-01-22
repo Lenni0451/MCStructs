@@ -5,6 +5,7 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.impl.NbtConverter_v1_21_5;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.JsonConverter_v1_20_3;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
 import net.lenni0451.mcstructs.converter.impl.v1_20_5.JsonConverter_v1_20_5;
@@ -64,7 +65,7 @@ public class TextComponentCodec {
      * The text codec for 1.21.5.<br>
      * TODO: Access to minecraft data
      */
-    public static final TextComponentCodec V1_21_5 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_21_5.TEXT, () -> StyleCodecs_v1_21_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
+    public static final TextComponentCodec V1_21_5 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_21_5.TEXT, () -> StyleCodecs_v1_21_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_21_5.INSTANCE);
     /**
      * The latest text codec.
      */
