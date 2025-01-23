@@ -12,10 +12,11 @@ import net.lenni0451.mcstructs.snbt.SNbt;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static net.lenni0451.mcstructs.nbt.utils.NbtCodecUtils.MARKER_KEY;
+
 public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
 
     public static final NbtConverter_v1_20_3 INSTANCE = new NbtConverter_v1_20_3();
-    public static final String MARKER_KEY = "";
 
     private final SNbt<CompoundTag> sNbt;
 

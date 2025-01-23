@@ -1,12 +1,13 @@
 package net.lenni0451.mcstructs.converter;
 
-import net.lenni0451.mcstructs.converter.impl.NbtConverter_v1_21_5;
+import net.lenni0451.mcstructs.converter.impl.v1_21_5.NbtConverter_v1_21_5;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static net.lenni0451.mcstructs.nbt.utils.NbtCodecUtils.MARKER_KEY;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,8 +18,8 @@ public class NbtConverterTest {
     @Test
     void testMarkers() {
         ListTag<CompoundTag> markers = new ListTag<CompoundTag>()
-                .add(new CompoundTag().addInt("", 12))
-                .add(new CompoundTag().addBoolean("", true))
+                .add(new CompoundTag().addInt(MARKER_KEY, 12))
+                .add(new CompoundTag().addBoolean(MARKER_KEY, true))
                 .add(new CompoundTag().addString("test", "string"));
 
         List<NbtTag> tags = CONVERTER.asList(markers).get();
@@ -60,8 +61,8 @@ public class NbtConverterTest {
         list = CONVERTER.mergeList(list, new CompoundTag().addString("test", "string")).get();
 
         ListTag<CompoundTag> markers = new ListTag<CompoundTag>()
-                .add(new CompoundTag().addInt("", 12))
-                .add(new CompoundTag().addBoolean("", true))
+                .add(new CompoundTag().addInt(MARKER_KEY, 12))
+                .add(new CompoundTag().addBoolean(MARKER_KEY, true))
                 .add(new CompoundTag().addString("test", "string"));
         assertEquals(markers, list);
     }
@@ -85,7 +86,7 @@ public class NbtConverterTest {
         ListTag<CompoundTag> out = new ListTag<>();
         for (NbtTag tag : list) {
             if (tag instanceof CompoundTag) out.add(tag.asCompoundTag());
-            else out.add(new CompoundTag().add("", tag));
+            else out.add(new CompoundTag().add(MARKER_KEY, tag));
         }
         return out;
     }

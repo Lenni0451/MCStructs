@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.itemcomponents.versions;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.impl.NbtConverter_v1_21_5;
+import net.lenni0451.mcstructs.converter.impl.v1_21_5.NbtConverter_v1_21_5;
 import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;

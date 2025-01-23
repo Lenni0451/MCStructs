@@ -10,7 +10,7 @@ import java.util.List;
 
 public class NbtCodecUtils {
 
-    private static final String MARKER_KEY = "";
+    public static final String MARKER_KEY = "";
 
     public static List<NbtTag> unwrapMarkers(final ListTag<?> listTag) {
         List<NbtTag> tags = new ArrayList<>(listTag.getValue());
