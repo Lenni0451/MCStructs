@@ -24,18 +24,29 @@ public class NbtCodecUtils {
         return tags;
     }
 
-    public static ListTag<CompoundTag> wrapMarkers(final List<NbtTag> tags) {
-        ListTag<CompoundTag> listTag = new ListTag<>(NbtType.COMPOUND);
+    public static ListTag<NbtTag> wrapMarkers(final List<NbtTag> tags) {
+        ListTag<NbtTag> listTag = new ListTag<>(NbtType.COMPOUND);
         for (NbtTag tag : tags) {
-            if (tag.isCompoundTag()) {
+            boolean isMarker = tag.isCompoundTag() && tag.asCompoundTag().size() == 1 && tag.asCompoundTag().contains(MARKER_KEY);
+            if (tag.isCompoundTag() && !isMarker) {
                 listTag.add(tag.asCompoundTag());
             } else {
-                CompoundTag compoundTag = new CompoundTag();
-                compoundTag.add(MARKER_KEY, tag);
-                listTag.add(compoundTag);
+                listTag.add(new CompoundTag().add(MARKER_KEY, tag));
             }
         }
         return listTag;
+    }
+
+    public static ListTag<NbtTag> wrapIfRequired(final List<NbtTag> tags) {
+        NbtType type = null;
+        for (NbtTag tag : tags) {
+            if (type == null) {
+                type = tag.getNbtType();
+            } else if (type != tag.getNbtType()) {
+                return wrapMarkers(tags);
+            }
+        }
+        return new ListTag<>(type, tags);
     }
 
 }

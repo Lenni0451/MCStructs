@@ -17,6 +17,16 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
     public static final NbtConverter_v1_20_3 INSTANCE = new NbtConverter_v1_20_3();
     public static final String MARKER_KEY = "";
 
+    private final SNbt<CompoundTag> sNbt;
+
+    public NbtConverter_v1_20_3() {
+        this(SNbt.V1_14);
+    }
+
+    protected NbtConverter_v1_20_3(final SNbt<CompoundTag> sNbt) {
+        this.sNbt = sNbt;
+    }
+
     @Override
     public <N> N convertTo(DataConverter<N> to, @Nullable NbtTag element) {
         if (to == this) return (N) element;
@@ -203,7 +213,7 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
         for (Map.Entry<NbtTag, NbtTag> entry : values.entrySet()) {
             String key;
             if (entry.getKey().isStringTag()) key = entry.getKey().asStringTag().getValue();
-            else key = SNbt.V1_14.trySerialize(entry.getKey());
+            else key = this.sNbt.trySerialize(entry.getKey());
             compound.add(key, entry.getValue());
         }
         return compound;

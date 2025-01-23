@@ -11,6 +11,7 @@ import net.lenni0451.mcstructs.snbt.impl.v1_12.SNbtSerializer_v1_12;
 import net.lenni0451.mcstructs.snbt.impl.v1_13.SNbtDeserializer_v1_13;
 import net.lenni0451.mcstructs.snbt.impl.v1_14.SNbtDeserializer_v1_14;
 import net.lenni0451.mcstructs.snbt.impl.v1_14.SNbtSerializer_v1_14;
+import net.lenni0451.mcstructs.snbt.impl.v1_21_5.SNbtDeserializer_v1_21_5;
 import net.lenni0451.mcstructs.snbt.impl.v1_7.SNbtDeserializer_v1_7;
 import net.lenni0451.mcstructs.snbt.impl.v1_7.SNbtSerializer_v1_7;
 import net.lenni0451.mcstructs.snbt.impl.v1_8.SNbtDeserializer_v1_8;
@@ -44,13 +45,17 @@ public class SNbt<T extends NbtTag> {
      */
     public static final SNbt<CompoundTag> V1_13 = new SNbt<>(SNbtSerializer_v1_12::new, SNbtDeserializer_v1_13::new);
     /**
-     * The SNbt serializer for minecraft 1.14 - 1.19.
+     * The SNbt serializer for minecraft 1.14 - 1.21.4.
      */
     public static final SNbt<CompoundTag> V1_14 = new SNbt<>(SNbtSerializer_v1_14::new, SNbtDeserializer_v1_14::new);
     /**
+     * The SNbt serializer for minecraft 1.21.5+.
+     */
+    public static final SNbt<CompoundTag> V1_21_5 = new SNbt<>(SNbtSerializer_v1_14::new, SNbtDeserializer_v1_21_5::new);
+    /**
      * The latest SNbt serializer.
      */
-    public static final SNbt<CompoundTag> LATEST = V1_14;
+    public static final SNbt<CompoundTag> LATEST = V1_21_5;
 
 
     private final Supplier<SNbtSerializer> serializerSupplier;

@@ -5,6 +5,7 @@ import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.*;
+import net.lenni0451.mcstructs.snbt.SNbt;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -13,6 +14,14 @@ import java.util.List;
 public class NbtConverter_v1_21_5 extends NbtConverter_v1_20_3 {
 
     public static final NbtConverter_v1_21_5 INSTANCE = new NbtConverter_v1_21_5();
+
+    public NbtConverter_v1_21_5() {
+        this(SNbt.V1_21_5);
+    }
+
+    protected NbtConverter_v1_21_5(final SNbt<CompoundTag> sNbt) {
+        super(sNbt);
+    }
 
     @Override
     public Result<NbtTag> mergeList(@Nullable NbtTag list, List<NbtTag> values) {

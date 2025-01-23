@@ -37,11 +37,7 @@ public class ListTag<T extends NbtTag> implements NbtTag, Iterable<T> {
      * @throws IllegalArgumentException If the list contains mixed types
      */
     public ListTag(final List<T> list) {
-        if (!list.isEmpty()) {
-            this.type = NbtType.byClass(list.get(0).getClass());
-            if (list.stream().anyMatch(tag -> !tag.getNbtType().equals(this.type))) throw new IllegalArgumentException("Tried to create list with multiple Nbt types");
-        }
-        this.value = list;
+        this(null, list);
     }
 
     /**
@@ -51,7 +47,11 @@ public class ListTag<T extends NbtTag> implements NbtTag, Iterable<T> {
      * @param value The list
      */
     public ListTag(final NbtType type, final List<T> value) {
-        this.type = type;
+        if (type == null && !value.isEmpty()) this.type = value.get(0).getNbtType();
+        else this.type = type;
+        if (this.type != null && !value.isEmpty() && value.stream().anyMatch(tag -> !tag.getNbtType().equals(this.type))) {
+            throw new IllegalArgumentException("Tried to create list with multiple Nbt types");
+        }
         this.value = value;
     }
 

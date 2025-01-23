@@ -119,6 +119,12 @@ public class SNbtDeserializer_v1_12 implements SNbtDeserializer<CompoundTag> {
     }
 
     protected NbtTag readPrimitive(final String value) {
+        if (value.equalsIgnoreCase("false")) return new ByteTag((byte) 0);
+        else if (value.equalsIgnoreCase("true")) return new ByteTag((byte) 1);
+        return this.readNumber(value);
+    }
+
+    protected NbtTag readNumber(final String value) {
         try {
             if (FLOAT_PATTERN.matcher(value).matches()) return new FloatTag(Float.parseFloat(value.substring(0, value.length() - 1)));
             else if (BYTE_PATTERN.matcher(value).matches()) return new ByteTag(Byte.parseByte(value.substring(0, value.length() - 1)));
@@ -127,8 +133,6 @@ public class SNbtDeserializer_v1_12 implements SNbtDeserializer<CompoundTag> {
             else if (INT_PATTERN.matcher(value).matches()) return new IntTag(Integer.parseInt(value));
             else if (DOUBLE_PATTERN.matcher(value).matches()) return new DoubleTag(Double.parseDouble(value.substring(0, value.length() - 1)));
             else if (SHORT_DOUBLE_PATTERN.matcher(value).matches()) return new DoubleTag(Double.parseDouble(value));
-            else if (value.equalsIgnoreCase("false")) return new ByteTag((byte) 0);
-            else if (value.equalsIgnoreCase("true")) return new ByteTag((byte) 1);
         } catch (NumberFormatException ignored) {
         }
         return new StringTag(value);

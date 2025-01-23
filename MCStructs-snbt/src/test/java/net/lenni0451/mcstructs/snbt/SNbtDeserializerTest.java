@@ -35,7 +35,8 @@ public class SNbtDeserializerTest {
             "{test:[1,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,3]}",
             "{test:[I;]}",
             "{test:\"Test\\\\String\"}",
-            "{test:\"Test\\String\"}"
+            "{test:\"Test\\String\"}",
+            "{id:[B;1,false,true]}",
     };
 
     protected static void executeTests(final SNbt<?> serializer, final String[] expectedResults) {

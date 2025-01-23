@@ -32,7 +32,8 @@ class SNbtDeserializer_v1_7Test extends SNbtDeserializerTest {
             "{test:\"[1,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,3]\",}",
             "{test:[0:\"I;\",],}",
             "{test:\"Test\\\\String\"}",
-            "{test:\"Test\\String\"}"
+            "{test:\"Test\\String\"}",
+            "{id:[0:\"B;1\"]}",
     };
 
     @Test

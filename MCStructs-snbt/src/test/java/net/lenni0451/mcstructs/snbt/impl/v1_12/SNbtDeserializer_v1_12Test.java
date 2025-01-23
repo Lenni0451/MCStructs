@@ -32,7 +32,8 @@ class SNbtDeserializer_v1_12Test extends SNbtDeserializerTest {
             FAIL,
             "{test:[I;]}",
             "{test:\"Test\\\\String\"}",
-            "{test:\"Test\\String\"}"
+            "{test:\"Test\\String\"}",
+            "{id:[B;1,0,1]}",
     };
 
     @Test
