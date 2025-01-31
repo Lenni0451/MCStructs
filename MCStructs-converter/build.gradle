@@ -1,5 +1,5 @@
 dependencies {
-    api "com.google.code.gson:gson:2.12.0"
+    api "com.google.code.gson:gson:2.12.1"
 
     api project(":MCStructs-nbt")
     api project(":MCStructs-snbt")
