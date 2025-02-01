@@ -21,6 +21,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> statusEffectTag = new Checker<>("status effect", this::verifyStatusEffectTag);
     public final Checker<Identifier> statusEffect = new Checker<>("status effect", this::verifyStatusEffect);
     public final Checker<Identifier> mapDecorationType = new Checker<>("map decoration type", this::verifyMapDecorationType);
+    public final Checker<Identifier> bannerPatternTag = new Checker<>("banner pattern tag", this::verifyBannerPatternTag);
     public final Checker<Identifier> bannerPattern = new Checker<>("banner pattern", this::verifyBannerPattern);
     public final Checker<Identifier> instrument = new Checker<>("instrument", this::verifyInstrument);
     public final Checker<Identifier> sound = new Checker<>("sound", this::verifySound);
@@ -38,6 +39,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> entityTypeTag = new Checker<>("entity type tag", this::verifyEntityTypeTag);
     public final Checker<Identifier> entityType = new Checker<>("entity type", this::verifyEntityType);
     public final Checker<Identifier> damageTypeTag = new Checker<>("damage type tag", this::verifyDamageTypeTag);
+    public final Checker<Identifier> damageType = new Checker<>("damage type", this::verifyDamageType);
     public final Checker<Identifier> wolfVariant = new Checker<>("wolf variant", this::verifyWolfVariant);
     public final Checker<Identifier> biomeTag = new Checker<>("biome tag", this::verifyBiomeTag);
     public final Checker<Identifier> biome = new Checker<>("biome", this::verifyBiome);
@@ -45,6 +47,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> catVariant = new Checker<>("cat variant", this::verifyCatVariant);
     public final Checker<Identifier> pigVariant = new Checker<>("pig variant", this::verifyPigVariant);
     public final Checker<Identifier> paintingVariant = new Checker<>("painting variant", this::verifyPaintingVariant);
+    public final Checker<Identifier> spawnConditionType = new Checker<>("spawn condition type", this::verifySpawnConditionType);
 
     /**
      * Verify the item tag in the item tag registry.
@@ -144,6 +147,16 @@ public class RegistryVerifier {
      * @return If the map decoration type is valid
      */
     public boolean verifyMapDecorationType(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the banner pattern tag in the banner pattern tag registry.
+     *
+     * @param id The banner pattern tag id
+     * @return If the banner pattern tag is valid
+     */
+    public boolean verifyBannerPatternTag(final Identifier id) {
         return true;
     }
 
@@ -318,6 +331,16 @@ public class RegistryVerifier {
     }
 
     /**
+     * Verify the damage type in the damage type registry.
+     *
+     * @param id The damage type id
+     * @return If the damage type is valid
+     */
+    public boolean verifyDamageType(final Identifier id) {
+        return true;
+    }
+
+    /**
      * Verify the wolf variant in the wolf variant registry.
      *
      * @param id The wolf variant id
@@ -384,6 +407,16 @@ public class RegistryVerifier {
      * @return If the painting variant is valid
      */
     public boolean verifyPaintingVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the spawn condition type in the spawn condition type registry.
+     *
+     * @param id The spawn condition type id
+     * @return If the spawn condition type is valid
+     */
+    public boolean verifySpawnConditionType(final Identifier id) {
         return true;
     }
 

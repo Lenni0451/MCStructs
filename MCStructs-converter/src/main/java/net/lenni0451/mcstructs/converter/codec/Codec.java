@@ -380,6 +380,15 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
+    static <T> Codec<List<T>> compactList(final Codec<T> elementCodec, final Codec<List<T>> listCodec) {
+        return Codec.either(listCodec, elementCodec).map(list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list), either -> either.xmap(list -> list, item -> {
+            List<T> list = new ArrayList<>();
+            list.add(item);
+            return list;
+        }));
+    }
+
+
     default <N> Codec<N> map(final Function<N, T> serializer, final Function<T, N> deserializer) {
         return new Codec<N>() {
             @Override
@@ -536,6 +545,10 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
             if (list.isEmpty()) return Result.error("List is empty");
             return null;
         });
+    }
+
+    default Codec<List<T>> compactListOf() {
+        return compactList(this, this.listOf());
     }
 
     default Codec<T> verified(final Function<T, Result<Void>> verifier) {

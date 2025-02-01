@@ -4,11 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
+import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.text.TextComponent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Types_v1_21_5 {
@@ -18,10 +23,10 @@ public class Types_v1_21_5 {
     @AllArgsConstructor
     public static class Weapon {
         public static final String ITEM_DAMAGE_PER_ATTACK = "item_damage_per_attack";
-        public static final String CAN_DISABLE_BLOCKING = "can_disable_blocking";
+        public static final String DISABLE_BLOCKING_FOR_SECONDS = "disable_blocking_for_seconds";
 
         private int itemDamagePerAttack = 1;
-        private boolean canDisableBlocking;
+        private float disableBlockingForSeconds = 0;
     }
 
     @Data
@@ -208,6 +213,49 @@ public class Types_v1_21_5 {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class CowVariant {
+        public static final String SPAWN_CONDITIONS = "spawn_conditions";
+
+        private ModelAndTexture modelAndTexture;
+        private List<SpawnCondition> spawnConditions;
+
+
+        @Getter
+        @AllArgsConstructor
+        public enum ModelType implements NamedType {
+            NORMAL("normal"),
+            COLD("cold"),
+            WARM("warm");
+
+            private final String name;
+        }
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class ModelAndTexture {
+            public static final String MODEL = "model";
+            public static final String ASSET_ID = "asset_id";
+
+            private ModelType model;
+            private Identifier assetId;
+        }
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class SpawnCondition {
+            public static final String CONDITION = "condition";
+            public static final String PRIORITY = "priority";
+
+            private Identifier condition;
+            private int priority;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class PaintingVariant {
         public static final String WIDTH = "width";
         public static final String HEIGHT = "height";
@@ -220,6 +268,87 @@ public class Types_v1_21_5 {
         private Identifier assetId;
         private TextComponent title = null;
         private TextComponent author = null;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BlocksAttacks {
+        public static final String BLOCK_DELAY_SECONDS = "block_delay_seconds";
+        public static final String DISABLE_COOLDOWN_SCALE = "disable_cooldown_scale";
+        public static final String DAMAGE_REDUCTIONS = "damage_reductions";
+        public static final String ITEM_DAMAGE = "item_damage";
+        public static final String BYPASSED_BY = "bypassed_by";
+        public static final String BLOCK_SOUND = "block_sound";
+        public static final String DISABLED_SOUND = "disabled_sound";
+
+        private float blockDelaySeconds = 0;
+        private float disableCooldownScale = 1;
+        private List<DamageReduction> damageReductions = Collections.singletonList(new DamageReduction(90, null, 0, 1));
+        private ItemDamageFunction itemDamage = null;
+        private Identifier bypassedBy = null;
+        private Either<Identifier, Types_v1_20_5.SoundEvent> blockSound = null;
+        private Either<Identifier, Types_v1_20_5.SoundEvent> disabledSound = null;
+
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class DamageReduction {
+            public static final String HORIZONTAL_BLOCKING_ANGLE = "horizontal_blocking_angle";
+            public static final String TYPE = "type";
+            public static final String BASE = "base";
+            public static final String FACTOR = "factor";
+
+            private float horizontalBlockingAngle = 90;
+            private Types_v1_20_5.TagEntryList type = null;
+            private float base;
+            private float factor;
+        }
+
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class ItemDamageFunction {
+            public static final String THRESHOLD = "threshold";
+            public static final String BASE = "base";
+            public static final String FACTOR = "factor";
+
+            private float threshold;
+            private float base;
+            private float factor;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TooltipDisplay {
+        public static final String HIDE_TOOLTIP = "hide_tooltip";
+        public static final String HIDDEN_COMPONENTS = "hidden_components";
+
+        private boolean hideTooltip = false;
+        private List<ItemComponent<?>> hiddenComponents = new ArrayList<>();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AttributeModifiers {
+        public static final String MODIFIERS = "modifiers";
+
+        private List<Types_v1_21.AttributeModifier> modifiers;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArmorTrim {
+        public static final String MATERIAL = "material";
+        public static final String PATTERN = "pattern";
+
+        private Either<Identifier, Types_v1_20_5.ArmorTrimMaterial> material;
+        private Either<Identifier, Types_v1_20_5.ArmorTrimPattern> pattern;
     }
 
 }
