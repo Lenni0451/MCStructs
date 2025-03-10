@@ -144,7 +144,8 @@ public class IntArrayTag implements NbtTag, NbtArray<IntArrayTag, IntTag, int[],
 
     @Override
     public String toString() {
-        return "int[" + this.value.length + "](" + Arrays.toString(this.value) + ")";
+        String s = Arrays.toString(this.value);
+        return "int[" + this.value.length + "](" + s.substring(1, s.length() - 1) + ")";
     }
 
 }

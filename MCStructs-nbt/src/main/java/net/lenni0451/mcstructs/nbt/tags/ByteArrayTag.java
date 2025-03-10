@@ -146,7 +146,8 @@ public class ByteArrayTag implements NbtTag, NbtArray<ByteArrayTag, ByteTag, byt
 
     @Override
     public String toString() {
-        return "byte[" + this.value.length + "](" + Arrays.toString(this.value) + ")";
+        String s = Arrays.toString(this.value);
+        return "byte[" + this.value.length + "](" + s.substring(1, s.length() - 1) + ")";
     }
 
 }

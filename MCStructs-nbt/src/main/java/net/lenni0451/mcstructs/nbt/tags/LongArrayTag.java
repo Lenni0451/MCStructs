@@ -144,7 +144,8 @@ public class LongArrayTag implements NbtTag, NbtArray<LongArrayTag, LongTag, lon
 
     @Override
     public String toString() {
-        return "long[" + this.value.length + "](" + Arrays.toString(this.value) + ")";
+        String s = Arrays.toString(this.value);
+        return "long[" + this.value.length + "](" + s.substring(1, s.length() - 1) + ")";
     }
 
 }
