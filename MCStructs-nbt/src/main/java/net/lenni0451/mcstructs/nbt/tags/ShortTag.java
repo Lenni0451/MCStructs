@@ -103,9 +103,7 @@ public class ShortTag implements NbtNumber {
 
     @Override
     public String toString() {
-        return "ShortTag{" +
-                "value=" + this.value +
-                '}';
+        return "short(" + this.value + ")";
     }
 
 }
