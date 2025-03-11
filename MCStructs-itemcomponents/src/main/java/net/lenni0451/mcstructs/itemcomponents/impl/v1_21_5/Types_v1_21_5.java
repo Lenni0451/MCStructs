@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.lenni0451.mcstructs.converter.model.Either;
+import net.lenni0451.mcstructs.converter.types.IdentifiedType;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
@@ -50,31 +51,46 @@ public class Types_v1_21_5 {
 
     @Getter
     @AllArgsConstructor
-    public enum VillagerVariant implements NamedType {
-        DESERT("desert"),
-        JUNGLE("jungle"),
-        PLAINS("plains"),
-        SAVANNA("savanna"),
-        SNOW("snow"),
-        SWAMP("swamp"),
-        TAIGA("taiga");
+    public enum VillagerVariant implements IdentifiedType {
+        DESERT(Identifier.of("desert")),
+        JUNGLE(Identifier.of("jungle")),
+        PLAINS(Identifier.of("plains")),
+        SAVANNA(Identifier.of("savanna")),
+        SNOW(Identifier.of("snow")),
+        SWAMP(Identifier.of("swamp")),
+        TAIGA(Identifier.of("taiga"));
 
-        private final String name;
+        private final Identifier identifier;
     }
 
-    @Data
-    @NoArgsConstructor
+    @Getter
     @AllArgsConstructor
-    public static class WolfVariant {
-        public static final String WILD_TEXTURE = "wild_texture";
-        public static final String TAME_TEXTURE = "tame_texture";
-        public static final String ANGRY_TEXTURE = "angry_texture";
-        public static final String BIOMES = "biomes";
+    public enum WolfVariant implements IdentifiedType {
+        PALE(Identifier.of("pale")),
+        SPOTTED(Identifier.of("spotted")),
+        SNOWY(Identifier.of("snowy")),
+        BLACK(Identifier.of("black")),
+        ASHEN(Identifier.of("ashen")),
+        RUSTY(Identifier.of("rusty")),
+        WOODS(Identifier.of("woods")),
+        CHESTNUT(Identifier.of("chestnut")),
+        STRIPED(Identifier.of("striped"));
 
-        private Identifier wildTexture;
-        private Identifier tameTexture;
-        private Identifier angryTexture;
-        private Types_v1_20_5.TagEntryList biomes;
+        private final Identifier identifier;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum WolfSoundVariant implements IdentifiedType {
+        CLASSIC(Identifier.of("classic")),
+        PUGLIN(Identifier.of("puglin")),
+        SAD(Identifier.of("sad")),
+        ANGRY(Identifier.of("angry")),
+        GRUMPY(Identifier.of("grumpy")),
+        BIG(Identifier.of("big")),
+        CUTE(Identifier.of("cute"));
+
+        private final Identifier identifier;
     }
 
     @Getter
@@ -152,6 +168,46 @@ public class Types_v1_21_5 {
 
     @Getter
     @AllArgsConstructor
+    public enum PigVariant implements IdentifiedType {
+        TEMPERATE(Identifier.of("temperate")),
+        WARM(Identifier.of("warm")),
+        COLD(Identifier.of("cold"));
+
+        private final Identifier identifier;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum CowVariant implements IdentifiedType {
+        TEMPERATE(Identifier.of("temperate")),
+        WARM(Identifier.of("warm")),
+        COLD(Identifier.of("cold"));
+
+        private final Identifier identifier;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum ChickenVariant implements IdentifiedType {
+        TEMPERATE(Identifier.of("temperate")),
+        WARM(Identifier.of("warm")),
+        COLD(Identifier.of("cold"));
+
+        private final Identifier identifier;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum FrogVariant implements IdentifiedType {
+        TEMPERATE(Identifier.of("temperate")),
+        WARM(Identifier.of("warm")),
+        COLD(Identifier.of("cold"));
+
+        private final Identifier identifier;
+    }
+
+    @Getter
+    @AllArgsConstructor
     public enum HorseVariant implements NamedType {
         WHITE("white"),
         CREAMY("creamy"),
@@ -187,70 +243,22 @@ public class Types_v1_21_5 {
         private final String name;
     }
 
-    @Data
-    @NoArgsConstructor
+    @Getter
     @AllArgsConstructor
-    public static class PigVariant {
-        public static final String MODEL = "model";
-        public static final String TEXTURE = "texture";
-        public static final String BIOMES = "biomes";
+    public enum CatVariant implements IdentifiedType {
+        TABBY(Identifier.of("tabby")),
+        BLACK(Identifier.of("black")),
+        RED(Identifier.of("red")),
+        SIAMESE(Identifier.of("siamese")),
+        BRITISH_SHORTHAIR(Identifier.of("british_shorthair")),
+        CALICO(Identifier.of("calico")),
+        PERSIAN(Identifier.of("persian")),
+        RAGDOLL(Identifier.of("ragdoll")),
+        WHITE(Identifier.of("white")),
+        JELLIE(Identifier.of("jellie")),
+        ALL_BLACK(Identifier.of("all_black"));
 
-        private ModelType model = ModelType.NORMAL;
-        private Identifier texture;
-        private Types_v1_20_5.TagEntryList biomes;
-
-
-        @Getter
-        @AllArgsConstructor
-        public enum ModelType implements NamedType {
-            NORMAL("normal"),
-            COLD("cold");
-
-            private final String name;
-        }
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class CowVariant {
-        public static final String SPAWN_CONDITIONS = "spawn_conditions";
-
-        private ModelAndTexture modelAndTexture;
-        private List<SpawnCondition> spawnConditions;
-
-
-        @Getter
-        @AllArgsConstructor
-        public enum ModelType implements NamedType {
-            NORMAL("normal"),
-            COLD("cold"),
-            WARM("warm");
-
-            private final String name;
-        }
-
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class ModelAndTexture {
-            public static final String MODEL = "model";
-            public static final String ASSET_ID = "asset_id";
-
-            private ModelType model;
-            private Identifier assetId;
-        }
-
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class SpawnCondition {
-            public static final String CONDITION = "condition";
-            public static final String PRIORITY = "priority";
-
-            private Identifier condition;
-            private int priority;
-        }
+        private final Identifier identifier;
     }
 
     @Data

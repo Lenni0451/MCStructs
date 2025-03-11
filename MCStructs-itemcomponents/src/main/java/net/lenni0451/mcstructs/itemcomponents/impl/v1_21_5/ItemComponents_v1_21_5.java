@@ -41,17 +41,9 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             Codec.BOOLEAN.mapCodec(ToolComponent.CAN_DESTROY_BLOCKS_IN_CREATIVE).optional().defaulted(true), ToolComponent::isCanDestroyBlocksInCreative,
             ToolComponent::new
     ));
-    public final ItemComponent<VillagerVariant> VILLAGER_VARIANT = this.register("villager/variant", Codec.named(VillagerVariant.values()));
-    public final ItemComponent<Either<Identifier, WolfVariant>> WOLF_VARIANT = this.register("wolf/variant", this.typeSerializers.registryEntry(
-            this.registryVerifier.wolfVariant,
-            MapCodecMerger.codec(
-                    Codec.STRING_IDENTIFIER.mapCodec(WolfVariant.WILD_TEXTURE).required(), WolfVariant::getWildTexture,
-                    Codec.STRING_IDENTIFIER.mapCodec(WolfVariant.TAME_TEXTURE).required(), WolfVariant::getTameTexture,
-                    Codec.STRING_IDENTIFIER.mapCodec(WolfVariant.ANGRY_TEXTURE).required(), WolfVariant::getAngryTexture,
-                    this.typeSerializers.tagEntryList(this.registryVerifier.biomeTag, this.registryVerifier.biome).mapCodec(WolfVariant.BIOMES).required(), WolfVariant::getBiomes,
-                    WolfVariant::new
-            )
-    ));
+    public final ItemComponent<VillagerVariant> VILLAGER_VARIANT = this.register("villager/variant", Codec.identified(VillagerVariant.values()));
+    public final ItemComponent<WolfVariant> WOLF_VARIANT = this.register("wolf/variant", Codec.identified(WolfVariant.values()));
+    public final ItemComponent<WolfSoundVariant> WOLF_SOUND_VARIANT = this.register("wolf/sound_variant", Codec.identified(WolfSoundVariant.values()));
     public final ItemComponent<Types_v1_20_5.DyeColor> WOLF_COLLAR = this.register("wolf/collar", Codec.named(Types_v1_20_5.DyeColor.values()));
     public final ItemComponent<FoxVariant> FOX_VARIANT = this.register("fox/variant", Codec.named(FoxVariant.values()));
     public final ItemComponent<SalmonSize> SALMON_SIZE = this.register("salmon/size", Codec.named(SalmonSize.values()));
@@ -61,29 +53,10 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
     public final ItemComponent<Types_v1_20_5.DyeColor> TROPICAL_FISH_PATTERN_COLOR = this.register("tropical_fish/pattern_color", Codec.named(Types_v1_20_5.DyeColor.values()));
     public final ItemComponent<MooshroomVariant> MOOSHROOM_VARIANT = this.register("mooshroom/variant", Codec.named(MooshroomVariant.values()));
     public final ItemComponent<RabbitVariant> RABBIT_VARIANT = this.register("rabbit/variant", Codec.named(RabbitVariant.values()));
-    public final ItemComponent<Either<Identifier, PigVariant>> PIG_VARIANT = this.register("pig/variant", this.typeSerializers.registryEntry(
-            this.registryVerifier.pigVariant,
-            MapCodecMerger.codec(
-                    Codec.named(PigVariant.ModelType.values()).mapCodec(PigVariant.MODEL).optional().defaulted(PigVariant.ModelType.NORMAL), PigVariant::getModel,
-                    Codec.STRING_IDENTIFIER.mapCodec(PigVariant.TEXTURE).required(), PigVariant::getTexture,
-                    this.typeSerializers.tagEntryList(this.registryVerifier.biomeTag, this.registryVerifier.biome).mapCodec(PigVariant.BIOMES).optional().defaulted(null), PigVariant::getBiomes,
-                    PigVariant::new
-            )
-    ));
-    public final ItemComponent<CowVariant> COW_VARIANT = this.register("cow/variant", MapCodecMerger.codec(
-            MapCodecMerger.mapCodec(
-                    Codec.named(CowVariant.ModelType.values()).mapCodec(CowVariant.ModelAndTexture.MODEL).required(), CowVariant.ModelAndTexture::getModel,
-                    Codec.STRING_IDENTIFIER.mapCodec(CowVariant.ModelAndTexture.ASSET_ID).required(), CowVariant.ModelAndTexture::getAssetId,
-                    CowVariant.ModelAndTexture::new
-            ), CowVariant::getModelAndTexture,
-            MapCodecMerger.codec(
-                    Codec.STRING_IDENTIFIER.verified(this.registryVerifier.spawnConditionType).mapCodec(CowVariant.SpawnCondition.CONDITION).required(), CowVariant.SpawnCondition::getCondition,
-                    Codec.INTEGER.mapCodec(CowVariant.SpawnCondition.PRIORITY).required(), CowVariant.SpawnCondition::getPriority,
-                    CowVariant.SpawnCondition::new
-            ).listOf().mapCodec(CowVariant.SPAWN_CONDITIONS).required(), CowVariant::getSpawnConditions,
-            CowVariant::new
-    ));
-    public final ItemComponent<Identifier> FROG_VARIANT = this.register("frog/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.frogVariant));
+    public final ItemComponent<PigVariant> PIG_VARIANT = this.register("pig/variant", Codec.identified(PigVariant.values()));
+    public final ItemComponent<CowVariant> COW_VARIANT = this.register("cow/variant", Codec.identified(CowVariant.values()));
+    public final ItemComponent<ChickenVariant> CHICKEN_VARIANT = this.register("chicken/variant", Codec.identified(ChickenVariant.values()));
+    public final ItemComponent<FrogVariant> FROG_VARIANT = this.register("frog/variant", Codec.identified(FrogVariant.values()));
     public final ItemComponent<HorseVariant> HORSE_VARIANT = this.register("horse/variant", Codec.named(HorseVariant.values()));
     public final ItemComponent<Either<Identifier, PaintingVariant>> PAINTING_VARIANT = this.register("painting/variant", this.typeSerializers.registryEntry(
             this.registryVerifier.paintingVariant,
@@ -98,7 +71,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
     ));
     public final ItemComponent<LlamaVariant> LLAMA_VARIANT = this.register("llama/variant", Codec.named(LlamaVariant.values()));
     public final ItemComponent<AxolotlVariant> AXOLOTL_VARIANT = this.register("axolotl/variant", Codec.named(AxolotlVariant.values()));
-    public final ItemComponent<Identifier> CAT_VARIANT = this.register("cat/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.catVariant));
+    public final ItemComponent<CatVariant> CAT_VARIANT = this.register("cat/variant", Codec.identified(CatVariant.values()));
     public final ItemComponent<Types_v1_20_5.DyeColor> CAT_COLLAR = this.register("cat/collar", Codec.named(Types_v1_20_5.DyeColor.values()));
     public final ItemComponent<Types_v1_20_5.DyeColor> SHEEP_COLOR = this.register("sheep/color", Codec.named(Types_v1_20_5.DyeColor.values()));
     public final ItemComponent<Types_v1_20_5.DyeColor> SHULKER_COLOR = this.register("shulker/color", Codec.named(Types_v1_20_5.DyeColor.values()));
@@ -161,7 +134,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
     {
         this.unregister("hide_additional_tooltip");
         this.unregister("hide_tooltip");
-        this.sort("custom_data", "max_stack_size", "max_damage", "damage", "unbreakable", "custom_name", "item_name", "item_model", "lore", "rarity", "enchantments", "can_place_on", "can_break", "attribute_modifiers", "custom_model_data", "tooltip_display", "repair_cost", "creative_slot_lock", "enchantment_glint_override", "intangible_projectile", "food", "consumable", "use_remainder", "use_cooldown", "damage_resistant", "tool", "weapon", "enchantable", "equippable", "repairable", "glider", "tooltip_style", "death_protection", "blocks_attacks", "stored_enchantments", "dyed_color", "map_color", "map_id", "map_decorations", "map_post_processing", "charged_projectiles", "bundle_contents", "potion_contents", "potion_duration_scale", "suspicious_stew_effects", "writable_book_content", "written_book_content", "trim", "debug_stick_state", "entity_data", "bucket_entity_data", "block_entity_data", "instrument", "provides_trim_material", "ominous_bottle_amplifier", "jukebox_playable", "provides_banner_patterns", "recipes", "lodestone_tracker", "firework_explosion", "fireworks", "profile", "note_block_sound", "banner_patterns", "base_color", "pot_decorations", "container", "block_state", "bees", "lock", "container_loot", "break_sound", "villager/variant", "wolf/variant", "wolf/collar", "fox/variant", "salmon/size", "parrot/variant", "tropical_fish/pattern", "tropical_fish/base_color", "tropical_fish/pattern_color", "mooshroom/variant", "rabbit/variant", "pig/variant", "cow/variant", "frog/variant", "horse/variant", "painting/variant", "llama/variant", "axolotl/variant", "cat/variant", "cat/collar", "sheep/color", "shulker/color");
+        this.sort("custom_data", "max_stack_size", "max_damage", "damage", "unbreakable", "custom_name", "item_name", "item_model", "lore", "rarity", "enchantments", "can_place_on", "can_break", "attribute_modifiers", "custom_model_data", "tooltip_display", "repair_cost", "creative_slot_lock", "enchantment_glint_override", "intangible_projectile", "food", "consumable", "use_remainder", "use_cooldown", "damage_resistant", "tool", "weapon", "enchantable", "equippable", "repairable", "glider", "tooltip_style", "death_protection", "blocks_attacks", "stored_enchantments", "dyed_color", "map_color", "map_id", "map_decorations", "map_post_processing", "charged_projectiles", "bundle_contents", "potion_contents", "potion_duration_scale", "suspicious_stew_effects", "writable_book_content", "written_book_content", "trim", "debug_stick_state", "entity_data", "bucket_entity_data", "block_entity_data", "instrument", "provides_trim_material", "ominous_bottle_amplifier", "jukebox_playable", "provides_banner_patterns", "recipes", "lodestone_tracker", "firework_explosion", "fireworks", "profile", "note_block_sound", "banner_patterns", "base_color", "pot_decorations", "container", "block_state", "bees", "lock", "container_loot", "break_sound", "villager/variant", "wolf/variant", "wolf/sound_variant", "wolf/collar", "fox/variant", "salmon/size", "parrot/variant", "tropical_fish/pattern", "tropical_fish/base_color", "tropical_fish/pattern_color", "mooshroom/variant", "rabbit/variant", "pig/variant", "cow/variant", "chicken/variant", "frog/variant", "horse/variant", "painting/variant", "llama/variant", "axolotl/variant", "cat/variant", "cat/collar", "sheep/color", "shulker/color");
     }
 
 }
