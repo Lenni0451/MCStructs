@@ -1,5 +1,6 @@
 dependencies {
     api "com.google.code.gson:gson:2.11.0"
+    api "com.google.guava:guava:33.4.0-jre"
 
     api project(":MCStructs-nbt")
     api project(":MCStructs-snbt")
