@@ -15,7 +15,7 @@ public class JavaConverter_v1_20_3 implements DataConverter<Object> {
 
     @Override
     public <N> N convertTo(DataConverter<N> converter, @Nullable Object element) {
-        if (element == null) return null;
+        if (element == null) return converter.empty();
         else if (element instanceof Boolean) return converter.createBoolean((Boolean) element);
         else if (element instanceof Byte) return converter.createByte((Byte) element);
         else if (element instanceof Short) return converter.createShort((Short) element);
@@ -117,13 +117,6 @@ public class JavaConverter_v1_20_3 implements DataConverter<Object> {
             result.put((String) entry.getKey(), entry.getValue());
         }
         return Result.success(result);
-    }
-
-    @Override
-    public boolean put(Object map, String key, Object value) {
-        if (!(map instanceof Map)) return false;
-        ((Map<Object, Object>) map).put(key, value);
-        return true;
     }
 
     @Override

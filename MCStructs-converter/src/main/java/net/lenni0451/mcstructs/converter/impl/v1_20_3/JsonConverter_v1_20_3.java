@@ -18,7 +18,7 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
     @Override
     public <N> N convertTo(DataConverter<N> to, @Nullable JsonElement element) {
         if (to == this) return (N) element;
-        if (element == null || element instanceof JsonNull) return null;
+        if (element == null || element instanceof JsonNull) return to.empty();
         if (element instanceof JsonObject) return this.convertMap(to, element);
         if (element instanceof JsonArray) return this.convertList(to, element);
 
@@ -38,6 +38,11 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
             if ((float) d == d) return to.createFloat((float) d);
             return to.createDouble(d);
         }
+    }
+
+    @Override
+    public JsonElement empty() {
+        return JsonNull.INSTANCE;
     }
 
     @Override
@@ -130,13 +135,6 @@ public class JsonConverter_v1_20_3 implements DataConverter<JsonElement> {
         Map<String, JsonElement> map = new HashMap<>();
         element.getAsJsonObject().entrySet().forEach(entry -> map.put(entry.getKey(), entry.getValue()));
         return Result.success(map);
-    }
-
-    @Override
-    public boolean put(JsonElement map, String key, JsonElement value) {
-        if (!map.isJsonObject()) return false;
-        map.getAsJsonObject().add(key, value);
-        return true;
     }
 
     @Override

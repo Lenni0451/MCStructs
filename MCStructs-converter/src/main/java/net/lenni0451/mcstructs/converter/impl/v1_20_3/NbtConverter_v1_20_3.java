@@ -31,10 +31,10 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
     @Override
     public <N> N convertTo(DataConverter<N> to, @Nullable NbtTag element) {
         if (to == this) return (N) element;
-        if (element == null) return null;
+        if (element == null) return to.empty();
         switch (element.getNbtType()) {
             case END:
-                return null;
+                return to.empty();
             case BYTE:
                 return to.createByte(element.asByteTag().getValue());
             case SHORT:
@@ -251,13 +251,6 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
         Map<String, NbtTag> map = new HashMap<>();
         for (Map.Entry<String, NbtTag> entry : compound) map.put(entry.getKey(), entry.getValue());
         return Result.success(map);
-    }
-
-    @Override
-    public boolean put(NbtTag map, String key, NbtTag value) {
-        if (!map.isCompoundTag()) return false;
-        map.asCompoundTag().add(key, value);
-        return true;
     }
 
     @Override

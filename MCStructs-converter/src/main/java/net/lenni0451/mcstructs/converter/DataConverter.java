@@ -28,6 +28,10 @@ public interface DataConverter<T> {
         return to.createUnsafeMap(out);
     }
 
+    default T empty() {
+        return null;
+    }
+
     T createBoolean(final boolean value);
 
     Result<Boolean> asBoolean(final T element);
@@ -112,8 +116,6 @@ public interface DataConverter<T> {
     Result<Map<T, T>> asMap(final T element);
 
     Result<Map<String, T>> asStringTypeMap(final T element);
-
-    boolean put(final T map, final String key, final T value);
 
     T createByteArray(final byte[] value);
 

@@ -168,11 +168,6 @@ public class DelegatingConverter<T> implements DataConverter<T> {
     }
 
     @Override
-    public boolean put(T map, String key, T value) {
-        return this.delegate.put(map, key, value);
-    }
-
-    @Override
     public T createByteArray(byte[] value) {
         return this.delegate.createByteArray(value);
     }

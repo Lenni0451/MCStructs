@@ -296,19 +296,19 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
 
     @Override
     public <D> D mapTo(DataConverter<D> converter, ItemComponentMap map) {
-        D out = converter.emptyMap();
+        Map<D, D> out = new HashMap<>();
         for (Map.Entry<ItemComponent<?>, ?> entry : map.getValues().entrySet()) {
             ItemComponent<Object> component = (ItemComponent<Object>) entry.getKey();
             Object value = entry.getValue();
 
             String name = component.getName().get();
-            converter.put(out, name, component.serialize(converter, value));
+            out.put(converter.createString(name), component.serialize(converter, value));
         }
         for (ItemComponent<?> component : map.getMarkedForRemoval()) {
             String name = "!" + component.getName().get();
-            converter.put(out, name, converter.emptyMap());
+            out.put(converter.createString(name), converter.emptyMap());
         }
-        return out;
+        return converter.createUnsafeMap(out);
     }
 
     @Override
