@@ -81,6 +81,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
             DeathProtection::new
     ));
     public final ItemComponent<ItemPredicate> LOCK = this.register("lock", this.typeSerializers.itemPredicate());
+    private ItemComponent<?> FIRE_RESISTANT;
 
 
     public ItemComponents_v1_21_2() {

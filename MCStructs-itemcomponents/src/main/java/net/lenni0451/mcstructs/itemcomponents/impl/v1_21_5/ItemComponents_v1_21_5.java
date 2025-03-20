@@ -136,6 +136,8 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             ArmorTrim::new
     ));
     public final ItemComponent<Boolean> UNBREAKABLE = this.register("unbreakable", Codec.UNIT);
+    private ItemComponent<?> HIDE_ADDITIONAL_TOOLTIP;
+    private ItemComponent<?> HIDE_TOOLTIP;
 
     public ItemComponents_v1_21_5() {
     }
