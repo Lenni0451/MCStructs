@@ -21,7 +21,7 @@ public class ServerRenaming {
             return;
         }
 
-        CompoundTag serversTag = (CompoundTag) NbtIO.LATEST.read(exampleServers, false, NbtReadTracker.unlimited());
+        CompoundTag serversTag = (CompoundTag) NbtIO.LATEST.read(exampleServers, false, NbtReadTracker.unlimitedDepth());
         ListTag<CompoundTag> servers = serversTag.getList("servers", NbtType.COMPOUND);
         int i = 0;
         for (CompoundTag server : servers) server.addString("name", "Server #" + ++i);

@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class NbtReadTrackerTest {
 
     @Test
-    void unlimited() {
-        assertDoesNotThrow(() -> NbtReadTracker.unlimited().read(Integer.MAX_VALUE));
+    void unlimitedDepth() {
+        assertDoesNotThrow(() -> NbtReadTracker.unlimitedDepth().read(Integer.MAX_VALUE));
     }
 
     @Test

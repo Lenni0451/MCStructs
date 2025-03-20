@@ -87,7 +87,7 @@ public class NbtReader_v1_0_0 implements NbtReader {
     public ByteArrayTag readByteArray(DataInput in, NbtReadTracker readTracker) throws IOException {
         readTracker.read(24);
         int length = in.readInt();
-        readTracker.read(length);
+        readTracker.read(length, 1);
         byte[] value = new byte[length];
         in.readFully(value);
         return new ByteArrayTag(value);
@@ -98,7 +98,7 @@ public class NbtReader_v1_0_0 implements NbtReader {
     public StringTag readString(DataInput in, NbtReadTracker readTracker) throws IOException {
         readTracker.read(36);
         String value = in.readUTF();
-        readTracker.read(2 * value.length());
+        readTracker.read(value.length(), 2);
         return new StringTag(value);
     }
 
@@ -109,7 +109,7 @@ public class NbtReader_v1_0_0 implements NbtReader {
         int typeId = in.readByte();
         int count = in.readInt();
         if (typeId == NbtType.END.getId() && count > 0) throw new NbtReadException("ListNbt with type END and count > 0");
-        readTracker.read(4 * count);
+        readTracker.read(count, 4);
         NbtType type = NbtType.byId(typeId);
         List<NbtTag> value = new ArrayList<>(Math.min(count, 512));
         for (int i = 0; i < count; i++) {
@@ -129,7 +129,8 @@ public class NbtReader_v1_0_0 implements NbtReader {
         while (true) {
             NbtHeader header = this.readHeader(in, readTracker);
             if (header.isEnd()) break;
-            readTracker.read(28 + 2 * header.getName().length());
+            readTracker.read(28);
+            readTracker.read(header.getName().length(), 2);
 
             readTracker.pushDepth();
             NbtTag tag = this.read(header.getType(), in, readTracker);

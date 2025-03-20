@@ -4,14 +4,14 @@ import net.lenni0451.mcstructs.nbt.exceptions.NbtReadException;
 
 /**
  * The Nbt read tracker is used to limit the size of Nbt data that is read.<br>
- * If you do not want any size constraints you can use {@link #unlimited()}.
+ * If you do not want any size constraints you can use {@link #unlimitedDepth()}.
  */
 public class NbtReadTracker {
 
     /**
      * The default max bytes that can be read.
      */
-    public static final int DEFAULT_MAX_BYTES = 2_097_152;
+    public static final long DEFAULT_MAX_BYTES = 2_097_152;
     /**
      * The default max depth that can be read.
      */
@@ -23,19 +23,19 @@ public class NbtReadTracker {
      *
      * @return The unlimited read tracker
      */
-    public static NbtReadTracker unlimited() {
+    public static NbtReadTracker unlimitedDepth() {
         return new NbtReadTracker(0) {
             @Override
-            public void read(int bytes) {
+            public void read(long bytes) {
             }
         };
     }
 
 
     private final int maxDepth;
-    private final int maxBytes;
+    private final long maxBytes;
     private int depth;
-    private int size;
+    private long size;
 
     /**
      * Create a new read tracker with the default max bytes ({@link #DEFAULT_MAX_BYTES}) and max depth ({@link #DEFAULT_MAX_DEPTH}).
@@ -49,7 +49,7 @@ public class NbtReadTracker {
      *
      * @param maxBytes The max bytes that can be read
      */
-    public NbtReadTracker(final int maxBytes) {
+    public NbtReadTracker(final long maxBytes) {
         this(DEFAULT_MAX_DEPTH, maxBytes);
     }
 
@@ -59,7 +59,7 @@ public class NbtReadTracker {
      * @param maxDepth The max depth that can be read
      * @param maxBytes The max bytes that can be read
      */
-    public NbtReadTracker(final int maxDepth, final int maxBytes) {
+    public NbtReadTracker(final int maxDepth, final long maxBytes) {
         this.maxDepth = maxDepth;
         this.maxBytes = maxBytes;
     }
@@ -87,11 +87,22 @@ public class NbtReadTracker {
      * @param bytes The amount of bytes that were read
      * @throws NbtReadException If the max bytes were exceeded
      */
-    public void read(final int bytes) throws NbtReadException {
-        this.size += bytes;
+    public void read(final long bytes) throws NbtReadException {
+        this.size = Math.addExact(this.size, bytes);
         if (this.size > this.maxBytes) {
             throw new NbtReadException("Tried to read larger Nbt than allowed. Needed bytes " + this.size + " but max is " + this.maxBytes + " bytes");
         }
+    }
+
+    /**
+     * Read the given amount of bytes multiplied by the given multiplier.
+     *
+     * @param bytes      The amount of bytes that were read
+     * @param multiplier The multiplier
+     * @throws NbtReadException If the max bytes were exceeded
+     */
+    public void read(final long bytes, final long multiplier) throws NbtReadException {
+        this.read(Math.multiplyExact(bytes, multiplier));
     }
 
 }

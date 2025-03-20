@@ -73,8 +73,8 @@ class NbtIOTest {
 
     @Test
     void read() {
-        NbtTag uncompressed = assertDoesNotThrow(() -> NBT_IO.read(new ByteArrayInputStream(NbtIOTest.uncompressed), false, NbtReadTracker.unlimited()));
-        NbtTag compressed = assertDoesNotThrow(() -> NBT_IO.read(new ByteArrayInputStream(NbtIOTest.compressed), true, NbtReadTracker.unlimited()));
+        NbtTag uncompressed = assertDoesNotThrow(() -> NBT_IO.read(new ByteArrayInputStream(NbtIOTest.uncompressed), false, NbtReadTracker.unlimitedDepth()));
+        NbtTag compressed = assertDoesNotThrow(() -> NBT_IO.read(new ByteArrayInputStream(NbtIOTest.compressed), true, NbtReadTracker.unlimitedDepth()));
 
         assertEquals(compoundTag, uncompressed);
         assertEquals(compoundTag, compressed);
@@ -82,7 +82,7 @@ class NbtIOTest {
 
     @Test
     void readNamed() {
-        NamedTag namedTag = assertDoesNotThrow(() -> NBT_IO.readNamed(new DataInputStream(new ByteArrayInputStream(NbtIOTest.named)), NbtReadTracker.unlimited()));
+        NamedTag namedTag = assertDoesNotThrow(() -> NBT_IO.readNamed(new DataInputStream(new ByteArrayInputStream(NbtIOTest.named)), NbtReadTracker.unlimitedDepth()));
 
         assertEquals("named", namedTag.getName());
         assertInstanceOf(StringTag.class, namedTag.getTag());

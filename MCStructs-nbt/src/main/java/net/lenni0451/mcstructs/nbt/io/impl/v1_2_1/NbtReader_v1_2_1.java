@@ -20,7 +20,7 @@ public class NbtReader_v1_2_1 extends NbtReader_v1_0_0 {
     public IntArrayTag readIntArray(DataInput in, NbtReadTracker readTracker) throws IOException {
         readTracker.read(24);
         int length = in.readInt();
-        readTracker.read(4 * length);
+        readTracker.read(length, 4);
         int[] value = new int[length];
         for (int i = 0; i < value.length; i++) value[i] = in.readInt();
         return new IntArrayTag(value);
