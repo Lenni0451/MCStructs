@@ -8,8 +8,19 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class Identifier {
 
+    public static final String DEFAULT_NAMESPACE = "minecraft";
     public static final String VALID_KEY_CHARS = "[_\\-a-z0-9.]*";
     public static final String VALID_VALUE_CHARS = "[_\\-a-z0-9/.]*";
+
+    /**
+     * Create a new identifier with the default namespace {@code "minecraft"}.
+     *
+     * @param value The value of the identifier
+     * @return The created identifier
+     */
+    public static Identifier defaultNamespace(final String value) {
+        return of(DEFAULT_NAMESPACE, value);
+    }
 
     /**
      * Create a new identifier.<br>
@@ -22,7 +33,7 @@ public class Identifier {
      */
     public static Identifier of(final String value) {
         int splitIndex = value.indexOf(':');
-        String key = splitIndex <= 0 ? "minecraft" : value.substring(0, splitIndex);
+        String key = splitIndex <= 0 ? DEFAULT_NAMESPACE : value.substring(0, splitIndex);
         String val = splitIndex == -1 ? value : value.substring(splitIndex + 1);
         return of(key, val);
     }
@@ -90,6 +101,7 @@ public class Identifier {
 
     /**
      * Check if the key and value are equal to the given key and value.
+     *
      * @param key   The key to check
      * @param value The value to check
      * @return If the key and value are equal
