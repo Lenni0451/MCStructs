@@ -13,6 +13,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.
 
 public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
 
-    private final TypeSerializers_v1_20_5 typeSerializers = new TypeSerializers_v1_20_5(this);
+    private final TypeSerializers_v1_20_5 typeSerializers = new TypeSerializers_v1_20_5(this, TextComponentCodec.V1_20_5);
 
     public final ItemComponent<CompoundTag> CUSTOM_DATA = this.register("custom_data", this.typeSerializers.customData());
     public final ItemComponent<Integer> MAX_STACK_SIZE = this.register("max_stack_size", Codec.rangedInt(1, 99));

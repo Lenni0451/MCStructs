@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.TypeSerializers_v1_20
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.snbt.SNbt;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.ItemStack;
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeModifier;
@@ -16,8 +17,8 @@ public class TypeSerializers_v1_21 extends TypeSerializers_v1_20_5 {
 
     protected static final String SINGLE_ITEM_STACK = "single_item_stack";
 
-    public TypeSerializers_v1_21(final ItemComponentRegistry registry) {
-        super(registry);
+    public TypeSerializers_v1_21(final ItemComponentRegistry registry, final TextComponentCodec textComponentCodec) {
+        super(registry, textComponentCodec);
     }
 
     @Override

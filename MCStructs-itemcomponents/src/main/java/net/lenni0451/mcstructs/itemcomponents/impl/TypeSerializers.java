@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +16,17 @@ import java.util.function.Supplier;
 public class TypeSerializers {
 
     protected final ItemComponentRegistry registry;
+    protected final TextComponentCodec textComponentCodec;
     private final Map<String, Codec<?>> codecCache;
 
-    public TypeSerializers(final ItemComponentRegistry registry) {
+    public TypeSerializers(final ItemComponentRegistry registry, final TextComponentCodec textComponentCodec) {
         this.registry = registry;
+        this.textComponentCodec = textComponentCodec;
         this.codecCache = new HashMap<>();
+    }
+
+    public TextComponentCodec getTextComponentCodec() {
+        return this.textComponentCodec;
     }
 
     protected <T> Codec<T> init(final String key, final Supplier<Codec<T>> codecSupplier) {

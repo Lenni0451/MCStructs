@@ -10,6 +10,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.TypeSerializers_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -26,8 +27,8 @@ public class TypeSerializers_v1_21_2 extends TypeSerializers_v1_21 {
     protected static final String CONSUME_EFFECT = "consume_effect";
     protected static final String ITEM_SUB_PREDICATE = "item_sub_predicate";
 
-    public TypeSerializers_v1_21_2(final ItemComponentRegistry registry) {
-        super(registry);
+    public TypeSerializers_v1_21_2(final ItemComponentRegistry registry, final TextComponentCodec textComponentCodec) {
+        super(registry, textComponentCodec);
     }
 
     public Codec<MinMaxInt> minMaxInt() {

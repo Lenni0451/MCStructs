@@ -32,6 +32,10 @@ public class Test_v1_21_5 extends ItemComponentTest<ItemComponents_v1_21_5> {
 
     @Override
     protected void register(ItemComponents_v1_21_5 registry) {
+        register(registry.CUSTOM_NAME, new StringComponent("Test"));
+        register(registry.ITEM_NAME, new StringComponent("Test"));
+        register(registry.LORE, Arrays.asList(new StringComponent("Test1"), new StringComponent("Test2")));
+        register(registry.WRITTEN_BOOK_CONTENT, new Types_v1_20_5.WrittenBook(new Types_v1_20_5.RawFilteredPair<>("title"), "author", 3, Arrays.asList(new Types_v1_20_5.RawFilteredPair<>(new StringComponent("page1")), new Types_v1_20_5.RawFilteredPair<>(new StringComponent("page2"), new StringComponent("filtered page2"))), true));
         register(registry.WEAPON, new Weapon(32, 12.3F));
         register(registry.POTION_DURATION_SCALE, 12.3F);
         register(registry.TOOL, new ToolComponent(Arrays.asList(new Types_v1_20_5.ToolComponent.Rule(new Types_v1_20_5.TagEntryList(Identifier.of("test")), 10F, true)), 12.3F, 10, true));

@@ -43,8 +43,8 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     protected static final String ARMOR_TRIM_PATTERN = "armor_trim_pattern";
     protected static final String STATUS_EFFECT = "status_effect";
 
-    public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
-        super(registry);
+    public TypeSerializers_v1_20_5(final ItemComponentRegistry registry, final TextComponentCodec textComponentCodec) {
+        super(registry, textComponentCodec);
     }
 
     public Codec<CompoundTag> customData() {
@@ -105,13 +105,13 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
                 S test = converter.createString("");
                 if (test instanceof StringTag) {
                     try {
-                        return Result.success((S) TextComponentCodec.V1_20_5.serializeNbtTree(element));
+                        return Result.success((S) TypeSerializers_v1_20_5.this.textComponentCodec.serializeNbtTree(element));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
                 } else if (test instanceof JsonPrimitive) {
                     try {
-                        return Result.success((S) TextComponentCodec.V1_20_5.serializeJsonTree(element));
+                        return Result.success((S) TypeSerializers_v1_20_5.this.textComponentCodec.serializeJsonTree(element));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
@@ -124,13 +124,13 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
             public <S> Result<TextComponent> deserialize(DataConverter<S> converter, S data) {
                 if (data instanceof NbtTag) {
                     try {
-                        return Result.success(TextComponentCodec.V1_20_5.deserializeNbtTree((NbtTag) data));
+                        return Result.success(TypeSerializers_v1_20_5.this.textComponentCodec.deserializeNbtTree((NbtTag) data));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
                 } else if (data instanceof JsonElement) {
                     try {
-                        return Result.success(TextComponentCodec.V1_20_5.deserializeJsonTree((JsonElement) data));
+                        return Result.success(TypeSerializers_v1_20_5.this.textComponentCodec.deserializeJsonTree((JsonElement) data));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
@@ -142,7 +142,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     }
 
     public Codec<TextComponent> textComponent(final int maxLength) {
-        return Codec.sizedString(0, maxLength).mapThrowing(TextComponentCodec.V1_20_5::serializeJsonString, TextComponentCodec.V1_20_5::deserializeJson);
+        return Codec.sizedString(0, maxLength).mapThrowing(TypeSerializers_v1_20_5.this.textComponentCodec::serializeJsonString, TypeSerializers_v1_20_5.this.textComponentCodec::deserializeJson);
     }
 
     public Codec<String> playerName() {

@@ -12,6 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeMo
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeModifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.Food;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.JukeboxPlayable;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class ItemComponents_v1_21 extends ItemComponents_v1_20_5 {
 
-    private final TypeSerializers_v1_21 typeSerializers = new TypeSerializers_v1_21(this);
+    private final TypeSerializers_v1_21 typeSerializers = new TypeSerializers_v1_21(this, TextComponentCodec.V1_20_5);
 
     public final ItemComponent<Food> FOOD = this.register("food", MapCodecMerger.codec(
             Codec.minInt(0).mapCodec(Food.NUTRITION).required(), Food::getNutrition,

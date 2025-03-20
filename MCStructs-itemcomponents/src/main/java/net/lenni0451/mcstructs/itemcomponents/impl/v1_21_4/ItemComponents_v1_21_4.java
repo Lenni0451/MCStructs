@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.ItemComponents_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.Types_v1_21_4.
 
 public class ItemComponents_v1_21_4 extends ItemComponents_v1_21_2 {
 
-    private final TypeSerializers_v1_21_4 typeSerializers = new TypeSerializers_v1_21_4(this);
+    private final TypeSerializers_v1_21_4 typeSerializers = new TypeSerializers_v1_21_4(this, TextComponentCodec.V1_21_4);
 
     public final ItemComponent<CustomModelData> CUSTOM_MODEL_DATA = this.register("custom_model_data", MapCodecMerger.codec(
             Codec.FLOAT.listOf().mapCodec(CustomModelData.FLOATS).optional().defaulted(List::isEmpty, ArrayList::new), CustomModelData::getFloats,

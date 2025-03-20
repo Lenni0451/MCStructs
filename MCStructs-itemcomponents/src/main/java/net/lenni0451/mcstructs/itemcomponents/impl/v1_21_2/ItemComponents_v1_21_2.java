@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2.
 
 public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
 
-    private final TypeSerializers_v1_21_2 typeSerializers = new TypeSerializers_v1_21_2(this);
+    private final TypeSerializers_v1_21_2 typeSerializers = new TypeSerializers_v1_21_2(this, TextComponentCodec.V1_21_2);
 
     public final ItemComponent<PotionContents> POTION_CONTENTS = this.register("potion_contents", Codec.oneOf(
             MapCodecMerger.codec(

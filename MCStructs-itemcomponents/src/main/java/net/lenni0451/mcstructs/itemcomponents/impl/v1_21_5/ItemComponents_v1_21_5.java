@@ -10,6 +10,8 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.TypeSerializers_v1_21_4;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
 
 import java.util.ArrayList;
@@ -21,12 +23,23 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.Types_v1_21_5.
 
 public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
 
-    private final TypeSerializers_v1_21_4 typeSerializers = new TypeSerializers_v1_21_4(this);
+    private final TypeSerializers_v1_21_4 typeSerializers = new TypeSerializers_v1_21_4(this, TextComponentCodec.V1_21_5);
 
+    public final ItemComponent<TextComponent> CUSTOM_NAME = this.register("custom_name", this.typeSerializers.getTextComponentCodec().getTextCodec());
+    public final ItemComponent<TextComponent> ITEM_NAME = this.register("item_name", this.typeSerializers.getTextComponentCodec().getTextCodec());
+    public final ItemComponent<List<TextComponent>> LORE = this.register("lore", this.typeSerializers.getTextComponentCodec().getTextCodec().listOf(256));
     public final ItemComponent<Weapon> WEAPON = this.register("weapon", MapCodecMerger.codec(
             Codec.minInt(0).mapCodec(Weapon.ITEM_DAMAGE_PER_ATTACK).optional().defaulted(1), Weapon::getItemDamagePerAttack,
             Codec.minFloat(0).mapCodec(Weapon.DISABLE_BLOCKING_FOR_SECONDS).optional().defaulted(0F), Weapon::getDisableBlockingForSeconds,
             Weapon::new
+    ));
+    public final ItemComponent<Types_v1_20_5.WrittenBook> WRITTEN_BOOK_CONTENT = this.register("written_book_content", MapCodecMerger.codec(
+            this.typeSerializers.rawFilteredPair(Codec.sizedString(0, 32)).mapCodec(Types_v1_20_5.WrittenBook.TITLE).required(), Types_v1_20_5.WrittenBook::getTitle,
+            Codec.STRING.mapCodec(Types_v1_20_5.WrittenBook.AUTHOR).required(), Types_v1_20_5.WrittenBook::getAuthor,
+            Codec.rangedInt(0, 3).mapCodec(Types_v1_20_5.WrittenBook.GENERATION).optional().defaulted(0), Types_v1_20_5.WrittenBook::getGeneration,
+            this.typeSerializers.rawFilteredPair(this.typeSerializers.getTextComponentCodec().getTextCodec()).listOf().mapCodec(Types_v1_20_5.WrittenBook.PAGES).optional().defaulted(List::isEmpty, ArrayList::new), Types_v1_20_5.WrittenBook::getPages,
+            Codec.BOOLEAN.mapCodec(Types_v1_20_5.WrittenBook.RESOLVED).optional().defaulted(false), Types_v1_20_5.WrittenBook::isResolved,
+            Types_v1_20_5.WrittenBook::new
     ));
     public final ItemComponent<Float> POTION_DURATION_SCALE = this.register("potion_duration_scale", Codec.minFloat(0));
     public final ItemComponent<ToolComponent> TOOL = this.register("tool", MapCodecMerger.codec(
