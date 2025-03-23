@@ -82,7 +82,7 @@ public interface MapCodec<T> extends MapSerializer<T>, MapDeserializer<T> {
 
     default MapCodec<T> defaulted(final T defaultValue) {
         return this.map(
-                value -> Objects.equals(value, defaultValue) ? defaultValue : value,
+                value -> Objects.equals(value, defaultValue) ? null : value,
                 value -> value == null ? defaultValue : value
         );
     }
