@@ -160,8 +160,8 @@ public class Types_v1_20_5 {
         public static final String HAS_TWINKLE = "has_twinkle";
 
         private ExplosionShape shape;
-        private int[] colors = new int[0];
-        private int[] fadeColors = new int[0];
+        private List<Integer> colors = new ArrayList<>();
+        private List<Integer> fadeColors = new ArrayList<>();
         private boolean hasTrail = false;
         private boolean hasTwinkle = false;
 

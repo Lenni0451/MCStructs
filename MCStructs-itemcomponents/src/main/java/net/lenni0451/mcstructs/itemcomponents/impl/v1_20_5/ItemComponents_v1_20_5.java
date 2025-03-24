@@ -194,8 +194,8 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     ));
     public final ItemComponent<FireworkExplosions> FIREWORK_EXPLOSION = this.register("firework_explosion", MapCodecMerger.codec(
             Codec.named(FireworkExplosions.ExplosionShape.values()).mapCodec(FireworkExplosions.SHAPE).required(), FireworkExplosions::getShape,
-            Codec.INT_ARRAY.mapCodec(FireworkExplosions.COLORS).optional().defaulted(array -> array.length == 0, () -> new int[0]), FireworkExplosions::getColors,
-            Codec.INT_ARRAY.mapCodec(FireworkExplosions.FADE_COLORS).optional().defaulted(array -> array.length == 0, () -> new int[0]), FireworkExplosions::getFadeColors,
+            Codec.INTEGER.listOf().mapCodec(FireworkExplosions.COLORS).optional().defaulted(List::isEmpty, ArrayList::new), FireworkExplosions::getColors,
+            Codec.INTEGER.listOf().mapCodec(FireworkExplosions.FADE_COLORS).optional().defaulted(List::isEmpty, ArrayList::new), FireworkExplosions::getFadeColors,
             Codec.BOOLEAN.mapCodec(FireworkExplosions.HAS_TRAIL).optional().defaulted(false), FireworkExplosions::isHasTrail,
             Codec.BOOLEAN.mapCodec(FireworkExplosions.HAS_TWINKLE).optional().defaulted(false), FireworkExplosions::isHasTwinkle,
             FireworkExplosions::new
