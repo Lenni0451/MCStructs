@@ -69,7 +69,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
     public final ItemComponent<Identifier> PIG_VARIANT = this.register("pig/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.pigVariant));
     public final ItemComponent<Identifier> COW_VARIANT = this.register("cow/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.cowVariant));
     public final ItemComponent<Identifier> CHICKEN_VARIANT = this.register("chicken/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.chickenVariant));
-    public final ItemComponent<Identifier> FROG_VARIANT = this.register("frog/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.frogVariant)); //TODO
+    public final ItemComponent<Identifier> FROG_VARIANT = this.register("frog/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.frogVariant));
     public final ItemComponent<HorseVariant> HORSE_VARIANT = this.register("horse/variant", Codec.named(HorseVariant.values()));
     public final ItemComponent<Either<Identifier, PaintingVariant>> PAINTING_VARIANT = this.register("painting/variant", this.typeSerializers.registryEntry(
             this.registryVerifier.paintingVariant,
