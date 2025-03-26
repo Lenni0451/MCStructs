@@ -55,8 +55,8 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             ToolComponent::new
     ));
     public final ItemComponent<VillagerVariant> VILLAGER_VARIANT = this.register("villager/variant", Codec.identified(VillagerVariant.values()));
-    public final ItemComponent<WolfVariant> WOLF_VARIANT = this.register("wolf/variant", Codec.identified(WolfVariant.values()));
-    public final ItemComponent<WolfSoundVariant> WOLF_SOUND_VARIANT = this.register("wolf/sound_variant", Codec.identified(WolfSoundVariant.values()));
+    public final ItemComponent<Identifier> WOLF_VARIANT = this.register("wolf/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.wolfVariant));
+    public final ItemComponent<Identifier> WOLF_SOUND_VARIANT = this.register("wolf/sound_variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.wolfSoundVariant));
     public final ItemComponent<Types_v1_20_5.DyeColor> WOLF_COLLAR = this.register("wolf/collar", Codec.named(Types_v1_20_5.DyeColor.values()));
     public final ItemComponent<FoxVariant> FOX_VARIANT = this.register("fox/variant", Codec.named(FoxVariant.values()));
     public final ItemComponent<SalmonSize> SALMON_SIZE = this.register("salmon/size", Codec.named(SalmonSize.values()));
@@ -66,10 +66,10 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
     public final ItemComponent<Types_v1_20_5.DyeColor> TROPICAL_FISH_PATTERN_COLOR = this.register("tropical_fish/pattern_color", Codec.named(Types_v1_20_5.DyeColor.values()));
     public final ItemComponent<MooshroomVariant> MOOSHROOM_VARIANT = this.register("mooshroom/variant", Codec.named(MooshroomVariant.values()));
     public final ItemComponent<RabbitVariant> RABBIT_VARIANT = this.register("rabbit/variant", Codec.named(RabbitVariant.values()));
-    public final ItemComponent<PigVariant> PIG_VARIANT = this.register("pig/variant", Codec.identified(PigVariant.values()));
-    public final ItemComponent<CowVariant> COW_VARIANT = this.register("cow/variant", Codec.identified(CowVariant.values()));
-    public final ItemComponent<ChickenVariant> CHICKEN_VARIANT = this.register("chicken/variant", Codec.identified(ChickenVariant.values()));
-    public final ItemComponent<FrogVariant> FROG_VARIANT = this.register("frog/variant", Codec.identified(FrogVariant.values()));
+    public final ItemComponent<Identifier> PIG_VARIANT = this.register("pig/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.pigVariant));
+    public final ItemComponent<Identifier> COW_VARIANT = this.register("cow/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.cowVariant));
+    public final ItemComponent<Identifier> CHICKEN_VARIANT = this.register("chicken/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.chickenVariant));
+    public final ItemComponent<Identifier> FROG_VARIANT = this.register("frog/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.frogVariant)); //TODO
     public final ItemComponent<HorseVariant> HORSE_VARIANT = this.register("horse/variant", Codec.named(HorseVariant.values()));
     public final ItemComponent<Either<Identifier, PaintingVariant>> PAINTING_VARIANT = this.register("painting/variant", this.typeSerializers.registryEntry(
             this.registryVerifier.paintingVariant,
@@ -84,7 +84,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
     ));
     public final ItemComponent<LlamaVariant> LLAMA_VARIANT = this.register("llama/variant", Codec.named(LlamaVariant.values()));
     public final ItemComponent<AxolotlVariant> AXOLOTL_VARIANT = this.register("axolotl/variant", Codec.named(AxolotlVariant.values()));
-    public final ItemComponent<CatVariant> CAT_VARIANT = this.register("cat/variant", Codec.identified(CatVariant.values()));
+    public final ItemComponent<Identifier> CAT_VARIANT = this.register("cat/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.catVariant));
     public final ItemComponent<Types_v1_20_5.DyeColor> CAT_COLLAR = this.register("cat/collar", Codec.named(Types_v1_20_5.DyeColor.values()));
     public final ItemComponent<Types_v1_20_5.DyeColor> SHEEP_COLOR = this.register("sheep/color", Codec.named(Types_v1_20_5.DyeColor.values()));
     public final ItemComponent<Types_v1_20_5.DyeColor> SHULKER_COLOR = this.register("shulker/color", Codec.named(Types_v1_20_5.DyeColor.values()));

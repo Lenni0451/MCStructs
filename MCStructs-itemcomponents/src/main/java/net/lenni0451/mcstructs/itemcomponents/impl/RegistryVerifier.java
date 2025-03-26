@@ -41,13 +41,13 @@ public class RegistryVerifier {
     public final Checker<Identifier> damageTypeTag = new Checker<>("damage type tag", this::verifyDamageTypeTag);
     public final Checker<Identifier> damageType = new Checker<>("damage type", this::verifyDamageType);
     public final Checker<Identifier> wolfVariant = new Checker<>("wolf variant", this::verifyWolfVariant);
-    public final Checker<Identifier> biomeTag = new Checker<>("biome tag", this::verifyBiomeTag);
-    public final Checker<Identifier> biome = new Checker<>("biome", this::verifyBiome);
+    public final Checker<Identifier> wolfSoundVariant = new Checker<>("wolf sound variant", this::verifyWolfSoundVariant);
     public final Checker<Identifier> frogVariant = new Checker<>("frog variant", this::verifyFrogVariant);
     public final Checker<Identifier> catVariant = new Checker<>("cat variant", this::verifyCatVariant);
     public final Checker<Identifier> pigVariant = new Checker<>("pig variant", this::verifyPigVariant);
+    public final Checker<Identifier> cowVariant = new Checker<>("cow variant", this::verifyCowVariant);
+    public final Checker<Identifier> chickenVariant = new Checker<>("chicken variant", this::verifyChickenVariant);
     public final Checker<Identifier> paintingVariant = new Checker<>("painting variant", this::verifyPaintingVariant);
-    public final Checker<Identifier> spawnConditionType = new Checker<>("spawn condition type", this::verifySpawnConditionType);
 
     /**
      * Verify the item tag in the item tag registry.
@@ -351,22 +351,12 @@ public class RegistryVerifier {
     }
 
     /**
-     * Verify the biome tag in the biome tag registry.
+     * Verify the wolf sound variant in the wolf sound variant registry.
      *
-     * @param id The biome tag id
-     * @return If the biome tag is valid
+     * @param id The wolf sound variant id
+     * @return If the sound variant type is valid
      */
-    public boolean verifyBiomeTag(final Identifier id) {
-        return true;
-    }
-
-    /**
-     * Verify the biome in the biome registry.
-     *
-     * @param id The biome id
-     * @return If the biome is valid
-     */
-    public boolean verifyBiome(final Identifier id) {
+    public boolean verifyWolfSoundVariant(final Identifier id) {
         return true;
     }
 
@@ -401,22 +391,32 @@ public class RegistryVerifier {
     }
 
     /**
+     * Verify the cow variant in the cow variant registry.
+     *
+     * @param id The cow variant id
+     * @return If the cow variant is valid
+     */
+    public boolean verifyCowVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the chicken variant in the chicken variant registry.
+     *
+     * @param id The chicken variant id
+     * @return If the chicken variant is valid
+     */
+    public boolean verifyChickenVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
      * Verify the painting variant in the painting variant registry.
      *
      * @param id The painting variant id
      * @return If the painting variant is valid
      */
     public boolean verifyPaintingVariant(final Identifier id) {
-        return true;
-    }
-
-    /**
-     * Verify the spawn condition type in the spawn condition type registry.
-     *
-     * @param id The spawn condition type id
-     * @return If the spawn condition type is valid
-     */
-    public boolean verifySpawnConditionType(final Identifier id) {
         return true;
     }
 
