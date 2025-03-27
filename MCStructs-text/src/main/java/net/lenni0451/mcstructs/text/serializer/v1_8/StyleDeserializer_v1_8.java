@@ -1,17 +1,20 @@
 package net.lenni0451.mcstructs.text.serializer.v1_8;
 
 import com.google.gson.*;
-import net.lenni0451.mcstructs.core.TextFormatting;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.Style;
-import net.lenni0451.mcstructs.text.events.click.ClickEvent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 
 import java.lang.reflect.Type;
 
-public class StyleDeserializer_v1_8 implements JsonDeserializer<Style> {
+public class StyleDeserializer_v1_8 extends EventSerializers_v1_8 implements JsonDeserializer<Style> {
+
+    public StyleDeserializer_v1_8(final SNbt<?> sNbt) {
+        super(sNbt);
+    }
 
     @Override
     public Style deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -35,10 +38,12 @@ public class StyleDeserializer_v1_8 implements JsonDeserializer<Style> {
 
                 ClickEventAction action = null;
                 String value = null;
-                if (rawAction != null) action = ClickEventAction.getByName(rawAction.getAsString());
+                if (rawAction != null) action = ClickEventAction.byName(rawAction.getAsString());
                 if (rawValue != null) value = rawValue.getAsString();
 
-                if (action != null && value != null && action.isUserDefinable()) style.setClickEvent(new ClickEvent(action, value));
+                if (action != null && value != null && action.isUserDefinable()) {
+                    style.setClickEvent(this.clickEventSerializer.deserialize(action, value));
+                }
             }
         }
         if (rawStyle.has("hoverEvent")) {
@@ -47,10 +52,12 @@ public class StyleDeserializer_v1_8 implements JsonDeserializer<Style> {
                 JsonPrimitive rawAction = rawHoverEvent.getAsJsonPrimitive("action");
 
                 HoverEventAction action = null;
-                ATextComponent value = context.deserialize(rawHoverEvent.get("value"), ATextComponent.class);
-                if (rawAction != null) action = HoverEventAction.getByName(rawAction.getAsString());
+                TextComponent value = context.deserialize(rawHoverEvent.get("value"), TextComponent.class);
+                if (rawAction != null) action = HoverEventAction.byName(rawAction.getAsString());
 
-                if (action != null && value != null && action.isUserDefinable()) style.setHoverEvent(new TextHoverEvent(action, value));
+                if (action != null && value != null && action.isUserDefinable()) {
+                    style.setHoverEvent(this.hoverEventSerializer.deserialize(action, value));
+                }
             }
         }
         return style;

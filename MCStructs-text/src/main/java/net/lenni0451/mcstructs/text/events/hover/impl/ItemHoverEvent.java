@@ -1,14 +1,13 @@
 package net.lenni0451.mcstructs.text.events.hover.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.text.components.StringComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -16,114 +15,110 @@ import java.util.Objects;
 /**
  * The implementation for item hover events.
  */
-public class ItemHoverEvent extends AHoverEvent {
+@EqualsAndHashCode(callSuper = false)
+public class ItemHoverEvent extends HoverEvent {
 
-    private Identifier item;
-    private int count;
-    @Nullable
-    private CompoundTag nbt;
+    private DataHolder data;
 
-    public ItemHoverEvent(final Identifier item, final int count, final CompoundTag nbt) {
-        this(HoverEventAction.SHOW_ITEM, item, count, nbt);
+    public ItemHoverEvent(final DataHolder data) {
+        super(HoverEventAction.SHOW_ITEM);
+        this.data = data;
     }
 
-    public ItemHoverEvent(final HoverEventAction action, final Identifier item, final int count, @Nullable final CompoundTag nbt) {
-        super(action);
-
-        this.item = item;
-        this.count = count;
-        this.nbt = nbt;
+    public ItemHoverEvent(final String legacyData) {
+        super(HoverEventAction.SHOW_ITEM);
+        this.data = new LegacyHolder(legacyData);
     }
 
-    /**
-     * @return The item of this hover event
-     */
-    public Identifier getItem() {
-        return this.item;
+    public ItemHoverEvent(final Identifier id, final int count, @Nullable final CompoundTag tag) {
+        super(HoverEventAction.SHOW_ITEM);
+        this.data = new ModernHolder(id, count, tag);
     }
 
-    /**
-     * Set the item of this hover event.
-     *
-     * @param item The new item
-     * @return This instance for chaining
-     */
-    public ItemHoverEvent setItem(final Identifier item) {
-        this.item = item;
+    public DataHolder getData() {
+        return this.data;
+    }
+
+    public ItemHoverEvent setData(final String data) {
+        this.data = new LegacyHolder(data);
         return this;
     }
 
-    /**
-     * @return The count of this hover event
-     */
-    public int getCount() {
-        return this.count;
+    public boolean isLegacy() {
+        return this.data instanceof LegacyHolder;
     }
 
-    /**
-     * Set the count of this hover event.
-     *
-     * @param count The new count
-     * @return This instance for chaining
-     */
-    public ItemHoverEvent setCount(final int count) {
-        this.count = count;
-        return this;
+    public boolean isModern() {
+        return this.data instanceof ModernHolder;
     }
 
-    /**
-     * @return The nbt of this hover event
-     */
-    @Nullable
-    public CompoundTag getNbt() {
-        return this.nbt;
-    }
-
-    /**
-     * Set the nbt of this hover event.
-     *
-     * @param nbt The new nbt
-     * @return This instance for chaining
-     */
-    public ItemHoverEvent setNbt(@Nullable final CompoundTag nbt) {
-        this.nbt = nbt;
-        return this;
-    }
-
-    @Override
-    public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbtSerializer<?> sNbtSerializer) {
-        CompoundTag tag = new CompoundTag();
-        tag.addString("id", this.item.getValue());
-        tag.addByte("Count", (byte) this.count);
-        if (this.nbt != null) tag.addCompound("tag", this.nbt);
-        try {
-            return new TextHoverEvent(this.getAction(), new StringComponent(sNbtSerializer.serialize(tag)));
-        } catch (SNbtSerializeException e) {
-            throw new RuntimeException("This should never happen! Please report to the developer immediately!", e);
+    public LegacyHolder asLegacy() {
+        if (this.data instanceof LegacyHolder) {
+            return (LegacyHolder) this.data;
+        } else {
+            throw new UnsupportedOperationException("Data holder is not a legacy raw holder: " + this.data);
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemHoverEvent that = (ItemHoverEvent) o;
-        return this.count == that.count && this.getAction() == that.getAction() && Objects.equals(this.item, that.item) && Objects.equals(this.nbt, that.nbt);
+    public ModernHolder asModern() {
+        if (this.data instanceof ModernHolder) {
+            return (ModernHolder) this.data;
+        } else {
+            throw new UnsupportedOperationException("Data holder is not a modern holder: " + this.data);
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getAction(), this.item, this.count, this.nbt);
+    public ItemHoverEvent setLegacyData(final String data) {
+        this.data = new LegacyHolder(data);
+        return this;
+    }
+
+    public ItemHoverEvent setModernData(final Identifier id, final int count, @Nullable final CompoundTag tag) {
+        this.data = new ModernHolder(id, count, tag);
+        return this;
     }
 
     @Override
     public String toString() {
         return ToString.of(this)
                 .add("action", this.action)
-                .add("item", this.item)
-                .add("count", this.count, count -> count != 1)
-                .add("nbt", this.nbt, Objects::nonNull)
+                .add("data", this.data)
                 .toString();
+    }
+
+
+    public interface DataHolder {
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class LegacyHolder implements DataHolder {
+        private String data;
+
+        @Override
+        public String toString() {
+            return ToString.of(this)
+                    .add("data", this.data)
+                    .toString();
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class ModernHolder implements DataHolder {
+        private Identifier id;
+        private int count;
+        @Nullable
+        private CompoundTag tag;
+
+        @Override
+        public String toString() {
+            return ToString.of(this)
+                    .add("id", this.id)
+                    .add("count", this.count, c -> c != 1)
+                    .add("tag", this.tag, Objects::nonNull)
+                    .toString();
+        }
     }
 
 }

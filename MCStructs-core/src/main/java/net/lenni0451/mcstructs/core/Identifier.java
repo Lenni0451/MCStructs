@@ -1,14 +1,26 @@
 package net.lenni0451.mcstructs.core;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 /**
  * The identifier used for registries in minecraft.
  */
+@EqualsAndHashCode
 public class Identifier {
 
+    public static final String DEFAULT_NAMESPACE = "minecraft";
     public static final String VALID_KEY_CHARS = "[_\\-a-z0-9.]*";
     public static final String VALID_VALUE_CHARS = "[_\\-a-z0-9/.]*";
+
+    /**
+     * Create a new identifier with the default namespace {@code "minecraft"}.
+     *
+     * @param value The value of the identifier
+     * @return The created identifier
+     */
+    public static Identifier defaultNamespace(final String value) {
+        return of(DEFAULT_NAMESPACE, value);
+    }
 
     /**
      * Create a new identifier.<br>
@@ -21,7 +33,7 @@ public class Identifier {
      */
     public static Identifier of(final String value) {
         int splitIndex = value.indexOf(':');
-        String key = splitIndex <= 0 ? "minecraft" : value.substring(0, splitIndex);
+        String key = splitIndex <= 0 ? DEFAULT_NAMESPACE : value.substring(0, splitIndex);
         String val = splitIndex == -1 ? value : value.substring(splitIndex + 1);
         return of(key, val);
     }
@@ -87,25 +99,20 @@ public class Identifier {
         return this.value;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Identifier that = (Identifier) o;
-        return Objects.equals(this.key, that.key) && Objects.equals(this.value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.key, this.value);
+    /**
+     * Check if the key and value are equal to the given key and value.
+     *
+     * @param key   The key to check
+     * @param value The value to check
+     * @return If the key and value are equal
+     */
+    public boolean equals(final String key, final String value) {
+        return this.key.equals(key) && this.value.equals(value);
     }
 
     @Override
     public String toString() {
-        return "Identifier{" +
-                "key='" + this.key + '\'' +
-                ", value='" + this.value + '\'' +
-                '}';
+        return this.get();
     }
 
 }

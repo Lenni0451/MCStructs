@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.converter.codec;
 
+import net.lenni0451.mcstructs.converter.model.Either;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.text.serializer.v1_6;
 
 import com.google.gson.*;
-import net.lenni0451.mcstructs.core.TextFormatting;
-import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 
@@ -11,11 +11,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextDeserializer_v1_6 implements JsonDeserializer<ATextComponent> {
+public class TextDeserializer_v1_6 implements JsonDeserializer<TextComponent> {
 
     @Override
-    public ATextComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        ATextComponent component = null;
+    public TextComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        TextComponent component = null;
         Style style = new Style();
 
         JsonObject rawComponent = json.getAsJsonObject();

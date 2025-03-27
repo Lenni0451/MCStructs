@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.snbt.SNbt;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
@@ -13,18 +13,18 @@ import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import java.lang.reflect.Type;
 
-public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
+public class HoverEventSerializer_v1_16 implements JsonSerializer<HoverEvent> {
 
     private final TextComponentSerializer textComponentSerializer;
-    private final SNbtSerializer<?> sNbtSerializer;
+    private final SNbt<?> sNbt;
 
-    public HoverEventSerializer_v1_16(final TextComponentSerializer textComponentSerializer, final SNbtSerializer<?> sNbtSerializer) {
+    public HoverEventSerializer_v1_16(final TextComponentSerializer textComponentSerializer, final SNbt<?> sNbt) {
         this.textComponentSerializer = textComponentSerializer;
-        this.sNbtSerializer = sNbtSerializer;
+        this.sNbt = sNbt;
     }
 
     @Override
-    public JsonElement serialize(AHoverEvent src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(HoverEvent src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject serializedHoverEvent = new JsonObject();
 
         serializedHoverEvent.addProperty("action", src.getAction().getName());
@@ -34,16 +34,16 @@ public class HoverEventSerializer_v1_16 implements JsonSerializer<AHoverEvent> {
         } else if (src instanceof ItemHoverEvent) {
             ItemHoverEvent itemHoverEvent = (ItemHoverEvent) src;
             JsonObject serializedItem = new JsonObject();
-            serializedItem.addProperty("id", itemHoverEvent.getItem().get());
-            if (itemHoverEvent.getCount() != 1) serializedItem.addProperty("count", itemHoverEvent.getCount());
-            if (itemHoverEvent.getNbt() != null) serializedItem.addProperty("tag", this.sNbtSerializer.trySerialize(itemHoverEvent.getNbt()));
+            serializedItem.addProperty("id", itemHoverEvent.asModern().getId().get());
+            if (itemHoverEvent.asModern().getCount() != 1) serializedItem.addProperty("count", itemHoverEvent.asModern().getCount());
+            if (itemHoverEvent.asModern().getTag() != null) serializedItem.addProperty("tag", this.sNbt.trySerialize(itemHoverEvent.asModern().getTag()));
             serializedHoverEvent.add("contents", serializedItem);
         } else if (src instanceof EntityHoverEvent) {
             EntityHoverEvent entityHoverEvent = (EntityHoverEvent) src;
             JsonObject serializedEntity = new JsonObject();
-            serializedEntity.addProperty("type", entityHoverEvent.getEntityType().get());
-            serializedEntity.addProperty("id", entityHoverEvent.getUuid().toString());
-            if (entityHoverEvent.getName() != null) serializedEntity.add("name", this.textComponentSerializer.serializeJson(entityHoverEvent.getName()));
+            serializedEntity.addProperty("type", entityHoverEvent.asModern().getType().get());
+            serializedEntity.addProperty("id", entityHoverEvent.asModern().getUuid().toString());
+            if (entityHoverEvent.asModern().getName() != null) serializedEntity.add("name", this.textComponentSerializer.serializeJson(entityHoverEvent.asModern().getName()));
             serializedHoverEvent.add("contents", serializedEntity);
         }
 

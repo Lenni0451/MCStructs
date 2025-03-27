@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
+import net.lenni0451.mcstructs.text.events.click.types.ChangePageClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import org.junit.jupiter.api.MethodOrderer;
@@ -145,7 +146,7 @@ class StyleTest {
     @Test
     @Order(0)
     void setClickEvent() {
-        style.setClickEvent(new ClickEvent(ClickEventAction.CHANGE_PAGE, "1"));
+        style.setClickEvent(ClickEvent.changePage(1));
     }
 
     @Test
@@ -153,13 +154,14 @@ class StyleTest {
     void getClickEvent() {
         assertNotNull(style.getClickEvent());
         assertEquals(ClickEventAction.CHANGE_PAGE, style.getClickEvent().getAction());
-        assertEquals("1", style.getClickEvent().getValue());
+        assertInstanceOf(ChangePageClickEvent.class, style.getClickEvent());
+        assertEquals(1, ((ChangePageClickEvent) style.getClickEvent()).asInt());
     }
 
     @Test
     @Order(0)
     void setHoverEvent() {
-        style.setHoverEvent(new ItemHoverEvent(HoverEventAction.SHOW_ITEM, Identifier.of("stone"), 1, new CompoundTag()));
+        style.setHoverEvent(new ItemHoverEvent(Identifier.of("stone"), 1, new CompoundTag()));
     }
 
     @Test
@@ -168,9 +170,9 @@ class StyleTest {
         ItemHoverEvent itemHoverEvent = (ItemHoverEvent) style.getHoverEvent();
         assertNotNull(style.getHoverEvent());
         assertEquals(HoverEventAction.SHOW_ITEM, style.getHoverEvent().getAction());
-        assertEquals(Identifier.of("stone"), itemHoverEvent.getItem());
-        assertEquals(1, itemHoverEvent.getCount());
-        assertNotNull(itemHoverEvent.getNbt());
+        assertEquals(Identifier.of("stone"), itemHoverEvent.asModern().getId());
+        assertEquals(1, itemHoverEvent.asModern().getCount());
+        assertNotNull(itemHoverEvent.asModern().getTag());
     }
 
     @Test

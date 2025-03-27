@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.lenni0451.mcstructs.converter.codec.Either;
-import net.lenni0451.mcstructs.converter.codec.IdentifiedType;
-import net.lenni0451.mcstructs.converter.codec.NamedType;
+import net.lenni0451.mcstructs.converter.model.Either;
+import net.lenni0451.mcstructs.converter.types.IdentifiedType;
+import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
@@ -188,6 +188,10 @@ public class Types_v1_21_2 {
 
         private Integer min;
         private Integer max;
+
+        public boolean isEmpty() {
+            return this.min == null && this.max == null;
+        }
     }
 
     @Data
@@ -199,6 +203,10 @@ public class Types_v1_21_2 {
 
         private Double min;
         private Double max;
+
+        public boolean isEmpty() {
+            return this.min == null && this.max == null;
+        }
     }
 
     @Data

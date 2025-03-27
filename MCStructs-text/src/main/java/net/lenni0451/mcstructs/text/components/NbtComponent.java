@@ -1,23 +1,30 @@
 package net.lenni0451.mcstructs.text.components;
 
-import net.lenni0451.mcstructs.text.ATextComponent;
+import lombok.EqualsAndHashCode;
+import net.lenni0451.mcstructs.core.utils.ToString;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.components.nbt.NbtDataSource;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
-public abstract class NbtComponent extends ATextComponent {
+@EqualsAndHashCode(callSuper = true)
+public class NbtComponent extends TextComponent {
 
     private String component;
     private boolean resolve;
-    private ATextComponent separator;
+    private TextComponent separator;
+    private NbtDataSource dataSource;
 
-    public NbtComponent(final String component, final boolean resolve) {
-        this(component, resolve, null);
+    public NbtComponent(final String component, final boolean resolve, final NbtDataSource dataSource) {
+        this(component, resolve, null, dataSource);
     }
 
-    public NbtComponent(final String component, final boolean resolve, @Nullable final ATextComponent separator) {
+    public NbtComponent(final String component, final boolean resolve, @Nullable final TextComponent separator, final NbtDataSource dataSource) {
         this.component = component;
         this.resolve = resolve;
         this.separator = separator;
+        this.dataSource = dataSource;
     }
 
     /**
@@ -60,7 +67,7 @@ public abstract class NbtComponent extends ATextComponent {
      * @return The separator of this component
      */
     @Nullable
-    public ATextComponent getSeparator() {
+    public TextComponent getSeparator() {
         return this.separator;
     }
 
@@ -70,14 +77,52 @@ public abstract class NbtComponent extends ATextComponent {
      * @param separator The separator
      * @return This component
      */
-    public NbtComponent setSeparator(final ATextComponent separator) {
+    public NbtComponent setSeparator(final TextComponent separator) {
         this.separator = separator;
         return this;
+    }
+
+    /**
+     * @return The data source of this component
+     */
+    public NbtDataSource getDataSource() {
+        return this.dataSource;
+    }
+
+    /**
+     * Set the data source of this component.
+     *
+     * @param dataSource The data source
+     */
+    public void setDataSource(final NbtDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
     public String asSingleString() {
         return "";
+    }
+
+    @Override
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
+    }
+
+    @Override
+    public TextComponent shallowCopy() {
+        NbtComponent copy = new NbtComponent(this.component, this.resolve, this.separator, this.dataSource);
+        return copy.setStyle(this.getStyle().copy());
+    }
+
+    @Override
+    public String toString() {
+        return ToString.of(this)
+                .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
+                .add("style", this.getStyle(), style -> !style.isEmpty())
+                .add("component", this.component)
+                .add("resolve", this.resolve)
+                .add("separator", this.separator, Objects::nonNull)
+                .toString();
     }
 
 }

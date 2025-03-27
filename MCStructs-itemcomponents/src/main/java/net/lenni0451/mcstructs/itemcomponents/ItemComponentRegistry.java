@@ -1,16 +1,17 @@
 package net.lenni0451.mcstructs.itemcomponents;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.DataDeserializer;
 import net.lenni0451.mcstructs.converter.codec.DataSerializer;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.ItemComponents_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
 
 import javax.annotation.Nullable;
 
@@ -37,9 +38,13 @@ public abstract class ItemComponentRegistry {
      */
     public static final ItemComponents_v1_21_4 V1_21_4 = new ItemComponents_v1_21_4();
     /**
+     * Item component registry for 1.21.5.
+     */
+    public static final ItemComponents_v1_21_5 V1_21_5 = new ItemComponents_v1_21_5();
+    /**
      * The latest item component registry.
      */
-    public static final ItemComponentRegistry LATEST = V1_21_4;
+    public static final ItemComponentRegistry LATEST = V1_21_5;
 
 
     private final ItemComponentList components;

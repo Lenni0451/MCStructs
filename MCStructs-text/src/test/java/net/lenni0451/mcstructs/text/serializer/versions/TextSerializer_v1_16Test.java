@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.text.serializer.versions;
 
-import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import org.junit.jupiter.api.Test;
@@ -11,12 +11,12 @@ import static net.lenni0451.mcstructs.text.serializer.TextComponentSerializer.V1
 class TextSerializer_v1_16Test extends TextSerializerTest {
 
     @Override
-    protected ATextComponent deserialize(String json) {
+    protected TextComponent deserialize(String json) {
         return V1_16.deserializeReader(json);
     }
 
     @Override
-    protected String serialize(ATextComponent component) {
+    protected String serialize(TextComponent component) {
         return V1_16.serialize(component);
     }
 

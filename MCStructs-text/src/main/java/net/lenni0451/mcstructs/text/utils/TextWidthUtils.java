@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.text.utils;
 
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,7 +71,7 @@ public class TextWidthUtils {
      * @throws IllegalStateException If the charwidths.bin resource could not be found
      * @throws RuntimeException      If the charwidths.bin resource could not be read
      */
-    public static float getComponentWidth(final ATextComponent component) {
+    public static float getComponentWidth(final TextComponent component) {
         loadCharWidths();
         return getComponentWidth(component, charWidths, 1);
     }
@@ -84,7 +84,7 @@ public class TextWidthUtils {
      * @param widths    The char widths array
      * @return The width of the component
      */
-    public static float getComponentWidth(final ATextComponent component, final float[] widths) {
+    public static float getComponentWidth(final TextComponent component, final float[] widths) {
         return getComponentWidth(component, widths, 1);
     }
 
@@ -98,7 +98,7 @@ public class TextWidthUtils {
      * @param boldOffset The bold offset
      * @return The width of the component
      */
-    public static float getComponentWidth(final ATextComponent component, final float[] widths, final float boldOffset) {
+    public static float getComponentWidth(final TextComponent component, final float[] widths, final float boldOffset) {
         float[] width = new float[]{0};
         component.forEach(comp -> {
             char[] chars = comp.asSingleString().toCharArray();

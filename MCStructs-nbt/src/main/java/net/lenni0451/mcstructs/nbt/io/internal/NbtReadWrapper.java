@@ -1,11 +1,11 @@
 package net.lenni0451.mcstructs.nbt.io.internal;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.io.NamedTag;
 import net.lenni0451.mcstructs.nbt.io.NbtHeader;
 import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
-import net.lenni0451.mcstructs.nbt.io.types.INbtReader;
+import net.lenni0451.mcstructs.nbt.io.impl.NbtReader;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,7 +20,7 @@ import java.util.zip.GZIPInputStream;
 @ParametersAreNonnullByDefault
 public interface NbtReadWrapper {
 
-    INbtReader getReader();
+    NbtReader getReader();
 
     /**
      * Read an uncompressed Nbt tag from a file.
@@ -31,7 +31,7 @@ public interface NbtReadWrapper {
      * @throws IOException If an I/O error occurs
      */
     @Nullable
-    default INbtTag readFile(final File f, final NbtReadTracker readTracker) throws IOException {
+    default NbtTag readFile(final File f, final NbtReadTracker readTracker) throws IOException {
         return this.readFile(f, false, readTracker);
     }
 
@@ -44,7 +44,7 @@ public interface NbtReadWrapper {
      * @throws IOException If an I/O error occurs
      */
     @Nullable
-    default INbtTag readCompressedFile(final File f, final NbtReadTracker readTracker) throws IOException {
+    default NbtTag readCompressedFile(final File f, final NbtReadTracker readTracker) throws IOException {
         return this.readFile(f, true, readTracker);
     }
 
@@ -58,7 +58,7 @@ public interface NbtReadWrapper {
      * @throws IOException If an I/O error occurs
      */
     @Nullable
-    default INbtTag readFile(final File f, final boolean compressed, final NbtReadTracker readTracker) throws IOException {
+    default NbtTag readFile(final File f, final boolean compressed, final NbtReadTracker readTracker) throws IOException {
         try (InputStream fis = Files.newInputStream(f.toPath())) {
             return this.read(fis, compressed, readTracker);
         }
@@ -75,7 +75,7 @@ public interface NbtReadWrapper {
      */
     @Nullable
     @WillNotClose
-    default INbtTag read(final InputStream is, final boolean compressed, final NbtReadTracker readTracker) throws IOException {
+    default NbtTag read(final InputStream is, final boolean compressed, final NbtReadTracker readTracker) throws IOException {
         if (compressed) return this.read(new DataInputStream(new GZIPInputStream(is)), readTracker);
         else return this.read(new DataInputStream(is), readTracker);
     }
@@ -90,7 +90,7 @@ public interface NbtReadWrapper {
      */
     @Nullable
     @WillNotClose
-    default INbtTag read(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+    default NbtTag read(final DataInput in, final NbtReadTracker readTracker) throws IOException {
         NamedTag named = this.readNamed(in, readTracker);
         if (named == null) return null;
         return named.getTag();
@@ -109,7 +109,7 @@ public interface NbtReadWrapper {
         NbtHeader header = this.getReader().readHeader(in, readTracker);
         if (header.isEnd()) return null;
         readTracker.pushDepth();
-        INbtTag tag = this.getReader().read(header.getType(), in, readTracker);
+        NbtTag tag = this.getReader().read(header.getType(), in, readTracker);
         readTracker.popDepth();
         return new NamedTag(header.getName(), header.getType(), tag);
     }
@@ -125,11 +125,11 @@ public interface NbtReadWrapper {
      * @throws IOException If an I/O error occurs
      */
     @Nullable
-    default INbtTag readUnnamed(final DataInput in, final NbtReadTracker readTracker) throws IOException {
+    default NbtTag readUnnamed(final DataInput in, final NbtReadTracker readTracker) throws IOException {
         NbtType type = this.getReader().readType(in, readTracker);
         if (NbtType.END.equals(type)) return null;
         readTracker.pushDepth();
-        INbtTag tag = this.getReader().read(type, in, readTracker);
+        NbtTag tag = this.getReader().read(type, in, readTracker);
         readTracker.popDepth();
         return tag;
     }

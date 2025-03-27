@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.itemcomponents.impl;
 
-import net.lenni0451.mcstructs.converter.Result;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 
 import java.util.function.Function;
@@ -21,6 +21,7 @@ public class RegistryVerifier {
     public final Checker<Identifier> statusEffectTag = new Checker<>("status effect", this::verifyStatusEffectTag);
     public final Checker<Identifier> statusEffect = new Checker<>("status effect", this::verifyStatusEffect);
     public final Checker<Identifier> mapDecorationType = new Checker<>("map decoration type", this::verifyMapDecorationType);
+    public final Checker<Identifier> bannerPatternTag = new Checker<>("banner pattern tag", this::verifyBannerPatternTag);
     public final Checker<Identifier> bannerPattern = new Checker<>("banner pattern", this::verifyBannerPattern);
     public final Checker<Identifier> instrument = new Checker<>("instrument", this::verifyInstrument);
     public final Checker<Identifier> sound = new Checker<>("sound", this::verifySound);
@@ -38,6 +39,15 @@ public class RegistryVerifier {
     public final Checker<Identifier> entityTypeTag = new Checker<>("entity type tag", this::verifyEntityTypeTag);
     public final Checker<Identifier> entityType = new Checker<>("entity type", this::verifyEntityType);
     public final Checker<Identifier> damageTypeTag = new Checker<>("damage type tag", this::verifyDamageTypeTag);
+    public final Checker<Identifier> damageType = new Checker<>("damage type", this::verifyDamageType);
+    public final Checker<Identifier> wolfVariant = new Checker<>("wolf variant", this::verifyWolfVariant);
+    public final Checker<Identifier> wolfSoundVariant = new Checker<>("wolf sound variant", this::verifyWolfSoundVariant);
+    public final Checker<Identifier> frogVariant = new Checker<>("frog variant", this::verifyFrogVariant);
+    public final Checker<Identifier> catVariant = new Checker<>("cat variant", this::verifyCatVariant);
+    public final Checker<Identifier> pigVariant = new Checker<>("pig variant", this::verifyPigVariant);
+    public final Checker<Identifier> cowVariant = new Checker<>("cow variant", this::verifyCowVariant);
+    public final Checker<Identifier> chickenVariant = new Checker<>("chicken variant", this::verifyChickenVariant);
+    public final Checker<Identifier> paintingVariant = new Checker<>("painting variant", this::verifyPaintingVariant);
 
     /**
      * Verify the item tag in the item tag registry.
@@ -137,6 +147,16 @@ public class RegistryVerifier {
      * @return If the map decoration type is valid
      */
     public boolean verifyMapDecorationType(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the banner pattern tag in the banner pattern tag registry.
+     *
+     * @param id The banner pattern tag id
+     * @return If the banner pattern tag is valid
+     */
+    public boolean verifyBannerPatternTag(final Identifier id) {
         return true;
     }
 
@@ -307,6 +327,96 @@ public class RegistryVerifier {
      * @return If the damage type tag is valid
      */
     public boolean verifyDamageTypeTag(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the damage type in the damage type registry.
+     *
+     * @param id The damage type id
+     * @return If the damage type is valid
+     */
+    public boolean verifyDamageType(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the wolf variant in the wolf variant registry.
+     *
+     * @param id The wolf variant id
+     * @return If the variant type is valid
+     */
+    public boolean verifyWolfVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the wolf sound variant in the wolf sound variant registry.
+     *
+     * @param id The wolf sound variant id
+     * @return If the sound variant type is valid
+     */
+    public boolean verifyWolfSoundVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the frog variant in the frog variant registry.
+     *
+     * @param id The frog variant id
+     * @return If the frog variant is valid
+     */
+    public boolean verifyFrogVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the cat variant in the cat variant registry.
+     *
+     * @param id The cat variant id
+     * @return If the cat variant is valid
+     */
+    public boolean verifyCatVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the pig variant in the pig variant registry.
+     *
+     * @param id The pig variant id
+     * @return If the pig variant is valid
+     */
+    public boolean verifyPigVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the cow variant in the cow variant registry.
+     *
+     * @param id The cow variant id
+     * @return If the cow variant is valid
+     */
+    public boolean verifyCowVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the chicken variant in the chicken variant registry.
+     *
+     * @param id The chicken variant id
+     * @return If the chicken variant is valid
+     */
+    public boolean verifyChickenVariant(final Identifier id) {
+        return true;
+    }
+
+    /**
+     * Verify the painting variant in the painting variant registry.
+     *
+     * @param id The painting variant id
+     * @return If the painting variant is valid
+     */
+    public boolean verifyPaintingVariant(final Identifier id) {
         return true;
     }
 

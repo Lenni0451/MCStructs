@@ -3,20 +3,21 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
-import net.lenni0451.mcstructs.converter.codec.Either;
-import net.lenni0451.mcstructs.converter.codec.MapCodec;
+import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
+import net.lenni0451.mcstructs.converter.model.Either;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.TypeSerializers;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.StringTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.snbt.SNbt;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.Map;
@@ -42,8 +43,8 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     protected static final String ARMOR_TRIM_PATTERN = "armor_trim_pattern";
     protected static final String STATUS_EFFECT = "status_effect";
 
-    public TypeSerializers_v1_20_5(final ItemComponentRegistry registry) {
-        super(registry);
+    public TypeSerializers_v1_20_5(final ItemComponentRegistry registry, final TextComponentCodec textComponentCodec) {
+        super(registry, textComponentCodec);
     }
 
     public Codec<CompoundTag> customData() {
@@ -55,7 +56,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
             @Override
             public <T> Result<CompoundTag> deserialize(DataConverter<T> converter, T data) {
-                INbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
+                NbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
                 if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
                 return Result.success(tag.asCompoundTag());
             }
@@ -64,7 +65,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public Codec<CompoundTag> stringOrRawCompoundTag() {
         return this.init(STRING_OR_RAW_COMPOUND_TAG, () -> Codec.oneOf(
-                Codec.STRING.mapThrowing(SNbtSerializer.V1_14::serialize, SNbtSerializer.V1_14::deserialize),
+                Codec.STRING.mapThrowing(SNbt.V1_14::serialize, SNbt.V1_14::deserialize),
                 new Codec<CompoundTag>() {
                     @Override
                     public <T> Result<T> serialize(DataConverter<T> converter, CompoundTag component) {
@@ -73,7 +74,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
                     @Override
                     public <T> Result<CompoundTag> deserialize(DataConverter<T> converter, T data) {
-                        INbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
+                        NbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
                         if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
                         return Result.success(tag.asCompoundTag());
                     }
@@ -82,10 +83,10 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     }
 
     public Codec<ItemStack> itemStack() {
-        return this.init(ITEM_STACK, () -> MapCodec.of(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ItemStack.ID), ItemStack::getId,
-                Codec.rangedInt(1, Integer.MAX_VALUE).mapCodec(ItemStack.COUNT).requiredDefault(() -> 1), ItemStack::getCount,
-                this.registry.getMapCodec().mapCodec(ItemStack.COMPONENTS).defaulted(() -> new ItemComponentMap(this.registry), ItemComponentMap::isEmpty), ItemStack::getComponents,
+        return this.init(ITEM_STACK, () -> MapCodecMerger.codec(
+                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ItemStack.ID).required(), ItemStack::getId,
+                Codec.rangedInt(1, Integer.MAX_VALUE).mapCodec(ItemStack.COUNT).optional().elseGet(() -> 1), ItemStack::getCount,
+                this.registry.getMapCodec().mapCodec(ItemStack.COMPONENTS).optional().defaulted(ItemComponentMap::isEmpty, () -> new ItemComponentMap(this.registry)), ItemStack::getComponents,
                 ItemStack::new
         ));
     }
@@ -97,20 +98,20 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         }).map(pos -> new int[]{pos.getX(), pos.getY(), pos.getZ()}, array -> new BlockPos(array[0], array[1], array[2])));
     }
 
-    public Codec<ATextComponent> rawTextComponent() {
-        return this.init(RAW_TEXT_COMPONENT, () -> new Codec<ATextComponent>() {
+    public Codec<TextComponent> rawTextComponent() {
+        return this.init(RAW_TEXT_COMPONENT, () -> new Codec<TextComponent>() {
             @Override
-            public <S> Result<S> serialize(DataConverter<S> converter, ATextComponent element) {
+            public <S> Result<S> serialize(DataConverter<S> converter, TextComponent element) {
                 S test = converter.createString("");
                 if (test instanceof StringTag) {
                     try {
-                        return Result.success((S) TextComponentCodec.V1_20_5.serializeNbt(element));
+                        return Result.success((S) TypeSerializers_v1_20_5.this.textComponentCodec.serializeNbtTree(element));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
                 } else if (test instanceof JsonPrimitive) {
                     try {
-                        return Result.success((S) TextComponentCodec.V1_20_5.serializeJsonTree(element));
+                        return Result.success((S) TypeSerializers_v1_20_5.this.textComponentCodec.serializeJsonTree(element));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
@@ -120,16 +121,16 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
             }
 
             @Override
-            public <S> Result<ATextComponent> deserialize(DataConverter<S> converter, S data) {
-                if (data instanceof INbtTag) {
+            public <S> Result<TextComponent> deserialize(DataConverter<S> converter, S data) {
+                if (data instanceof NbtTag) {
                     try {
-                        return Result.success(TextComponentCodec.V1_20_5.deserializeNbtTree((INbtTag) data));
+                        return Result.success(TypeSerializers_v1_20_5.this.textComponentCodec.deserializeNbtTree((NbtTag) data));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
                 } else if (data instanceof JsonElement) {
                     try {
-                        return Result.success(TextComponentCodec.V1_20_5.deserializeJsonTree((JsonElement) data));
+                        return Result.success(TypeSerializers_v1_20_5.this.textComponentCodec.deserializeJsonTree((JsonElement) data));
                     } catch (Throwable t) {
                         return Result.error(t);
                     }
@@ -140,8 +141,8 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         });
     }
 
-    public Codec<ATextComponent> textComponent(final int maxLength) {
-        return Codec.sizedString(0, maxLength).mapThrowing(TextComponentCodec.V1_20_5::serializeJsonString, TextComponentCodec.V1_20_5::deserializeJson);
+    public Codec<TextComponent> textComponent(final int maxLength) {
+        return Codec.sizedString(0, maxLength).mapThrowing(TypeSerializers_v1_20_5.this.textComponentCodec::serializeJsonString, TypeSerializers_v1_20_5.this.textComponentCodec::deserializeJson);
     }
 
     public Codec<String> playerName() {
@@ -163,44 +164,44 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     public Codec<Either<Identifier, SoundEvent>> soundEvent() {
         return this.init(SOUND_EVENT, () -> this.registryEntry(
                 this.registry.getRegistryVerifier().sound,
-                MapCodec.of(
-                        Codec.STRING_IDENTIFIER.mapCodec(SoundEvent.SOUND_ID), SoundEvent::getSoundId,
-                        Codec.FLOAT.mapCodec(SoundEvent.RANGE).lenient().optionalDefault(() -> 16F), SoundEvent::getRange,
+                MapCodecMerger.codec(
+                        Codec.STRING_IDENTIFIER.mapCodec(SoundEvent.SOUND_ID).required(), SoundEvent::getSoundId,
+                        Codec.FLOAT.mapCodec(SoundEvent.RANGE).optional().lenient().defaulted(16F), SoundEvent::getRange,
                         SoundEvent::new
                 )
         ));
     }
 
     public Codec<BlockPredicate> blockPredicate() {
-        return this.init(BLOCK_PREDICATE, () -> MapCodec.of(
-                this.tagEntryList(this.registry.getRegistryVerifier().blockTag, this.registry.getRegistryVerifier().block).mapCodec(BlockPredicate.BLOCKS).optionalDefault(() -> null), BlockPredicate::getBlocks,
+        return this.init(BLOCK_PREDICATE, () -> MapCodecMerger.codec(
+                this.tagEntryList(this.registry.getRegistryVerifier().blockTag, this.registry.getRegistryVerifier().block).mapCodec(BlockPredicate.BLOCKS).optional().defaulted(null), BlockPredicate::getBlocks,
                 Codec.mapOf(Codec.STRING, Codec.oneOf(
                         Codec.STRING.verified(s -> {
                             if (s == null) return Result.error("Value matcher cannot be null");
                             return Result.success(null);
                         }).map(BlockPredicate.ValueMatcher::getValue, BlockPredicate.ValueMatcher::new),
-                        MapCodec.of(
-                                Codec.STRING.mapCodec(BlockPredicate.ValueMatcher.MIN).optionalDefault(() -> null), BlockPredicate.ValueMatcher::getMin,
-                                Codec.STRING.mapCodec(BlockPredicate.ValueMatcher.MAX).optionalDefault(() -> null), BlockPredicate.ValueMatcher::getMax,
+                        MapCodecMerger.codec(
+                                Codec.STRING.mapCodec(BlockPredicate.ValueMatcher.MIN).optional().defaulted(null), BlockPredicate.ValueMatcher::getMin,
+                                Codec.STRING.mapCodec(BlockPredicate.ValueMatcher.MAX).optional().defaulted(null), BlockPredicate.ValueMatcher::getMax,
                                 BlockPredicate.ValueMatcher::new
                         )
-                )).mapCodec(BlockPredicate.STATE).optionalDefault(() -> null), BlockPredicate::getState,
-                this.stringOrRawCompoundTag().mapCodec(BlockPredicate.NBT).optionalDefault(() -> null), BlockPredicate::getNbt,
+                )).mapCodec(BlockPredicate.STATE).optional().defaulted(null), BlockPredicate::getState,
+                this.stringOrRawCompoundTag().mapCodec(BlockPredicate.NBT).optional().defaulted(null), BlockPredicate::getNbt,
                 BlockPredicate::new
         ));
     }
 
     public Codec<AttributeModifier> attributeModifier() {
-        return this.init(ATTRIBUTE_MODIFIER, () -> MapCodec.of(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().attributeModifier).mapCodec(AttributeModifier.TYPE), AttributeModifier::getType,
-                MapCodec.of(
-                        Codec.INT_ARRAY_UUID.mapCodec(AttributeModifier.EntityAttribute.UUID), AttributeModifier.EntityAttribute::getUuid,
-                        Codec.STRING.mapCodec(AttributeModifier.EntityAttribute.NAME), AttributeModifier.EntityAttribute::getName,
-                        Codec.DOUBLE.mapCodec(AttributeModifier.EntityAttribute.AMOUNT), AttributeModifier.EntityAttribute::getAmount,
-                        Codec.named(AttributeModifier.EntityAttribute.Operation.values()).mapCodec(AttributeModifier.EntityAttribute.OPERATION), AttributeModifier.EntityAttribute::getOperation,
+        return this.init(ATTRIBUTE_MODIFIER, () -> MapCodecMerger.codec(
+                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().attributeModifier).mapCodec(AttributeModifier.TYPE).required(), AttributeModifier::getType,
+                MapCodecMerger.mapCodec(
+                        Codec.INT_ARRAY_UUID.mapCodec(AttributeModifier.EntityAttribute.UUID).required(), AttributeModifier.EntityAttribute::getUuid,
+                        Codec.STRING.mapCodec(AttributeModifier.EntityAttribute.NAME).required(), AttributeModifier.EntityAttribute::getName,
+                        Codec.DOUBLE.mapCodec(AttributeModifier.EntityAttribute.AMOUNT).required(), AttributeModifier.EntityAttribute::getAmount,
+                        Codec.named(AttributeModifier.EntityAttribute.Operation.values()).mapCodec(AttributeModifier.EntityAttribute.OPERATION).required(), AttributeModifier.EntityAttribute::getOperation,
                         AttributeModifier.EntityAttribute::new
-                ).mapCodec(), AttributeModifier::getModifier,
-                Codec.named(AttributeModifier.Slot.values()).mapCodec(AttributeModifier.SLOT).optionalDefault(() -> AttributeModifier.Slot.ANY), AttributeModifier::getSlot,
+                ), AttributeModifier::getModifier,
+                Codec.named(AttributeModifier.Slot.values()).mapCodec(AttributeModifier.SLOT).optional().defaulted(AttributeModifier.Slot.ANY), AttributeModifier::getSlot,
                 AttributeModifier::new
         ));
     }
@@ -208,18 +209,18 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     public Codec<Either<Identifier, ArmorTrimMaterial>> armorTrimMaterial() {
         return this.init(ARMOR_TRIM_MATERIAL, () -> this.registryEntry(
                 this.registry.getRegistryVerifier().armorTrimMaterial,
-                MapCodec.of(
+                MapCodecMerger.codec(
                         Codec.STRING.verified(s -> {
                             if (s.matches(Identifier.VALID_VALUE_CHARS)) return Result.error("Invalid armor trim material: " + s);
                             return Result.success(null);
-                        }).mapCodec(ArmorTrimMaterial.ASSET_NAME), ArmorTrimMaterial::getAssetName,
-                        Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ArmorTrimMaterial.INGREDIENT), ArmorTrimMaterial::getIngredient,
-                        Codec.FLOAT.mapCodec(ArmorTrimMaterial.ITEM_MODEL_INDEX), ArmorTrimMaterial::getItemModelIndex,
+                        }).mapCodec(ArmorTrimMaterial.ASSET_NAME).required(), ArmorTrimMaterial::getAssetName,
+                        Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ArmorTrimMaterial.INGREDIENT).required(), ArmorTrimMaterial::getIngredient,
+                        Codec.FLOAT.mapCodec(ArmorTrimMaterial.ITEM_MODEL_INDEX).required(), ArmorTrimMaterial::getItemModelIndex,
                         Codec.mapOf(
                                 Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().armorMaterial),
                                 Codec.STRING
-                        ).mapCodec(ArmorTrimMaterial.OVERRIDE_ARMOR_MATERIALS), ArmorTrimMaterial::getOverrideArmorMaterials,
-                        this.rawTextComponent().mapCodec(ArmorTrimMaterial.DESCRIPTION), ArmorTrimMaterial::getDescription,
+                        ).mapCodec(ArmorTrimMaterial.OVERRIDE_ARMOR_MATERIALS).required(), ArmorTrimMaterial::getOverrideArmorMaterials,
+                        this.rawTextComponent().mapCodec(ArmorTrimMaterial.DESCRIPTION).required(), ArmorTrimMaterial::getDescription,
                         ArmorTrimMaterial::new
                 )
         ));
@@ -228,37 +229,37 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
     public Codec<Either<Identifier, ArmorTrimPattern>> armorTrimPattern() {
         return this.init(ARMOR_TRIM_PATTERN, () -> this.registryEntry(
                 this.registry.getRegistryVerifier().armorTrimPattern,
-                MapCodec.of(
-                        Codec.STRING_IDENTIFIER.mapCodec(ArmorTrimPattern.ASSET_ID), ArmorTrimPattern::getAssetId,
-                        Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ArmorTrimPattern.TEMPLATE_ITEM), ArmorTrimPattern::getTemplateItem,
-                        this.rawTextComponent().mapCodec(ArmorTrimPattern.DESCRIPTION), ArmorTrimPattern::getDescription,
-                        Codec.BOOLEAN.mapCodec(ArmorTrimPattern.DECAL).optionalDefault(() -> false), ArmorTrimPattern::isDecal,
+                MapCodecMerger.codec(
+                        Codec.STRING_IDENTIFIER.mapCodec(ArmorTrimPattern.ASSET_ID).required(), ArmorTrimPattern::getAssetId,
+                        Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ArmorTrimPattern.TEMPLATE_ITEM).required(), ArmorTrimPattern::getTemplateItem,
+                        this.rawTextComponent().mapCodec(ArmorTrimPattern.DESCRIPTION).required(), ArmorTrimPattern::getDescription,
+                        Codec.BOOLEAN.mapCodec(ArmorTrimPattern.DECAL).optional().defaulted(false), ArmorTrimPattern::isDecal,
                         ArmorTrimPattern::new
                 )
         ));
     }
 
     public Codec<StatusEffect> statusEffect() {
-        return this.init(STATUS_EFFECT, () -> MapCodec.of(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().statusEffect).mapCodec(StatusEffect.ID), StatusEffect::getId,
-                Codec.<StatusEffect.Parameters>recursive(thiz -> MapCodec.of(
-                        Codec.UNSIGNED_BYTE.mapCodec(StatusEffect.Parameters.AMPLIFIER).optionalDefault(() -> 0), StatusEffect.Parameters::getAmplifier,
-                        Codec.INTEGER.mapCodec(StatusEffect.Parameters.DURATION).optionalDefault(() -> 0), StatusEffect.Parameters::getDuration,
-                        Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.AMBIENT).optionalDefault(() -> false), StatusEffect.Parameters::isAmbient,
-                        Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.SHOW_PARTICLES).optionalDefault(() -> true), StatusEffect.Parameters::isShowParticles,
-                        Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.SHOW_ICON).defaulted(() -> null, v -> false), StatusEffect.Parameters::isShowIcon,
-                        thiz.mapCodec(StatusEffect.Parameters.HIDDEN_EFFECT).optionalDefault(() -> null), StatusEffect.Parameters::getHiddenEffect,
+        return this.init(STATUS_EFFECT, () -> MapCodecMerger.codec(
+                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().statusEffect).mapCodec(StatusEffect.ID).required(), StatusEffect::getId,
+                MapCodec.recursive(thiz -> MapCodecMerger.mapCodec(
+                        Codec.UNSIGNED_BYTE.mapCodec(StatusEffect.Parameters.AMPLIFIER).optional().defaulted(0), StatusEffect.Parameters::getAmplifier,
+                        Codec.INTEGER.mapCodec(StatusEffect.Parameters.DURATION).optional().defaulted(0), StatusEffect.Parameters::getDuration,
+                        Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.AMBIENT).optional().defaulted(false), StatusEffect.Parameters::isAmbient,
+                        Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.SHOW_PARTICLES).optional().defaulted(true), StatusEffect.Parameters::isShowParticles,
+                        Codec.BOOLEAN.mapCodec(StatusEffect.Parameters.SHOW_ICON).optional().defaulted(v -> false, () -> null), StatusEffect.Parameters::isShowIcon,
+                        thiz.mapCodec(StatusEffect.Parameters.HIDDEN_EFFECT).optional().defaulted(null), StatusEffect.Parameters::getHiddenEffect,
                         StatusEffect.Parameters::new
-                )).mapCodec(), StatusEffect::getParameters,
+                )), StatusEffect::getParameters,
                 StatusEffect::new
         ));
     }
 
     public <T> Codec<RawFilteredPair<T>> rawFilteredPair(final Codec<T> codec) {
         return Codec.oneOf(
-                MapCodec.of(
-                        codec.mapCodec(RawFilteredPair.RAW), RawFilteredPair::getRaw,
-                        codec.mapCodec(RawFilteredPair.FILTERED).optionalDefault(() -> null), RawFilteredPair::getFiltered,
+                MapCodecMerger.codec(
+                        codec.mapCodec(RawFilteredPair.RAW).required(), RawFilteredPair::getRaw,
+                        codec.mapCodec(RawFilteredPair.FILTERED).optional().defaulted(null), RawFilteredPair::getFiltered,
                         RawFilteredPair::new
                 ),
                 codec.map(RawFilteredPair::getRaw, raw -> new RawFilteredPair<>(raw, null))

@@ -1,27 +1,27 @@
 package net.lenni0451.mcstructs.text.components;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.translation.Translator;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TranslationComponent extends ATextComponent {
+@EqualsAndHashCode(callSuper = true)
+public class TranslationComponent extends TextComponent {
 
-    private static final Function<String, String> NULL_TRANSLATOR = s -> null;
     private static final Pattern ARG_PATTERN = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
     private String key;
     private Object[] args;
     @Nullable
     private String fallback;
-    private Function<String, String> translator = NULL_TRANSLATOR;
+    private Translator translator = Translator.GLOBAL;
 
     public TranslationComponent(final String key, final List<?> args) {
         this.key = key;
@@ -96,15 +96,15 @@ public class TranslationComponent extends ATextComponent {
      * @param translator The translator function
      * @return This component
      */
-    public TranslationComponent setTranslator(@Nullable final Function<String, String> translator) {
-        if (translator == null) this.translator = NULL_TRANSLATOR;
+    public TranslationComponent setTranslator(@Nullable final Translator translator) {
+        if (translator == null) this.translator = Translator.GLOBAL;
         else this.translator = translator;
         return this;
     }
 
-    public ATextComponent resolveIntoComponents() {
-        List<ATextComponent> components = new ArrayList<>();
-        String translated = this.translator.apply(this.key);
+    public TextComponent resolveIntoComponents() {
+        List<TextComponent> components = new ArrayList<>();
+        String translated = this.translator.translate(this.key);
         if (translated == null) translated = this.fallback;
         if (translated == null) translated = this.key;
         Matcher matcher = ARG_PATTERN.matcher(translated);
@@ -128,14 +128,14 @@ public class TranslationComponent extends ATextComponent {
                 else index = Integer.parseInt(rawIndex) - 1;
                 if (index < this.args.length) {
                     Object arg = this.args[index];
-                    if (arg instanceof ATextComponent) components.add((ATextComponent) arg);
+                    if (arg instanceof TextComponent) components.add((TextComponent) arg);
                     else if (arg == null) components.add(new StringComponent("null"));
                     else components.add(new StringComponent(arg.toString()));
                 }
             }
         }
         if (start < translated.length()) components.add(new StringComponent(String.format(translated.substring(start))));
-        ATextComponent out = new StringComponent();
+        TextComponent out = new StringComponent();
         out.setStyle(this.getStyle());
         components.forEach(out::append);
         return out;
@@ -152,36 +152,21 @@ public class TranslationComponent extends ATextComponent {
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         Object[] copyArgs = new Object[this.args.length];
         for (int i = 0; i < this.args.length; i++) {
             Object arg = this.args[i];
-            if (arg instanceof ATextComponent) copyArgs[i] = ((ATextComponent) arg).copy();
+            if (arg instanceof TextComponent) copyArgs[i] = ((TextComponent) arg).copy();
             else copyArgs[i] = arg;
         }
         TranslationComponent copy = new TranslationComponent(this.key, copyArgs);
         copy.translator = this.translator;
         return copy.setStyle(this.getStyle().copy());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TranslationComponent that = (TranslationComponent) o;
-        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.key, that.key) && Arrays.equals(this.args, that.args) && Objects.equals(this.translator, that.translator);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(this.getSiblings(), this.getStyle(), this.key, this.translator);
-        result = 31 * result + Arrays.hashCode(this.args);
-        return result;
     }
 
     @Override
@@ -191,7 +176,7 @@ public class TranslationComponent extends ATextComponent {
                 .add("style", this.getStyle(), style -> !style.isEmpty())
                 .add("key", this.key)
                 .add("args", this.args, args -> args.length > 0, Arrays::toString)
-                .add("translator", this.translator, translator -> translator != NULL_TRANSLATOR)
+                .add("translator", this.translator, translator -> translator != Translator.GLOBAL)
                 .toString();
     }
 

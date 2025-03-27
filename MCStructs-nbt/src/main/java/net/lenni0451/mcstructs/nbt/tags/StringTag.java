@@ -1,11 +1,11 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.util.Objects;
 
-public class StringTag implements INbtTag {
+public class StringTag implements NbtTag {
 
     private String value;
 
@@ -49,7 +49,7 @@ public class StringTag implements INbtTag {
     }
 
     @Override
-    public INbtTag copy() {
+    public StringTag copy() {
         return new StringTag(this.value);
     }
 

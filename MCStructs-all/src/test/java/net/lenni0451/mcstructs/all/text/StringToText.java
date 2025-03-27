@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.all.text;
 
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 /**
@@ -9,7 +9,7 @@ import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 public class StringToText {
 
     public static void main(String[] args) {
-        ATextComponent text = TextComponentSerializer.V1_18.deserializeLenientReader("{\"text\":\"Hi\",\"color\":\"gold\"}");
+        TextComponent text = TextComponentSerializer.V1_18.deserializeLenientReader("{\"text\":\"Hi\",\"color\":\"gold\"}");
         System.out.println(text);
     }
 

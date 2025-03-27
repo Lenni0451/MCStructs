@@ -1,16 +1,16 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_7;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
-import net.lenni0451.mcstructs.snbt.ISNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
+import net.lenni0451.mcstructs.snbt.impl.SNbtSerializer;
 
 import java.util.Map;
 
-public class SNbtSerializer_v1_7 implements ISNbtSerializer {
+public class SNbtSerializer_v1_7 implements SNbtSerializer {
 
     @Override
-    public String serialize(INbtTag tag) throws SNbtSerializeException {
+    public String serialize(NbtTag tag) throws SNbtSerializeException {
         if (tag instanceof ByteTag) {
             ByteTag byteTag = (ByteTag) tag;
             return byteTag.getValue() + "b";
@@ -40,7 +40,7 @@ public class SNbtSerializer_v1_7 implements ISNbtSerializer {
         } else if (tag instanceof CompoundTag) {
             CompoundTag compoundTag = (CompoundTag) tag;
             StringBuilder out = new StringBuilder("{");
-            for (Map.Entry<String, INbtTag> entry : compoundTag.getValue().entrySet()) out.append(entry.getKey()).append(":").append(this.serialize(entry.getValue())).append(",");
+            for (Map.Entry<String, NbtTag> entry : compoundTag.getValue().entrySet()) out.append(entry.getKey()).append(":").append(this.serialize(entry.getValue())).append(",");
             return out.append("}").toString();
         } else if (tag instanceof IntArrayTag) {
             IntArrayTag intArrayTag = (IntArrayTag) tag;

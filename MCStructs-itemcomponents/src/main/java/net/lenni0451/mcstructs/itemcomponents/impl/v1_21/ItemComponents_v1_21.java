@@ -1,8 +1,8 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_21;
 
-import net.lenni0451.mcstructs.converter.Result;
 import net.lenni0451.mcstructs.converter.codec.Codec;
-import net.lenni0451.mcstructs.converter.codec.MapCodec;
+import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
@@ -12,6 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeMo
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeModifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.Food;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.JukeboxPlayable;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,36 +20,36 @@ import java.util.List;
 
 public class ItemComponents_v1_21 extends ItemComponents_v1_20_5 {
 
-    private final TypeSerializers_v1_21 typeSerializers = new TypeSerializers_v1_21(this);
+    private final TypeSerializers_v1_21 typeSerializers = new TypeSerializers_v1_21(this, TextComponentCodec.V1_20_5);
 
-    public final ItemComponent<Food> FOOD = this.register("food", MapCodec.of(
-            Codec.minInt(0).mapCodec(Food.NUTRITION), Food::getNutrition,
-            Codec.FLOAT.mapCodec(Food.SATURATION), Food::getSaturation,
-            Codec.BOOLEAN.mapCodec(Food.CAN_ALWAYS_EAT).optionalDefault(() -> false), Food::isCanAlwaysEat,
-            Codec.minExclusiveFloat(0).mapCodec(Food.EAT_SECONDS).optionalDefault(() -> 1.6F), Food::getEatSeconds,
-            this.typeSerializers.itemStack().mapCodec(Food.USING_CONVERTS_TO).optionalDefault(() -> null), Food::getUsingConvertsTo,
-            MapCodec.of(
-                    this.typeSerializers.statusEffect().mapCodec(Types_v1_20_5.Food.Effect.EFFECT), Types_v1_20_5.Food.Effect::getEffect,
-                    Codec.rangedFloat(0, 1).mapCodec(Types_v1_20_5.Food.Effect.PROBABILITY).optionalDefault(() -> 1F), Types_v1_20_5.Food.Effect::getProbability,
+    public final ItemComponent<Food> FOOD = this.register("food", MapCodecMerger.codec(
+            Codec.minInt(0).mapCodec(Food.NUTRITION).required(), Food::getNutrition,
+            Codec.FLOAT.mapCodec(Food.SATURATION).required(), Food::getSaturation,
+            Codec.BOOLEAN.mapCodec(Food.CAN_ALWAYS_EAT).optional().defaulted(false), Food::isCanAlwaysEat,
+            Codec.minExclusiveFloat(0).mapCodec(Food.EAT_SECONDS).optional().defaulted(1.6F), Food::getEatSeconds,
+            this.typeSerializers.itemStack().mapCodec(Food.USING_CONVERTS_TO).optional().defaulted(null), Food::getUsingConvertsTo,
+            MapCodecMerger.codec(
+                    this.typeSerializers.statusEffect().mapCodec(Types_v1_20_5.Food.Effect.EFFECT).required(), Types_v1_20_5.Food.Effect::getEffect,
+                    Codec.rangedFloat(0, 1).mapCodec(Types_v1_20_5.Food.Effect.PROBABILITY).optional().defaulted(1F), Types_v1_20_5.Food.Effect::getProbability,
                     Types_v1_20_5.Food.Effect::new
-            ).listOf().mapCodec(Food.EFFECTS).defaulted(ArrayList::new, List::isEmpty), Food::getEffects,
+            ).listOf().mapCodec(Food.EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), Food::getEffects,
             Food::new
     ));
-    public final ItemComponent<JukeboxPlayable> JUKEBOX_PLAYABLE = this.register("jukebox_playable", MapCodec.of(
-            this.typeSerializers.registryEntry(this.registryVerifier.jukeboxSong, MapCodec.of(
-                    this.typeSerializers.soundEvent().mapCodec(JukeboxPlayable.JukeboxSong.SOUND_EVENT), JukeboxPlayable.JukeboxSong::getSoundEvent,
-                    this.typeSerializers.rawTextComponent().mapCodec(JukeboxPlayable.JukeboxSong.DESCRIPTION), JukeboxPlayable.JukeboxSong::getDescription,
-                    Codec.minExclusiveFloat(0).mapCodec(JukeboxPlayable.JukeboxSong.LENGTH_IN_SECONDS), JukeboxPlayable.JukeboxSong::getLengthInSeconds,
-                    Codec.rangedInt(0, 15).mapCodec(JukeboxPlayable.JukeboxSong.COMPARATOR_OUTPUT), JukeboxPlayable.JukeboxSong::getComparatorOutput,
+    public final ItemComponent<JukeboxPlayable> JUKEBOX_PLAYABLE = this.register("jukebox_playable", MapCodecMerger.codec(
+            this.typeSerializers.registryEntry(this.registryVerifier.jukeboxSong, MapCodecMerger.codec(
+                    this.typeSerializers.soundEvent().mapCodec(JukeboxPlayable.JukeboxSong.SOUND_EVENT).required(), JukeboxPlayable.JukeboxSong::getSoundEvent,
+                    this.typeSerializers.rawTextComponent().mapCodec(JukeboxPlayable.JukeboxSong.DESCRIPTION).required(), JukeboxPlayable.JukeboxSong::getDescription,
+                    Codec.minExclusiveFloat(0).mapCodec(JukeboxPlayable.JukeboxSong.LENGTH_IN_SECONDS).required(), JukeboxPlayable.JukeboxSong::getLengthInSeconds,
+                    Codec.rangedInt(0, 15).mapCodec(JukeboxPlayable.JukeboxSong.COMPARATOR_OUTPUT).required(), JukeboxPlayable.JukeboxSong::getComparatorOutput,
                     JukeboxPlayable.JukeboxSong::new
-            )).mapCodec(JukeboxPlayable.SONG), JukeboxPlayable::getSong,
-            Codec.BOOLEAN.mapCodec(JukeboxPlayable.SHOW_IN_TOOLTIP).optionalDefault(() -> true), JukeboxPlayable::isShowInTooltip,
+            )).mapCodec(JukeboxPlayable.SONG).required(), JukeboxPlayable::getSong,
+            Codec.BOOLEAN.mapCodec(JukeboxPlayable.SHOW_IN_TOOLTIP).optional().defaulted(true), JukeboxPlayable::isShowInTooltip,
             JukeboxPlayable::new
     ));
     public final ItemComponent<AttributeModifiers> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", Codec.oneOf(
-            MapCodec.of(
-                    this.typeSerializers.attributeModifier_v1_21().listOf().mapCodec(AttributeModifiers.MODIFIERS), AttributeModifiers::getModifiers,
-                    Codec.BOOLEAN.mapCodec(AttributeModifiers.SHOW_IN_TOOLTIP).optionalDefault(() -> true), AttributeModifiers::isShowInTooltip,
+            MapCodecMerger.codec(
+                    this.typeSerializers.attributeModifier_v1_21().listOf().mapCodec(AttributeModifiers.MODIFIERS).required(), AttributeModifiers::getModifiers,
+                    Codec.BOOLEAN.mapCodec(AttributeModifiers.SHOW_IN_TOOLTIP).optional().defaulted(true), AttributeModifiers::isShowInTooltip,
                     AttributeModifiers::new
             ),
             this.typeSerializers.attributeModifier_v1_21().flatMap(modifiers -> Result.error("Can't encode single attribute modifier"), modifier -> {

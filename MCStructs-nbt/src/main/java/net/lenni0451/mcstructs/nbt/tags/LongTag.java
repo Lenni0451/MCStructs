@@ -1,12 +1,11 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtNumber;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.util.Objects;
 
-public class LongTag implements INbtNumber {
+public class LongTag implements NbtNumber {
 
     private long value;
 
@@ -85,7 +84,7 @@ public class LongTag implements INbtNumber {
     }
 
     @Override
-    public INbtTag copy() {
+    public LongTag copy() {
         return new LongTag(this.value);
     }
 

@@ -1,14 +1,14 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_12;
 
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtNumber;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
-import net.lenni0451.mcstructs.snbt.ISNbtDeserializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
+import net.lenni0451.mcstructs.snbt.impl.SNbtDeserializer;
 
 import java.util.regex.Pattern;
 
-public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
+public class SNbtDeserializer_v1_12 implements SNbtDeserializer<CompoundTag> {
 
     private static final Pattern BYTE_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)b", Pattern.CASE_INSENSITIVE);
     private static final Pattern SHORT_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)s", Pattern.CASE_INSENSITIVE);
@@ -28,7 +28,7 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
     }
 
     @Override
-    public INbtTag deserializeValue(String s) throws SNbtDeserializeException {
+    public NbtTag deserializeValue(String s) throws SNbtDeserializeException {
         return this.readValue(this.makeReader(s));
     }
 
@@ -49,18 +49,18 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
         return compound;
     }
 
-    protected INbtTag readListOrArray(final StringReader_v1_12 reader) throws SNbtDeserializeException {
+    protected NbtTag readListOrArray(final StringReader_v1_12 reader) throws SNbtDeserializeException {
         if (reader.canRead(2) && !this.isQuote(reader.charAt(1)) && reader.charAt(2) == ';') return this.readArray(reader);
         else return this.readList(reader);
     }
 
-    protected ListTag<INbtTag> readList(final StringReader_v1_12 reader) throws SNbtDeserializeException {
+    protected ListTag<NbtTag> readList(final StringReader_v1_12 reader) throws SNbtDeserializeException {
         reader.jumpTo('[');
         reader.skipWhitespaces();
         if (!reader.canRead()) throw this.makeException(reader, "Expected value");
-        ListTag<INbtTag> list = new ListTag<>();
+        ListTag<NbtTag> list = new ListTag<>();
         while (reader.peek() != ']') {
-            INbtTag tag = this.readValue(reader);
+            NbtTag tag = this.readValue(reader);
             if (!list.canAdd(tag)) throw new SNbtDeserializeException("Unable to insert " + tag.getClass().getSimpleName() + " into ListTag of type " + list.getType().name());
             list.add(tag);
             if (!this.hasNextValue(reader)) break;
@@ -70,11 +70,11 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
         return list;
     }
 
-    protected <T extends INbtNumber> ListTag<T> readPrimitiveList(final StringReader_v1_12 reader, final Class<T> primitiveType, final Class<? extends INbtTag> arrayType) throws SNbtDeserializeException {
+    protected <T extends NbtNumber> ListTag<T> readPrimitiveList(final StringReader_v1_12 reader, final Class<T> primitiveType, final Class<? extends NbtTag> arrayType) throws SNbtDeserializeException {
         ListTag<T> list = new ListTag<>();
         while (true) {
             if (reader.peek() != ']') {
-                INbtTag tag = this.readValue(reader);
+                NbtTag tag = this.readValue(reader);
                 if (!primitiveType.isAssignableFrom(tag.getClass())) {
                     throw new SNbtDeserializeException("Unable to insert " + tag.getClass().getSimpleName() + " into " + arrayType.getSimpleName());
                 }
@@ -89,7 +89,7 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
         }
     }
 
-    protected INbtTag readArray(final StringReader_v1_12 reader) throws SNbtDeserializeException {
+    protected NbtTag readArray(final StringReader_v1_12 reader) throws SNbtDeserializeException {
         reader.jumpTo('[');
         char c = reader.read();
         reader.read();
@@ -101,7 +101,7 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
         else throw new SNbtDeserializeException("Invalid array type '" + c + "' found");
     }
 
-    protected INbtTag readValue(final StringReader_v1_12 reader) throws SNbtDeserializeException {
+    protected NbtTag readValue(final StringReader_v1_12 reader) throws SNbtDeserializeException {
         reader.skipWhitespaces();
         if (!reader.canRead()) throw this.makeException(reader, "Expected value");
         char c = reader.peek();
@@ -110,7 +110,7 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
         else return this.readPrimitive(reader);
     }
 
-    protected INbtTag readPrimitive(final StringReader_v1_12 reader) throws SNbtDeserializeException {
+    protected NbtTag readPrimitive(final StringReader_v1_12 reader) throws SNbtDeserializeException {
         reader.skipWhitespaces();
         if (this.isQuote(reader.peek())) return new StringTag(reader.readQuotedString());
         String value = reader.readUnquotedString();
@@ -118,7 +118,13 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
         else return this.readPrimitive(value);
     }
 
-    protected INbtTag readPrimitive(final String value) {
+    protected NbtTag readPrimitive(final String value) {
+        if (value.equalsIgnoreCase("false")) return new ByteTag((byte) 0);
+        else if (value.equalsIgnoreCase("true")) return new ByteTag((byte) 1);
+        return this.readNumber(value);
+    }
+
+    protected NbtTag readNumber(final String value) {
         try {
             if (FLOAT_PATTERN.matcher(value).matches()) return new FloatTag(Float.parseFloat(value.substring(0, value.length() - 1)));
             else if (BYTE_PATTERN.matcher(value).matches()) return new ByteTag(Byte.parseByte(value.substring(0, value.length() - 1)));
@@ -127,8 +133,6 @@ public class SNbtDeserializer_v1_12 implements ISNbtDeserializer<CompoundTag> {
             else if (INT_PATTERN.matcher(value).matches()) return new IntTag(Integer.parseInt(value));
             else if (DOUBLE_PATTERN.matcher(value).matches()) return new DoubleTag(Double.parseDouble(value.substring(0, value.length() - 1)));
             else if (SHORT_DOUBLE_PATTERN.matcher(value).matches()) return new DoubleTag(Double.parseDouble(value));
-            else if (value.equalsIgnoreCase("false")) return new ByteTag((byte) 0);
-            else if (value.equalsIgnoreCase("true")) return new ByteTag((byte) 1);
         } catch (NumberFormatException ignored) {
         }
         return new StringTag(value);

@@ -1,15 +1,15 @@
 package net.lenni0451.mcstructs.text.utils;
 
-import net.lenni0451.mcstructs.core.TextFormatting;
-import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
-import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.api.Test;
+
+import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,19 +19,19 @@ class TextUtilsTest {
     void makeURLsClickable() {
         String url = "https://lenni0451.net";
 
-        ATextComponent component = new StringComponent("Check out my website: " + url + " it's awesome!");
+        TextComponent component = new StringComponent("Check out my website: " + url + " it's awesome!");
         component = TextUtils.makeURLsClickable(component);
         assertEquals(new StringComponent("")
                         .append("Check out my website: ")
-                        .append(new StringComponent(url).setStyle(new Style().setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL, url))))
+                        .append(new StringComponent(url).setStyle(new Style().setClickEvent(ClickEvent.openUrl(URI.create(url)))))
                         .append(" it's awesome!"),
                 component);
     }
 
     @Test
     void replaceRGBColors() {
-        ATextComponent component = new StringComponent("A").setStyle(new Style().setColor(0xFF_00_00)).append(new StringComponent("B").setStyle(new Style().setColor(0x00_FF_00))).append(new StringComponent("C").setStyle(new Style().setColor(0x00_00_FF)));
-        ATextComponent replaced = TextUtils.replaceRGBColors(component);
+        TextComponent component = new StringComponent("A").setStyle(new Style().setColor(0xFF_00_00)).append(new StringComponent("B").setStyle(new Style().setColor(0x00_FF_00))).append(new StringComponent("C").setStyle(new Style().setColor(0x00_00_FF)));
+        TextComponent replaced = TextUtils.replaceRGBColors(component);
 
         int[] i = {0};
         replaced.forEach(comp -> {
@@ -52,17 +52,17 @@ class TextUtilsTest {
 
     @Test
     void join() {
-        ATextComponent a = new StringComponent("A");
-        ATextComponent b = new StringComponent("B");
-        ATextComponent c = new StringComponent("C");
+        TextComponent a = new StringComponent("A");
+        TextComponent b = new StringComponent("B");
+        TextComponent c = new StringComponent("C");
 
-        ATextComponent joined = TextUtils.join(new StringComponent(" "), a, b, c);
+        TextComponent joined = TextUtils.join(new StringComponent(" "), a, b, c);
         assertEquals(new StringComponent("").append(a).append(" ").append(b).append(" ").append(c), joined);
     }
 
     @Test
     void iterateAll() {
-        ATextComponent component = new TranslationComponent("%s", new StringComponent("A").append("B")).append("C").modifyStyle(style -> style.setHoverEvent(new TextHoverEvent(HoverEventAction.SHOW_TEXT, new StringComponent("D"))));
+        TextComponent component = new TranslationComponent("%s", new StringComponent("A").append("B")).append("C").styled(style -> style.setHoverEvent(new TextHoverEvent(new StringComponent("D"))));
         StringBuilder out = new StringBuilder();
         TextUtils.iterateAll(component, comp -> out.append(comp.asSingleString()));
         //'AB' from the translation component filled with the args
@@ -75,8 +75,8 @@ class TextUtilsTest {
 
     @Test
     void split() {
-        ATextComponent component = new StringComponent("A B C");
-        ATextComponent[] split = TextUtils.split(component, " ", false);
+        TextComponent component = new StringComponent("A B C");
+        TextComponent[] split = TextUtils.split(component, " ", false);
         assertEquals(3, split.length);
         assertEquals(new StringComponent("A"), split[0]);
         assertEquals(new StringComponent("B"), split[1]);
@@ -85,24 +85,24 @@ class TextUtilsTest {
 
     @Test
     void splitEmpty() {
-        ATextComponent component = new StringComponent("");
-        ATextComponent[] split = TextUtils.split(component, " ", false);
+        TextComponent component = new StringComponent("");
+        TextComponent[] split = TextUtils.split(component, " ", false);
         assertEquals(1, split.length);
         assertEquals(new StringComponent(""), split[0]);
     }
 
     @Test
     void splitOnlySplitter() {
-        ATextComponent component = new StringComponent("   ");
-        ATextComponent[] split = TextUtils.split(component, " ", false);
+        TextComponent component = new StringComponent("   ");
+        TextComponent[] split = TextUtils.split(component, " ", false);
         assertEquals(4, split.length);
-        for (ATextComponent aTextComponent : split) assertEquals(new StringComponent(""), aTextComponent);
+        for (TextComponent textComponent : split) assertEquals(new StringComponent(""), textComponent);
     }
 
     @Test
     void splitSiblings() {
-        ATextComponent component = new StringComponent("A").append(" ").append("B").append(" ").append("C");
-        ATextComponent[] split = TextUtils.split(component, " ", true);
+        TextComponent component = new StringComponent("A").append(" ").append("B").append(" ").append("C");
+        TextComponent[] split = TextUtils.split(component, " ", true);
         assertEquals(3, split.length);
         assertEquals(new StringComponent("A"), split[0]);
         assertEquals(new StringComponent("B"), split[1]);
@@ -111,8 +111,8 @@ class TextUtilsTest {
 
     @Test
     void splitEmptySplitter() {
-        ATextComponent component = new StringComponent("A B C");
-        ATextComponent[] split = TextUtils.split(component, "", false);
+        TextComponent component = new StringComponent("A B C");
+        TextComponent[] split = TextUtils.split(component, "", false);
         assertEquals(6, split.length);
         assertEquals(new StringComponent("A"), split[0]);
         assertEquals(new StringComponent(" "), split[1]);

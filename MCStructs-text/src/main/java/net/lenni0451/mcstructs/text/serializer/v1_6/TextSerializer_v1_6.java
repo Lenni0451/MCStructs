@@ -1,17 +1,17 @@
 package net.lenni0451.mcstructs.text.serializer.v1_6;
 
 import com.google.gson.*;
-import net.lenni0451.mcstructs.text.ATextComponent;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
 
 import java.lang.reflect.Type;
 
-public class TextSerializer_v1_6 implements JsonSerializer<ATextComponent> {
+public class TextSerializer_v1_6 implements JsonSerializer<TextComponent> {
 
     @Override
-    public JsonElement serialize(ATextComponent src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(TextComponent src, Type typeOfSrc, JsonSerializationContext context) {
         Style style = src.getStyle();
         JsonObject component = new JsonObject();
 
@@ -28,7 +28,7 @@ public class TextSerializer_v1_6 implements JsonSerializer<ATextComponent> {
             } else {
                 JsonArray text = new JsonArray();
                 text.add(stringComponent.getText());
-                for (ATextComponent sibling : stringComponent.getSiblings()) {
+                for (TextComponent sibling : stringComponent.getSiblings()) {
                     if (sibling instanceof StringComponent && sibling.getStyle().isEmpty() && sibling.getSiblings().isEmpty()) text.add(((StringComponent) sibling).getText());
                     else text.add(this.serialize(sibling, typeOfSrc, context));
                 }

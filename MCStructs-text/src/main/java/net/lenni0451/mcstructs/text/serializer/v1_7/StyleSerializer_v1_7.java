@@ -4,20 +4,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.text.Style;
-import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import java.lang.reflect.Type;
 
-public class StyleSerializer_v1_7 implements JsonSerializer<Style> {
+public class StyleSerializer_v1_7 extends EventSerializers_v1_7 implements JsonSerializer<Style> {
 
-    private final TextComponentSerializer textComponentSerializer;
-    private final SNbtSerializer<?> sNbtSerializer;
-
-    public StyleSerializer_v1_7(final TextComponentSerializer textComponentSerializer, final SNbtSerializer<?> sNbtSerializer) {
-        this.textComponentSerializer = textComponentSerializer;
-        this.sNbtSerializer = sNbtSerializer;
+    public StyleSerializer_v1_7(final SNbt<?> sNbt) {
+        super(sNbt);
     }
 
     @Override
@@ -34,13 +29,13 @@ public class StyleSerializer_v1_7 implements JsonSerializer<Style> {
         if (src.getClickEvent() != null) {
             JsonObject clickEvent = new JsonObject();
             clickEvent.addProperty("action", src.getClickEvent().getAction().getName());
-            clickEvent.addProperty("value", src.getClickEvent().getValue());
+            clickEvent.addProperty("value", this.clickEventSerializer.serialize(src.getClickEvent()));
             serializedStyle.add("clickEvent", clickEvent);
         }
         if (src.getHoverEvent() != null) {
             JsonObject hoverEvent = new JsonObject();
             hoverEvent.addProperty("action", src.getHoverEvent().getAction().getName());
-            hoverEvent.add("value", context.serialize(src.getHoverEvent().toLegacy(this.textComponentSerializer, this.sNbtSerializer).getText()));
+            hoverEvent.add("value", context.serialize(this.hoverEventSerializer.serialize(src.getHoverEvent())));
             serializedStyle.add("hoverEvent", hoverEvent);
         }
 

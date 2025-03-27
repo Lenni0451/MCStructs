@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NbtIOTest {
 
+    private static final NbtIO NBT_IO = NbtIO.LATEST;
     private static final CompoundTag compoundTag = new CompoundTag();
     private static byte[] uncompressed;
     private static byte[] compressed;
@@ -63,8 +64,8 @@ class NbtIOTest {
     void write() {
         ByteArrayOutputStream uncompressed = new ByteArrayOutputStream();
         ByteArrayOutputStream compressed = new ByteArrayOutputStream();
-        assertDoesNotThrow(() -> NbtIO.JAVA.write(uncompressed, "", compoundTag, false));
-        assertDoesNotThrow(() -> NbtIO.JAVA.write(compressed, "", compoundTag, true));
+        assertDoesNotThrow(() -> NBT_IO.write(uncompressed, "", compoundTag, false));
+        assertDoesNotThrow(() -> NBT_IO.write(compressed, "", compoundTag, true));
 
         assertArrayEquals(NbtIOTest.uncompressed, uncompressed.toByteArray());
         assertArrayEquals(NbtIOTest.uncompressed, assertDoesNotThrow(() -> decompress(compressed.toByteArray())));
@@ -72,8 +73,8 @@ class NbtIOTest {
 
     @Test
     void read() {
-        INbtTag uncompressed = assertDoesNotThrow(() -> NbtIO.JAVA.read(new ByteArrayInputStream(NbtIOTest.uncompressed), false, NbtReadTracker.unlimited()));
-        INbtTag compressed = assertDoesNotThrow(() -> NbtIO.JAVA.read(new ByteArrayInputStream(NbtIOTest.compressed), true, NbtReadTracker.unlimited()));
+        NbtTag uncompressed = assertDoesNotThrow(() -> NBT_IO.read(new ByteArrayInputStream(NbtIOTest.uncompressed), false, NbtReadTracker.unlimitedDepth()));
+        NbtTag compressed = assertDoesNotThrow(() -> NBT_IO.read(new ByteArrayInputStream(NbtIOTest.compressed), true, NbtReadTracker.unlimitedDepth()));
 
         assertEquals(compoundTag, uncompressed);
         assertEquals(compoundTag, compressed);
@@ -81,7 +82,7 @@ class NbtIOTest {
 
     @Test
     void readNamed() {
-        NamedTag namedTag = assertDoesNotThrow(() -> NbtIO.JAVA.readNamed(new DataInputStream(new ByteArrayInputStream(NbtIOTest.named)), NbtReadTracker.unlimited()));
+        NamedTag namedTag = assertDoesNotThrow(() -> NBT_IO.readNamed(new DataInputStream(new ByteArrayInputStream(NbtIOTest.named)), NbtReadTracker.unlimitedDepth()));
 
         assertEquals("named", namedTag.getName());
         assertInstanceOf(StringTag.class, namedTag.getTag());

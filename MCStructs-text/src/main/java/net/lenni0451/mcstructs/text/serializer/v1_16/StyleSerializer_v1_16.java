@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.events.click.ClickEvent;
+import net.lenni0451.mcstructs.text.events.click.types.*;
 
 import java.lang.reflect.Type;
 
@@ -25,13 +27,30 @@ public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
         if (src.getClickEvent() != null) {
             JsonObject clickEvent = new JsonObject();
             clickEvent.addProperty("action", src.getClickEvent().getAction().getName());
-            clickEvent.addProperty("value", src.getClickEvent().getValue());
+            clickEvent.addProperty("value", this.serializeClickEvent(src.getClickEvent()));
             serializedStyle.add("clickEvent", clickEvent);
         }
         if (src.getHoverEvent() != null) serializedStyle.add("hoverEvent", context.serialize(src.getHoverEvent()));
         if (src.getFont() != null) serializedStyle.addProperty("font", src.getFont().get());
 
         return serializedStyle;
+    }
+
+    private String serializeClickEvent(final ClickEvent clickEvent) {
+        if (clickEvent instanceof OpenUrlClickEvent) {
+            return ((OpenUrlClickEvent) clickEvent).asString();
+        } else if (clickEvent instanceof OpenFileClickEvent) {
+            return ((OpenFileClickEvent) clickEvent).getPath();
+        } else if (clickEvent instanceof RunCommandClickEvent) {
+            return ((RunCommandClickEvent) clickEvent).getCommand();
+        } else if (clickEvent instanceof SuggestCommandClickEvent) {
+            return ((SuggestCommandClickEvent) clickEvent).getCommand();
+        } else if (clickEvent instanceof ChangePageClickEvent) {
+            return ((ChangePageClickEvent) clickEvent).asString();
+        } else if (clickEvent instanceof CopyToClipboardClickEvent) {
+            return ((CopyToClipboardClickEvent) clickEvent).getValue();
+        }
+        throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
     }
 
 }

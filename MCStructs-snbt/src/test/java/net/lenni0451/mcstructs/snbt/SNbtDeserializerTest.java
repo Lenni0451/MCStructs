@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.snbt;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,18 +35,19 @@ public class SNbtDeserializerTest {
             "{test:[1,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,3]}",
             "{test:[I;]}",
             "{test:\"Test\\\\String\"}",
-            "{test:\"Test\\String\"}"
+            "{test:\"Test\\String\"}",
+            "{id:[B;1,false,true]}",
     };
 
-    protected static void executeTests(final SNbtSerializer<?> serializer, final String[] expectedResults) {
+    protected static void executeTests(final SNbt<?> serializer, final String[] expectedResults) {
         assertEquals(TESTS.length, expectedResults.length);
 
         for (int i = 0; i < TESTS.length; i++) {
             String test = TESTS[i];
-            INbtTag expected = serializer.tryDeserialize(expectedResults[i]);
+            NbtTag expected = serializer.tryDeserialize(expectedResults[i]);
 
             try {
-                INbtTag result = serializer.deserialize(test);
+                NbtTag result = serializer.deserialize(test);
                 assertEquals(expected, result, "Test " + i + " failed: " + test);
             } catch (SNbtDeserializeException e) {
                 assertNull(expected, "Test " + i + " failed: " + test);

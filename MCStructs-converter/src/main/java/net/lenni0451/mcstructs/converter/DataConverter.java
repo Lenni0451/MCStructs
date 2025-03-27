@@ -1,5 +1,8 @@
 package net.lenni0451.mcstructs.converter;
 
+import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.model.Result;
+
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -23,6 +26,10 @@ public interface DataConverter<T> {
         Map<N, N> out = new HashMap<>();
         for (Map.Entry<T, T> entry : in.entrySet()) out.put(this.convertTo(to, entry.getKey()), this.convertTo(to, entry.getValue()));
         return to.createUnsafeMap(out);
+    }
+
+    default T empty() {
+        return null;
     }
 
     T createBoolean(final boolean value);
@@ -110,8 +117,6 @@ public interface DataConverter<T> {
 
     Result<Map<String, T>> asStringTypeMap(final T element);
 
-    boolean put(final T map, final String key, final T value);
-
     T createByteArray(final byte[] value);
 
     Result<byte[]> asByteArray(final T element);
@@ -123,5 +128,27 @@ public interface DataConverter<T> {
     T createLongArray(final long[] value);
 
     Result<long[]> asLongArray(final T element);
+
+    default Codec<T> toCodec() {
+        return new Codec<T>() {
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                try {
+                    return Result.success(converter.convertTo(DataConverter.this, data));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            }
+
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                try {
+                    return Result.success(converter.convertFrom(DataConverter.this, element));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            }
+        };
+    }
 
 }

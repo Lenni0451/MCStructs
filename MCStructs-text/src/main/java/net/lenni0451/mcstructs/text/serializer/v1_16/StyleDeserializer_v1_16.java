@@ -2,11 +2,13 @@ package net.lenni0451.mcstructs.text.serializer.v1_16;
 
 import com.google.gson.*;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.click.types.ChangePageClickEvent;
+import net.lenni0451.mcstructs.text.events.click.types.OpenUrlClickEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 
 import java.lang.reflect.Type;
 
@@ -35,14 +37,18 @@ public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
 
             ClickEventAction action = null;
             String value = getString(rawClickEvent, "value");
-            if (rawAction != null) action = ClickEventAction.getByName(rawAction);
+            if (rawAction != null) action = ClickEventAction.byName(rawAction);
 
-            if (action != null && value != null && action.isUserDefinable()) style.setClickEvent(new ClickEvent(action, value));
+            if (action != null && value != null && action.isUserDefinable()) {
+                style.setClickEvent(this.deserializeClickEvent(action, value));
+            }
         }
         if (rawStyle.has("hoverEvent")) {
             JsonObject rawHoverEvent = getJsonObject(rawStyle, "hoverEvent");
-            AHoverEvent hoverEvent = context.deserialize(rawHoverEvent, AHoverEvent.class);
-            if (hoverEvent != null && hoverEvent.getAction().isUserDefinable()) style.setHoverEvent(hoverEvent);
+            HoverEvent hoverEvent = context.deserialize(rawHoverEvent, HoverEvent.class);
+            if (hoverEvent != null && hoverEvent.getAction().isUserDefinable()) {
+                style.setHoverEvent(hoverEvent);
+            }
         }
         if (rawStyle.has("font")) {
             String font = getString(rawStyle, "font");
@@ -53,6 +59,25 @@ public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
             }
         }
         return style;
+    }
+
+    private ClickEvent deserializeClickEvent(final ClickEventAction action, final String value) {
+        switch (action) {
+            case OPEN_URL:
+                return new OpenUrlClickEvent(value);
+            case OPEN_FILE:
+                return ClickEvent.openFile(value);
+            case RUN_COMMAND:
+                return ClickEvent.runCommand(value);
+            case SUGGEST_COMMAND:
+                return ClickEvent.suggestCommand(value);
+            case CHANGE_PAGE:
+                return new ChangePageClickEvent(value);
+            case COPY_TO_CLIPBOARD:
+                return ClickEvent.copyToClipboard(value);
+            default:
+                throw new IllegalArgumentException("Unknown click event action: " + action.getName());
+        }
     }
 
 }

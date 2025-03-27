@@ -3,105 +3,126 @@ package net.lenni0451.mcstructs.text.serializer;
 import com.google.gson.*;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.impl.v1_20_3.JsonConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.v1_20_5.JsonConverter_v1_20_5;
+import net.lenni0451.mcstructs.converter.impl.v1_21_5.NbtConverter_v1_21_5;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtDeserializeException;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.text.ATextComponent;
-import net.lenni0451.mcstructs.text.serializer.subtypes.ITextComponentSerializer;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonHoverEventSerializer_v1_20_3;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonStyleSerializer_v1_20_3;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.json.JsonTextSerializer_v1_20_3;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtHoverEventSerializer_v1_20_3;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtStyleSerializer_v1_20_3;
-import net.lenni0451.mcstructs.text.serializer.v1_20_3.nbt.NbtTextSerializer_v1_20_3;
-import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextComponentCodec_v1_20_5;
-import net.lenni0451.mcstructs.text.serializer.v1_21_2.TextComponentCodec_v1_21_2;
-import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextComponentCodec_v1_21_4;
+import net.lenni0451.mcstructs.text.Style;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.StyleCodecs_v1_20_3;
+import net.lenni0451.mcstructs.text.serializer.v1_20_3.TextCodecs_v1_20_3;
+import net.lenni0451.mcstructs.text.serializer.v1_20_5.StyleCodecs_v1_20_5;
+import net.lenni0451.mcstructs.text.serializer.v1_20_5.TextCodecs_v1_20_5;
+import net.lenni0451.mcstructs.text.serializer.v1_21_2.StyleCodecs_v1_21_2;
+import net.lenni0451.mcstructs.text.serializer.v1_21_2.TextCodecs_v1_21_2;
+import net.lenni0451.mcstructs.text.serializer.v1_21_4.StyleCodecs_v1_21_4;
+import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextCodecs_v1_21_4;
+import net.lenni0451.mcstructs.text.serializer.v1_21_5.StyleCodecs_v1_21_5;
+import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
+import net.lenni0451.mcstructs.text.serializer.verify.TextVerifier;
+import net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.StringReader;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
  * The text component serializer and deserializer wrapper class for multiple types of input and output.<br>
  * Use the static default fields for a specific minecraft version or create your own serializer/deserializer.<br>
  * <br>
- * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link TextComponentSerializer} class because components can now be serialized to nbt.<br>
- * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link TextComponentSerializer} will still be updated using this wrapper method.
+ * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} class because components can now be serialized to nbt.<br>
+ * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} will still be updated using this wrapper method.
  */
 @ParametersAreNonnullByDefault
-@SuppressWarnings("StaticInitializerReferencesSubClass")
 public class TextComponentCodec {
 
     private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
     /**
      * The text codec for 1.20.3.
      */
-    public static final TextComponentCodec V1_20_3 = new TextComponentCodec(
-            () -> SNbtSerializer.V1_14,
-            (codec, sNbtSerializer) -> new JsonTextSerializer_v1_20_3(textSerializer -> new JsonStyleSerializer_v1_20_3(styleSerializer -> new JsonHoverEventSerializer_v1_20_3(codec, textSerializer, sNbtSerializer))),
-            (codec, sNbtSerializer) -> new NbtTextSerializer_v1_20_3(textSerializer -> new NbtStyleSerializer_v1_20_3(styleSerializer -> new NbtHoverEventSerializer_v1_20_3(codec, textSerializer, sNbtSerializer)))
-    );
+    public static final TextComponentCodec V1_20_3 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_20_3.TEXT, () -> StyleCodecs_v1_20_3.CODEC, JsonConverter_v1_20_3.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
-     * The text codec for 1.20.5.<br>
-     * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_20_5} class yourself instead of using this codec.</b>
+     * The text codec for 1.20.5.
      */
-    public static final TextComponentCodec_v1_20_5 V1_20_5 = new TextComponentCodec_v1_20_5();
+    public static final TextComponentCodec V1_20_5 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_20_5.TEXT, () -> StyleCodecs_v1_20_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
-     * The text codec for 1.21.2.<br>
-     * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_21_2} class yourself instead of using this codec.</b>
+     * The text codec for 1.21.2.
      */
-    public static final TextComponentCodec_v1_21_2 V1_21_2 = new TextComponentCodec_v1_21_2();
+    public static final TextComponentCodec V1_21_2 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_21_2.TEXT, () -> StyleCodecs_v1_21_2.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
-     * The text codec for 1.21.4.<br>
-     * <b>If you have access to minecraft data, it is recommended to implement the {@link TextComponentCodec_v1_21_4} class yourself instead of using this codec.</b>
+     * The text codec for 1.21.4.
      */
-    public static final TextComponentCodec_v1_21_4 V1_21_4 = new TextComponentCodec_v1_21_4();
+    public static final TextComponentCodec V1_21_4 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_21_4.TEXT, () -> StyleCodecs_v1_21_4.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
+    /**
+     * The text codec for 1.21.5.<br>
+     * TODO: Access to minecraft data
+     */
+    public static final TextComponentCodec V1_21_5 = new TextComponentCodec(() -> SNbt.V1_21_5, () -> TextCodecs_v1_21_5.TEXT, () -> StyleCodecs_v1_21_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_21_5.INSTANCE);
     /**
      * The latest text codec.
      */
-    public static final TextComponentCodec LATEST = V1_21_4;
+    public static final TextComponentCodec LATEST = V1_21_5;
 
 
-    private final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier;
-    private final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier;
-    private final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<INbtTag>> nbtSerializerSupplier;
-    private SNbtSerializer<CompoundTag> sNbtSerializer;
-    private ITextComponentSerializer<JsonElement> jsonSerializer;
-    private ITextComponentSerializer<INbtTag> nbtSerializer;
+    private final Supplier<SNbt<CompoundTag>> sNbtSupplier;
+    private final Supplier<Codec<TextComponent>> textCodecSupplier;
+    private final Supplier<Codec<Style>> styleCodecSupplier;
+    private final DataConverter<JsonElement> jsonConverter;
+    private final DataConverter<NbtTag> nbtConverter;
+    private SNbt<CompoundTag> sNbt;
+    private Codec<TextComponent> textCodec;
+    private Codec<Style> styleCodec;
 
-    public TextComponentCodec(final Supplier<SNbtSerializer<CompoundTag>> sNbtSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<JsonElement>> jsonSerializerSupplier, final BiFunction<TextComponentCodec, SNbtSerializer<CompoundTag>, ITextComponentSerializer<INbtTag>> nbtSerializerSupplier) {
-        this.sNbtSerializerSupplier = sNbtSerializerSupplier;
-        this.jsonSerializerSupplier = jsonSerializerSupplier;
-        this.nbtSerializerSupplier = nbtSerializerSupplier;
+    public TextComponentCodec(final Supplier<SNbt<CompoundTag>> sNbtSupplier, final Supplier<Codec<TextComponent>> textCodec, final Supplier<Codec<Style>> styleCodec, final DataConverter<JsonElement> jsonConverter, final DataConverter<NbtTag> nbtConverter) {
+        this.sNbtSupplier = sNbtSupplier;
+        this.textCodecSupplier = textCodec;
+        this.styleCodecSupplier = styleCodec;
+        this.jsonConverter = jsonConverter;
+        this.nbtConverter = nbtConverter;
     }
 
     /**
      * @return The used snbt serializer
      */
-    private SNbtSerializer<CompoundTag> getSNbtSerializer() {
-        if (this.sNbtSerializer == null) this.sNbtSerializer = this.sNbtSerializerSupplier.get();
-        return this.sNbtSerializerSupplier.get();
+    private SNbt<CompoundTag> getSNbtSerializer() {
+        if (this.sNbt == null) this.sNbt = this.sNbtSupplier.get();
+        return this.sNbtSupplier.get();
     }
 
     /**
      * @return The used json serializer/deserializer
      */
-    public ITextComponentSerializer<JsonElement> getJsonSerializer() {
-        if (this.jsonSerializer == null) this.jsonSerializer = this.jsonSerializerSupplier.apply(this, this.getSNbtSerializer());
-        return this.jsonSerializer;
+    public Codec<TextComponent> getTextCodec() {
+        if (this.textCodec == null) this.textCodec = this.textCodecSupplier.get();
+        return this.textCodec;
     }
 
     /**
      * @return The used nbt serializer/deserializer
      */
-    public ITextComponentSerializer<INbtTag> getNbtSerializer() {
-        if (this.nbtSerializer == null) this.nbtSerializer = this.nbtSerializerSupplier.apply(this, this.getSNbtSerializer());
-        return this.nbtSerializer;
+    public Codec<Style> getStyleCodec() {
+        if (this.styleCodec == null) this.styleCodec = this.styleCodecSupplier.get();
+        return this.styleCodec;
+    }
+
+    /**
+     * Create a new text component codec with the given text verifier.<br>
+     * The verifier is used to check if the text component is valid during serialization/deserialization.<br>
+     * By default, no verifier is used and all text components are valid.
+     *
+     * @param verifier The text verifier
+     * @return The new text component codec
+     */
+    public TextComponentCodec withVerifier(final TextVerifier verifier) {
+        return new TextComponentCodec(this.sNbtSupplier, this.textCodecSupplier, this.styleCodecSupplier, new VerifyingConverter<>(this.jsonConverter, verifier), new VerifyingConverter<>(this.nbtConverter, verifier));
     }
 
     /**
@@ -110,7 +131,7 @@ public class TextComponentCodec {
      * @param json The json string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeJson(final String json) {
+    public TextComponent deserializeJson(final String json) {
         return this.deserializeJsonTree(JsonParser.parseString(json));
     }
 
@@ -121,7 +142,7 @@ public class TextComponentCodec {
      * @param json The json string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeJsonReader(final String json) {
+    public TextComponent deserializeJsonReader(final String json) {
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(false);
         try {
@@ -138,7 +159,7 @@ public class TextComponentCodec {
      * @param json The json string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeLenientJson(final String json) {
+    public TextComponent deserializeLenientJson(final String json) {
         JsonReader reader = new JsonReader(new StringReader(json));
         reader.setLenient(true);
         return this.deserializeJsonTree(JsonParser.parseReader(reader));
@@ -150,7 +171,7 @@ public class TextComponentCodec {
      * @param nbt The nbt string
      * @return The deserialized text component
      */
-    public ATextComponent deserializeNbt(final String nbt) {
+    public TextComponent deserializeNbt(final String nbt) {
         try {
             return this.deserialize(this.getSNbtSerializer().getDeserializer().deserializeValue(nbt));
         } catch (SNbtDeserializeException e) {
@@ -164,18 +185,18 @@ public class TextComponentCodec {
      * @param element The json element
      * @return The deserialized text component
      */
-    public ATextComponent deserializeJsonTree(@Nullable final JsonElement element) {
+    public TextComponent deserializeJsonTree(@Nullable final JsonElement element) {
         if (element == null) return null;
         return this.deserialize(element);
     }
 
     /**
-     * Deserialize a text component from a {@link INbtTag}.
+     * Deserialize a text component from a {@link NbtTag}.
      *
      * @param nbt The nbt tag
      * @return The deserialized text component
      */
-    public ATextComponent deserializeNbtTree(@Nullable final INbtTag nbt) {
+    public TextComponent deserializeNbtTree(@Nullable final NbtTag nbt) {
         if (nbt == null) return null;
         return this.deserialize(nbt);
     }
@@ -187,19 +208,19 @@ public class TextComponentCodec {
      * @param json The json element
      * @return The deserialized text component
      */
-    public ATextComponent deserialize(final JsonElement json) {
-        return this.getJsonSerializer().deserialize(json);
+    public TextComponent deserialize(final JsonElement json) {
+        return this.getTextCodec().deserialize(this.jsonConverter, json).getOrThrow(JsonParseException::new);
     }
 
     /**
-     * Deserialize a text component from a {@link INbtTag}.<br>
+     * Deserialize a text component from a {@link NbtTag}.<br>
      * This method does not check for null values.
      *
      * @param nbt The nbt tag
      * @return The deserialized text component
      */
-    public ATextComponent deserialize(final INbtTag nbt) {
-        return this.getNbtSerializer().deserialize(nbt);
+    public TextComponent deserialize(final NbtTag nbt) {
+        return this.getTextCodec().deserialize(this.nbtConverter, nbt).getOrThrow();
     }
 
     /**
@@ -208,18 +229,18 @@ public class TextComponentCodec {
      * @param component The text component
      * @return The serialized json element
      */
-    public JsonElement serializeJsonTree(final ATextComponent component) {
-        return this.getJsonSerializer().serialize(component);
+    public JsonElement serializeJsonTree(final TextComponent component) {
+        return this.getTextCodec().serialize(this.jsonConverter, component).getOrThrow(JsonParseException::new);
     }
 
     /**
-     * Serialize a text component to a {@link INbtTag}.
+     * Serialize a text component to a {@link NbtTag}.
      *
      * @param component The text component
      * @return The serialized nbt tag
      */
-    public INbtTag serializeNbt(final ATextComponent component) {
-        return this.getNbtSerializer().serialize(component);
+    public NbtTag serializeNbtTree(final TextComponent component) {
+        return this.getTextCodec().serialize(this.nbtConverter, component).getOrThrow();
     }
 
     /**
@@ -228,7 +249,7 @@ public class TextComponentCodec {
      * @param component The text component
      * @return The serialized json string
      */
-    public String serializeJsonString(final ATextComponent component) {
+    public String serializeJsonString(final TextComponent component) {
         return GSON.toJson(this.serializeJsonTree(component));
     }
 
@@ -238,21 +259,21 @@ public class TextComponentCodec {
      * @param component The text component
      * @return The serialized nbt string
      */
-    public String serializeNbtString(final ATextComponent component) {
+    public String serializeNbtString(final TextComponent component) {
         try {
-            return this.getSNbtSerializer().serialize(this.serializeNbt(component));
+            return this.getSNbtSerializer().serialize(this.serializeNbtTree(component));
         } catch (SNbtSerializeException e) {
             throw new RuntimeException("Failed to serialize SNbt", e);
         }
     }
 
     /**
-     * @return A wrapper for this codec to use it as a {@link TextComponentSerializer}.
+     * @return A wrapper for this codec to use it as a {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer}.
      */
-    public TextComponentSerializer asSerializer() {
-        return new TextComponentSerializer(this, () -> new GsonBuilder()
-                .registerTypeHierarchyAdapter(ATextComponent.class, (JsonSerializer<ATextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
-                .registerTypeHierarchyAdapter(ATextComponent.class, (JsonDeserializer<ATextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
+    public net.lenni0451.mcstructs.text.serializer.TextComponentSerializer asSerializer() {
+        return new net.lenni0451.mcstructs.text.serializer.TextComponentSerializer(this, () -> new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, (JsonSerializer<TextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
+                .registerTypeHierarchyAdapter(TextComponent.class, (JsonDeserializer<TextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
                 .disableHtmlEscaping()
                 .create());
     }

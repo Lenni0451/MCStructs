@@ -7,6 +7,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class IdentifierTest {
 
     @Test
+    void defaultNamespace() {
+        assertEquals(Identifier.of("test"), Identifier.defaultNamespace("test"));
+        assertNotEquals(Identifier.of("other:test"), Identifier.defaultNamespace("test"));
+        assertThrows(IllegalArgumentException.class, () -> Identifier.defaultNamespace("a:b"));
+    }
+
+    @Test
     void of() {
         assertThrows(IllegalArgumentException.class, () -> Identifier.of("a:b:c"));
         assertThrows(IllegalArgumentException.class, () -> Identifier.of("a\0:b"));

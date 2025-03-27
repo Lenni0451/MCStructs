@@ -1,10 +1,17 @@
 package net.lenni0451.mcstructs.converter.codec;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.Result;
+import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
+import net.lenni0451.mcstructs.converter.mapcodec.impl.FieldMapCodec;
+import net.lenni0451.mcstructs.converter.mapcodec.impl.TypedMapCodec;
+import net.lenni0451.mcstructs.converter.model.Either;
+import net.lenni0451.mcstructs.converter.model.Result;
+import net.lenni0451.mcstructs.converter.types.IdentifiedType;
+import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -153,6 +160,7 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         long leastSigBits = ((long) ints[2] << 32) | ints[3] & 0xFFFF_FFFFL;
         return new UUID(mostSigBits, leastSigBits);
     });
+    Codec<UUID> STRICT_STRING_UUID = Codec.STRING.mapThrowing(UUID::toString, UUID::fromString);
 
     static <T> Codec<T> unit(final Supplier<T> supplier) {
         return new Codec<T>() {
@@ -259,7 +267,8 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         });
     }
 
-    static <T extends NamedType> Codec<T> named(final T[] values) {
+    @SafeVarargs
+    static <T extends NamedType> Codec<T> named(final T... values) {
         return STRING.flatMap(named -> Result.success(named.getName()), name -> {
             for (T value : values) {
                 if (value.getName().equals(name)) return Result.success(value);
@@ -371,6 +380,15 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
+    static <T> Codec<List<T>> compactList(final Codec<T> elementCodec, final Codec<List<T>> listCodec) {
+        return Codec.either(listCodec, elementCodec).map(list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list), either -> either.xmap(list -> list, item -> {
+            List<T> list = new ArrayList<>();
+            list.add(item);
+            return list;
+        }));
+    }
+
+
     default <N> Codec<N> map(final Function<N, T> serializer, final Function<T, N> deserializer) {
         return new Codec<N>() {
             @Override
@@ -419,31 +437,38 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
-    default <N> Codec<N> typed(final Function<N, T> typeMapper, final Function<T, Codec<N>> continuation) {
+    default <N> Codec<N> converterFlatMap(final BiFunction<DataConverter<?>, N, Result<T>> serializer, final BiFunction<DataConverter<?>, T, Result<N>> deserializer) {
         return new Codec<N>() {
             @Override
             public <S> Result<S> serialize(DataConverter<S> converter, N element) {
-                T type = typeMapper.apply(element);
-                Result<S> result = Codec.this.serialize(converter, type);
+                Result<T> result = serializer.apply(converter, element);
                 if (result.isError()) return result.mapError();
-
-                Result<S> continuedResult = continuation.apply(type).serialize(converter, element);
-                if (continuedResult.isError()) return continuedResult.mapError();
-
-                return converter.mergeMap(continuedResult.get(), converter.createString("type"), result.get());
+                return Codec.this.serialize(converter, result.get());
             }
 
             @Override
             public <S> Result<N> deserialize(DataConverter<S> converter, S data) {
-                Result<Map<S, S>> mapResult = converter.asMap(data);
-                if (mapResult.isError()) return mapResult.mapError();
-
-                Result<T> type = Codec.this.deserialize(converter, mapResult.get().get(converter.createString("type")));
-                if (type.isError()) return type.mapError();
-
-                return continuation.apply(type.get()).deserialize(converter, data);
+                Result<T> result = Codec.this.deserialize(converter, data);
+                if (result.isError()) return result.mapError();
+                return deserializer.apply(converter, result.get());
             }
         };
+    }
+
+    default <N> Codec<N> typed(final Function<N, T> typeMapper, final Function<T, MapCodec<? extends N>> continuation) {
+        return this.typedMap(typeMapper, continuation).asCodec();
+    }
+
+    default <N> Codec<N> typed(final String typeKey, final Function<N, T> typeMapper, final Function<T, MapCodec<? extends N>> continuation) {
+        return this.typedMap(typeKey, typeMapper, continuation).asCodec();
+    }
+
+    default <N> MapCodec<N> typedMap(final Function<N, T> typeMapper, final Function<T, MapCodec<? extends N>> continuation) {
+        return this.typedMap("type", typeMapper, continuation);
+    }
+
+    default <N> MapCodec<N> typedMap(final String typeKey, final Function<N, T> typeMapper, final Function<T, MapCodec<? extends N>> continuation) {
+        return new TypedMapCodec<>(typeKey, this, typeMapper, continuation);
     }
 
     default Codec<List<T>> listOf() {
@@ -496,7 +521,7 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
     }
 
     default Codec<List<T>> optionalListOf(final int minElements, final int maxElements) {
-        Codec<List<T>> listCodec = this.listOf(maxElements);
+        Codec<List<T>> listCodec = this.listOf(minElements, maxElements);
         return new Codec<List<T>>() {
             @Override
             public <S> Result<List<T>> deserialize(DataConverter<S> converter, S data) {
@@ -513,6 +538,17 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
                 return listCodec.serialize(converter, element);
             }
         };
+    }
+
+    default Codec<List<T>> nonEmptyList() {
+        return this.listOf().verified(list -> {
+            if (list.isEmpty()) return Result.error("List is empty");
+            return null;
+        });
+    }
+
+    default Codec<List<T>> compactListOf() {
+        return compactList(this, this.listOf());
     }
 
     default Codec<T> verified(final Function<T, Result<Void>> verifier) {
@@ -535,16 +571,28 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
-    default <K> MapCodec<K, T> mapCodec() {
-        return this.mapCodec(null, null);
+    default Codec<T> converterVerified(final BiFunction<DataConverter<?>, T, Result<Void>> verifier) {
+        return new Codec<T>() {
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                Result<Void> verify = verifier.apply(converter, element);
+                if (verify != null && verify.isError()) return verify.mapError();
+                return Codec.this.serialize(converter, element);
+            }
+
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                Result<T> result = Codec.this.deserialize(converter, data);
+                if (result.isError()) return result;
+                Result<Void> verify = verifier.apply(converter, result.get());
+                if (verify != null && verify.isError()) return verify.mapError();
+                return result;
+            }
+        };
     }
 
-    default MapCodec<String, T> mapCodec(final String key) {
-        return this.mapCodec(STRING, key);
-    }
-
-    default <K> MapCodec<K, T> mapCodec(final Codec<K> keyCodec, final K key) {
-        return MapCodec.of(key, keyCodec, this);
+    default FieldMapCodec.Builder.Stage1<T> mapCodec(final String key) {
+        return FieldMapCodec.builder(this, key);
     }
 
 }

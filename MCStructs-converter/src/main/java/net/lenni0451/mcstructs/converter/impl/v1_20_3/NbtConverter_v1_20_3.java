@@ -1,29 +1,40 @@
 package net.lenni0451.mcstructs.converter.impl.v1_20_3;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
-import net.lenni0451.mcstructs.converter.Result;
-import net.lenni0451.mcstructs.nbt.INbtArray;
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.converter.model.Result;
+import net.lenni0451.mcstructs.nbt.NbtArray;
+import net.lenni0451.mcstructs.nbt.NbtNumber;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.*;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
+import net.lenni0451.mcstructs.snbt.SNbt;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
+import static net.lenni0451.mcstructs.nbt.utils.NbtCodecUtils.MARKER_KEY;
+
+public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
 
     public static final NbtConverter_v1_20_3 INSTANCE = new NbtConverter_v1_20_3();
-    private static final String MARKER_KEY = "";
+
+    private final SNbt<CompoundTag> sNbt;
+
+    public NbtConverter_v1_20_3() {
+        this(SNbt.V1_14);
+    }
+
+    protected NbtConverter_v1_20_3(final SNbt<CompoundTag> sNbt) {
+        this.sNbt = sNbt;
+    }
 
     @Override
-    public <N> N convertTo(DataConverter<N> to, @Nullable INbtTag element) {
+    public <N> N convertTo(DataConverter<N> to, @Nullable NbtTag element) {
         if (to == this) return (N) element;
-        if (element == null) return null;
+        if (element == null) return to.empty();
         switch (element.getNbtType()) {
             case END:
-                return null;
+                return to.empty();
             case BYTE:
                 return to.createByte(element.asByteTag().getValue());
             case SHORT:
@@ -54,94 +65,94 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     }
 
     @Override
-    public INbtTag createBoolean(boolean value) {
+    public NbtTag createBoolean(boolean value) {
         return new ByteTag(value);
     }
 
     @Override
-    public Result<Boolean> asBoolean(INbtTag element) {
+    public Result<Boolean> asBoolean(NbtTag element) {
         return this.asNumber(element).map(number -> number.byteValue() != 0);
     }
 
     @Override
-    public INbtTag createNumber(Number number) {
+    public NbtTag createNumber(Number number) {
         return new DoubleTag(number.doubleValue());
     }
 
     @Override
-    public Result<Number> asNumber(INbtTag element) {
-        if (!element.isNumberTag()) return Result.unexpected(element, INbtNumber.class);
+    public Result<Number> asNumber(NbtTag element) {
+        if (!element.isNumberTag()) return Result.unexpected(element, NbtNumber.class);
         return Result.success(element.asNumberTag().numberValue());
     }
 
     @Override
-    public INbtTag createByte(byte value) {
+    public NbtTag createByte(byte value) {
         return new ByteTag(value);
     }
 
     @Override
-    public INbtTag createShort(short value) {
+    public NbtTag createShort(short value) {
         return new ShortTag(value);
     }
 
     @Override
-    public INbtTag createInt(int value) {
+    public NbtTag createInt(int value) {
         return new IntTag(value);
     }
 
     @Override
-    public INbtTag createLong(long value) {
+    public NbtTag createLong(long value) {
         return new LongTag(value);
     }
 
     @Override
-    public INbtTag createFloat(float value) {
+    public NbtTag createFloat(float value) {
         return new FloatTag(value);
     }
 
     @Override
-    public INbtTag createDouble(double value) {
+    public NbtTag createDouble(double value) {
         return new DoubleTag(value);
     }
 
     @Override
-    public INbtTag createString(String value) {
+    public NbtTag createString(String value) {
         return new StringTag(value);
     }
 
     @Override
-    public Result<String> asString(INbtTag element) {
+    public Result<String> asString(NbtTag element) {
         if (!element.isStringTag()) return Result.unexpected(element, StringTag.class);
         return Result.success(element.asStringTag().getValue());
     }
 
     @Override
-    public Result<INbtTag> mergeList(@Nullable INbtTag list, List<INbtTag> values) {
+    public Result<NbtTag> mergeList(@Nullable NbtTag list, List<NbtTag> values) {
         if (list == null) list = new ListTag<>();
-        if (list.isByteArrayTag() && values.stream().allMatch(INbtTag::isByteArrayTag)) {
-            ByteArrayTag tag = new ByteArrayTag();
+        if (list.isByteArrayTag() && values.stream().allMatch(NbtTag::isByteTag)) {
+            ByteArrayTag tag = list.asByteArrayTag();
             byte[] bytes = Arrays.copyOf(tag.getValue(), tag.getLength() + values.size());
             for (int i = 0; i < values.size(); i++) bytes[tag.getLength() + i] = values.get(i).asNumberTag().byteValue();
             return Result.success(new ByteArrayTag(bytes));
-        } else if (list.isIntArrayTag() && values.stream().allMatch(INbtTag::isIntArrayTag)) {
-            IntArrayTag tag = new IntArrayTag();
+        } else if (list.isIntArrayTag() && values.stream().allMatch(NbtTag::isIntTag)) {
+            IntArrayTag tag = list.asIntArrayTag();
             int[] ints = Arrays.copyOf(tag.getValue(), tag.getLength() + values.size());
             for (int i = 0; i < values.size(); i++) ints[tag.getLength() + i] = values.get(i).asNumberTag().intValue();
             return Result.success(new IntArrayTag(ints));
-        } else if (list.isLongArrayTag() && values.stream().allMatch(INbtTag::isLongArrayTag)) {
-            LongArrayTag tag = new LongArrayTag();
+        } else if (list.isLongArrayTag() && values.stream().allMatch(NbtTag::isLongTag)) {
+            LongArrayTag tag = list.asLongArrayTag();
             long[] longs = Arrays.copyOf(tag.getValue(), tag.getLength() + values.size());
             for (int i = 0; i < values.size(); i++) longs[tag.getLength() + i] = values.get(i).asNumberTag().longValue();
             return Result.success(new LongArrayTag(longs));
         }
 
-        Result<List<INbtTag>> listResult = this.asList(list);
+        Result<List<NbtTag>> listResult = this.asList(list);
         if (listResult.isError()) return listResult.mapError();
-        List<INbtTag> elements = new ArrayList<>(listResult.get());
+        List<NbtTag> elements = new ArrayList<>(listResult.get());
         elements.addAll(values);
 
         NbtType listType = null;
-        for (INbtTag value : elements) {
+        for (NbtTag value : elements) {
             NbtType valueType = value.getNbtType();
             if (listType == null) listType = valueType;
             else if (!valueType.equals(listType)) listType = NbtType.END; //Placeholder for mixed lists
@@ -163,8 +174,9 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
             return Result.success(new LongArrayTag(longs));
         } else if (NbtType.END.equals(listType)) {
             ListTag<CompoundTag> listTag = new ListTag<>();
-            for (INbtTag tag : elements) {
-                if (tag.isCompoundTag()) listTag.add(tag.asCompoundTag());
+            for (NbtTag tag : elements) {
+                boolean isMarker = tag.isCompoundTag() && tag.asCompoundTag().size() == 1 && tag.asCompoundTag().contains(MARKER_KEY);
+                if (tag.isCompoundTag() && !isMarker) listTag.add(tag.asCompoundTag());
                 else listTag.add(new CompoundTag().add(MARKER_KEY, tag));
             }
             return Result.success(listTag);
@@ -174,14 +186,14 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     }
 
     @Override
-    public Result<List<INbtTag>> asList(INbtTag element) {
+    public Result<List<NbtTag>> asList(NbtTag element) {
         if (element.isListTag()) {
             ListTag<?> listTag = element.asListTag();
-            List<INbtTag> list = new ArrayList<>();
+            List<NbtTag> list = new ArrayList<>();
             if (NbtType.COMPOUND.equals(listTag.getType())) {
-                for (INbtTag tag : listTag) {
+                for (NbtTag tag : listTag) {
                     CompoundTag compound = tag.asCompoundTag();
-                    INbtTag wrapped = compound.size() == 1 ? compound.get(MARKER_KEY) : null;
+                    NbtTag wrapped = compound.size() == 1 ? compound.get(MARKER_KEY) : null;
                     if (wrapped != null) list.add(wrapped);
                     else list.add(tag);
                 }
@@ -190,27 +202,30 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
             }
             return Result.success(list);
         } else if (element.isArrayTag()) {
-            return Result.success((List<INbtTag>) element.asArrayTag().toListTag().getValue());
+            return Result.success((List<NbtTag>) element.asArrayTag().toListTag().getValue());
         } else {
-            return Result.unexpected(element, ListTag.class, INbtArray.class);
+            return Result.unexpected(element, ListTag.class, NbtArray.class);
         }
     }
 
     @Override
-    public INbtTag createUnsafeMap(Map<INbtTag, INbtTag> values) {
+    public NbtTag createUnsafeMap(Map<NbtTag, NbtTag> values) {
         CompoundTag compound = new CompoundTag();
-        for (Map.Entry<INbtTag, INbtTag> entry : values.entrySet()) {
-            compound.add(SNbtSerializer.V1_14.trySerialize(entry.getKey()), entry.getValue());
+        for (Map.Entry<NbtTag, NbtTag> entry : values.entrySet()) {
+            String key;
+            if (entry.getKey().isStringTag()) key = entry.getKey().asStringTag().getValue();
+            else key = this.sNbt.trySerialize(entry.getKey());
+            compound.add(key, entry.getValue());
         }
         return compound;
     }
 
     @Override
-    public Result<INbtTag> mergeMap(@Nullable INbtTag map, Map<INbtTag, INbtTag> values) {
+    public Result<NbtTag> mergeMap(@Nullable NbtTag map, Map<NbtTag, NbtTag> values) {
         if (map == null) map = new CompoundTag();
         if (!map.isCompoundTag()) return Result.unexpected(map, CompoundTag.class);
         CompoundTag compound = map.asCompoundTag();
-        for (Map.Entry<INbtTag, INbtTag> entry : values.entrySet()) {
+        for (Map.Entry<NbtTag, NbtTag> entry : values.entrySet()) {
             if (entry.getKey().isStringTag()) {
                 compound.add(entry.getKey().asStringTag().getValue(), entry.getValue());
             } else {
@@ -221,37 +236,30 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     }
 
     @Override
-    public Result<Map<INbtTag, INbtTag>> asMap(INbtTag element) {
+    public Result<Map<NbtTag, NbtTag>> asMap(NbtTag element) {
         if (!element.isCompoundTag()) return Result.unexpected(element, CompoundTag.class);
         CompoundTag compound = element.asCompoundTag();
-        Map<INbtTag, INbtTag> map = new HashMap<>();
-        for (Map.Entry<String, INbtTag> entry : compound) map.put(this.createString(entry.getKey()), entry.getValue());
+        Map<NbtTag, NbtTag> map = new HashMap<>();
+        for (Map.Entry<String, NbtTag> entry : compound) map.put(this.createString(entry.getKey()), entry.getValue());
         return Result.success(map);
     }
 
     @Override
-    public Result<Map<String, INbtTag>> asStringTypeMap(INbtTag element) {
+    public Result<Map<String, NbtTag>> asStringTypeMap(NbtTag element) {
         if (!element.isCompoundTag()) return Result.unexpected(element, CompoundTag.class);
         CompoundTag compound = element.asCompoundTag();
-        Map<String, INbtTag> map = new HashMap<>();
-        for (Map.Entry<String, INbtTag> entry : compound) map.put(entry.getKey(), entry.getValue());
+        Map<String, NbtTag> map = new HashMap<>();
+        for (Map.Entry<String, NbtTag> entry : compound) map.put(entry.getKey(), entry.getValue());
         return Result.success(map);
     }
 
     @Override
-    public boolean put(INbtTag map, String key, INbtTag value) {
-        if (!map.isCompoundTag()) return false;
-        map.asCompoundTag().add(key, value);
-        return true;
-    }
-
-    @Override
-    public INbtTag createByteArray(byte[] value) {
+    public NbtTag createByteArray(byte[] value) {
         return new ByteArrayTag(value);
     }
 
     @Override
-    public Result<byte[]> asByteArray(INbtTag element) {
+    public Result<byte[]> asByteArray(NbtTag element) {
         if (element.isByteArrayTag()) {
             return Result.success(element.asByteArrayTag().getValue());
         } else if (element.isIntArrayTag()) {
@@ -265,8 +273,8 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
             for (int i = 0; i < longArrayTag.getLength(); i++) bytes[i] = (byte) longArrayTag.get(i);
             return Result.success(bytes);
         } else if (element.isListTag()) {
-            List<INbtTag> list = this.asList(element).get();
-            if (list.stream().allMatch(INbtTag::isNumberTag)) {
+            List<NbtTag> list = this.asList(element).get();
+            if (list.stream().allMatch(NbtTag::isNumberTag)) {
                 byte[] bytes = new byte[list.size()];
                 for (int i = 0; i < list.size(); i++) bytes[i] = list.get(i).asNumberTag().byteValue();
                 return Result.success(bytes);
@@ -279,12 +287,12 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     }
 
     @Override
-    public INbtTag createIntArray(int[] value) {
+    public NbtTag createIntArray(int[] value) {
         return new IntArrayTag(value);
     }
 
     @Override
-    public Result<int[]> asIntArray(INbtTag element) {
+    public Result<int[]> asIntArray(NbtTag element) {
         if (element.isByteArrayTag()) {
             ByteArrayTag byteArrayTag = element.asByteArrayTag();
             int[] ints = new int[byteArrayTag.getLength()];
@@ -298,8 +306,8 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
             for (int i = 0; i < longArrayTag.getLength(); i++) ints[i] = (int) longArrayTag.get(i);
             return Result.success(ints);
         } else if (element.isListTag()) {
-            List<INbtTag> list = this.asList(element).get();
-            if (list.stream().allMatch(INbtTag::isNumberTag)) {
+            List<NbtTag> list = this.asList(element).get();
+            if (list.stream().allMatch(NbtTag::isNumberTag)) {
                 int[] ints = new int[list.size()];
                 for (int i = 0; i < list.size(); i++) ints[i] = list.get(i).asNumberTag().intValue();
                 return Result.success(ints);
@@ -312,12 +320,12 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
     }
 
     @Override
-    public INbtTag createLongArray(long[] value) {
+    public NbtTag createLongArray(long[] value) {
         return new LongArrayTag(value);
     }
 
     @Override
-    public Result<long[]> asLongArray(INbtTag element) {
+    public Result<long[]> asLongArray(NbtTag element) {
         if (element.isByteArrayTag()) {
             ByteArrayTag byteArrayTag = element.asByteArrayTag();
             long[] longs = new long[byteArrayTag.getLength()];
@@ -331,8 +339,8 @@ public class NbtConverter_v1_20_3 implements DataConverter<INbtTag> {
         } else if (element.isLongArrayTag()) {
             return Result.success(element.asLongArrayTag().getValue());
         } else if (element.isListTag()) {
-            List<INbtTag> list = this.asList(element).get();
-            if (list.stream().allMatch(INbtTag::isNumberTag)) {
+            List<NbtTag> list = this.asList(element).get();
+            if (list.stream().allMatch(NbtTag::isNumberTag)) {
                 long[] longs = new long[list.size()];
                 for (int i = 0; i < list.size(); i++) longs[i] = list.get(i).asNumberTag().longValue();
                 return Result.success(longs);

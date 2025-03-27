@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.TypeSerializers_v1_21_2;
+import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.Arrays;
 
@@ -10,8 +11,8 @@ public class TypeSerializers_v1_21_4 extends TypeSerializers_v1_21_2 {
 
     protected static final String RGB_COLOR = "rgb_color";
 
-    public TypeSerializers_v1_21_4(final ItemComponentRegistry registry) {
-        super(registry);
+    public TypeSerializers_v1_21_4(final ItemComponentRegistry registry, final TextComponentCodec textComponentCodec) {
+        super(registry, textComponentCodec);
     }
 
     public Codec<Integer> rgbColor() {

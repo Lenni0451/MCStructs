@@ -1,12 +1,11 @@
 package net.lenni0451.mcstructs.nbt.tags;
 
-import net.lenni0451.mcstructs.nbt.INbtNumber;
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtNumber;
 import net.lenni0451.mcstructs.nbt.NbtType;
 
 import java.util.Objects;
 
-public class ByteTag implements INbtNumber {
+public class ByteTag implements NbtNumber {
 
     private byte value;
 
@@ -118,7 +117,7 @@ public class ByteTag implements INbtNumber {
     }
 
     @Override
-    public INbtTag copy() {
+    public ByteTag copy() {
         return new ByteTag(this.value);
     }
 

@@ -1,7 +1,7 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_12;
 
+import net.lenni0451.mcstructs.snbt.SNbt;
 import net.lenni0451.mcstructs.snbt.SNbtDeserializerTest;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
 import org.junit.jupiter.api.Test;
 
 class SNbtDeserializer_v1_12Test extends SNbtDeserializerTest {
@@ -32,12 +32,13 @@ class SNbtDeserializer_v1_12Test extends SNbtDeserializerTest {
             FAIL,
             "{test:[I;]}",
             "{test:\"Test\\\\String\"}",
-            "{test:\"Test\\String\"}"
+            "{test:\"Test\\String\"}",
+            "{id:[B;1,0,1]}",
     };
 
     @Test
     void runTests() {
-        executeTests(SNbtSerializer.V1_12, expectedResults);
+        executeTests(SNbt.V1_12, expectedResults);
     }
 
 }

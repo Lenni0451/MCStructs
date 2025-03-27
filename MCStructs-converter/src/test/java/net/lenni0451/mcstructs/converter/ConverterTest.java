@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
+import static net.lenni0451.mcstructs.nbt.utils.NbtCodecUtils.MARKER_KEY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -78,9 +79,9 @@ public class ConverterTest {
 
         ListTag<?> list = new JsonConverter_v1_20_3().convertTo(new NbtConverter_v1_20_3(), array).asListTag();
         ListTag<CompoundTag> expected = new ListTag<>();
-        expected.add(new CompoundTag().addByte("", (byte) 12));
-        expected.add(new CompoundTag().addBoolean("", true));
-        expected.add(new CompoundTag().addString("", "test"));
+        expected.add(new CompoundTag().addByte(MARKER_KEY, (byte) 12));
+        expected.add(new CompoundTag().addBoolean(MARKER_KEY, true));
+        expected.add(new CompoundTag().addString(MARKER_KEY, "test"));
 
         assertEquals(expected, list);
     }
@@ -88,9 +89,9 @@ public class ConverterTest {
     @Test
     void convertNbtToJson() {
         ListTag<CompoundTag> list = new ListTag<>();
-        list.add(new CompoundTag().addByte("", (byte) 12));
-        list.add(new CompoundTag().addBoolean("", true));
-        list.add(new CompoundTag().addString("", "test"));
+        list.add(new CompoundTag().addByte(MARKER_KEY, (byte) 12));
+        list.add(new CompoundTag().addBoolean(MARKER_KEY, true));
+        list.add(new CompoundTag().addString(MARKER_KEY, "test"));
 
         JsonArray array = new NbtConverter_v1_20_3().convertTo(new JsonConverter_v1_20_3(), list).getAsJsonArray();
         JsonArray expected = new JsonArray();

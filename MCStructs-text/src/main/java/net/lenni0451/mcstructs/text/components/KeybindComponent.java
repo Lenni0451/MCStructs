@@ -1,25 +1,24 @@
 package net.lenni0451.mcstructs.text.components;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.text.ATextComponent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.translation.Translator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
-import java.util.function.Function;
 
-public class KeybindComponent extends ATextComponent {
-
-    private static final Function<String, String> DEFAULT_TRANSLATOR = s -> s;
+@EqualsAndHashCode(callSuper = true)
+public class KeybindComponent extends TextComponent {
 
     private String keybind;
-    private Function<String, String> translator = DEFAULT_TRANSLATOR;
+    private Translator translator;
 
     public KeybindComponent(final String keybind) {
-        this.keybind = keybind;
+        this(keybind, Translator.GLOBAL);
     }
 
-    public KeybindComponent(final String keybind, @Nonnull final Function<String, String> translator) {
+    public KeybindComponent(final String keybind, @Nonnull Translator translator) {
         this.keybind = keybind;
         this.translator = translator;
     }
@@ -48,40 +47,27 @@ public class KeybindComponent extends ATextComponent {
      * @param translator The translator function
      * @return This component
      */
-    public KeybindComponent setTranslator(@Nullable final Function<String, String> translator) {
-        if (translator == null) this.translator = DEFAULT_TRANSLATOR;
+    public KeybindComponent setTranslator(@Nullable final Translator translator) {
+        if (translator == null) this.translator = Translator.GLOBAL;
         else this.translator = translator;
         return this;
     }
 
     @Override
     public String asSingleString() {
-        return this.translator.apply(this.keybind);
+        return this.translator.translateOrKey(this.keybind);
     }
 
     @Override
-    public ATextComponent copy() {
-        return this.putMetaCopy(this.shallowCopy());
+    public TextComponent copy() {
+        return this.copyMetaTo(this.shallowCopy());
     }
 
     @Override
-    public ATextComponent shallowCopy() {
+    public TextComponent shallowCopy() {
         KeybindComponent copy = new KeybindComponent(this.keybind);
         copy.translator = this.translator;
         return copy.setStyle(this.getStyle().copy());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        KeybindComponent that = (KeybindComponent) o;
-        return Objects.equals(this.getSiblings(), that.getSiblings()) && Objects.equals(this.getStyle(), that.getStyle()) && Objects.equals(this.keybind, that.keybind) && Objects.equals(this.translator, that.translator);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getSiblings(), this.getStyle(), this.keybind, this.translator);
     }
 
     @Override
@@ -90,7 +76,7 @@ public class KeybindComponent extends ATextComponent {
                 .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
                 .add("style", this.getStyle(), style -> !style.isEmpty())
                 .add("keybind", this.keybind)
-                .add("translator", this.translator, translator -> translator != DEFAULT_TRANSLATOR)
+                .add("translator", this.translator, translator -> translator != Translator.GLOBAL)
                 .toString();
     }
 

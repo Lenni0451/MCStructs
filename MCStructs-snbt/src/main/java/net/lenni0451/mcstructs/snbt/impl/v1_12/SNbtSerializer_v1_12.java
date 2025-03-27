@@ -1,19 +1,19 @@
 package net.lenni0451.mcstructs.snbt.impl.v1_12;
 
-import net.lenni0451.mcstructs.nbt.INbtTag;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.*;
-import net.lenni0451.mcstructs.snbt.ISNbtSerializer;
 import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
+import net.lenni0451.mcstructs.snbt.impl.SNbtSerializer;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class SNbtSerializer_v1_12 implements ISNbtSerializer {
+public class SNbtSerializer_v1_12 implements SNbtSerializer {
 
     private static final Pattern ESCAPE_PATTERN = Pattern.compile("[A-Za-z0-9._+-]+");
 
     @Override
-    public String serialize(INbtTag tag) throws SNbtSerializeException {
+    public String serialize(NbtTag tag) throws SNbtSerializeException {
         if (tag instanceof ByteTag) {
             ByteTag byteTag = (ByteTag) tag;
             return byteTag.getValue() + "b";
@@ -54,7 +54,7 @@ public class SNbtSerializer_v1_12 implements ISNbtSerializer {
         } else if (tag instanceof CompoundTag) {
             CompoundTag compoundTag = (CompoundTag) tag;
             StringBuilder out = new StringBuilder("{");
-            for (Map.Entry<String, INbtTag> entry : compoundTag.getValue().entrySet()) {
+            for (Map.Entry<String, NbtTag> entry : compoundTag.getValue().entrySet()) {
                 if (out.length() != 1) out.append(",");
                 out.append(this.checkEscape(entry.getKey())).append(":").append(this.serialize(entry.getValue()));
             }

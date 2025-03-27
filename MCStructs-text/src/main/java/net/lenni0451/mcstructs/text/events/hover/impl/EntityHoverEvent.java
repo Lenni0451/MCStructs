@@ -1,15 +1,13 @@
 package net.lenni0451.mcstructs.text.events.hover.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
-import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.snbt.SNbtSerializer;
-import net.lenni0451.mcstructs.snbt.exceptions.SNbtSerializeException;
-import net.lenni0451.mcstructs.text.ATextComponent;
-import net.lenni0451.mcstructs.text.components.StringComponent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.TextComponent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
-import net.lenni0451.mcstructs.text.serializer.TextComponentSerializer;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -18,110 +16,110 @@ import java.util.UUID;
 /**
  * The implementation for entity hover events.
  */
-public class EntityHoverEvent extends AHoverEvent {
+@EqualsAndHashCode(callSuper = false)
+public class EntityHoverEvent extends HoverEvent {
 
-    private Identifier entityType;
-    private UUID uuid;
-    @Nullable
-    private ATextComponent name;
+    private DataHolder data;
 
-    public EntityHoverEvent(final HoverEventAction action, final Identifier entityType, final UUID uuid, @Nullable final ATextComponent name) {
-        super(action);
-
-        this.entityType = entityType;
-        this.uuid = uuid;
-        this.name = name;
+    public EntityHoverEvent(final DataHolder data) {
+        super(HoverEventAction.SHOW_ENTITY);
+        this.data = data;
     }
 
-    /**
-     * @return The entity type of this hover event
-     */
-    public Identifier getEntityType() {
-        return this.entityType;
+    public EntityHoverEvent(final TextComponent legacyData) {
+        super(HoverEventAction.SHOW_ENTITY);
+        this.data = new LegacyHolder(legacyData);
     }
 
-    /**
-     * Set the entity type of this hover event.
-     *
-     * @param entityType The new entity type
-     * @return This instance for chaining
-     */
-    public EntityHoverEvent setEntityType(final Identifier entityType) {
-        this.entityType = entityType;
+    public EntityHoverEvent(final Identifier type, final UUID uuid, @Nullable final TextComponent name) {
+        super(HoverEventAction.SHOW_ENTITY);
+        this.data = new ModernHolder(type, uuid, name);
+    }
+
+    public DataHolder getData() {
+        return this.data;
+    }
+
+    public EntityHoverEvent setData(final DataHolder data) {
+        this.data = data;
         return this;
     }
 
-    /**
-     * @return The uuid of this hover event
-     */
-    public UUID getUuid() {
-        return this.uuid;
+    public boolean isLegacy() {
+        return this.data instanceof LegacyHolder;
     }
 
-    /**
-     * Set the uuid of this hover event.
-     *
-     * @param uuid The new uuid
-     * @return This instance for chaining
-     */
-    public EntityHoverEvent setUuid(final UUID uuid) {
-        this.uuid = uuid;
-        return this;
+    public boolean isModern() {
+        return this.data instanceof ModernHolder;
     }
 
-    /**
-     * @return The name of this hover event
-     */
-    @Nullable
-    public ATextComponent getName() {
-        return this.name;
-    }
-
-    /**
-     * Set the name of this hover event.
-     *
-     * @param name The new name
-     * @return This instance for chaining
-     */
-    public EntityHoverEvent setName(@Nullable final ATextComponent name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public TextHoverEvent toLegacy(TextComponentSerializer textComponentSerializer, SNbtSerializer<?> sNbtSerializer) {
-        CompoundTag tag = new CompoundTag();
-        tag.addString("type", this.entityType.getValue());
-        tag.addString("id", this.uuid.toString());
-        tag.addString("name", textComponentSerializer.serialize(this.name == null ? new StringComponent("") : this.name));
-        try {
-            return new TextHoverEvent(this.getAction(), new StringComponent(sNbtSerializer.serialize(tag)));
-        } catch (SNbtSerializeException e) {
-            throw new RuntimeException("This should never happen! Please report to the developer immediately!", e);
+    public LegacyHolder asLegacy() {
+        if (this.data instanceof LegacyHolder) {
+            return (LegacyHolder) this.data;
+        } else {
+            throw new UnsupportedOperationException("Data holder is not a legacy string holder: " + this.data);
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EntityHoverEvent that = (EntityHoverEvent) o;
-        return Objects.equals(this.entityType, that.entityType) && Objects.equals(this.uuid, that.uuid) && Objects.equals(this.name, that.name);
+    public ModernHolder asModern() {
+        if (this.data instanceof ModernHolder) {
+            return (ModernHolder) this.data;
+        } else {
+            throw new UnsupportedOperationException("Data holder is not a modern holder: " + this.data);
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.entityType, this.uuid, this.name);
+    public EntityHoverEvent setLegacyData(final TextComponent data) {
+        this.data = new LegacyHolder(data);
+        return this;
+    }
+
+    public EntityHoverEvent setModernData(final Identifier type, final UUID uuid, @Nullable final TextComponent name) {
+        this.data = new ModernHolder(type, uuid, name);
+        return this;
     }
 
     @Override
     public String toString() {
         return ToString.of(this)
                 .add("action", this.action)
-                .add("entityType", this.entityType)
-                .add("uuid", this.uuid)
-                .add("name", this.name, Objects::nonNull)
+                .add("data", this.data)
                 .toString();
+    }
+
+
+    public interface DataHolder {
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class LegacyHolder implements DataHolder {
+        private TextComponent data;
+
+        @Override
+        public String toString() {
+            return ToString.of(this)
+                    .add("data", this.data)
+                    .toString();
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class ModernHolder implements DataHolder {
+        private Identifier type;
+        private UUID uuid;
+        @Nullable
+        private TextComponent name;
+
+        @Override
+        public String toString() {
+            return ToString.of(this)
+                    .add("type", this.type)
+                    .add("uuid", this.uuid)
+                    .add("name", this.name, Objects::nonNull)
+                    .toString();
+        }
     }
 
 }

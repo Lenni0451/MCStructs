@@ -1,15 +1,16 @@
 package net.lenni0451.mcstructs.text;
 
-import net.lenni0451.mcstructs.core.ICopyable;
+import net.lenni0451.mcstructs.core.Copyable;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.core.TextFormatting;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
-import net.lenni0451.mcstructs.text.events.hover.AHoverEvent;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class Style implements ICopyable<Style> {
+public class Style implements Copyable<Style> {
 
     private Style parent;
     private TextFormatting color;
@@ -20,9 +21,31 @@ public class Style implements ICopyable<Style> {
     private Boolean underlined;
     private Boolean italic;
     private ClickEvent clickEvent;
-    private AHoverEvent hoverEvent;
+    private HoverEvent hoverEvent;
     private String insertion;
     private Identifier font;
+
+    public Style() {
+    }
+
+    public Style(final TextFormatting color, final Boolean obfuscated, final Boolean bold, final Boolean strikethrough, final Boolean underlined, final Boolean italic, final ClickEvent clickEvent, final HoverEvent hoverEvent, final String insertion, final Identifier font) {
+        this(color, null, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, insertion, font);
+    }
+
+    public Style(final TextFormatting color, final Integer shadowColor, final Boolean obfuscated, final Boolean bold, final Boolean strikethrough, final Boolean underlined, final Boolean italic, final ClickEvent clickEvent, final HoverEvent hoverEvent, final String insertion, final Identifier font) {
+        if (color != null && !color.isColor()) throw new IllegalArgumentException("The color must be a color");
+        this.color = color;
+        this.shadowColor = shadowColor;
+        this.obfuscated = obfuscated;
+        this.bold = bold;
+        this.strikethrough = strikethrough;
+        this.underlined = underlined;
+        this.italic = italic;
+        this.clickEvent = clickEvent;
+        this.hoverEvent = hoverEvent;
+        this.insertion = insertion;
+        this.font = font;
+    }
 
     /**
      * Set the parent style.
@@ -93,6 +116,34 @@ public class Style implements ICopyable<Style> {
     }
 
     /**
+     * Get the formattings of this style.<br>
+     * The color will always be the first element in the array.
+     *
+     * @return The formattings
+     */
+    public TextFormatting[] getFormattings() {
+        return this.getFormattings(true);
+    }
+
+    /**
+     * Get the formattings of this style.<br>
+     * The color will always be the first element in the array.
+     *
+     * @param includeColor If the color should be included
+     * @return The formattings
+     */
+    public TextFormatting[] getFormattings(final boolean includeColor) {
+        List<TextFormatting> formattings = new ArrayList<>();
+        if (includeColor && this.color != null) formattings.add(this.color);
+        if (this.isObfuscated()) formattings.add(TextFormatting.OBFUSCATED);
+        if (this.isBold()) formattings.add(TextFormatting.BOLD);
+        if (this.isStrikethrough()) formattings.add(TextFormatting.STRIKETHROUGH);
+        if (this.isUnderlined()) formattings.add(TextFormatting.UNDERLINE);
+        if (this.isItalic()) formattings.add(TextFormatting.ITALIC);
+        return formattings.toArray(new TextFormatting[0]);
+    }
+
+    /**
      * Set the rgb color of this style.
      *
      * @param rgb The rgb color
@@ -115,9 +166,11 @@ public class Style implements ICopyable<Style> {
      * Set the shadow color of this style.
      *
      * @param shadowColor The shadow color
+     * @return The current style
      */
-    public void setShadowColor(final Integer shadowColor) {
+    public Style setShadowColor(final Integer shadowColor) {
         this.shadowColor = shadowColor;
+        return this;
     }
 
     /**
@@ -288,7 +341,7 @@ public class Style implements ICopyable<Style> {
      * @param hoverEvent The hover event
      * @return The current style
      */
-    public Style setHoverEvent(final AHoverEvent hoverEvent) {
+    public Style setHoverEvent(final HoverEvent hoverEvent) {
         this.hoverEvent = hoverEvent;
         return this;
     }
@@ -296,7 +349,7 @@ public class Style implements ICopyable<Style> {
     /**
      * @return The hover event of this style
      */
-    public AHoverEvent getHoverEvent() {
+    public HoverEvent getHoverEvent() {
         if (this.hoverEvent == null && this.parent != null) return this.parent.getHoverEvent();
         return this.hoverEvent;
     }
@@ -357,10 +410,10 @@ public class Style implements ICopyable<Style> {
     }
 
     /**
-     * Apply the parent style to this style.<br>
-     * The parent style will be removed.
+     * Merge the parent style with this style.<br>
+     * This removes the reference to the parent style while maintaining the formatting.
      */
-    public void applyParent() {
+    public void mergeParent() {
         this.color = this.getColor();
         this.shadowColor = this.getShadowColor();
         this.bold = this.getBold();
