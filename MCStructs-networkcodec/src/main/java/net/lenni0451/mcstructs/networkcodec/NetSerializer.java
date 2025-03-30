@@ -1,11 +1,9 @@
 package net.lenni0451.mcstructs.networkcodec;
 
 import io.netty.buffer.ByteBuf;
-import sun.security.ssl.ProtocolVersion;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.*;
 
 public class NetSerializer<I> {
@@ -63,36 +61,6 @@ public class NetSerializer<I> {
         public void write(final I instance, final ByteBuf buf) {
             this.netType.write(buf, this.getter.apply(instance));
         }
-
-        public NetType<T> netType() {return netType;}
-
-        public Function<I, T> getter() {return getter;}
-
-        public BiConsumer<I, T> setter() {return setter;}
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null || obj.getClass() != this.getClass()) return false;
-            BaseSerializer that = (BaseSerializer) obj;
-            return Objects.equals(this.netType, that.netType) &&
-                Objects.equals(this.getter, that.getter) &&
-                Objects.equals(this.setter, that.setter);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(netType, getter, setter);
-        }
-
-        @Override
-        public String toString() {
-            return "BaseSerializer[" +
-                "netType=" + netType + ", " +
-                "getter=" + getter + ", " +
-                "setter=" + setter + ']';
-        }
-
     }
 
     private static final class VersionedSerializer<I, T> implements Serializer<I> {
@@ -147,14 +115,6 @@ public class NetSerializer<I> {
             if (!this.predicate.test(instance)) return;
             this.netType.write(buf, this.getter.apply(instance));
         }
-
-        public NetType<T> netType() {return netType;}
-
-        public Function<I, T> getter() {return getter;}
-
-        public BiConsumer<I, T> setter() {return setter;}
-
-        public Predicate<I> predicate() {return predicate;}
     }
 
     private static final class DirectSerializer<I, T> implements Serializer<I> {
@@ -175,10 +135,6 @@ public class NetSerializer<I> {
         public void write(final I instance, final ByteBuf buf) {
             this.writer.accept(instance, buf);
         }
-
-        public BiConsumer<I, ByteBuf> reader() {return reader;}
-
-        public BiConsumer<I, ByteBuf> writer() {return writer;}
     }
 
     private static final class NetPipeline<I> implements NetType<I> {
@@ -201,9 +157,5 @@ public class NetSerializer<I> {
         public void write(ByteBuf buf, I value) {
             for (Serializer<I> serializer : this.serializers) serializer.write(value, buf);
         }
-
-        public Supplier<I> constructor() {return constructor;}
-
-        public List<Serializer<I>> serializers() {return serializers;}
     }
 }
