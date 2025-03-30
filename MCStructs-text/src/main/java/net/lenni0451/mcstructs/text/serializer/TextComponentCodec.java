@@ -62,8 +62,7 @@ public class TextComponentCodec {
      */
     public static final TextComponentCodec V1_21_4 = new TextComponentCodec(() -> SNbt.V1_14, () -> TextCodecs_v1_21_4.TEXT, () -> StyleCodecs_v1_21_4.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_20_3.INSTANCE);
     /**
-     * The text codec for 1.21.5.<br>
-     * TODO: Access to minecraft data
+     * The text codec for 1.21.5.
      */
     public static final TextComponentCodec V1_21_5 = new TextComponentCodec(() -> SNbt.V1_21_5, () -> TextCodecs_v1_21_5.TEXT, () -> StyleCodecs_v1_21_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_21_5.INSTANCE);
     /**
@@ -98,7 +97,7 @@ public class TextComponentCodec {
     }
 
     /**
-     * @return The used json serializer/deserializer
+     * @return The used text codec
      */
     public Codec<TextComponent> getTextCodec() {
         if (this.textCodec == null) this.textCodec = this.textCodecSupplier.get();
@@ -106,11 +105,25 @@ public class TextComponentCodec {
     }
 
     /**
-     * @return The used nbt serializer/deserializer
+     * @return The used style codec
      */
     public Codec<Style> getStyleCodec() {
         if (this.styleCodec == null) this.styleCodec = this.styleCodecSupplier.get();
         return this.styleCodec;
+    }
+
+    /**
+     * @return The used json converter
+     */
+    public DataConverter<JsonElement> getJsonConverter() {
+        return this.jsonConverter;
+    }
+
+    /**
+     * @return The used nbt converter
+     */
+    public DataConverter<NbtTag> getNbtConverter() {
+        return this.nbtConverter;
     }
 
     /**
