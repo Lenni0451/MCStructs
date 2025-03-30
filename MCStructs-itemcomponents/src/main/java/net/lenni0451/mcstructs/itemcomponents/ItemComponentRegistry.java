@@ -12,6 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.ItemComponents_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 
 import javax.annotation.Nullable;
 
@@ -143,16 +144,16 @@ public abstract class ItemComponentRegistry {
 
 
     protected <T> ItemComponent<T> copy(final String name, final ItemComponent<T> component) {
-        return this.register(name, component.codec);
+        return this.register(name, component.codec, component.netType);
     }
 
-    protected <T> ItemComponent<T> registerNonSerializable(final String name) {
-        return this.register(name, Codec.failing("The component " + name + " is not serializable!"));
+    protected <T> ItemComponent<T> registerNonSerializable(final String name, final NetType<T> netType) {
+        return this.register(name, Codec.failing("The component " + name + " is not serializable!"), netType);
     }
 
-    protected <T> ItemComponent<T> register(final String name, final Codec<T> codec) {
+    protected <T> ItemComponent<T> register(final String name, final Codec<T> codec, final NetType<T> netType) {
         this.unregister(name);
-        ItemComponent<T> itemComponent = new ItemComponent<>(name, codec);
+        ItemComponent<T> itemComponent = new ItemComponent<>(name, codec, netType);
         this.components.register(itemComponent);
         return itemComponent;
     }

@@ -12,6 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
@@ -27,9 +28,9 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     private final TypeSerializers_v1_20_5 typeSerializers = new TypeSerializers_v1_20_5(this, TextComponentCodec.V1_20_5);
 
     public final ItemComponent<CompoundTag> CUSTOM_DATA = this.register("custom_data", this.typeSerializers.customData());
-    public final ItemComponent<Integer> MAX_STACK_SIZE = this.register("max_stack_size", Codec.rangedInt(1, 99));
-    public final ItemComponent<Integer> MAX_DAMAGE = this.register("max_damage", Codec.minInt(1));
-    public final ItemComponent<Integer> DAMAGE = this.register("damage", Codec.minInt(0));
+    public final ItemComponent<Integer> MAX_STACK_SIZE = this.register("max_stack_size", Codec.rangedInt(1, 99), NetType.INTEGER);
+    public final ItemComponent<Integer> MAX_DAMAGE = this.register("max_damage", Codec.minInt(1), NetType.INTEGER);
+    public final ItemComponent<Integer> DAMAGE = this.register("damage", Codec.minInt(0), NetType.INTEGER);
     public final ItemComponent<Unbreakable> UNBREAKABLE = this.register("unbreakable", MapCodecMerger.codec(
             Codec.BOOLEAN.mapCodec(Unbreakable.SHOW_IN_TOOLTIP).optional().defaulted(true), Unbreakable::isShowInTooltip,
             Unbreakable::new
@@ -75,10 +76,10 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
                 return Result.success(attributeModifiers);
             })
     ));
-    public final ItemComponent<Integer> CUSTOM_MODEL_DATA = this.register("custom_model_data", Codec.INTEGER);
-    public final ItemComponent<Boolean> HIDE_ADDITIONAL_TOOLTIP = this.register("hide_additional_tooltip", Codec.UNIT);
-    public final ItemComponent<Boolean> HIDE_TOOLTIP = this.register("hide_tooltip", Codec.UNIT);
-    public final ItemComponent<Integer> REPAIR_COST = this.register("repair_cost", Codec.minInt(0));
+    public final ItemComponent<Integer> CUSTOM_MODEL_DATA = this.register("custom_model_data", Codec.INTEGER, NetType.INTEGER);
+    public final ItemComponent<Boolean> HIDE_ADDITIONAL_TOOLTIP = this.register("hide_additional_tooltip", Codec.UNIT, NetType.UNIT);
+    public final ItemComponent<Boolean> HIDE_TOOLTIP = this.register("hide_tooltip", Codec.UNIT, NetType.UNIT);
+    public final ItemComponent<Integer> REPAIR_COST = this.register("repair_cost", Codec.minInt(0), NetType.INTEGER);
     public final ItemComponent<Boolean> CREATIVE_SLOT_LOCK = this.registerNonSerializable("creative_slot_lock"); //No json/nbt serialization
     public final ItemComponent<Boolean> ENCHANTMENT_GLINT_OVERRIDE = this.register("enchantment_glint_override", Codec.BOOLEAN);
     public final ItemComponent<Boolean> INTANGIBLE_PROJECTILE = this.register("intangible_projectile", Codec.UNIT);
@@ -265,7 +266,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.INTEGER.mapCodec(BeeData.MIN_TICKS_IN_HIVE).required(), BeeData::getMinTicksInHive,
             BeeData::new
     ).listOf());
-    public final ItemComponent<String> LOCK = this.register("lock", Codec.STRING);
+    public final ItemComponent<String> LOCK = this.register("lock", Codec.STRING, NetType.STRING);
     public final ItemComponent<ContainerLoot> CONTAINER_LOOT = this.register("container_loot", MapCodecMerger.codec(
             Codec.STRING_IDENTIFIER.mapCodec(ContainerLoot.LOOT_TABLE).required(), ContainerLoot::getLootTable,
             Codec.LONG.mapCodec(ContainerLoot.SEED).optional().defaulted(0L), ContainerLoot::getSeed,

@@ -12,8 +12,6 @@ import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.io.NbtIO;
 import net.lenni0451.mcstructs.nbt.io.NbtReadTracker;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.text.TextComponent;
-import sun.security.ssl.ProtocolVersion;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;

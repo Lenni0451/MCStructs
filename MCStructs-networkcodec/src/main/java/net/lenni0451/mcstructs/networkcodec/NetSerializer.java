@@ -15,17 +15,12 @@ public class NetSerializer<I> {
         return this;
     }
 
-    public <T> NetSerializer<I> versioned(final NetType<T> type, final Function<I, T> getter, final BiConsumer<I, T> setter) {
-        this.serializers.add(new VersionedSerializer<>(type, getter, setter));
-        return this;
-    }
-
     public <T> NetSerializer<I> cond(final NetType<T> type, final Function<I, T> getter, final BiConsumer<I, T> setter, final Predicate<I> predicate) {
         this.serializers.add(new ConditionalSerializer<>(type, getter, setter, predicate));
         return this;
     }
 
-    public <T> NetSerializer<I> direct(final BiConsumer<I, ByteBuf> reader, final BiConsumer<I, ByteBuf> writer) {
+    public NetSerializer<I> direct(final BiConsumer<I, ByteBuf> reader, final BiConsumer<I, ByteBuf> writer) {
         this.serializers.add(new DirectSerializer<>(reader, writer));
         return this;
     }
@@ -61,34 +56,6 @@ public class NetSerializer<I> {
         public void write(final I instance, final ByteBuf buf) {
             this.netType.write(buf, this.getter.apply(instance));
         }
-    }
-
-    private static final class VersionedSerializer<I, T> implements Serializer<I> {
-        private final NetType<T> netType;
-        private final Function<I, T> getter;
-        private final BiConsumer<I, T> setter;
-
-        private VersionedSerializer(NetType<T> netType, Function<I, T> getter, BiConsumer<I, T> setter) {
-            this.netType = netType;
-            this.getter = getter;
-            this.setter = setter;
-        }
-
-        @Override
-        public void read(final I instance, final ByteBuf buf) {
-            this.setter.accept(instance, this.netType.read(buf));
-        }
-
-        @Override
-        public void write(final I instance, final ByteBuf buf) {
-            this.netType.write(buf, this.getter.apply(instance));
-        }
-
-        public NetType<T> netType() {return netType;}
-
-        public Function<I, T> getter() {return getter;}
-
-        public BiConsumer<I, T> setter() {return setter;}
     }
 
     private static final class ConditionalSerializer<I, T> implements Serializer<I> {
