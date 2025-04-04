@@ -1,0 +1,46 @@
+{
+  "template": "RecordNetType.mustache",
+  "target": "net/lenni0451/mcstructs/networkcodec/RecordNetType.java",
+  "variables": [
+    {
+      "count": "1",
+      "vars": ["O1"]
+    },
+    {
+      "count": "2",
+      "vars": ["O1", "O2"]
+    },
+    {
+      "count": "3",
+      "vars": ["O1", "O2", "O3"]
+    },
+    {
+      "count": "4",
+      "vars": ["O1", "O2", "O3", "O4"]
+    },
+    {
+      "count": "5",
+      "vars": ["O1", "O2", "O3", "O4", "O5"]
+    },
+    {
+      "count": "6",
+      "vars": ["O1", "O2", "O3", "O4", "O5", "O6"]
+    },
+    {
+      "count": "7",
+      "vars": ["O1", "O2", "O3", "O4", "O5", "O6", "O7"]
+    },
+    {
+      "count": "8",
+      "vars": ["O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8"]
+    },
+    {
+      "count": "9",
+      "vars": ["O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8", "O9"]
+    },
+    {
+      "count": "10",
+      "vars": ["O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8", "O9", "O10"]
+    }
+  ]
+}

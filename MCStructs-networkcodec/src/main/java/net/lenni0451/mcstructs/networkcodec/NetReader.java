@@ -5,4 +5,5 @@ import io.netty.buffer.ByteBuf;
 @FunctionalInterface
 public interface NetReader<T> {
     T read(final ByteBuf buf);
+
 }

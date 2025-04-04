@@ -325,13 +325,13 @@ public interface NetType<T> extends NetReader<T>, NetWriter<T> {
             @Override
             @SneakyThrows
             public NbtTag read(ByteBuf buf) {
-              return NbtIO.LATEST.readUnnamed(new ByteBufInputStream(buf), readTracker);
+                return NbtIO.LATEST.readUnnamed(new ByteBufInputStream(buf), readTracker);
             }
 
             @Override
             @SneakyThrows
             public void write(ByteBuf buf, NbtTag value) {
-              NbtIO.LATEST.writeUnnamed(new ByteBufOutputStream(buf), value);
+                NbtIO.LATEST.writeUnnamed(new ByteBufOutputStream(buf), value);
             }
         };
     }
