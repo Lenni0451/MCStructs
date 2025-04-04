@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
             ),
             Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).map(PotionContents::getPotion, id -> new PotionContents(id, null, new ArrayList<>(), null))
     ));
-    public final ItemComponent<Identifier> ITEM_MODEL = this.register("item_model", Codec.STRING_IDENTIFIER);
+    public final ItemComponent<Identifier> ITEM_MODEL = this.register("item_model", Codec.STRING_IDENTIFIER, NetType.IDENTIFIER);
     public final ItemComponent<Food> FOOD = this.register("food", MapCodecMerger.codec(
             Codec.minInt(0).mapCodec(NUTRITION).required(), Food::getNutrition,
             Codec.FLOAT.mapCodec(SATURATION).required(), Food::getSaturation,
@@ -74,8 +75,8 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
             this.typeSerializers.tagEntryList(this.registryVerifier.itemTag, this.registryVerifier.item).mapCodec(Repairable.ITEMS).required(), Repairable::getItems,
             Repairable::new
     ));
-    public final ItemComponent<Boolean> GLIDER = this.register("glider", Codec.UNIT);
-    public final ItemComponent<Identifier> TOOLTIP_STYLE = this.register("tooltip_style", Codec.STRING_IDENTIFIER);
+    public final ItemComponent<Boolean> GLIDER = this.register("glider", Codec.UNIT, NetType.UNIT);
+    public final ItemComponent<Identifier> TOOLTIP_STYLE = this.register("tooltip_style", Codec.STRING_IDENTIFIER, NetType.IDENTIFIER);
     public final ItemComponent<DeathProtection> DEATH_PROTECTION = this.register("death_protection", MapCodecMerger.codec(
             this.typeSerializers.consumeEffect().listOf().mapCodec(DeathProtection.DEATH_EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), DeathProtection::getDeathEffects,
             DeathProtection::new

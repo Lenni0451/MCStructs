@@ -27,7 +27,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
 
     private final TypeSerializers_v1_20_5 typeSerializers = new TypeSerializers_v1_20_5(this, TextComponentCodec.V1_20_5);
 
-    public final ItemComponent<CompoundTag> CUSTOM_DATA = this.register("custom_data", this.typeSerializers.customData(), NetType.COMPOUND_TAG);
+    public final ItemComponent<CompoundTag> CUSTOM_DATA = this.registerNonNetworkSerializable("custom_data", this.typeSerializers.customData());
     public final ItemComponent<Integer> MAX_STACK_SIZE = this.register("max_stack_size", Codec.rangedInt(1, 99), NetType.VAR_INT);
     public final ItemComponent<Integer> MAX_DAMAGE = this.register("max_damage", Codec.minInt(1), NetType.VAR_INT);
     public final ItemComponent<Integer> DAMAGE = this.register("damage", Codec.minInt(0), NetType.VAR_INT);
@@ -113,9 +113,9 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(DyedColor.SHOW_IN_TOOLTIP).optional().defaulted(true), DyedColor::isShowInTooltip,
             DyedColor::new
     ));
-    public final ItemComponent<Integer> MAP_COLOR = this.register("map_color", Codec.INTEGER);
-    public final ItemComponent<Integer> MAP_ID = this.register("map_id", Codec.INTEGER);
-    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = this.register("map_decorations", Codec.mapOf(Codec.STRING, MapCodecMerger.codec(
+    public final ItemComponent<Integer> MAP_COLOR = this.register("map_color", Codec.INTEGER, NetType.INTEGER);
+    public final ItemComponent<Integer> MAP_ID = this.register("map_id", Codec.INTEGER, NetType.VAR_INT);
+    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = this.registerNonNetworkSerializable("map_decorations", Codec.mapOf(Codec.STRING, MapCodecMerger.codec(
             Codec.STRING_IDENTIFIER.verified(this.getRegistryVerifier().mapDecorationType).mapCodec(MapDecoration.TYPE).required(), MapDecoration::getType,
             Codec.DOUBLE.mapCodec(MapDecoration.X).required(), MapDecoration::getX,
             Codec.DOUBLE.mapCodec(MapDecoration.Z).required(), MapDecoration::getZ,
@@ -157,7 +157,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(ArmorTrim.SHOW_IN_TOOLTIP).optional().defaulted(true), ArmorTrim::isShowInTooltip,
             ArmorTrim::new
     ));
-    public final ItemComponent<Map<Identifier, String>> DEBUG_STICK_STATE = this.register("debug_stick_state", Codec.mapOf(
+    public final ItemComponent<Map<Identifier, String>> DEBUG_STICK_STATE = this.registerNonNetworkSerializable("debug_stick_state", Codec.mapOf(
             Codec.STRING_IDENTIFIER.verified(this.registryVerifier.block),
             block -> Codec.STRING.verified(value -> {
                 if (this.registryVerifier.verifyBlockState(block, value)) return Result.success(null);
@@ -169,7 +169,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         return Result.success(null);
     }));
     public final ItemComponent<CompoundTag> BUCKET_ENTITY_DATA = this.register("bucket_entity_data", this.typeSerializers.customData());
-    public final ItemComponent<CompoundTag> BLOCK_ENTITY_DATA = this.register("block_entity_data", this.typeSerializers.customData().verified(tag -> {
+    public final ItemComponent<CompoundTag> BLOCK_ENTITY_DATA = this.registerNonNetworkSerializable("block_entity_data", this.typeSerializers.customData().verified(tag -> {
         if (!tag.contains("id", NbtType.STRING)) return Result.error("Block entity data tag does not contain an id");
         return Result.success(null);
     }));
@@ -183,7 +183,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             )
     ));
     public final ItemComponent<Integer> OMINOUS_BOTTLE_AMPLIFIER = this.register("ominous_bottle_amplifier", Codec.rangedInt(1, 4));
-    public final ItemComponent<List<Identifier>> RECIPES = this.register("recipes", Codec.STRING_IDENTIFIER.listOf());
+    public final ItemComponent<List<Identifier>> RECIPES = this.registerNonNetworkSerializable("recipes", Codec.STRING_IDENTIFIER.listOf());
     public final ItemComponent<LodestoneTracker> LODESTONE_TRACKER = this.register("lodestone_tracker", MapCodecMerger.codec(
             MapCodecMerger.codec(
                     Codec.STRING_IDENTIFIER.mapCodec(LodestoneTracker.GlobalPos.DIMENSION).required(), LodestoneTracker.GlobalPos::getDimension,
@@ -259,7 +259,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             this.typeSerializers.itemStack().mapCodec(ContainerSlot.ITEM).required(), ContainerSlot::getItem,
             ContainerSlot::new
     ).listOf(256));
-    public final ItemComponent<Map<String, String>> BLOCK_STATE = this.register("block_state", Codec.mapOf(Codec.STRING, Codec.STRING));
+    public final ItemComponent<Map<String, String>> BLOCK_STATE = this.register("block_state", Codec.mapOf(Codec.STRING, Codec.STRING), NetType.map(NetType.STRING, NetType.STRING));
     public final ItemComponent<List<BeeData>> BEES = this.register("bees", MapCodecMerger.codec(
             this.typeSerializers.customData().mapCodec(BeeData.ENTITY_DATA).optional().defaulted(CompoundTag::isEmpty, CompoundTag::new), BeeData::getEntityData,
             Codec.INTEGER.mapCodec(BeeData.TICKS_IN_HIVE).required(), BeeData::getTicksInHive,
@@ -267,7 +267,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             BeeData::new
     ).listOf());
     public final ItemComponent<String> LOCK = this.register("lock", Codec.STRING, NetType.STRING);
-    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = this.register("container_loot", MapCodecMerger.codec(
+    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = this.registerNonNetworkSerializable("container_loot", MapCodecMerger.codec(
             Codec.STRING_IDENTIFIER.mapCodec(ContainerLoot.LOOT_TABLE).required(), ContainerLoot::getLootTable,
             Codec.LONG.mapCodec(ContainerLoot.SEED).optional().defaulted(0L), ContainerLoot::getSeed,
             ContainerLoot::new
