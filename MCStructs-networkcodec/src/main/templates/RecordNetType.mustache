@@ -1,0 +1,42 @@
+package net.lenni0451.mcstructs.networkcodec;
+
+import io.netty.buffer.ByteBuf;
+
+import java.util.function.Function;
+
+public class RecordNetType {
+
+    {{#each this}}
+    public static <{{#vars}}{{.}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, T> NetType<T> of(
+            {{#vars}}
+            final NetType<{{.}}> type{{iterIndex}}, final Function<T, {{.}}> getter{{iterIndex}},
+            {{/vars}}
+            final C{{count}}<{{#vars}}{{.}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, T> constructor
+    ) {
+        return new NetType<T>() {
+            @Override
+            public T read(ByteBuf buf) {
+                {{#vars}}
+                {{.}} value{{iterIndex}} = type{{iterIndex}}.read(buf);
+                {{/vars}}
+                return constructor.apply({{#vars}}value{{iterIndex}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}});
+            }
+
+            @Override
+            public void write(ByteBuf buf, T value) {
+                {{#vars}}
+                type{{iterIndex}}.write(buf, getter{{iterIndex}}.apply(value));
+                {{/vars}}
+            }
+        };
+    }
+
+    {{/each}}
+    {{#each this}}
+    @FunctionalInterface
+    public interface C{{count}}<{{#vars}}{{.}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}}, T> {
+        T apply({{#vars}}{{.}} {{lower .}}{{#iterHasNext}}, {{/iterHasNext}}{{/vars}});
+    }
+
+    {{/each}}
+}

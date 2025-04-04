@@ -8,11 +8,14 @@ import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
+import net.lenni0451.mcstructs.networkcodec.ByIdMap;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntFunction;
 
 import static net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5.ItemStack;
 
@@ -121,6 +124,9 @@ public class Types_v1_21 {
                 ADD_VALUE("add_value"),
                 ADD_MULTIPLIED_BASE("add_multiplied_base"),
                 ADD_MULTIPLIED_TOTAL("add_multiplied_total");
+
+                private static final IntFunction<Operation> BY_ID = ByIdMap.continuous(Operation::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+                public static final NetType<Operation> STREAM_CODEC = NetType.idMapper(BY_ID, Operation::ordinal);
 
                 private final String name;
             }

@@ -9,12 +9,15 @@ import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.networkcodec.ByIdMap;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.IntFunction;
 
 public class Types_v1_20_5 {
 
@@ -49,6 +52,9 @@ public class Types_v1_20_5 {
         UNCOMMON("uncommon", TextFormatting.YELLOW),
         RARE("rare", TextFormatting.AQUA),
         EPIC("epic", TextFormatting.LIGHT_PURPLE);
+
+        private static final IntFunction<Rarity> BY_ID = ByIdMap.continuous(Rarity::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final NetType<Rarity> STREAM_CODEC = NetType.idMapper(BY_ID, Rarity::ordinal);
 
         private final String name;
         private final TextFormatting color;
@@ -179,6 +185,9 @@ public class Types_v1_20_5 {
             CREEPER("creeper"),
             BURST("burst");
 
+            private static final IntFunction<ExplosionShape> BY_ID = ByIdMap.continuous(ExplosionShape::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+            public static final NetType<ExplosionShape> STREAM_CODEC = NetType.idMapper(BY_ID, ExplosionShape::ordinal);
+
             private final String name;
         }
     }
@@ -236,6 +245,9 @@ public class Types_v1_20_5 {
         GREEN("green", 0x5E_7C_16),
         RED("red", 0xB0_2E_26),
         BLACK("black", 0x1D_1D_21);
+
+        private static final IntFunction<DyeColor> BY_ID = ByIdMap.continuous(DyeColor::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final NetType<DyeColor> STREAM_CODEC = NetType.idMapper(BY_ID, DyeColor::ordinal);
 
         private final String name;
         private final int color;
@@ -526,6 +538,9 @@ public class Types_v1_20_5 {
                 ADD_MULTIPLIED_BASE("add_multiplied_base"),
                 ADD_MULTIPLIED_TOTAL("add_multiplied_total");
 
+                private static final IntFunction<Operation> BY_ID = ByIdMap.continuous(Operation::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+                public static final NetType<Operation> STREAM_CODEC = NetType.idMapper(BY_ID, Operation::ordinal);
+
                 private final String name;
             }
         }
@@ -543,6 +558,9 @@ public class Types_v1_20_5 {
             HEAD("head"),
             ARMOR("armor"),
             BODY("body");
+
+            private static final IntFunction<Slot> BY_ID = ByIdMap.continuous(Slot::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+            public static final NetType<Slot> STREAM_CODEC = NetType.idMapper(BY_ID, Slot::ordinal);
 
             private final String name;
         }
@@ -795,7 +813,10 @@ public class Types_v1_20_5 {
     }
 
     public enum MapPostProcessing {
-        LOCK, SCALE
+        LOCK, SCALE;
+
+        private static final IntFunction<MapPostProcessing> BY_ID = ByIdMap.continuous(MapPostProcessing::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final NetType<MapPostProcessing> STREAM_CODEC = NetType.idMapper(BY_ID, MapPostProcessing::ordinal);
     }
 
     @Data

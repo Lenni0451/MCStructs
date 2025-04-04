@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5;
 
+import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -11,11 +12,14 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
+import net.lenni0451.mcstructs.networkcodec.ByIdMap;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 import net.lenni0451.mcstructs.text.TextComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.IntFunction;
 
 public class Types_v1_21_5 {
 
@@ -69,6 +73,9 @@ public class Types_v1_21_5 {
         RED("red"),
         SNOW("snow");
 
+        private static final IntFunction<FoxVariant> BY_ID = ByIdMap.continuous(FoxVariant::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final NetType<FoxVariant> STREAM_CODEC = NetType.idMapper(BY_ID, FoxVariant::ordinal);
+
         private final String name;
     }
 
@@ -78,6 +85,9 @@ public class Types_v1_21_5 {
         SMALL("small"),
         MEDIUM("medium"),
         LARGE("large");
+
+        private static final IntFunction<SalmonSize> BY_ID = ByIdMap.continuous(SalmonSize::ordinal, values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
+        public static final NetType<SalmonSize> STREAM_CODEC = NetType.idMapper(BY_ID, SalmonSize::ordinal);
 
         private final String name;
     }
@@ -90,6 +100,9 @@ public class Types_v1_21_5 {
         GREEN("green"),
         YELLOW_BLUE("yellow_blue"),
         GRAY("gray");
+
+        private static final IntFunction<ParrotVariant> BY_ID = ByIdMap.continuous(ParrotVariant::ordinal, values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
+        public static final NetType<ParrotVariant> STREAM_CODEC = NetType.idMapper(BY_ID, ParrotVariant::ordinal);
 
         private final String name;
     }
@@ -110,6 +123,9 @@ public class Types_v1_21_5 {
         BETTY("betty"),
         CLAYFISH("clayfish");
 
+        private static final IntFunction<TropicalFishPattern> BY_ID = ByIdMap.sparse(TropicalFishPattern::ordinal, values(), KOB);
+        public static final NetType<TropicalFishPattern> STREAM_CODEC = NetType.idMapper(BY_ID, TropicalFishPattern::ordinal);
+
         private final String name;
     }
 
@@ -118,6 +134,9 @@ public class Types_v1_21_5 {
     public enum MooshroomVariant implements NamedType {
         RED("red"),
         BROWN("brown");
+
+        private static final IntFunction<MooshroomVariant> BY_ID = ByIdMap.continuous(MooshroomVariant::ordinal, values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
+        public static final NetType<MooshroomVariant> STREAM_CODEC = NetType.idMapper(BY_ID, MooshroomVariant::ordinal);
 
         private final String name;
     }
@@ -133,6 +152,10 @@ public class Types_v1_21_5 {
         SALT("salt"),
         EVIL("evil");
 
+        public static final RabbitVariant DEFAULT = BROWN;
+        private static final IntFunction<RabbitVariant> BY_ID = ByIdMap.sparse(RabbitVariant::ordinal, values(), DEFAULT);
+        public static final NetType<RabbitVariant> STREAM_CODEC = NetType.idMapper(BY_ID, RabbitVariant::ordinal);
+
         private final String name;
     }
 
@@ -147,6 +170,9 @@ public class Types_v1_21_5 {
         GRAY("gray"),
         DARK_BROWN("dark_brown");
 
+        private static final IntFunction<HorseVariant> BY_ID = ByIdMap.continuous(HorseVariant::ordinal, values(), ByIdMap.OutOfBoundsStrategy.WRAP);
+        public static final NetType<HorseVariant> STREAM_CODEC = NetType.idMapper(BY_ID, HorseVariant::ordinal);
+
         private final String name;
     }
 
@@ -157,6 +183,9 @@ public class Types_v1_21_5 {
         WHITE("white"),
         BROWN("brown"),
         GRAY("gray");
+
+        private static final IntFunction<LlamaVariant> BY_ID = ByIdMap.continuous(LlamaVariant::ordinal, values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
+        public static final NetType<LlamaVariant> STREAM_CODEC = NetType.idMapper(BY_ID, LlamaVariant::ordinal);
 
         private final String name;
     }
@@ -169,6 +198,9 @@ public class Types_v1_21_5 {
         GOLD("gold"),
         CYAN("cyan"),
         BLUE("blue");
+
+        private static final IntFunction<AxolotlVariant> BY_ID = ByIdMap.continuous(AxolotlVariant::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final NetType<AxolotlVariant> STREAM_CODEC = NetType.idMapper(BY_ID, AxolotlVariant::ordinal);
 
         private final String name;
     }
