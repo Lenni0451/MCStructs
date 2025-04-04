@@ -10,6 +10,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.TypeSerializers_v1_21_4;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
@@ -118,10 +119,10 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             TooltipDisplay::new
     ));
     public final ItemComponent<AttributeModifiers> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", this.typeSerializers.attributeModifier_v1_21().listOf().map(AttributeModifiers::getModifiers, AttributeModifiers::new));
-    public final ItemComponent<Integer> DYED_COLOR = this.register("dyed_color", this.typeSerializers.rgbColor());
+    public final ItemComponent<Integer> DYED_COLOR = this.register("dyed_color", this.typeSerializers.rgbColor(), NetType.INTEGER);
     public final ItemComponent<List<Types_v1_20_5.BlockPredicate>> CAN_PLACE_ON = this.register("can_place_on", this.typeSerializers.blockPredicate().compactListOf());
     public final ItemComponent<List<Types_v1_20_5.BlockPredicate>> CAN_BREAK = this.copy("can_break", this.CAN_PLACE_ON);
-    public final ItemComponent<Map<Identifier, Integer>> ENCHANTMENTS = this.register("enchantments", this.typeSerializers.enchantmentLevels());
+    public final ItemComponent<Map<Identifier, Integer>> ENCHANTMENTS = this.register("enchantments", this.typeSerializers.enchantmentLevels(), NetType.map(NetType.IDENTIFIER, NetType.VAR_INT));
     public final ItemComponent<Map<Identifier, Integer>> STORED_ENCHANTMENTS = this.copy("stored_enchantments", this.ENCHANTMENTS);
     public final ItemComponent<Either<Identifier, Types_v1_21.JukeboxPlayable.JukeboxSong>> JUKEBOX_PLAYABLE = this.register("jukebox_playable", this.typeSerializers.registryEntry(this.registryVerifier.jukeboxSong, MapCodecMerger.codec(
             this.typeSerializers.soundEvent().mapCodec(Types_v1_21.JukeboxPlayable.JukeboxSong.SOUND_EVENT).required(), Types_v1_21.JukeboxPlayable.JukeboxSong::getSoundEvent,
@@ -135,7 +136,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             this.typeSerializers.armorTrimPattern().mapCodec(ArmorTrim.PATTERN).required(), ArmorTrim::getPattern,
             ArmorTrim::new
     ));
-    public final ItemComponent<Boolean> UNBREAKABLE = this.register("unbreakable", Codec.UNIT);
+    public final ItemComponent<Boolean> UNBREAKABLE = this.register("unbreakable", Codec.UNIT, NetType.UNIT);
     private ItemComponent<?> HIDE_ADDITIONAL_TOOLTIP;
     private ItemComponent<?> HIDE_TOOLTIP;
 

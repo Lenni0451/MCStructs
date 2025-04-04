@@ -147,8 +147,12 @@ public abstract class ItemComponentRegistry {
         return this.register(name, component.codec, component.netType);
     }
 
-    protected <T> ItemComponent<T> registerNonSerializable(final String name, final NetType<T> netType) {
+    protected <T> ItemComponent<T> registerNonCodecSerializable(final String name, final NetType<T> netType) {
         return this.register(name, Codec.failing("The component " + name + " is not serializable!"), netType);
+    }
+
+    protected <T> ItemComponent<T> registerNonNetworkSerializable(final String name, final Codec<T> codec) {
+        return this.register(name, codec, NetType.invalid("The component " + name + " is not network serializable!"));
     }
 
     protected <T> ItemComponent<T> register(final String name, final Codec<T> codec, final NetType<T> netType) {
