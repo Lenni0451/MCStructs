@@ -9,12 +9,15 @@ import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.networkcodec.ByIdMap;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.IntFunction;
 
 public class Types_v1_20_5 {
 
@@ -236,6 +239,9 @@ public class Types_v1_20_5 {
         GREEN("green", 0x5E_7C_16),
         RED("red", 0xB0_2E_26),
         BLACK("black", 0x1D_1D_21);
+
+        private static final IntFunction<DyeColor> BY_ID = ByIdMap.continuous(DyeColor::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final NetType<DyeColor> STREAM_CODEC = NetType.idMapper(BY_ID, DyeColor::ordinal);
 
         private final String name;
         private final int color;

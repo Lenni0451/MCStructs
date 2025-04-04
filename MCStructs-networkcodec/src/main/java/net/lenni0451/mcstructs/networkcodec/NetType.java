@@ -336,20 +336,16 @@ public interface NetType<T> extends NetReader<T>, NetWriter<T> {
         };
     }
 
-    static <T extends Enum<T>> NetType<T> enumType(final T[] values, final Function<Integer, Integer> outOfBoundsMapper) {
+    static <T> NetType<T> idMapper(IntFunction<T> intFunction, ToIntFunction<T> toIntFunction) {
         return new NetType<T>() {
-            @Override
-            public T read(ByteBuf buf) {
-                int index = VAR_INT.read(buf);
-                if (index < 0 || index >= values.length) {
-                    index = outOfBoundsMapper.apply(index);
-                }
-                return values[index];
+            public T read(ByteBuf byteBuf) {
+                int i = VAR_INT.read(byteBuf);
+                return intFunction.apply(i);
             }
 
-            @Override
-            public void write(ByteBuf buf, T value) {
-                VAR_INT.write(buf, value.ordinal());
+            public void write(ByteBuf byteBuf, T object) {
+                int i = toIntFunction.applyAsInt(object);
+                VAR_INT.write(byteBuf, i);
             }
         };
     }

@@ -252,7 +252,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             this.typeSerializers.dyeColor().mapCodec(BannerPattern.COLOR).required(), BannerPattern::getColor,
             BannerPattern::new
     ).listOf());
-    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.dyeColor());
+    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.dyeColor(), DyeColor.STREAM_CODEC);
     public final ItemComponent<List<Identifier>> POT_DECORATIONS = this.register("pot_decorations", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.item).listOf(4));
     public final ItemComponent<List<ContainerSlot>> CONTAINER = this.register("container", MapCodecMerger.codec(
             Codec.rangedInt(0, 255).mapCodec(ContainerSlot.SLOT).required(), ContainerSlot::getSlot,
