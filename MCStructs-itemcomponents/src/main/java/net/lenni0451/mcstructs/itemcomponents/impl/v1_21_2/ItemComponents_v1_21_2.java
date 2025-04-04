@@ -81,7 +81,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
             this.typeSerializers.consumeEffect().listOf().mapCodec(DeathProtection.DEATH_EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), DeathProtection::getDeathEffects,
             DeathProtection::new
     ));
-    public final ItemComponent<ItemPredicate> LOCK = this.register("lock", this.typeSerializers.itemPredicate());
+    public final ItemComponent<ItemPredicate> LOCK = this.registerNonNetworkSerializable("lock", this.typeSerializers.itemPredicate());
     private ItemComponent<?> FIRE_RESISTANT;
 
 

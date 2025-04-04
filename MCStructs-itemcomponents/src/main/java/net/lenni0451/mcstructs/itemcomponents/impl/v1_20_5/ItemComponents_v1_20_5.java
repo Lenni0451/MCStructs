@@ -38,7 +38,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<TextComponent> CUSTOM_NAME = this.register("custom_name", this.typeSerializers.textComponent(Integer.MAX_VALUE));
     public final ItemComponent<TextComponent> ITEM_NAME = this.register("item_name", this.typeSerializers.textComponent(Integer.MAX_VALUE));
     public final ItemComponent<List<TextComponent>> LORE = this.register("lore", this.typeSerializers.textComponent(Integer.MAX_VALUE).listOf(256));
-    public final ItemComponent<Rarity> RARITY = this.register("rarity", Codec.named(Rarity.values()), NetType.enumType(Rarity.values(), ignored -> 0));
+    public final ItemComponent<Rarity> RARITY = this.register("rarity", Codec.named(Rarity.values()), Rarity.STREAM_CODEC);
     public final ItemComponent<Enchantments> ENCHANTMENTS = this.register("enchantments", Codec.oneOf(
             MapCodecMerger.codec(
                     this.typeSerializers.enchantmentLevels().mapCodec(Enchantments.LEVELS).required(), Enchantments::getEnchantments,
