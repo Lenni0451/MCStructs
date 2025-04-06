@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.types.IdentifiedType;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
+import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryTag;
+import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
 
 import java.util.ArrayList;
@@ -206,9 +208,9 @@ public class Types_v1_21_5 {
         private float disableCooldownScale = 1;
         private List<DamageReduction> damageReductions = Collections.singletonList(new DamageReduction(90, null, 0, 1));
         private ItemDamageFunction itemDamage = null;
-        private Identifier bypassedBy = null;
-        private Either<Identifier, Types_v1_20_5.SoundEvent> blockSound = null;
-        private Either<Identifier, Types_v1_20_5.SoundEvent> disabledSound = null;
+        private RegistryTag bypassedBy = null;
+        private EitherEntry<Types_v1_20_5.SoundEvent> blockSound = null;
+        private EitherEntry<Types_v1_20_5.SoundEvent> disabledSound = null;
 
 
         @Data
@@ -221,7 +223,7 @@ public class Types_v1_21_5 {
             public static final String FACTOR = "factor";
 
             private float horizontalBlockingAngle = 90;
-            private Types_v1_20_5.TagEntryList type = null;
+            private TagEntryList type = null;
             private float base;
             private float factor;
         }
@@ -267,8 +269,8 @@ public class Types_v1_21_5 {
         public static final String MATERIAL = "material";
         public static final String PATTERN = "pattern";
 
-        private Either<Identifier, Types_v1_20_5.ArmorTrimMaterial> material;
-        private Either<Identifier, Types_v1_20_5.ArmorTrimPattern> pattern;
+        private EitherEntry<Types_v1_20_5.ArmorTrimMaterial> material;
+        private EitherEntry<Types_v1_20_5.ArmorTrimPattern> pattern;
     }
 
 }

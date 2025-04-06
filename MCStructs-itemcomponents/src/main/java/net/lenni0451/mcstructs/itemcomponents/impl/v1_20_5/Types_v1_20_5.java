@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
+import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.TextFormatting;
@@ -61,14 +63,14 @@ public class Types_v1_20_5 {
         public static final String LEVELS = "levels";
         public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
 
-        private Map<Identifier, Integer> enchantments = new HashMap<>();
+        private Map<RegistryEntry, Integer> enchantments = new HashMap<>();
         private boolean showInTooltip = true;
 
-        public void addEnchantment(final Identifier enchantment, final int level) {
+        public void addEnchantment(final RegistryEntry enchantment, final int level) {
             this.enchantments.put(enchantment, level);
         }
 
-        public void removeEnchantment(final Identifier enchantment) {
+        public void removeEnchantment(final RegistryEntry enchantment) {
             this.enchantments.remove(enchantment);
         }
     }
@@ -97,7 +99,7 @@ public class Types_v1_20_5 {
         public static final String Z = "z";
         public static final String ROTATION = "rotation";
 
-        private Identifier type;
+        private RegistryEntry type;
         private double x;
         private double z;
         private float rotation;
@@ -111,7 +113,7 @@ public class Types_v1_20_5 {
         public static final String COUNT = "count";
         public static final String COMPONENTS = "components";
 
-        private Identifier id;
+        private RegistryEntry id;
         private int count = 1;
         private ItemComponentMap components /* = new ItemComponentMap() */;
     }
@@ -201,7 +203,7 @@ public class Types_v1_20_5 {
         public static final String PATTERN = "pattern";
         public static final String COLOR = "color";
 
-        private Either<Identifier, Pattern> pattern;
+        private EitherEntry<Pattern> pattern;
         private DyeColor color;
 
 
@@ -371,7 +373,7 @@ public class Types_v1_20_5 {
         public static final String USE_DURATION = "use_duration";
         public static final String RANGE = "range";
 
-        private Either<Identifier, SoundEvent> soundEvent;
+        private EitherEntry<SoundEvent> soundEvent;
         private int useDuration;
         private float range;
     }
@@ -383,10 +385,10 @@ public class Types_v1_20_5 {
         public static final String ID = "id";
         public static final String DURATION = "duration";
 
-        private Identifier id;
+        private RegistryEntry id;
         private int duration = 0;
 
-        public SuspiciousStewEffect(final Identifier id) {
+        public SuspiciousStewEffect(final RegistryEntry id) {
             this.id = id;
         }
     }
@@ -494,11 +496,11 @@ public class Types_v1_20_5 {
         public static final String TYPE = "type";
         public static final String SLOT = "slot";
 
-        private Identifier type;
+        private RegistryEntry type;
         private EntityAttribute modifier;
         private Slot slot = Slot.ANY;
 
-        public AttributeModifier(final Identifier type, final EntityAttribute modifier) {
+        public AttributeModifier(final RegistryEntry type, final EntityAttribute modifier) {
             this.type = type;
             this.modifier = modifier;
         }
@@ -606,11 +608,11 @@ public class Types_v1_20_5 {
         public static final String PATTERN = "pattern";
         public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
 
-        private Either<Identifier, ArmorTrimMaterial> material;
-        private Either<Identifier, ArmorTrimPattern> pattern;
+        private EitherEntry<ArmorTrimMaterial> material;
+        private EitherEntry<ArmorTrimPattern> pattern;
         private boolean showInTooltip = true;
 
-        public ArmorTrim(final Either<Identifier, ArmorTrimMaterial> material, final Either<Identifier, ArmorTrimPattern> pattern) {
+        public ArmorTrim(final EitherEntry<ArmorTrimMaterial> material, final EitherEntry<ArmorTrimPattern> pattern) {
             this.material = material;
             this.pattern = pattern;
         }
@@ -627,9 +629,9 @@ public class Types_v1_20_5 {
         public static final String DESCRIPTION = "description";
 
         private String assetName;
-        private Identifier ingredient;
+        private RegistryEntry ingredient;
         private float itemModelIndex;
-        private Map<Identifier, String> overrideArmorMaterials;
+        private Map<RegistryEntry, String> overrideArmorMaterials;
         private TextComponent description;
     }
 
@@ -643,11 +645,11 @@ public class Types_v1_20_5 {
         public static final String DECAL = "decal";
 
         private Identifier assetId;
-        private Identifier templateItem;
+        private RegistryEntry templateItem;
         private TextComponent description;
         private boolean decal = false;
 
-        public ArmorTrimPattern(final Identifier assetId, final Identifier templateItem, final TextComponent description) {
+        public ArmorTrimPattern(final Identifier assetId, final RegistryEntry templateItem, final TextComponent description) {
             this.assetId = assetId;
             this.templateItem = templateItem;
             this.description = description;
@@ -660,7 +662,7 @@ public class Types_v1_20_5 {
     public static class StatusEffect {
         public static final String ID = "id";
 
-        private Identifier id;
+        private RegistryEntry id;
         private int amplifier = 0;
         private int duration = 0;
         private boolean ambient = false;
@@ -669,11 +671,11 @@ public class Types_v1_20_5 {
         @Nullable
         private StatusEffect hiddenEffect;
 
-        public StatusEffect(final Identifier id) {
+        public StatusEffect(final RegistryEntry id) {
             this.id = id;
         }
 
-        public StatusEffect(final Identifier id, final Parameters parameters) {
+        public StatusEffect(final RegistryEntry id, final Parameters parameters) {
             this.id = id;
             this.amplifier = parameters.amplifier;
             this.duration = parameters.duration;
@@ -683,7 +685,7 @@ public class Types_v1_20_5 {
             if (parameters.hiddenEffect != null) this.hiddenEffect = new StatusEffect(id, parameters.hiddenEffect);
         }
 
-        public StatusEffect(final Identifier id, final int amplifier, final int duration, final boolean ambient, final boolean showParticles, final Boolean showIcon, final StatusEffect hiddenEffect) {
+        public StatusEffect(final RegistryEntry id, final int amplifier, final int duration, final boolean ambient, final boolean showParticles, final Boolean showIcon, final StatusEffect hiddenEffect) {
             this.id = id;
             this.amplifier = amplifier;
             this.duration = duration;
@@ -750,7 +752,7 @@ public class Types_v1_20_5 {
         public static final String CUSTOM_EFFECTS = "custom_effects";
 
         @Nullable
-        private Identifier potion;
+        private RegistryEntry potion;
         @Nullable
         private Integer customColor;
         private List<StatusEffect> customEffects;
@@ -796,30 +798,6 @@ public class Types_v1_20_5 {
 
     public enum MapPostProcessing {
         LOCK, SCALE
-    }
-
-    @Data
-    public static class TagEntryList {
-        private final Identifier tag;
-        private final List<Identifier> entries;
-
-        public TagEntryList(final Identifier tag) {
-            this.tag = tag;
-            this.entries = null;
-        }
-
-        public TagEntryList(final List<Identifier> entries) {
-            this.tag = null;
-            this.entries = entries;
-        }
-
-        public boolean isTag() {
-            return this.tag != null;
-        }
-
-        public boolean isEntries() {
-            return this.entries != null;
-        }
     }
 
 }

@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
+import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
 import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;
@@ -50,7 +51,7 @@ public class Types_v1_21 {
         public static final String SONG = "song";
         public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
 
-        private Either<Identifier, JukeboxSong> song;
+        private EitherEntry<JukeboxSong> song;
         private boolean showInTooltip = true;
 
 
@@ -63,7 +64,7 @@ public class Types_v1_21 {
             public static final String LENGTH_IN_SECONDS = "length_in_seconds";
             public static final String COMPARATOR_OUTPUT = "comparator_output";
 
-            private Either<Identifier, Types_v1_20_5.SoundEvent> soundEvent;
+            private EitherEntry<Types_v1_20_5.SoundEvent> soundEvent;
             private TextComponent description;
             private float lengthInSeconds;
             private int comparatorOutput;
@@ -92,11 +93,11 @@ public class Types_v1_21 {
         public static final String TYPE = "type";
         public static final String SLOT = "slot";
 
-        private Identifier type;
+        private RegistryEntry type;
         private AttributeModifier.EntityAttribute modifier;
         private Types_v1_20_5.AttributeModifier.Slot slot = Types_v1_20_5.AttributeModifier.Slot.ANY;
 
-        public AttributeModifier(final Identifier type, final AttributeModifier.EntityAttribute modifier) {
+        public AttributeModifier(final RegistryEntry type, final AttributeModifier.EntityAttribute modifier) {
             this.type = type;
             this.modifier = modifier;
         }

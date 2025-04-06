@@ -10,6 +10,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.TypeSerializers_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
+import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.EnumMap;
@@ -67,7 +68,7 @@ public class TypeSerializers_v1_21_2 extends TypeSerializers_v1_21 {
 
     public Codec<EnchantmentPredicate> enchantmentPredicate() {
         return this.init(ENCHANTMENT_PREDICATE, () -> MapCodecMerger.codec(
-                this.tagEntryList(this.registry.getRegistryVerifier().enchantmentTag, this.registry.getRegistryVerifier().enchantment).mapCodec(EnchantmentPredicate.ENCHANTMENTS).optional().defaulted(null), EnchantmentPredicate::getEnchantments,
+                TagEntryList.codec(this.registry.getRegistries().enchantment, false).mapCodec(EnchantmentPredicate.ENCHANTMENTS).optional().defaulted(null), EnchantmentPredicate::getEnchantments,
                 this.minMaxInt().mapCodec(EnchantmentPredicate.LEVELS).optional().defaulted(null), EnchantmentPredicate::getLevels,
                 EnchantmentPredicate::new
         ));
@@ -88,7 +89,7 @@ public class TypeSerializers_v1_21_2 extends TypeSerializers_v1_21 {
 
     public Codec<ItemPredicate> itemPredicate() {
         return this.init(ITEM_PREDICATE, () -> MapCodecMerger.codec(
-                this.tagEntryList(this.registry.getRegistryVerifier().itemTag, this.registry.getRegistryVerifier().item).mapCodec(ItemPredicate.ITEMS).optional().defaulted(null), ItemPredicate::getItems,
+                TagEntryList.codec(this.registry.getRegistries().item, false).mapCodec(ItemPredicate.ITEMS).optional().defaulted(null), ItemPredicate::getItems,
                 this.minMaxInt().mapCodec(ItemPredicate.COUNT).optional().defaulted(null), ItemPredicate::getCount,
                 cast(new DynamicMapCodec<>(this.registry.getComponentCodec(), ItemComponent::getCodec).mapCodec(ItemPredicate.COMPONENTS).optional().defaulted(null)), ItemPredicate::getComponents,
                 this.itemSubPredicate().mapCodec(ItemPredicate.PREDICATES).optional().defaulted(null), ItemPredicate::getPredicates,
@@ -105,7 +106,7 @@ public class TypeSerializers_v1_21_2 extends TypeSerializers_v1_21 {
                     ConsumeEffect.ApplyEffects::new
             ));
             codecs.put(ConsumeEffect.Type.REMOVE_EFFECTS, MapCodecMerger.mapCodec(
-                    this.tagEntryList(this.registry.getRegistryVerifier().statusEffectTag, this.registry.getRegistryVerifier().statusEffect).mapCodec(ConsumeEffect.RemoveEffects.EFFECTS).required(), ConsumeEffect.RemoveEffects::getEffects,
+                    TagEntryList.codec(this.registry.getRegistries().statusEffect, false).mapCodec(ConsumeEffect.RemoveEffects.EFFECTS).required(), ConsumeEffect.RemoveEffects::getEffects,
                     ConsumeEffect.RemoveEffects::new
             ));
             codecs.put(ConsumeEffect.Type.CLEAR_ALL_EFFECTS, MapCodec.unit(ConsumeEffect.ClearAllEffects::new));
@@ -131,7 +132,7 @@ public class TypeSerializers_v1_21_2 extends TypeSerializers_v1_21 {
             ));
             codecs.put(ItemSubPredicate.Type.ENCHANTMENTS, this.enchantmentPredicate().listOf().map(ItemSubPredicate.Enchantments::getEnchantments, ItemSubPredicate.Enchantments::new));
             codecs.put(ItemSubPredicate.Type.STORED_ENCHANTMENTS, this.enchantmentPredicate().listOf().map(ItemSubPredicate.StoredEnchantments::getEnchantments, ItemSubPredicate.StoredEnchantments::new));
-            codecs.put(ItemSubPredicate.Type.POTION_CONTENTS, this.tagEntryList(this.registry.getRegistryVerifier().potionTag, this.registry.getRegistryVerifier().potion).map(ItemSubPredicate.PotionContents::getPotion, ItemSubPredicate.PotionContents::new));
+            codecs.put(ItemSubPredicate.Type.POTION_CONTENTS, TagEntryList.codec(this.registry.getRegistries().potion, false).map(ItemSubPredicate.PotionContents::getPotion, ItemSubPredicate.PotionContents::new));
             codecs.put(ItemSubPredicate.Type.CUSTOM_DATA, this.stringOrRawCompoundTag().map(ItemSubPredicate.CustomData::getData, ItemSubPredicate.CustomData::new));
             codecs.put(ItemSubPredicate.Type.CONTAINER, MapCodecMerger.codec(
                     this.collectionPredicate(this.itemPredicate()).mapCodec(ItemSubPredicate.Container.ITEMS).optional().defaulted(null), ItemSubPredicate.Container::getItems,
@@ -166,7 +167,7 @@ public class TypeSerializers_v1_21_2 extends TypeSerializers_v1_21 {
             ));
             codecs.put(ItemSubPredicate.Type.ATTRIBUTE_MODIFIERS, MapCodecMerger.codec(
                     this.collectionPredicate(MapCodecMerger.codec(
-                            this.tagEntryList(this.registry.getRegistryVerifier().attributeModifierTag, this.registry.getRegistryVerifier().attributeModifier).mapCodec(ItemSubPredicate.AttributeModifiers.ModifierPredicate.ATTRIBUTE).optional().defaulted(null), ItemSubPredicate.AttributeModifiers.ModifierPredicate::getAttribute,
+                            TagEntryList.codec(this.registry.getRegistries().attributeModifier, false).mapCodec(ItemSubPredicate.AttributeModifiers.ModifierPredicate.ATTRIBUTE).optional().defaulted(null), ItemSubPredicate.AttributeModifiers.ModifierPredicate::getAttribute,
                             Codec.STRING_IDENTIFIER.mapCodec(ItemSubPredicate.AttributeModifiers.ModifierPredicate.ID).optional().defaulted(null), ItemSubPredicate.AttributeModifiers.ModifierPredicate::getId,
                             this.minMaxDouble().mapCodec(ItemSubPredicate.AttributeModifiers.ModifierPredicate.AMOUNT).optional().defaulted(MinMaxDouble::isEmpty, MinMaxDouble::new), ItemSubPredicate.AttributeModifiers.ModifierPredicate::getAmount,
                             Codec.named(Types_v1_21.AttributeModifier.EntityAttribute.Operation.values()).mapCodec(ItemSubPredicate.AttributeModifiers.ModifierPredicate.OPERATION).optional().defaulted(null), ItemSubPredicate.AttributeModifiers.ModifierPredicate::getOperation,
@@ -176,12 +177,12 @@ public class TypeSerializers_v1_21_2 extends TypeSerializers_v1_21 {
                     ItemSubPredicate.AttributeModifiers::new
             ));
             codecs.put(ItemSubPredicate.Type.TRIM, MapCodecMerger.codec(
-                    this.tagEntryList(this.registry.getRegistryVerifier().armorTrimMaterialTag, this.registry.getRegistryVerifier().armorTrimMaterial).mapCodec(ItemSubPredicate.Trim.MATERIAL).optional().defaulted(null), ItemSubPredicate.Trim::getMaterial,
-                    this.tagEntryList(this.registry.getRegistryVerifier().armorTrimPatternTag, this.registry.getRegistryVerifier().armorTrimPattern).mapCodec(ItemSubPredicate.Trim.PATTERN).optional().defaulted(null), ItemSubPredicate.Trim::getPattern,
+                    TagEntryList.codec(this.registry.getRegistries().armorTrimMaterial, false).mapCodec(ItemSubPredicate.Trim.MATERIAL).optional().defaulted(null), ItemSubPredicate.Trim::getMaterial,
+                    TagEntryList.codec(this.registry.getRegistries().armorTrimPattern, false).mapCodec(ItemSubPredicate.Trim.PATTERN).optional().defaulted(null), ItemSubPredicate.Trim::getPattern,
                     ItemSubPredicate.Trim::new
             ));
             codecs.put(ItemSubPredicate.Type.JUKEBOX_PLAYABLE, MapCodecMerger.codec(
-                    this.tagEntryList(this.registry.getRegistryVerifier().jukeboxSongTag, this.registry.getRegistryVerifier().jukeboxSong).mapCodec(ItemSubPredicate.JukeboxPlayable.SONG).optional().defaulted(null), ItemSubPredicate.JukeboxPlayable::getSong,
+                    TagEntryList.codec(this.registry.getRegistries().jukeboxSong, false).mapCodec(ItemSubPredicate.JukeboxPlayable.SONG).optional().defaulted(null), ItemSubPredicate.JukeboxPlayable::getSong,
                     ItemSubPredicate.JukeboxPlayable::new
             ));
             return new DynamicMapCodec<>(Codec.identified(ItemSubPredicate.Type.values()), codecs::get);

@@ -13,6 +13,9 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.TypeSerializers;
+import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.nbt.tags.StringTag;
@@ -84,7 +87,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public Codec<ItemStack> itemStack() {
         return this.init(ITEM_STACK, () -> MapCodecMerger.codec(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ItemStack.ID).required(), ItemStack::getId,
+                this.registry.getRegistries().item.entryCodec().mapCodec(ItemStack.ID).required(), ItemStack::getId,
                 Codec.rangedInt(1, Integer.MAX_VALUE).mapCodec(ItemStack.COUNT).optional().elseGet(() -> 1), ItemStack::getCount,
                 this.registry.getMapCodec().mapCodec(ItemStack.COMPONENTS).optional().defaulted(ItemComponentMap::isEmpty, () -> new ItemComponentMap(this.registry)), ItemStack::getComponents,
                 ItemStack::new
@@ -157,13 +160,13 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         return this.init(DYE_COLOR, () -> Codec.named(DyeColor.values()));
     }
 
-    public Codec<Map<Identifier, Integer>> enchantmentLevels() {
-        return this.init(ENCHANTMENT_LEVELS, () -> Codec.mapOf(Codec.STRING_IDENTIFIER.verified(registry.getRegistryVerifier().enchantment), Codec.INTEGER));
+    public Codec<Map<RegistryEntry, Integer>> enchantmentLevels() {
+        return this.init(ENCHANTMENT_LEVELS, () -> Codec.mapOf(registry.getRegistries().enchantment.entryCodec(), Codec.INTEGER));
     }
 
-    public Codec<Either<Identifier, SoundEvent>> soundEvent() {
-        return this.init(SOUND_EVENT, () -> this.registryEntry(
-                this.registry.getRegistryVerifier().sound,
+    public Codec<EitherEntry<SoundEvent>> soundEvent() {
+        return this.init(SOUND_EVENT, () -> EitherEntry.codec(
+                this.registry.getRegistries().sound,
                 MapCodecMerger.codec(
                         Codec.STRING_IDENTIFIER.mapCodec(SoundEvent.SOUND_ID).required(), SoundEvent::getSoundId,
                         Codec.FLOAT.mapCodec(SoundEvent.RANGE).optional().lenient().defaulted(16F), SoundEvent::getRange,
@@ -174,7 +177,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public Codec<BlockPredicate> blockPredicate() {
         return this.init(BLOCK_PREDICATE, () -> MapCodecMerger.codec(
-                this.tagEntryList(this.registry.getRegistryVerifier().blockTag, this.registry.getRegistryVerifier().block).mapCodec(BlockPredicate.BLOCKS).optional().defaulted(null), BlockPredicate::getBlocks,
+                TagEntryList.codec(this.registry.getRegistries().block, false).mapCodec(BlockPredicate.BLOCKS).optional().defaulted(null), BlockPredicate::getBlocks,
                 Codec.mapOf(Codec.STRING, Codec.oneOf(
                         Codec.STRING.verified(s -> {
                             if (s == null) return Result.error("Value matcher cannot be null");
@@ -193,7 +196,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public Codec<AttributeModifier> attributeModifier() {
         return this.init(ATTRIBUTE_MODIFIER, () -> MapCodecMerger.codec(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().attributeModifier).mapCodec(AttributeModifier.TYPE).required(), AttributeModifier::getType,
+                this.registry.getRegistries().attributeModifier.entryCodec().mapCodec(AttributeModifier.TYPE).required(), AttributeModifier::getType,
                 MapCodecMerger.mapCodec(
                         Codec.INT_ARRAY_UUID.mapCodec(AttributeModifier.EntityAttribute.UUID).required(), AttributeModifier.EntityAttribute::getUuid,
                         Codec.STRING.mapCodec(AttributeModifier.EntityAttribute.NAME).required(), AttributeModifier.EntityAttribute::getName,
@@ -206,18 +209,18 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         ));
     }
 
-    public Codec<Either<Identifier, ArmorTrimMaterial>> armorTrimMaterial() {
-        return this.init(ARMOR_TRIM_MATERIAL, () -> this.registryEntry(
-                this.registry.getRegistryVerifier().armorTrimMaterial,
+    public Codec<EitherEntry<ArmorTrimMaterial>> armorTrimMaterial() {
+        return this.init(ARMOR_TRIM_MATERIAL, () -> EitherEntry.codec(
+                this.registry.getRegistries().armorTrimMaterial,
                 MapCodecMerger.codec(
                         Codec.STRING.verified(s -> {
                             if (s.matches(Identifier.VALID_VALUE_CHARS)) return Result.error("Invalid armor trim material: " + s);
                             return Result.success(null);
                         }).mapCodec(ArmorTrimMaterial.ASSET_NAME).required(), ArmorTrimMaterial::getAssetName,
-                        Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ArmorTrimMaterial.INGREDIENT).required(), ArmorTrimMaterial::getIngredient,
+                        this.registry.getRegistries().item.entryCodec().mapCodec(ArmorTrimMaterial.INGREDIENT).required(), ArmorTrimMaterial::getIngredient,
                         Codec.FLOAT.mapCodec(ArmorTrimMaterial.ITEM_MODEL_INDEX).required(), ArmorTrimMaterial::getItemModelIndex,
                         Codec.mapOf(
-                                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().armorMaterial),
+                                this.registry.getRegistries().armorMaterial.entryCodec(),
                                 Codec.STRING
                         ).mapCodec(ArmorTrimMaterial.OVERRIDE_ARMOR_MATERIALS).required(), ArmorTrimMaterial::getOverrideArmorMaterials,
                         this.rawTextComponent().mapCodec(ArmorTrimMaterial.DESCRIPTION).required(), ArmorTrimMaterial::getDescription,
@@ -226,12 +229,12 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         ));
     }
 
-    public Codec<Either<Identifier, ArmorTrimPattern>> armorTrimPattern() {
-        return this.init(ARMOR_TRIM_PATTERN, () -> this.registryEntry(
-                this.registry.getRegistryVerifier().armorTrimPattern,
+    public Codec<EitherEntry<ArmorTrimPattern>> armorTrimPattern() {
+        return this.init(ARMOR_TRIM_PATTERN, () -> EitherEntry.codec(
+                this.registry.getRegistries().armorTrimPattern,
                 MapCodecMerger.codec(
                         Codec.STRING_IDENTIFIER.mapCodec(ArmorTrimPattern.ASSET_ID).required(), ArmorTrimPattern::getAssetId,
-                        Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ArmorTrimPattern.TEMPLATE_ITEM).required(), ArmorTrimPattern::getTemplateItem,
+                        this.registry.getRegistries().item.entryCodec().mapCodec(ArmorTrimPattern.TEMPLATE_ITEM).required(), ArmorTrimPattern::getTemplateItem,
                         this.rawTextComponent().mapCodec(ArmorTrimPattern.DESCRIPTION).required(), ArmorTrimPattern::getDescription,
                         Codec.BOOLEAN.mapCodec(ArmorTrimPattern.DECAL).optional().defaulted(false), ArmorTrimPattern::isDecal,
                         ArmorTrimPattern::new
@@ -241,7 +244,7 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public Codec<StatusEffect> statusEffect() {
         return this.init(STATUS_EFFECT, () -> MapCodecMerger.codec(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().statusEffect).mapCodec(StatusEffect.ID).required(), StatusEffect::getId,
+                this.registry.getRegistries().statusEffect.entryCodec().mapCodec(StatusEffect.ID).required(), StatusEffect::getId,
                 MapCodec.recursive(thiz -> MapCodecMerger.mapCodec(
                         Codec.UNSIGNED_BYTE.mapCodec(StatusEffect.Parameters.AMPLIFIER).optional().defaulted(0), StatusEffect.Parameters::getAmplifier,
                         Codec.INTEGER.mapCodec(StatusEffect.Parameters.DURATION).optional().defaulted(0), StatusEffect.Parameters::getDuration,
@@ -268,26 +271,6 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
 
     public <T> Codec<Either<Identifier, T>> registryEntry(final Function<Identifier, Result<Void>> idVerifier, final Codec<T> entryCodec) {
         return Codec.either(Codec.STRING_IDENTIFIER.verified(idVerifier), entryCodec);
-    }
-
-    public Codec<Identifier> tag(final Function<Identifier, Result<Void>> verifier) {
-        return Codec.STRING.verified(tag -> {
-            if (!tag.startsWith("#")) return Result.error("Tag must start with a #");
-            else return null;
-        }).mapThrowing(id -> "#" + id.get(), value -> Identifier.of(value.substring(1))).verified(verifier);
-    }
-
-    public Codec<TagEntryList> tagEntryList(final Function<Identifier, Result<Void>> tagVerifier, final Function<Identifier, Result<Void>> entryVerifier) {
-        return Codec.oneOf(
-                this.tag(tagVerifier).flatMap(list -> {
-                    if (!list.isTag()) return Result.error("TagEntryList is not a tag");
-                    return Result.success(list.getTag());
-                }, tag -> Result.success(new TagEntryList(tag))),
-                Codec.STRING_IDENTIFIER.verified(entryVerifier).optionalListOf().flatMap(list -> {
-                    if (!list.isEntries()) return Result.error("TagEntryList is not a list of entries");
-                    return Result.success(list.getEntries());
-                }, entries -> Result.success(new TagEntryList(entries)))
-        );
     }
 
 }

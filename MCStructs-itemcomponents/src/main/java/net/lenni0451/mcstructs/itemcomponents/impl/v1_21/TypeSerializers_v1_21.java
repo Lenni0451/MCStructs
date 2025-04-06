@@ -31,7 +31,7 @@ public class TypeSerializers_v1_21 extends TypeSerializers_v1_20_5 {
 
     public Codec<ItemStack> singleItemStack() {
         return this.init(SINGLE_ITEM_STACK, () -> MapCodecMerger.codec(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().item).mapCodec(ItemStack.ID).required(), ItemStack::getId,
+                this.registry.getRegistries().item.entryCodec().mapCodec(ItemStack.ID).required(), ItemStack::getId,
                 this.registry.getMapCodec().mapCodec(ItemStack.COMPONENTS).optional().defaulted(ItemComponentMap::isEmpty, () -> new ItemComponentMap(this.registry)), ItemStack::getComponents,
                 (id, components) -> new ItemStack(id, 1, components)
         ));
@@ -45,7 +45,7 @@ public class TypeSerializers_v1_21 extends TypeSerializers_v1_20_5 {
 
     public Codec<AttributeModifier> attributeModifier_v1_21() {
         return this.init(ATTRIBUTE_MODIFIER, () -> MapCodecMerger.codec(
-                Codec.STRING_IDENTIFIER.verified(this.registry.getRegistryVerifier().attributeModifier).mapCodec(AttributeModifier.TYPE).required(), AttributeModifier::getType,
+                this.registry.getRegistries().attributeModifier.entryCodec().mapCodec(AttributeModifier.TYPE).required(), AttributeModifier::getType,
                 MapCodecMerger.mapCodec(
                         Codec.STRING_IDENTIFIER.mapCodec(AttributeModifier.EntityAttribute.ID).required(), AttributeModifier.EntityAttribute::getId,
                         Codec.DOUBLE.mapCodec(AttributeModifier.EntityAttribute.AMOUNT).required(), AttributeModifier.EntityAttribute::getAmount,
