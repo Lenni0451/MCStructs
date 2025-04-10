@@ -139,19 +139,19 @@ public class StyleCodecs_v1_20_5 {
         }
 
         public static class Item {
-            private static final Codec<Identifier> NON_AIR_ITEM = Codec.STRING_IDENTIFIER
+            private static final Codec<Identifier> NON_AIR_ITEM_CODEC = Codec.STRING_IDENTIFIER
                     .converterVerified(verify(TextVerifier_v1_20_5.class, TextVerifier_v1_20_5::verifyRegistryItem, "Invalid item"))
                     .verified(id -> {
                         if (!id.equals("minecraft", "air")) return null;
                         return Result.error("Item must not be minecraft:air");
                     });
             private static final Codec<ItemHoverEvent.ModernHolder> ITEM_STACK_CODEC = MapCodecMerger.codec(
-                    NON_AIR_ITEM.mapCodec("id").required(), ItemHoverEvent.ModernHolder::getId,
+                    NON_AIR_ITEM_CODEC.mapCodec("id").required(), ItemHoverEvent.ModernHolder::getId,
                     Codec.minInt(1).mapCodec("count").optional().elseGet(() -> 1), ItemHoverEvent.ModernHolder::getCount,
                     ExtraCodecs_v1_20_5.INLINED_COMPOUND_TAG.converterVerified(verify(TextVerifier_v1_20_5.class, TextVerifier_v1_20_5::verifyDataComponents, "Invalid data components")).mapCodec("components").optional().defaulted(null), ItemHoverEvent.ModernHolder::getTag,
                     ItemHoverEvent.ModernHolder::new
             );
-            private static final Codec<ItemHoverEvent.ModernHolder> SIMPLE_ITEM_CODEC = NON_AIR_ITEM.map(ItemHoverEvent.ModernHolder::getId, id -> new ItemHoverEvent.ModernHolder(id, 1, null));
+            private static final Codec<ItemHoverEvent.ModernHolder> SIMPLE_ITEM_CODEC = NON_AIR_ITEM_CODEC.map(ItemHoverEvent.ModernHolder::getId, id -> new ItemHoverEvent.ModernHolder(id, 1, null));
             public static final MapCodec<ItemHoverEvent> MAP_CODEC = Codec.oneOf(ITEM_STACK_CODEC, SIMPLE_ITEM_CODEC).mapCodec(CONTENTS).required().map(ItemHoverEvent::asModern, ItemHoverEvent::new);
             public static final MapCodec<ItemHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> {
                 try {
