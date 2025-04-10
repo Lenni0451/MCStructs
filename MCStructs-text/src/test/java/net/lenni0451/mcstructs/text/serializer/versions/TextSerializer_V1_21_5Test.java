@@ -38,7 +38,8 @@ public class TextSerializer_V1_21_5Test extends TextSerializerTest {
                 new TranslationComponent("%s %s", "abc", (byte) 123),
                 new StringComponent("test").setStyle(new Style().setColor(0xFFF001)),
                 DESERIALIZE_FAIL,
-                DESERIALIZE_FAIL
+                DESERIALIZE_FAIL,
+                new StringComponent()
         );
         this.executeSerializeTests(
                 "\"test\""

@@ -25,6 +25,7 @@ public abstract class TextSerializerTest {
             "{\"text\":\"test\",\"color\":\"#-FFF\"}",
             "{\"text\":\"test\",\"color\":\"#FFFFFFFF\"}",
             "'te\\$st'",
+            "{\"text\":\"\",\"hoverEvent\":{\"action\":\"show_item\",\"contents\":\"minecraft:stone\"}}"
     };
 
     protected static String SERIALIZE_FAIL = "--test fail--";

@@ -1,9 +1,11 @@
 package net.lenni0451.mcstructs.text.serializer.versions;
 
+import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import net.lenni0451.mcstructs.text.components.TranslationComponent;
+import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import org.junit.jupiter.api.Test;
 
 import static net.lenni0451.mcstructs.text.serializer.TextComponentSerializer.V1_16;
@@ -38,7 +40,8 @@ class TextSerializer_v1_16Test extends TextSerializerTest {
                 new TranslationComponent("%s %s", "abc", "123"),
                 new StringComponent("test").setStyle(new Style().setColor(0xFFF001)),
                 new StringComponent("test"),
-                DESERIALIZE_FAIL
+                DESERIALIZE_FAIL,
+                new StringComponent().styled(style -> style.setHoverEvent(new ItemHoverEvent(Identifier.of("minecraft:stone"), 1, null)))
         );
         this.executeSerializeTests(
                 "{\"text\":\"test\"}"

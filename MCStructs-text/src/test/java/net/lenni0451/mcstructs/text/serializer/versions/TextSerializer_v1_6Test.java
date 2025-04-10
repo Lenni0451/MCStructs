@@ -37,7 +37,8 @@ class TextSerializer_v1_6Test extends TextSerializerTest {
                 new TranslationComponent("%s %s"),
                 DESERIALIZE_FAIL,
                 DESERIALIZE_FAIL,
-                DESERIALIZE_FAIL
+                DESERIALIZE_FAIL,
+                new StringComponent()
         );
         this.executeSerializeTests(
                 "{\"text\":\"test\"}"

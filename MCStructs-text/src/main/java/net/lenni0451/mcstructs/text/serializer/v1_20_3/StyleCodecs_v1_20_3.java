@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.JsonConverter_v1_20_3;
 import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
+import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
@@ -138,12 +139,14 @@ public class StyleCodecs_v1_20_3 {
         }
 
         public static class Item {
-            public static final MapCodec<ItemHoverEvent> MAP_CODEC = MapCodecMerger.codec(
-                    Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryItem, "Invalid item")).mapCodec("id").required(), ItemHoverEvent.ModernHolder::getId,
+            public static final Codec<Identifier> ITEM_CODEC = Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryItem, "Invalid item"));
+            public static final Codec<ItemHoverEvent.ModernHolder> FULL_CODEC = MapCodecMerger.codec(
+                    ITEM_CODEC.mapCodec("id").required(), ItemHoverEvent.ModernHolder::getId,
                     Codec.INTEGER.mapCodec("count").optional().defaulted(1), ItemHoverEvent.ModernHolder::getCount,
                     ExtraCodecs_v1_20_3.STRING_COMPOUND.mapCodec("tag").optional().defaulted(null), ItemHoverEvent.ModernHolder::getTag,
                     ItemHoverEvent.ModernHolder::new
-            ).mapCodec(CONTENTS).required().map(ItemHoverEvent::asModern, ItemHoverEvent::new);
+            );
+            public static final MapCodec<ItemHoverEvent> MAP_CODEC = Codec.either(ITEM_CODEC, FULL_CODEC).map(Either::right, either -> either.xmap(id -> new ItemHoverEvent.ModernHolder(id, 1, null), Function.identity())).mapCodec(CONTENTS).required().map(ItemHoverEvent::asModern, ItemHoverEvent::new);
             public static final MapCodec<ItemHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> {
                 try {
                     CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
