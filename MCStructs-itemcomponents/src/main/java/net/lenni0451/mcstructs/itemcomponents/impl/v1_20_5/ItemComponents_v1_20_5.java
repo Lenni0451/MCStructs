@@ -12,6 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
@@ -26,10 +27,10 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
 
     private final TypeSerializers_v1_20_5 typeSerializers = new TypeSerializers_v1_20_5(this, TextComponentCodec.V1_20_5);
 
-    public final ItemComponent<CompoundTag> CUSTOM_DATA = this.register("custom_data", this.typeSerializers.customData());
-    public final ItemComponent<Integer> MAX_STACK_SIZE = this.register("max_stack_size", Codec.rangedInt(1, 99));
-    public final ItemComponent<Integer> MAX_DAMAGE = this.register("max_damage", Codec.minInt(1));
-    public final ItemComponent<Integer> DAMAGE = this.register("damage", Codec.minInt(0));
+    public final ItemComponent<CompoundTag> CUSTOM_DATA = this.registerNonNetworkSerializable("custom_data", this.typeSerializers.customData());
+    public final ItemComponent<Integer> MAX_STACK_SIZE = this.register("max_stack_size", Codec.rangedInt(1, 99), NetType.VAR_INT);
+    public final ItemComponent<Integer> MAX_DAMAGE = this.register("max_damage", Codec.minInt(1), NetType.VAR_INT);
+    public final ItemComponent<Integer> DAMAGE = this.register("damage", Codec.minInt(0), NetType.VAR_INT);
     public final ItemComponent<Unbreakable> UNBREAKABLE = this.register("unbreakable", MapCodecMerger.codec(
             Codec.BOOLEAN.mapCodec(Unbreakable.SHOW_IN_TOOLTIP).optional().defaulted(true), Unbreakable::isShowInTooltip,
             Unbreakable::new
@@ -37,7 +38,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<TextComponent> CUSTOM_NAME = this.register("custom_name", this.typeSerializers.textComponent(Integer.MAX_VALUE));
     public final ItemComponent<TextComponent> ITEM_NAME = this.register("item_name", this.typeSerializers.textComponent(Integer.MAX_VALUE));
     public final ItemComponent<List<TextComponent>> LORE = this.register("lore", this.typeSerializers.textComponent(Integer.MAX_VALUE).listOf(256));
-    public final ItemComponent<Rarity> RARITY = this.register("rarity", Codec.named(Rarity.values()));
+    public final ItemComponent<Rarity> RARITY = this.register("rarity", Codec.named(Rarity.values()), Rarity.STREAM_CODEC);
     public final ItemComponent<Enchantments> ENCHANTMENTS = this.register("enchantments", Codec.oneOf(
             MapCodecMerger.codec(
                     this.typeSerializers.enchantmentLevels().mapCodec(Enchantments.LEVELS).required(), Enchantments::getEnchantments,
@@ -75,13 +76,13 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
                 return Result.success(attributeModifiers);
             })
     ));
-    public final ItemComponent<Integer> CUSTOM_MODEL_DATA = this.register("custom_model_data", Codec.INTEGER);
-    public final ItemComponent<Boolean> HIDE_ADDITIONAL_TOOLTIP = this.register("hide_additional_tooltip", Codec.UNIT);
-    public final ItemComponent<Boolean> HIDE_TOOLTIP = this.register("hide_tooltip", Codec.UNIT);
-    public final ItemComponent<Integer> REPAIR_COST = this.register("repair_cost", Codec.minInt(0));
-    public final ItemComponent<Boolean> CREATIVE_SLOT_LOCK = this.registerNonSerializable("creative_slot_lock"); //No json/nbt serialization
-    public final ItemComponent<Boolean> ENCHANTMENT_GLINT_OVERRIDE = this.register("enchantment_glint_override", Codec.BOOLEAN);
-    public final ItemComponent<Boolean> INTANGIBLE_PROJECTILE = this.register("intangible_projectile", Codec.UNIT);
+    public final ItemComponent<Integer> CUSTOM_MODEL_DATA = this.register("custom_model_data", Codec.INTEGER, NetType.VAR_INT);
+    public final ItemComponent<Boolean> HIDE_ADDITIONAL_TOOLTIP = this.register("hide_additional_tooltip", Codec.UNIT, NetType.UNIT);
+    public final ItemComponent<Boolean> HIDE_TOOLTIP = this.register("hide_tooltip", Codec.UNIT, NetType.UNIT);
+    public final ItemComponent<Integer> REPAIR_COST = this.register("repair_cost", Codec.minInt(0), NetType.VAR_INT);
+    public final ItemComponent<Boolean> CREATIVE_SLOT_LOCK = this.registerNonCodecSerializable("creative_slot_lock", NetType.UNIT); //No json/nbt serialization
+    public final ItemComponent<Boolean> ENCHANTMENT_GLINT_OVERRIDE = this.register("enchantment_glint_override", Codec.BOOLEAN, NetType.BOOLEAN);
+    public final ItemComponent<Boolean> INTANGIBLE_PROJECTILE = this.registerNonNetworkSerializable("intangible_projectile", Codec.UNIT);
     public final ItemComponent<Food> FOOD = this.register("food", MapCodecMerger.codec(
             Codec.minInt(0).mapCodec(Food.NUTRITION).required(), Food::getNutrition,
             Codec.FLOAT.mapCodec(Food.SATURATION).required(), Food::getSaturation,
@@ -94,7 +95,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             ).listOf().mapCodec(Food.EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), Food::getEffects,
             Food::new
     ));
-    public final ItemComponent<Boolean> FIRE_RESISTANT = this.register("fire_resistant", Codec.UNIT);
+    public final ItemComponent<Boolean> FIRE_RESISTANT = this.register("fire_resistant", Codec.UNIT, NetType.UNIT);
     public final ItemComponent<ToolComponent> TOOL = this.register("tool", MapCodecMerger.codec(
             MapCodecMerger.codec(
                     this.typeSerializers.tagEntryList(this.registryVerifier.blockTag, this.registryVerifier.block).mapCodec(ToolComponent.Rule.BLOCKS).required(), ToolComponent.Rule::getBlocks,
@@ -112,16 +113,16 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(DyedColor.SHOW_IN_TOOLTIP).optional().defaulted(true), DyedColor::isShowInTooltip,
             DyedColor::new
     ));
-    public final ItemComponent<Integer> MAP_COLOR = this.register("map_color", Codec.INTEGER);
-    public final ItemComponent<Integer> MAP_ID = this.register("map_id", Codec.INTEGER);
-    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = this.register("map_decorations", Codec.mapOf(Codec.STRING, MapCodecMerger.codec(
+    public final ItemComponent<Integer> MAP_COLOR = this.register("map_color", Codec.INTEGER, NetType.INTEGER);
+    public final ItemComponent<Integer> MAP_ID = this.register("map_id", Codec.INTEGER, NetType.VAR_INT);
+    public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = this.registerNonNetworkSerializable("map_decorations", Codec.mapOf(Codec.STRING, MapCodecMerger.codec(
             Codec.STRING_IDENTIFIER.verified(this.getRegistryVerifier().mapDecorationType).mapCodec(MapDecoration.TYPE).required(), MapDecoration::getType,
             Codec.DOUBLE.mapCodec(MapDecoration.X).required(), MapDecoration::getX,
             Codec.DOUBLE.mapCodec(MapDecoration.Z).required(), MapDecoration::getZ,
             Codec.FLOAT.mapCodec(MapDecoration.ROTATION).required(), MapDecoration::getRotation,
             MapDecoration::new
     )));
-    public final ItemComponent<MapPostProcessing> MAP_POST_PROCESSING = this.registerNonSerializable("map_post_processing");
+    public final ItemComponent<MapPostProcessing> MAP_POST_PROCESSING = this.registerNonCodecSerializable("map_post_processing");
     public final ItemComponent<List<ItemStack>> CHARGED_PROJECTILES = this.register("charged_projectiles", this.typeSerializers.itemStack().listOf());
     public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = this.register("bundle_contents", this.typeSerializers.itemStack().listOf());
     public final ItemComponent<PotionContents> POTION_CONTENTS = this.register("potion_contents", Codec.oneOf(
@@ -156,7 +157,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(ArmorTrim.SHOW_IN_TOOLTIP).optional().defaulted(true), ArmorTrim::isShowInTooltip,
             ArmorTrim::new
     ));
-    public final ItemComponent<Map<Identifier, String>> DEBUG_STICK_STATE = this.register("debug_stick_state", Codec.mapOf(
+    public final ItemComponent<Map<Identifier, String>> DEBUG_STICK_STATE = this.registerNonNetworkSerializable("debug_stick_state", Codec.mapOf(
             Codec.STRING_IDENTIFIER.verified(this.registryVerifier.block),
             block -> Codec.STRING.verified(value -> {
                 if (this.registryVerifier.verifyBlockState(block, value)) return Result.success(null);
@@ -168,7 +169,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         return Result.success(null);
     }));
     public final ItemComponent<CompoundTag> BUCKET_ENTITY_DATA = this.register("bucket_entity_data", this.typeSerializers.customData());
-    public final ItemComponent<CompoundTag> BLOCK_ENTITY_DATA = this.register("block_entity_data", this.typeSerializers.customData().verified(tag -> {
+    public final ItemComponent<CompoundTag> BLOCK_ENTITY_DATA = this.registerNonNetworkSerializable("block_entity_data", this.typeSerializers.customData().verified(tag -> {
         if (!tag.contains("id", NbtType.STRING)) return Result.error("Block entity data tag does not contain an id");
         return Result.success(null);
     }));
@@ -182,7 +183,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             )
     ));
     public final ItemComponent<Integer> OMINOUS_BOTTLE_AMPLIFIER = this.register("ominous_bottle_amplifier", Codec.rangedInt(1, 4));
-    public final ItemComponent<List<Identifier>> RECIPES = this.register("recipes", Codec.STRING_IDENTIFIER.listOf());
+    public final ItemComponent<List<Identifier>> RECIPES = this.registerNonNetworkSerializable("recipes", Codec.STRING_IDENTIFIER.listOf());
     public final ItemComponent<LodestoneTracker> LODESTONE_TRACKER = this.register("lodestone_tracker", MapCodecMerger.codec(
             MapCodecMerger.codec(
                     Codec.STRING_IDENTIFIER.mapCodec(LodestoneTracker.GlobalPos.DIMENSION).required(), LodestoneTracker.GlobalPos::getDimension,
@@ -238,7 +239,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             ),
             this.typeSerializers.playerName().map(GameProfile::getName, name -> new GameProfile(name, null, new HashMap<>()))
     ));
-    public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", Codec.STRING_IDENTIFIER);
+    public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", Codec.STRING_IDENTIFIER, NetType.IDENTIFIER);
     public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", MapCodecMerger.codec(
             this.typeSerializers.registryEntry(
                     this.getRegistryVerifier().bannerPattern,
@@ -251,22 +252,22 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             this.typeSerializers.dyeColor().mapCodec(BannerPattern.COLOR).required(), BannerPattern::getColor,
             BannerPattern::new
     ).listOf());
-    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.dyeColor());
+    public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.dyeColor(), DyeColor.STREAM_CODEC);
     public final ItemComponent<List<Identifier>> POT_DECORATIONS = this.register("pot_decorations", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.item).listOf(4));
     public final ItemComponent<List<ContainerSlot>> CONTAINER = this.register("container", MapCodecMerger.codec(
             Codec.rangedInt(0, 255).mapCodec(ContainerSlot.SLOT).required(), ContainerSlot::getSlot,
             this.typeSerializers.itemStack().mapCodec(ContainerSlot.ITEM).required(), ContainerSlot::getItem,
             ContainerSlot::new
     ).listOf(256));
-    public final ItemComponent<Map<String, String>> BLOCK_STATE = this.register("block_state", Codec.mapOf(Codec.STRING, Codec.STRING));
+    public final ItemComponent<Map<String, String>> BLOCK_STATE = this.register("block_state", Codec.mapOf(Codec.STRING, Codec.STRING), NetType.map(NetType.STRING, NetType.STRING));
     public final ItemComponent<List<BeeData>> BEES = this.register("bees", MapCodecMerger.codec(
             this.typeSerializers.customData().mapCodec(BeeData.ENTITY_DATA).optional().defaulted(CompoundTag::isEmpty, CompoundTag::new), BeeData::getEntityData,
             Codec.INTEGER.mapCodec(BeeData.TICKS_IN_HIVE).required(), BeeData::getTicksInHive,
             Codec.INTEGER.mapCodec(BeeData.MIN_TICKS_IN_HIVE).required(), BeeData::getMinTicksInHive,
             BeeData::new
     ).listOf());
-    public final ItemComponent<String> LOCK = this.register("lock", Codec.STRING);
-    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = this.register("container_loot", MapCodecMerger.codec(
+    public final ItemComponent<String> LOCK = this.register("lock", Codec.STRING, NetType.STRING);
+    public final ItemComponent<ContainerLoot> CONTAINER_LOOT = this.registerNonNetworkSerializable("container_loot", MapCodecMerger.codec(
             Codec.STRING_IDENTIFIER.mapCodec(ContainerLoot.LOOT_TABLE).required(), ContainerLoot::getLootTable,
             Codec.LONG.mapCodec(ContainerLoot.SEED).optional().defaulted(0L), ContainerLoot::getSeed,
             ContainerLoot::new

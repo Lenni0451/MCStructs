@@ -1,9 +1,11 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2;
 
+import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.types.IdentifiedType;
 import net.lenni0451.mcstructs.converter.types.NamedType;
@@ -12,11 +14,14 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.networkcodec.ByIdMap;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntFunction;
 
 public class Types_v1_21_2 {
 
@@ -86,6 +91,9 @@ public class Types_v1_21_2 {
             SPYGLASS("spyglass"),
             TOOT_HORN("toot_horn"),
             BRUSH("brush");
+
+            private static final IntFunction<ItemUseAnimation> BY_ID = ByIdMap.continuous(ItemUseAnimation::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+            public static final NetType<ItemUseAnimation> STREAM_CODEC = NetType.idMapper(BY_ID, ItemUseAnimation::ordinal);
 
             private final String name;
         }
@@ -175,6 +183,9 @@ public class Types_v1_21_2 {
         CHEST("chest"),
         HEAD("head"),
         BODY("body");
+
+        private static final IntFunction<EquipmentSlot> BY_ID = ByIdMap.continuous(EquipmentSlot::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final NetType<EquipmentSlot> STREAM_CODEC = NetType.idMapper(BY_ID, EquipmentSlot::ordinal);
 
         private final String name;
     }
@@ -350,6 +361,9 @@ public class Types_v1_21_2 {
             TRIM(Identifier.of("trim")),
             JUKEBOX_PLAYABLE(Identifier.of("jukebox_playable")),
             ;
+
+            private static final IntFunction<Type> BY_ID = ByIdMap.continuous(Type::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+            public static final NetType<Type> STREAM_CODEC = NetType.idMapper(BY_ID, Type::ordinal);
 
             private final Identifier identifier;
         }

@@ -10,6 +10,8 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.TypeSerializers_v1_21_4;
+import net.lenni0451.mcstructs.networkcodec.NetType;
+import net.lenni0451.mcstructs.networkcodec.RecordNetType;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
@@ -32,7 +34,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             Codec.minInt(0).mapCodec(Weapon.ITEM_DAMAGE_PER_ATTACK).optional().defaulted(1), Weapon::getItemDamagePerAttack,
             Codec.minFloat(0).mapCodec(Weapon.DISABLE_BLOCKING_FOR_SECONDS).optional().defaulted(0F), Weapon::getDisableBlockingForSeconds,
             Weapon::new
-    ));
+    ), RecordNetType.of(NetType.VAR_INT, Weapon::getItemDamagePerAttack, NetType.FLOAT, Weapon::getDisableBlockingForSeconds, Weapon::new));
     public final ItemComponent<Types_v1_20_5.WrittenBook> WRITTEN_BOOK_CONTENT = this.register("written_book_content", MapCodecMerger.codec(
             this.typeSerializers.rawFilteredPair(Codec.sizedString(0, 32)).mapCodec(Types_v1_20_5.WrittenBook.TITLE).required(), Types_v1_20_5.WrittenBook::getTitle,
             Codec.STRING.mapCodec(Types_v1_20_5.WrittenBook.AUTHOR).required(), Types_v1_20_5.WrittenBook::getAuthor,
@@ -41,7 +43,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             Codec.BOOLEAN.mapCodec(Types_v1_20_5.WrittenBook.RESOLVED).optional().defaulted(false), Types_v1_20_5.WrittenBook::isResolved,
             Types_v1_20_5.WrittenBook::new
     ));
-    public final ItemComponent<Float> POTION_DURATION_SCALE = this.register("potion_duration_scale", Codec.minFloat(0));
+    public final ItemComponent<Float> POTION_DURATION_SCALE = this.register("potion_duration_scale", Codec.minFloat(0), NetType.FLOAT);
     public final ItemComponent<ToolComponent> TOOL = this.register("tool", MapCodecMerger.codec(
             MapCodecMerger.codec(
                     this.typeSerializers.tagEntryList(this.registryVerifier.blockTag, this.registryVerifier.block).mapCodec(Types_v1_20_5.ToolComponent.Rule.BLOCKS).required(), Types_v1_20_5.ToolComponent.Rule::getBlocks,
@@ -55,22 +57,22 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             ToolComponent::new
     ));
     public final ItemComponent<VillagerVariant> VILLAGER_VARIANT = this.register("villager/variant", Codec.identified(VillagerVariant.values()));
-    public final ItemComponent<Identifier> WOLF_VARIANT = this.register("wolf/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.wolfVariant));
-    public final ItemComponent<Identifier> WOLF_SOUND_VARIANT = this.register("wolf/sound_variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.wolfSoundVariant));
-    public final ItemComponent<Types_v1_20_5.DyeColor> WOLF_COLLAR = this.register("wolf/collar", Codec.named(Types_v1_20_5.DyeColor.values()));
-    public final ItemComponent<FoxVariant> FOX_VARIANT = this.register("fox/variant", Codec.named(FoxVariant.values()));
-    public final ItemComponent<SalmonSize> SALMON_SIZE = this.register("salmon/size", Codec.named(SalmonSize.values()));
-    public final ItemComponent<ParrotVariant> PARROT_VARIANT = this.register("parrot/variant", Codec.named(ParrotVariant.values()));
-    public final ItemComponent<TropicalFishPattern> TROPICAL_FISH_PATTERN = this.register("tropical_fish/pattern", Codec.named(TropicalFishPattern.values()));
-    public final ItemComponent<Types_v1_20_5.DyeColor> TROPICAL_FISH_BASE_COLOR = this.register("tropical_fish/base_color", Codec.named(Types_v1_20_5.DyeColor.values()));
-    public final ItemComponent<Types_v1_20_5.DyeColor> TROPICAL_FISH_PATTERN_COLOR = this.register("tropical_fish/pattern_color", Codec.named(Types_v1_20_5.DyeColor.values()));
-    public final ItemComponent<MooshroomVariant> MOOSHROOM_VARIANT = this.register("mooshroom/variant", Codec.named(MooshroomVariant.values()));
-    public final ItemComponent<RabbitVariant> RABBIT_VARIANT = this.register("rabbit/variant", Codec.named(RabbitVariant.values()));
-    public final ItemComponent<Identifier> PIG_VARIANT = this.register("pig/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.pigVariant));
-    public final ItemComponent<Identifier> COW_VARIANT = this.register("cow/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.cowVariant));
-    public final ItemComponent<Identifier> CHICKEN_VARIANT = this.register("chicken/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.chickenVariant));
-    public final ItemComponent<Identifier> FROG_VARIANT = this.register("frog/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.frogVariant));
-    public final ItemComponent<HorseVariant> HORSE_VARIANT = this.register("horse/variant", Codec.named(HorseVariant.values()));
+    public final ItemComponent<Identifier> WOLF_VARIANT = this.register("wolf/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.wolfVariant), NetType.IDENTIFIER);
+    public final ItemComponent<Identifier> WOLF_SOUND_VARIANT = this.register("wolf/sound_variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.wolfSoundVariant), NetType.IDENTIFIER);
+    public final ItemComponent<Types_v1_20_5.DyeColor> WOLF_COLLAR = this.register("wolf/collar", Codec.named(Types_v1_20_5.DyeColor.values()), Types_v1_20_5.DyeColor.STREAM_CODEC);
+    public final ItemComponent<FoxVariant> FOX_VARIANT = this.register("fox/variant", Codec.named(FoxVariant.values()), FoxVariant.STREAM_CODEC);
+    public final ItemComponent<SalmonSize> SALMON_SIZE = this.register("salmon/size", Codec.named(SalmonSize.values()), SalmonSize.STREAM_CODEC);
+    public final ItemComponent<ParrotVariant> PARROT_VARIANT = this.register("parrot/variant", Codec.named(ParrotVariant.values()), ParrotVariant.STREAM_CODEC);
+    public final ItemComponent<TropicalFishPattern> TROPICAL_FISH_PATTERN = this.register("tropical_fish/pattern", Codec.named(TropicalFishPattern.values()), TropicalFishPattern.STREAM_CODEC);
+    public final ItemComponent<Types_v1_20_5.DyeColor> TROPICAL_FISH_BASE_COLOR = this.register("tropical_fish/base_color", Codec.named(Types_v1_20_5.DyeColor.values()), Types_v1_20_5.DyeColor.STREAM_CODEC);
+    public final ItemComponent<Types_v1_20_5.DyeColor> TROPICAL_FISH_PATTERN_COLOR = this.register("tropical_fish/pattern_color", Codec.named(Types_v1_20_5.DyeColor.values()), Types_v1_20_5.DyeColor.STREAM_CODEC);
+    public final ItemComponent<MooshroomVariant> MOOSHROOM_VARIANT = this.register("mooshroom/variant", Codec.named(MooshroomVariant.values()), MooshroomVariant.STREAM_CODEC);
+    public final ItemComponent<RabbitVariant> RABBIT_VARIANT = this.register("rabbit/variant", Codec.named(RabbitVariant.values()), RabbitVariant.STREAM_CODEC);
+    public final ItemComponent<Identifier> PIG_VARIANT = this.register("pig/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.pigVariant), NetType.IDENTIFIER);
+    public final ItemComponent<Identifier> COW_VARIANT = this.register("cow/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.cowVariant), NetType.IDENTIFIER);
+    public final ItemComponent<Identifier> CHICKEN_VARIANT = this.register("chicken/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.chickenVariant), NetType.IDENTIFIER);
+    public final ItemComponent<Identifier> FROG_VARIANT = this.register("frog/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.frogVariant), NetType.IDENTIFIER);
+    public final ItemComponent<HorseVariant> HORSE_VARIANT = this.register("horse/variant", Codec.named(HorseVariant.values()), HorseVariant.STREAM_CODEC);
     public final ItemComponent<Either<Identifier, PaintingVariant>> PAINTING_VARIANT = this.register("painting/variant", this.typeSerializers.registryEntry(
             this.registryVerifier.paintingVariant,
             MapCodecMerger.codec(
@@ -82,12 +84,12 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
                     PaintingVariant::new
             )
     ));
-    public final ItemComponent<LlamaVariant> LLAMA_VARIANT = this.register("llama/variant", Codec.named(LlamaVariant.values()));
-    public final ItemComponent<AxolotlVariant> AXOLOTL_VARIANT = this.register("axolotl/variant", Codec.named(AxolotlVariant.values()));
-    public final ItemComponent<Identifier> CAT_VARIANT = this.register("cat/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.catVariant));
-    public final ItemComponent<Types_v1_20_5.DyeColor> CAT_COLLAR = this.register("cat/collar", Codec.named(Types_v1_20_5.DyeColor.values()));
-    public final ItemComponent<Types_v1_20_5.DyeColor> SHEEP_COLOR = this.register("sheep/color", Codec.named(Types_v1_20_5.DyeColor.values()));
-    public final ItemComponent<Types_v1_20_5.DyeColor> SHULKER_COLOR = this.register("shulker/color", Codec.named(Types_v1_20_5.DyeColor.values()));
+    public final ItemComponent<LlamaVariant> LLAMA_VARIANT = this.register("llama/variant", Codec.named(LlamaVariant.values()), LlamaVariant.STREAM_CODEC);
+    public final ItemComponent<AxolotlVariant> AXOLOTL_VARIANT = this.register("axolotl/variant", Codec.named(AxolotlVariant.values()), AxolotlVariant.STREAM_CODEC);
+    public final ItemComponent<Identifier> CAT_VARIANT = this.register("cat/variant", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.catVariant), NetType.IDENTIFIER);
+    public final ItemComponent<Types_v1_20_5.DyeColor> CAT_COLLAR = this.register("cat/collar", Codec.named(Types_v1_20_5.DyeColor.values()), Types_v1_20_5.DyeColor.STREAM_CODEC);
+    public final ItemComponent<Types_v1_20_5.DyeColor> SHEEP_COLOR = this.register("sheep/color", Codec.named(Types_v1_20_5.DyeColor.values()), Types_v1_20_5.DyeColor.STREAM_CODEC);
+    public final ItemComponent<Types_v1_20_5.DyeColor> SHULKER_COLOR = this.register("shulker/color", Codec.named(Types_v1_20_5.DyeColor.values()), Types_v1_20_5.DyeColor.STREAM_CODEC);
     public final ItemComponent<BlocksAttacks> BLOCKS_ATTACKS = this.register("blocks_attacks", MapCodecMerger.codec(
             Codec.minFloat(0).mapCodec(BlocksAttacks.BLOCK_DELAY_SECONDS).optional().defaulted(0F), BlocksAttacks::getBlockDelaySeconds,
             Codec.minFloat(0).mapCodec(BlocksAttacks.DISABLE_COOLDOWN_SCALE).optional().defaulted(0F), BlocksAttacks::getDisableCooldownScale,
@@ -110,18 +112,18 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             BlocksAttacks::new
     ));
     public final ItemComponent<Either<Identifier, Types_v1_20_5.SoundEvent>> BREAK_SOUND = this.register("break_sound", this.typeSerializers.soundEvent());
-    public final ItemComponent<Identifier> PROVIDES_BANNER_PATTERNS = this.register("provides_banner_patterns", this.typeSerializers.tag(this.registryVerifier.bannerPatternTag));
-    public final ItemComponent<Identifier> PROVIDES_TRIM_MATERIAL = this.register("provides_trim_material", this.typeSerializers.tag(this.registryVerifier.armorTrimMaterialTag));
+    public final ItemComponent<Identifier> PROVIDES_BANNER_PATTERNS = this.register("provides_banner_patterns", this.typeSerializers.tag(this.registryVerifier.bannerPatternTag), NetType.IDENTIFIER);
+    public final ItemComponent<Identifier> PROVIDES_TRIM_MATERIAL = this.register("provides_trim_material", this.typeSerializers.tag(this.registryVerifier.armorTrimMaterialTag), NetType.IDENTIFIER);
     public final ItemComponent<TooltipDisplay> TOOLTIP_DISPLAY = this.register("tooltip_display", MapCodecMerger.codec(
             Codec.BOOLEAN.mapCodec(TooltipDisplay.HIDE_TOOLTIP).optional().defaulted(false), TooltipDisplay::isHideTooltip,
             this.getComponentCodec().listOf().mapCodec(TooltipDisplay.HIDDEN_COMPONENTS).optional().defaulted(List::isEmpty, ArrayList::new), TooltipDisplay::getHiddenComponents,
             TooltipDisplay::new
     ));
     public final ItemComponent<AttributeModifiers> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", this.typeSerializers.attributeModifier_v1_21().listOf().map(AttributeModifiers::getModifiers, AttributeModifiers::new));
-    public final ItemComponent<Integer> DYED_COLOR = this.register("dyed_color", this.typeSerializers.rgbColor());
+    public final ItemComponent<Integer> DYED_COLOR = this.register("dyed_color", this.typeSerializers.rgbColor(), NetType.INTEGER);
     public final ItemComponent<List<Types_v1_20_5.BlockPredicate>> CAN_PLACE_ON = this.register("can_place_on", this.typeSerializers.blockPredicate().compactListOf());
     public final ItemComponent<List<Types_v1_20_5.BlockPredicate>> CAN_BREAK = this.copy("can_break", this.CAN_PLACE_ON);
-    public final ItemComponent<Map<Identifier, Integer>> ENCHANTMENTS = this.register("enchantments", this.typeSerializers.enchantmentLevels());
+    public final ItemComponent<Map<Identifier, Integer>> ENCHANTMENTS = this.register("enchantments", this.typeSerializers.enchantmentLevels(), NetType.map(NetType.IDENTIFIER, NetType.VAR_INT));
     public final ItemComponent<Map<Identifier, Integer>> STORED_ENCHANTMENTS = this.copy("stored_enchantments", this.ENCHANTMENTS);
     public final ItemComponent<Either<Identifier, Types_v1_21.JukeboxPlayable.JukeboxSong>> JUKEBOX_PLAYABLE = this.register("jukebox_playable", this.typeSerializers.registryEntry(this.registryVerifier.jukeboxSong, MapCodecMerger.codec(
             this.typeSerializers.soundEvent().mapCodec(Types_v1_21.JukeboxPlayable.JukeboxSong.SOUND_EVENT).required(), Types_v1_21.JukeboxPlayable.JukeboxSong::getSoundEvent,
@@ -135,7 +137,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             this.typeSerializers.armorTrimPattern().mapCodec(ArmorTrim.PATTERN).required(), ArmorTrim::getPattern,
             ArmorTrim::new
     ));
-    public final ItemComponent<Boolean> UNBREAKABLE = this.register("unbreakable", Codec.UNIT);
+    public final ItemComponent<Boolean> UNBREAKABLE = this.register("unbreakable", Codec.UNIT, NetType.UNIT);
     private ItemComponent<?> HIDE_ADDITIONAL_TOOLTIP;
     private ItemComponent<?> HIDE_TOOLTIP;
 

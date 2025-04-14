@@ -4,6 +4,7 @@ import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
+import net.lenni0451.mcstructs.networkcodec.NetType;
 
 import java.util.Objects;
 
@@ -11,10 +12,12 @@ public class ItemComponent<T> {
 
     private final Identifier name;
     final Codec<T> codec;
+    final NetType<T> netType;
 
-    public ItemComponent(final String name, final Codec<T> codec) {
+    public ItemComponent(final String name, final Codec<T> codec, final NetType<T> netType) {
         this.name = Identifier.of(name);
         this.codec = codec;
+        this.netType = netType;
     }
 
     public Identifier getName() {
@@ -23,6 +26,10 @@ public class ItemComponent<T> {
 
     public Codec<T> getCodec() {
         return this.codec;
+    }
+
+    public NetType<T> getNetType() {
+        return this.netType;
     }
 
     public <D> D serialize(final DataConverter<D> converter, final T value) {
