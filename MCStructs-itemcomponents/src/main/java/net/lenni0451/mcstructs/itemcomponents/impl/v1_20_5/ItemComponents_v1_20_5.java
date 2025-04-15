@@ -3,13 +3,16 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5;
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
-import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
-import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
+import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
+import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
+import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -97,7 +100,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Boolean> FIRE_RESISTANT = this.register("fire_resistant", Codec.UNIT);
     public final ItemComponent<ToolComponent> TOOL = this.register("tool", MapCodecMerger.codec(
             MapCodecMerger.codec(
-                    this.typeSerializers.tagEntryList(this.registryVerifier.blockTag, this.registryVerifier.block).mapCodec(ToolComponent.Rule.BLOCKS).required(), ToolComponent.Rule::getBlocks,
+                    TagEntryList.codec(this.registries.block, false).mapCodec(ToolComponent.Rule.BLOCKS).required(), ToolComponent.Rule::getBlocks,
                     Codec.minExclusiveFloat(0).mapCodec(ToolComponent.Rule.SPEED).optional().defaulted(null), ToolComponent.Rule::getSpeed,
                     Codec.BOOLEAN.mapCodec(ToolComponent.Rule.CORRECT_FOR_DROPS).optional().defaulted(null), ToolComponent.Rule::getCorrectForDrops,
                     ToolComponent.Rule::new
@@ -115,7 +118,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<Integer> MAP_COLOR = this.register("map_color", Codec.INTEGER);
     public final ItemComponent<Integer> MAP_ID = this.register("map_id", Codec.INTEGER);
     public final ItemComponent<Map<String, MapDecoration>> MAP_DECORATIONS = this.register("map_decorations", Codec.mapOf(Codec.STRING, MapCodecMerger.codec(
-            Codec.STRING_IDENTIFIER.verified(this.getRegistryVerifier().mapDecorationType).mapCodec(MapDecoration.TYPE).required(), MapDecoration::getType,
+            this.registries.mapDecorationType.entryCodec().mapCodec(MapDecoration.TYPE).required(), MapDecoration::getType,
             Codec.DOUBLE.mapCodec(MapDecoration.X).required(), MapDecoration::getX,
             Codec.DOUBLE.mapCodec(MapDecoration.Z).required(), MapDecoration::getZ,
             Codec.FLOAT.mapCodec(MapDecoration.ROTATION).required(), MapDecoration::getRotation,
@@ -126,15 +129,15 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<List<ItemStack>> BUNDLE_CONTENTS = this.register("bundle_contents", this.typeSerializers.itemStack().listOf());
     public final ItemComponent<PotionContents> POTION_CONTENTS = this.register("potion_contents", Codec.oneOf(
             MapCodecMerger.codec(
-                    Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).mapCodec(PotionContents.POTION).optional().defaulted(null), PotionContents::getPotion,
+                    this.registries.potion.entryCodec().mapCodec(PotionContents.POTION).optional().defaulted(null), PotionContents::getPotion,
                     Codec.INTEGER.mapCodec(PotionContents.CUSTOM_COLOR).optional().defaulted(null), PotionContents::getCustomColor,
                     this.typeSerializers.statusEffect().listOf().mapCodec(PotionContents.CUSTOM_EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), PotionContents::getCustomEffects,
                     PotionContents::new
             ),
-            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.potion).map(PotionContents::getPotion, id -> new PotionContents(id, null, new ArrayList<>()))
+            this.registries.potion.entryCodec().map(PotionContents::getPotion, id -> new PotionContents(id, null, new ArrayList<>()))
     ));
     public final ItemComponent<List<SuspiciousStewEffect>> SUSPICIOUS_STEW_EFFECTS = this.register("suspicious_stew_effects", MapCodecMerger.codec(
-            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.statusEffect).mapCodec(SuspiciousStewEffect.ID).required(), SuspiciousStewEffect::getId,
+            this.registries.statusEffect.entryCodec().mapCodec(SuspiciousStewEffect.ID).required(), SuspiciousStewEffect::getId,
             Codec.INTEGER.mapCodec(SuspiciousStewEffect.DURATION).optional().lenient().defaulted(0), SuspiciousStewEffect::getDuration,
             SuspiciousStewEffect::new
     ).listOf());
@@ -156,10 +159,10 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             Codec.BOOLEAN.mapCodec(ArmorTrim.SHOW_IN_TOOLTIP).optional().defaulted(true), ArmorTrim::isShowInTooltip,
             ArmorTrim::new
     ));
-    public final ItemComponent<Map<Identifier, String>> DEBUG_STICK_STATE = this.register("debug_stick_state", Codec.mapOf(
-            Codec.STRING_IDENTIFIER.verified(this.registryVerifier.block),
+    public final ItemComponent<Map<RegistryEntry, String>> DEBUG_STICK_STATE = this.register("debug_stick_state", Codec.mapOf(
+            this.registries.block.entryCodec(),
             block -> Codec.STRING.verified(value -> {
-                if (this.registryVerifier.verifyBlockState(block, value)) return Result.success(null);
+                if (this.verifiers.verifyBlockState(block, value)) return Result.success(null);
                 return Result.error("Invalid " + block + " block state value: " + value);
             })
     ));
@@ -172,8 +175,8 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         if (!tag.contains("id", NbtType.STRING)) return Result.error("Block entity data tag does not contain an id");
         return Result.success(null);
     }));
-    public final ItemComponent<Either<Identifier, Instrument>> INSTRUMENT = this.register("instrument", this.typeSerializers.registryEntry(
-            this.registryVerifier.instrument,
+    public final ItemComponent<EitherEntry<Instrument>> INSTRUMENT = this.register("instrument", EitherEntry.codec(
+            this.registries.instrument,
             MapCodecMerger.codec(
                     this.typeSerializers.soundEvent().mapCodec(Instrument.SOUND_EVENT).required(), Instrument::getSoundEvent,
                     Codec.minInt(1).mapCodec(Instrument.USE_DURATION).required(), Instrument::getUseDuration,
@@ -240,8 +243,8 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     ));
     public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", Codec.STRING_IDENTIFIER);
     public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", MapCodecMerger.codec(
-            this.typeSerializers.registryEntry(
-                    this.getRegistryVerifier().bannerPattern,
+            EitherEntry.codec(
+                    this.registries.bannerPattern,
                     MapCodecMerger.codec(
                             Codec.STRING_IDENTIFIER.mapCodec(BannerPattern.Pattern.ASSET_ID).required(), BannerPattern.Pattern::getAssetId,
                             Codec.STRING.mapCodec(BannerPattern.Pattern.TRANSLATION_KEY).required(), BannerPattern.Pattern::getTranslationKey,
@@ -252,7 +255,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
             BannerPattern::new
     ).listOf());
     public final ItemComponent<DyeColor> BASE_COLOR = this.register("base_color", this.typeSerializers.dyeColor());
-    public final ItemComponent<List<Identifier>> POT_DECORATIONS = this.register("pot_decorations", Codec.STRING_IDENTIFIER.verified(this.registryVerifier.item).listOf(4));
+    public final ItemComponent<List<RegistryEntry>> POT_DECORATIONS = this.register("pot_decorations", this.registries.item.entryCodec().listOf(4));
     public final ItemComponent<List<ContainerSlot>> CONTAINER = this.register("container", MapCodecMerger.codec(
             Codec.rangedInt(0, 255).mapCodec(ContainerSlot.SLOT).required(), ContainerSlot::getSlot,
             this.typeSerializers.itemStack().mapCodec(ContainerSlot.ITEM).required(), ContainerSlot::getItem,
@@ -276,8 +279,8 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public ItemComponents_v1_20_5() {
     }
 
-    public ItemComponents_v1_20_5(final RegistryVerifier registryVerifier) {
-        super(registryVerifier);
+    public ItemComponents_v1_20_5(final Registries registryVerifier, final Verifiers verifiers) {
+        super(registryVerifier, verifiers);
     }
 
     {

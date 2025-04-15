@@ -6,7 +6,8 @@ import net.lenni0451.mcstructs.converter.codec.DataDeserializer;
 import net.lenni0451.mcstructs.converter.codec.DataSerializer;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
+import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
+import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.ItemComponents_v1_21_2;
@@ -48,7 +49,8 @@ public abstract class ItemComponentRegistry {
 
 
     private final ItemComponentList components;
-    protected final RegistryVerifier registryVerifier;
+    protected final Registries registries;
+    protected final Verifiers verifiers;
     private final Codec<ItemComponent<?>> componentCodec = Codec.STRING_IDENTIFIER.flatMap(itemComponent -> Result.success(itemComponent.getName()), identifier -> {
         ItemComponent<?> component = ItemComponentRegistry.this.getComponent(identifier);
         if (component == null) return Result.error("Unknown item component: " + identifier);
@@ -68,12 +70,15 @@ public abstract class ItemComponentRegistry {
 
     public ItemComponentRegistry() {
         this.components = new ItemComponentList();
-        this.registryVerifier = new RegistryVerifier();
+        this.registries = new Registries();
+        this.verifiers = new Verifiers() {
+        };
     }
 
-    protected ItemComponentRegistry(final RegistryVerifier registryVerifier) {
+    public ItemComponentRegistry(final Registries registries, final Verifiers verifiers) {
         this.components = new ItemComponentList();
-        this.registryVerifier = registryVerifier;
+        this.registries = registries;
+        this.verifiers = verifiers;
     }
 
     /**
@@ -96,10 +101,17 @@ public abstract class ItemComponentRegistry {
     }
 
     /**
-     * @return The verifier for registry entries
+     * @return The registries
      */
-    public RegistryVerifier getRegistryVerifier() {
-        return this.registryVerifier;
+    public Registries getRegistries() {
+        return this.registries;
+    }
+
+    /**
+     * @return The verifiers
+     */
+    public Verifiers getVerifiers() {
+        return this.verifiers;
     }
 
     /**

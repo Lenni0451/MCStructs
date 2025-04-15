@@ -5,13 +5,15 @@ import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
-import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
+import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
+import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeModifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeModifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.Food;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.JukeboxPlayable;
+import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class ItemComponents_v1_21 extends ItemComponents_v1_20_5 {
             Food::new
     ));
     public final ItemComponent<JukeboxPlayable> JUKEBOX_PLAYABLE = this.register("jukebox_playable", MapCodecMerger.codec(
-            this.typeSerializers.registryEntry(this.registryVerifier.jukeboxSong, MapCodecMerger.codec(
+            EitherEntry.codec(this.registries.jukeboxSong, MapCodecMerger.codec(
                     this.typeSerializers.soundEvent().mapCodec(JukeboxPlayable.JukeboxSong.SOUND_EVENT).required(), JukeboxPlayable.JukeboxSong::getSoundEvent,
                     this.typeSerializers.rawTextComponent().mapCodec(JukeboxPlayable.JukeboxSong.DESCRIPTION).required(), JukeboxPlayable.JukeboxSong::getDescription,
                     Codec.minExclusiveFloat(0).mapCodec(JukeboxPlayable.JukeboxSong.LENGTH_IN_SECONDS).required(), JukeboxPlayable.JukeboxSong::getLengthInSeconds,
@@ -65,8 +67,8 @@ public class ItemComponents_v1_21 extends ItemComponents_v1_20_5 {
     public ItemComponents_v1_21() {
     }
 
-    public ItemComponents_v1_21(final RegistryVerifier registryVerifier) {
-        super(registryVerifier);
+    public ItemComponents_v1_21(final Registries registries, final Verifiers verifiers) {
+        super(registries, verifiers);
     }
 
     {

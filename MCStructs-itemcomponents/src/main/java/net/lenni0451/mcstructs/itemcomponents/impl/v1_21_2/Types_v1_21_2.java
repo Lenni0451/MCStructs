@@ -4,13 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.types.IdentifiedType;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
+import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryTag;
+import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 
 import javax.annotation.Nullable;
@@ -30,7 +33,7 @@ public class Types_v1_21_2 {
         public static final String CUSTOM_NAME = "custom_name";
 
         @Nullable
-        private Identifier potion;
+        private RegistryEntry potion;
         @Nullable
         private Integer customColor;
         private List<Types_v1_20_5.StatusEffect> customEffects;
@@ -68,7 +71,7 @@ public class Types_v1_21_2 {
 
         private float consumeSeconds = 1.6F;
         private ItemUseAnimation animation = ItemUseAnimation.EAT;
-        private Either<Identifier, Types_v1_20_5.SoundEvent> sound = Either.left(Identifier.of("entity.generic.eat"));
+        private EitherEntry<Types_v1_20_5.SoundEvent> sound; //Default: entity.generic.eat
         private boolean hasConsumeParticles = true;
         private List<ConsumeEffect> onConsumeEffects = new ArrayList<>();
 
@@ -117,7 +120,7 @@ public class Types_v1_21_2 {
     public static class DamageResistant {
         public static final String TYPES = "types";
 
-        private Identifier types;
+        private RegistryTag types;
     }
 
     @Data
@@ -134,10 +137,10 @@ public class Types_v1_21_2 {
         public static final String DAMAGE_ON_HURT = "damage_on_hurt";
 
         private EquipmentSlot slot;
-        private Either<Identifier, Types_v1_20_5.SoundEvent> equipSound = Either.left(Identifier.of("item.armor.equip_generic"));
+        private EitherEntry<Types_v1_20_5.SoundEvent> equipSound; //Default: item.armor.equip_generic
         private Identifier model = null;
         private Identifier cameraOverlay = null;
-        private Types_v1_20_5.TagEntryList allowedEntities = null;
+        private TagEntryList allowedEntities = null;
         private boolean dispensable = true;
         private boolean swappable = true;
         private boolean damageOnHurt = true;
@@ -153,7 +156,7 @@ public class Types_v1_21_2 {
     public static class Repairable {
         public static final String ITEMS = "items";
 
-        private Types_v1_20_5.TagEntryList items;
+        private TagEntryList items;
     }
 
     @Data
@@ -216,7 +219,7 @@ public class Types_v1_21_2 {
         public static final String ENCHANTMENTS = "enchantments";
         public static final String LEVELS = "levels";
 
-        private Types_v1_20_5.TagEntryList enchantments;
+        private TagEntryList enchantments;
         private MinMaxInt levels;
     }
 
@@ -254,7 +257,7 @@ public class Types_v1_21_2 {
         public static final String COMPONENTS = "components";
         public static final String PREDICATES = "predicates";
 
-        private Types_v1_20_5.TagEntryList items;
+        private TagEntryList items;
         private MinMaxInt count;
         private Map<ItemComponent<?>, ?> components;
         private Map<ItemSubPredicate.Type, ItemSubPredicate> predicates;
@@ -299,7 +302,7 @@ public class Types_v1_21_2 {
             public static final String EFFECTS = "effects";
 
             private final Type type = Type.REMOVE_EFFECTS;
-            private Types_v1_20_5.TagEntryList effects;
+            private TagEntryList effects;
         }
 
         @Data
@@ -325,7 +328,7 @@ public class Types_v1_21_2 {
             public static final String SOUND = "sound";
 
             private final Type type = Type.PLAY_SOUND;
-            private Either<Identifier, Types_v1_20_5.SoundEvent> sound;
+            private EitherEntry<Types_v1_20_5.SoundEvent> sound;
         }
     }
 
@@ -387,7 +390,7 @@ public class Types_v1_21_2 {
         @AllArgsConstructor
         class PotionContents implements ItemSubPredicate {
             private final Type type = Type.POTION_CONTENTS;
-            private Types_v1_20_5.TagEntryList potion;
+            private TagEntryList potion;
         }
 
         @Data
@@ -508,7 +511,7 @@ public class Types_v1_21_2 {
                 public static final String OPERATION = "operation";
                 public static final String SLOT = "slot";
 
-                private Types_v1_20_5.TagEntryList attribute;
+                private TagEntryList attribute;
                 private Identifier id;
                 private MinMaxDouble amount;
                 private Types_v1_21.AttributeModifier.EntityAttribute.Operation operation;
@@ -524,8 +527,8 @@ public class Types_v1_21_2 {
             public static final String PATTERN = "pattern";
 
             private final Type type = Type.TRIM;
-            private Types_v1_20_5.TagEntryList material;
-            private Types_v1_20_5.TagEntryList pattern;
+            private TagEntryList material;
+            private TagEntryList pattern;
         }
 
         @Data
@@ -535,7 +538,7 @@ public class Types_v1_21_2 {
             public static final String SONG = "song";
 
             private final Type type = Type.JUKEBOX_PLAYABLE;
-            private Types_v1_20_5.TagEntryList song;
+            private TagEntryList song;
         }
     }
 
