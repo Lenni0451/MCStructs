@@ -38,6 +38,12 @@ public abstract class Registry {
     public abstract RegistryEntry getEntry(final int networkId);
 
     @Nullable
+    public abstract Integer getNetworkId(final Identifier id);
+
+    @Nullable
+    public abstract Identifier getId(final int networkId);
+
+    @Nullable
     public <T> EitherEntry<T> getLeftEntry(final Identifier id) {
         RegistryEntry entry = this.getEntry(id);
         if (entry == null) return null;

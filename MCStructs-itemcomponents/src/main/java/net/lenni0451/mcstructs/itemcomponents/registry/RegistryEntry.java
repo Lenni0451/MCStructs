@@ -30,10 +30,18 @@ public class RegistryEntry {
     }
 
     public Identifier getId() {
+        if (this.id == null) {
+            this.id = this.registry.getId(this.networkId);
+            if (this.id == null) throw new IllegalStateException("Network ID " + this.networkId + " not found in registry " + this.registry.getName());
+        }
         return this.id;
     }
 
     public int getNetworkId() {
+        if (this.networkId == null) {
+            this.networkId = this.registry.getNetworkId(this.id);
+            if (this.networkId == null) throw new IllegalStateException("ID " + this.id + " not found in registry " + this.registry.getName());
+        }
         return this.networkId;
     }
 
