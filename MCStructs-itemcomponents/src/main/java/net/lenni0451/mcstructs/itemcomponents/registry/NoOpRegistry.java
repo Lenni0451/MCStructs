@@ -24,6 +24,18 @@ public class NoOpRegistry extends Registry {
 
     @Nullable
     @Override
+    public Integer getNetworkId(Identifier id) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Identifier getId(int networkId) {
+        return null;
+    }
+
+    @Nullable
+    @Override
     public RegistryTag getTag(Identifier tag) {
         return new RegistryTag(this, tag);
     }
