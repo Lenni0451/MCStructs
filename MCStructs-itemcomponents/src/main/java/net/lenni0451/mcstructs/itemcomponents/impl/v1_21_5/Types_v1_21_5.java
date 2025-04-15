@@ -11,6 +11,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
 import net.lenni0451.mcstructs.itemcomponents.registry.RegistryTag;
 import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -18,6 +19,7 @@ import net.lenni0451.mcstructs.text.TextComponent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class Types_v1_21_5 {
 
@@ -265,12 +267,43 @@ public class Types_v1_21_5 {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class ArmorTrimMaterial {
+        public static final String ASSET_NAME = "asset_name";
+        public static final String OVERRIDE_ARMOR_ASSETS = "override_armor_assets";
+        public static final String DESCRIPTION = "description";
+
+        private String assetName;
+        private Map<RegistryEntry, String> overrideArmorAssets;
+        private TextComponent description;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArmorTrimPattern {
+        public static final String ASSET_ID = "asset_id";
+        public static final String DESCRIPTION = "description";
+        public static final String DECAL = "decal";
+
+        private Identifier assetId;
+        private TextComponent description;
+        private boolean decal = false;
+
+        public ArmorTrimPattern(final Identifier assetId, final TextComponent description) {
+            this.assetId = assetId;
+            this.description = description;
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ArmorTrim {
         public static final String MATERIAL = "material";
         public static final String PATTERN = "pattern";
 
-        private EitherEntry<Types_v1_20_5.ArmorTrimMaterial> material;
-        private EitherEntry<Types_v1_20_5.ArmorTrimPattern> pattern;
+        private EitherEntry<ArmorTrimMaterial> material;
+        private EitherEntry<ArmorTrimPattern> pattern;
     }
 
 }

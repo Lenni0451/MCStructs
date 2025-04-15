@@ -8,7 +8,6 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
-import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.TypeSerializers_v1_21_4;
 import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
 import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
 import net.lenni0451.mcstructs.itemcomponents.registry.RegistryTag;
@@ -26,7 +25,7 @@ import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.Types_v1_21_5.
 
 public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
 
-    private final TypeSerializers_v1_21_4 typeSerializers = new TypeSerializers_v1_21_4(this, TextComponentCodec.V1_21_5);
+    private final TypeSerializers_v1_21_5 typeSerializers = new TypeSerializers_v1_21_5(this, TextComponentCodec.V1_21_5);
 
     public final ItemComponent<TextComponent> CUSTOM_NAME = this.register("custom_name", this.typeSerializers.getTextComponentCodec().getTextCodec());
     public final ItemComponent<TextComponent> ITEM_NAME = this.register("item_name", this.typeSerializers.getTextComponentCodec().getTextCodec());
@@ -134,8 +133,8 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             Types_v1_21.JukeboxPlayable.JukeboxSong::new
     )));
     public final ItemComponent<ArmorTrim> TRIM = this.register("trim", MapCodecMerger.codec(
-            this.typeSerializers.armorTrimMaterial().mapCodec(ArmorTrim.MATERIAL).required(), ArmorTrim::getMaterial,
-            this.typeSerializers.armorTrimPattern().mapCodec(ArmorTrim.PATTERN).required(), ArmorTrim::getPattern,
+            this.typeSerializers.armorTrimMaterial_v1_21_5().mapCodec(ArmorTrim.MATERIAL).required(), ArmorTrim::getMaterial,
+            this.typeSerializers.armorTrimPattern_v1_21_5().mapCodec(ArmorTrim.PATTERN).required(), ArmorTrim::getPattern,
             ArmorTrim::new
     ));
     public final ItemComponent<Boolean> UNBREAKABLE = this.register("unbreakable", Codec.UNIT);

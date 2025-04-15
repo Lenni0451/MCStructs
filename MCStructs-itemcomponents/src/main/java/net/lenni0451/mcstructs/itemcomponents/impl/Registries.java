@@ -22,6 +22,7 @@ public class Registries {
     public final Registry armorMaterial = this.register(Identifier.of("armor_material"));
     public final Registry armorTrimMaterial = this.register(Identifier.of("trim_material"));
     public final Registry armorTrimPattern = this.register(Identifier.of("trim_pattern"));
+    public final Registry equipmentAsset = this.register(Identifier.of("equipment_asset"));
     public final Registry potion = this.register(Identifier.of("potion"));
     public final Registry jukeboxSong = this.register(Identifier.of("jukebox_song"));
     public final Registry entityType = this.register(Identifier.of("entity_type"));

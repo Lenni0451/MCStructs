@@ -145,6 +145,10 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         }
     };
     Codec<Identifier> STRING_IDENTIFIER = STRING.mapThrowing(Identifier::get, Identifier::of);
+    Codec<String> STRING_IDENTIFIER_PATH = STRING.verified(s -> {
+        if (s.matches(Identifier.VALID_VALUE_CHARS)) return Result.error("Invalid identifier path: " + s);
+        return null;
+    });
     Codec<UUID> INT_ARRAY_UUID = INT_ARRAY.verified(array -> {
         if (array.length != 4) return Result.error("UUID array must have a length of 4");
         return null;
