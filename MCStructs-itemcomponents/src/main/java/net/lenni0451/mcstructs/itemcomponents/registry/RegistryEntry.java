@@ -11,18 +11,18 @@ public class RegistryEntry {
     private final Registry registry;
     private Identifier id;
     private Integer networkId;
-    private final int hashCode;
+    private final int cachedHashCode;
 
     public RegistryEntry(@Nonnull final Registry registry, final Identifier id) {
         this.registry = registry;
         this.id = id;
-        this.hashCode = id.hashCode();
+        this.cachedHashCode = id.hashCode();
     }
 
     public RegistryEntry(final Registry registry, final int networkId) {
         this.registry = registry;
         this.networkId = networkId;
-        this.hashCode = this.networkId.hashCode();
+        this.cachedHashCode = this.networkId.hashCode();
     }
 
     public Registry getRegistry() {
@@ -55,7 +55,7 @@ public class RegistryEntry {
 
     @Override
     public int hashCode() {
-        return this.hashCode;
+        return this.cachedHashCode;
     }
 
 }
