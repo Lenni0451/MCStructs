@@ -1,9 +1,9 @@
 package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
-import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.TypeSerializers_v1_21_4;
+import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
@@ -21,8 +21,8 @@ public class TypeSerializers_v1_21_5 extends TypeSerializers_v1_21_4 {
     }
 
     @Override
-    public Codec<Map<Identifier, Integer>> enchantmentLevels() {
-        return this.init(ENCHANTMENT_LEVELS, () -> Codec.mapOf(Codec.STRING_IDENTIFIER.verified(registry.getRegistryVerifier().enchantment), Codec.rangedInt(1, 255)));
+    public Codec<Map<RegistryEntry, Integer>> enchantmentLevels() {
+        return this.init(ENCHANTMENT_LEVELS, () -> Codec.mapOf(registry.getRegistries().enchantment.entryCodec(), Codec.rangedInt(1, 255)));
     }
 
 }

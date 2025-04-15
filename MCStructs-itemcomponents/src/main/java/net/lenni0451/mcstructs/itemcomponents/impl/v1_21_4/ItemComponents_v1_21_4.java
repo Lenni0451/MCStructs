@@ -2,12 +2,14 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
-import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
-import net.lenni0451.mcstructs.itemcomponents.impl.RegistryVerifier;
+import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
+import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.ItemComponents_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
+import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
@@ -28,10 +30,10 @@ public class ItemComponents_v1_21_4 extends ItemComponents_v1_21_2 {
     ));
     public final ItemComponent<Types_v1_21_2.Equippable> EQUIPPABLE = this.register("equippable", MapCodecMerger.codec(
             Codec.named(Types_v1_21_2.EquipmentSlot.values()).mapCodec(Types_v1_21_2.Equippable.SLOT).required(), Types_v1_21_2.Equippable::getSlot,
-            this.typeSerializers.soundEvent().mapCodec(Types_v1_21_2.Equippable.EQUIP_SOUND).optional().defaulted(Either.left(Identifier.of("item.armor.equip_generic"))), Types_v1_21_2.Equippable::getEquipSound,
+            this.typeSerializers.soundEvent().mapCodec(Types_v1_21_2.Equippable.EQUIP_SOUND).optional().defaulted(new EitherEntry<>(this.registries.sound.getEntry(Identifier.of("item.armor.equip_generic")))), Types_v1_21_2.Equippable::getEquipSound,
             Codec.STRING_IDENTIFIER.mapCodec("asset_id").optional().defaulted(null), Types_v1_21_2.Equippable::getModel,
             Codec.STRING_IDENTIFIER.mapCodec(Types_v1_21_2.Equippable.CAMERA_OVERLAY).optional().defaulted(null), Types_v1_21_2.Equippable::getCameraOverlay,
-            this.typeSerializers.tagEntryList(this.registryVerifier.entityTypeTag, this.registryVerifier.entityType).mapCodec(Types_v1_21_2.Equippable.ALLOWED_ENTITIES).optional().defaulted(null), Types_v1_21_2.Equippable::getAllowedEntities,
+            TagEntryList.codec(this.registries.entityType, false).mapCodec(Types_v1_21_2.Equippable.ALLOWED_ENTITIES).optional().defaulted(null), Types_v1_21_2.Equippable::getAllowedEntities,
             Codec.BOOLEAN.mapCodec(Types_v1_21_2.Equippable.DISPENSABLE).optional().defaulted(true), Types_v1_21_2.Equippable::isDispensable,
             Codec.BOOLEAN.mapCodec(Types_v1_21_2.Equippable.SWAPPABLE).optional().defaulted(true), Types_v1_21_2.Equippable::isSwappable,
             Codec.BOOLEAN.mapCodec(Types_v1_21_2.Equippable.DAMAGE_ON_HURT).optional().defaulted(true), Types_v1_21_2.Equippable::isDamageOnHurt,
@@ -42,8 +44,8 @@ public class ItemComponents_v1_21_4 extends ItemComponents_v1_21_2 {
     public ItemComponents_v1_21_4() {
     }
 
-    public ItemComponents_v1_21_4(final RegistryVerifier registryVerifier) {
-        super(registryVerifier);
+    public ItemComponents_v1_21_4(final Registries registries, final Verifiers verifiers) {
+        super(registries, verifiers);
     }
 
     {
