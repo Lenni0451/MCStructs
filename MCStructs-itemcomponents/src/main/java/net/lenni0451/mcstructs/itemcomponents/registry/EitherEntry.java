@@ -1,19 +1,18 @@
 package net.lenni0451.mcstructs.itemcomponents.registry;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.model.Either;
-import net.lenni0451.mcstructs.converter.model.Result;
+import net.lenni0451.mcstructs.core.utils.ToString;
 
 import javax.annotation.Nonnull;
-import java.util.function.Function;
+import java.util.Objects;
 
+@EqualsAndHashCode
 public class EitherEntry<T> {
 
     public static <T> Codec<EitherEntry<T>> codec(final Registry registry, final Codec<T> codec) {
-        return Codec.either(
-                codec,
-                registry.entryCodec().flatMap((Function<RegistryEntry, Result<RegistryEntry>>) Result::success, registryEntry -> Result.error("Cannot parse entry without registry"))
-        ).map(EitherEntry::either, EitherEntry::new);
+        return Codec.either(codec, registry.entryCodec()).map(EitherEntry::either, EitherEntry::new);
     }
 
 
@@ -46,6 +45,14 @@ public class EitherEntry<T> {
         } else {
             return Either.right(this.entry);
         }
+    }
+
+    @Override
+    public String toString() {
+        return ToString.of(this)
+                .add("value", this.value, Objects::nonNull)
+                .add("entry", this.entry, Objects::nonNull)
+                .toString();
     }
 
 }

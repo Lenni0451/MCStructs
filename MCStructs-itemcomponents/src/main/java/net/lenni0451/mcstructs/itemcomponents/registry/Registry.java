@@ -3,9 +3,11 @@ package net.lenni0451.mcstructs.itemcomponents.registry;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
+import net.lenni0451.mcstructs.core.utils.ToString;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public abstract class Registry {
 
@@ -44,5 +46,24 @@ public abstract class Registry {
 
     @Nullable
     public abstract RegistryTag getTag(final Identifier tag);
+
+    @Override
+    public String toString() {
+        return ToString.of(this)
+                .add("name", this.name)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Registry registry = (Registry) o;
+        return Objects.equals(this.name, registry.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name);
+    }
 
 }

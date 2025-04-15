@@ -1,12 +1,16 @@
 package net.lenni0451.mcstructs.itemcomponents.registry;
 
+import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.model.Either;
+import net.lenni0451.mcstructs.core.utils.ToString;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
+@EqualsAndHashCode
 public class TagEntryList {
 
     private static Codec<List<RegistryEntry>> homogenousList(final Codec<RegistryEntry> entryCodec, final boolean requireList) {
@@ -59,6 +63,14 @@ public class TagEntryList {
 
     public List<RegistryEntry> getEntries() {
         return this.entries;
+    }
+
+    @Override
+    public String toString() {
+        return ToString.of(this)
+                .add("tag", this.tag, Objects::nonNull)
+                .add("entries", this.entries, Objects::nonNull)
+                .toString();
     }
 
 }
