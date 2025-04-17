@@ -12,46 +12,64 @@ import java.util.Objects;
 public class EitherEntry<T> {
 
     public static <T> Codec<EitherEntry<T>> codec(final Registry registry, final Codec<T> codec) {
-        return Codec.either(codec, registry.entryCodec()).map(EitherEntry::either, EitherEntry::new);
+        return Codec.either(codec, registry.entryCodec()).map(Either::swap, Either::swap).map(EitherEntry::either, EitherEntry::new);
     }
 
 
-    private final T value;
     private final RegistryEntry entry;
+    private final T value;
 
-    public EitherEntry(final Either<T, RegistryEntry> either) {
+    public EitherEntry(final Either<RegistryEntry, T> either) {
         if (either.isLeft()) {
-            this.value = either.getLeft();
-            this.entry = null;
-        } else {
+            this.entry = either.getLeft();
             this.value = null;
-            this.entry = either.getRight();
+        } else {
+            this.entry = null;
+            this.value = either.getRight();
         }
     }
 
-    public EitherEntry(@Nonnull final T value) {
-        this.value = value;
-        this.entry = null;
-    }
-
     public EitherEntry(@Nonnull final RegistryEntry entry) {
-        this.value = null;
         this.entry = entry;
+        this.value = null;
     }
 
-    public Either<T, RegistryEntry> either() {
-        if (this.value != null) {
-            return Either.left(this.value);
+    public EitherEntry(@Nonnull final T value) {
+        this.entry = null;
+        this.value = value;
+    }
+
+    public boolean isLeft() {
+        return this.value != null;
+    }
+
+    public T getLeft() {
+        if (this.value == null) throw new IllegalStateException("Either is not left");
+        return this.value;
+    }
+
+    public boolean isRight() {
+        return this.entry != null;
+    }
+
+    public RegistryEntry getRight() {
+        if (this.entry == null) throw new IllegalStateException("Either is not right");
+        return this.entry;
+    }
+
+    public Either<RegistryEntry, T> either() {
+        if (this.entry != null) {
+            return Either.left(this.entry);
         } else {
-            return Either.right(this.entry);
+            return Either.right(this.value);
         }
     }
 
     @Override
     public String toString() {
         return ToString.of(this)
-                .add("value", this.value, Objects::nonNull)
                 .add("entry", this.entry, Objects::nonNull)
+                .add("value", this.value, Objects::nonNull)
                 .toString();
     }
 

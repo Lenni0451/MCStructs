@@ -101,20 +101,21 @@ public class Types_v1_21_5 {
     @Getter
     @AllArgsConstructor
     public enum TropicalFishPattern implements NamedType {
-        KOB("kob"),
-        SUNSTREAK("sunstreak"),
-        SNOOPER("snooper"),
-        DASHER("dasher"),
-        BRINELY("brinely"),
-        SPOTTY("spotty"),
-        FLOPPER("flopper"),
-        STRIPEY("stripey"),
-        GLITTER("glitter"),
-        BLOCKFISH("blockfish"),
-        BETTY("betty"),
-        CLAYFISH("clayfish");
+        KOB("kob", 0 | 0 << 8),
+        SUNSTREAK("sunstreak", 0 | 1 << 8),
+        SNOOPER("snooper", 0 | 2 << 8),
+        DASHER("dasher", 0 | 3 << 8),
+        BRINELY("brinely", 0 | 4 << 8),
+        SPOTTY("spotty", 0 | 5 << 8),
+        FLOPPER("flopper", 1 | 0 << 8),
+        STRIPEY("stripey", 1 | 1 << 8),
+        GLITTER("glitter", 1 | 2 << 8),
+        BLOCKFISH("blockfish", 1 | 3 << 8),
+        BETTY("betty", 1 | 4 << 8),
+        CLAYFISH("clayfish", 1 | 5 << 8);
 
         private final String name;
+        private final int packetId;
     }
 
     @Getter
@@ -129,15 +130,16 @@ public class Types_v1_21_5 {
     @Getter
     @AllArgsConstructor
     public enum RabbitVariant implements NamedType {
-        BROWN("brown"),
-        WHITE("white"),
-        BLACK("black"),
-        WHITE_SPLOTCHED("white_splotched"),
-        GOLD("gold"),
-        SALT("salt"),
-        EVIL("evil");
+        BROWN("brown", 0),
+        WHITE("white", 1),
+        BLACK("black", 2),
+        WHITE_SPLOTCHED("white_splotched", 3),
+        GOLD("gold", 4),
+        SALT("salt", 5),
+        EVIL("evil", 99);
 
         private final String name;
+        private final int packetId;
     }
 
     @Getter

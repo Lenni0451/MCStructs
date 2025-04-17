@@ -97,7 +97,7 @@ public class Test_v1_20_5 extends ItemComponentTest<ItemComponents_v1_20_5> {
         register(registry.INSTRUMENT, new EitherEntry<>(new Instrument(new EitherEntry<>(new SoundEvent(Identifier.of("test"), 0.5F)), 12, 13)));
         register(registry.OMINOUS_BOTTLE_AMPLIFIER, 2);
         register(registry.RECIPES, Arrays.asList(Identifier.of("test"), Identifier.of("test2")));
-        register(registry.LODESTONE_TRACKER, new LodestoneTracker(new LodestoneTracker.GlobalPos(Identifier.of("test"), new BlockPos(12, 21, 34)), false));
+        register(registry.LODESTONE_TRACKER, new LodestoneTracker(new LodestoneTracker.GlobalPos(registry.getRegistries().dimension.getEntry(Identifier.of("test")), new BlockPos(12, 21, 34)), false));
         register(registry.FIREWORK_EXPLOSION, new FireworkExplosions(FireworkExplosions.ExplosionShape.CREEPER, Arrays.asList(1, 2, 3), Arrays.asList(4, 5, 6), true, true));
         register(registry.FIREWORKS, new Fireworks(5, Collections.singletonList(new FireworkExplosions(FireworkExplosions.ExplosionShape.STAR, Arrays.asList(8, 9, 7), Arrays.asList(3, 5, 7), true, false))));
         register(registry.PROFILE, new GameProfile("name", UUID.randomUUID(), init(() -> {

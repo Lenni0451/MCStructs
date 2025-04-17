@@ -119,7 +119,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             this.getComponentCodec().listOf().mapCodec(TooltipDisplay.HIDDEN_COMPONENTS).optional().defaulted(List::isEmpty, ArrayList::new), TooltipDisplay::getHiddenComponents,
             TooltipDisplay::new
     ));
-    public final ItemComponent<AttributeModifiers> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", this.typeSerializers.attributeModifier_v1_21().listOf().map(AttributeModifiers::getModifiers, AttributeModifiers::new));
+    public final ItemComponent<List<Types_v1_21.AttributeModifier>> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", this.typeSerializers.attributeModifier_v1_21().listOf());
     public final ItemComponent<Integer> DYED_COLOR = this.register("dyed_color", this.typeSerializers.rgbColor());
     public final ItemComponent<List<Types_v1_20_5.BlockPredicate>> CAN_PLACE_ON = this.register("can_place_on", this.typeSerializers.blockPredicate().compactListOf());
     public final ItemComponent<List<Types_v1_20_5.BlockPredicate>> CAN_BREAK = this.copy("can_break", this.CAN_PLACE_ON);

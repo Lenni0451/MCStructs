@@ -188,7 +188,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     public final ItemComponent<List<Identifier>> RECIPES = this.register("recipes", Codec.STRING_IDENTIFIER.listOf());
     public final ItemComponent<LodestoneTracker> LODESTONE_TRACKER = this.register("lodestone_tracker", MapCodecMerger.codec(
             MapCodecMerger.codec(
-                    Codec.STRING_IDENTIFIER.mapCodec(LodestoneTracker.GlobalPos.DIMENSION).required(), LodestoneTracker.GlobalPos::getDimension,
+                    this.registries.dimension.entryCodec().mapCodec(LodestoneTracker.GlobalPos.DIMENSION).required(), LodestoneTracker.GlobalPos::getDimension,
                     this.typeSerializers.blockPos().mapCodec(LodestoneTracker.GlobalPos.POS).required(), LodestoneTracker.GlobalPos::getPos,
                     LodestoneTracker.GlobalPos::new
             ).mapCodec(LodestoneTracker.TARGET).optional().defaulted(null), LodestoneTracker::getTarget,

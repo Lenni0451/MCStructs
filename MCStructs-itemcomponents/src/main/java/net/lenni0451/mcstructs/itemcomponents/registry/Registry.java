@@ -51,6 +51,13 @@ public abstract class Registry {
     }
 
     @Nullable
+    public <T> EitherEntry<T> getLeftEntry(final int networkId) {
+        RegistryEntry entry = this.getEntry(networkId);
+        if (entry == null) return null;
+        return new EitherEntry<>(entry);
+    }
+
+    @Nullable
     public abstract RegistryTag getTag(final Identifier tag);
 
     @Override

@@ -55,6 +55,14 @@ public class Either<L, R> {
         return this.isLeft() ? leftMapper.apply(this.left) : rightMapper.apply(this.right);
     }
 
+    public Either<R, L> swap() {
+        if (this.isLeft()) {
+            return Either.right(this.left);
+        } else {
+            return Either.left(this.right);
+        }
+    }
+
     @Override
     public String toString() {
         if (this.isLeft()) {

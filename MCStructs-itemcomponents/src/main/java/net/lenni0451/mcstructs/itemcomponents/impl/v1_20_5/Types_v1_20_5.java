@@ -336,7 +336,7 @@ public class Types_v1_20_5 {
             public static final String DIMENSION = "dimension";
             public static final String POS = "pos";
 
-            private Identifier dimension;
+            private RegistryEntry dimension;
             private BlockPos pos;
         }
     }
