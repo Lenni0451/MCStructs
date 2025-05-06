@@ -40,21 +40,21 @@ public class EitherEntry<T> {
     }
 
     public boolean isLeft() {
-        return this.value != null;
-    }
-
-    public T getLeft() {
-        if (this.value == null) throw new IllegalStateException("Either is not left");
-        return this.value;
-    }
-
-    public boolean isRight() {
         return this.entry != null;
     }
 
-    public RegistryEntry getRight() {
-        if (this.entry == null) throw new IllegalStateException("Either is not right");
+    public RegistryEntry getLeft() {
+        if (this.entry == null) throw new IllegalStateException("Either is not left");
         return this.entry;
+    }
+
+    public boolean isRight() {
+        return this.value != null;
+    }
+
+    public T getRight() {
+        if (this.value == null) throw new IllegalStateException("Either is not right");
+        return this.value;
     }
 
     public Either<RegistryEntry, T> either() {
