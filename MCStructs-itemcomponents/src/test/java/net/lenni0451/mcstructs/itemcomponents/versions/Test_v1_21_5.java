@@ -70,7 +70,7 @@ public class Test_v1_21_5 extends ItemComponentTest<ItemComponents_v1_21_5> {
         register(registry.PROVIDES_BANNER_PATTERNS, registry.getRegistries().bannerPattern.getTag(Identifier.of("test")));
         register(registry.PROVIDES_TRIM_MATERIAL, registry.getRegistries().armorTrimMaterial.getTag(Identifier.of("test")));
         register(registry.TOOLTIP_DISPLAY, new TooltipDisplay(true, Arrays.asList(registry.TOOLTIP_DISPLAY, registry.BREAK_SOUND)));
-        register(registry.ATTRIBUTE_MODIFIERS, new AttributeModifiers(Arrays.asList(new Types_v1_21.AttributeModifier(registry.getRegistries().attributeModifier.getEntry(Identifier.of("test")), new Types_v1_21.AttributeModifier.EntityAttribute(Identifier.of("test"), 1, Types_v1_21.AttributeModifier.EntityAttribute.Operation.ADD_MULTIPLIED_TOTAL)))));
+        register(registry.ATTRIBUTE_MODIFIERS, Arrays.asList(new Types_v1_21.AttributeModifier(registry.getRegistries().attributeModifier.getEntry(Identifier.of("test")), new Types_v1_21.AttributeModifier.EntityAttribute(Identifier.of("test"), 1, Types_v1_21.AttributeModifier.EntityAttribute.Operation.ADD_MULTIPLIED_TOTAL))));
         register(registry.DYED_COLOR, 0xFF_00_FF);
         register(registry.CAN_PLACE_ON, Arrays.asList(new Types_v1_20_5.BlockPredicate(new TagEntryList(registry.getRegistries().block.getTag(Identifier.of("test"))), init(() -> {
             Map<String, Types_v1_20_5.BlockPredicate.ValueMatcher> valueMatchers = new HashMap<>();
