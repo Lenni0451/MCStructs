@@ -1,10 +1,9 @@
 package net.lenni0451.mcstructs.converter.impl.v1_21_5;
 
-import com.google.common.hash.HashCode;
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
 import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.hash.HashBuilder;
+import net.lenni0451.mcstructs.converter.hash.HashCode;
+import net.lenni0451.mcstructs.converter.hash.HashFunction;
 import net.lenni0451.mcstructs.converter.model.Result;
 
 import javax.annotation.Nullable;
@@ -12,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("UnstableApiUsage")
 public class HashConverter_v1_21_5 implements DataConverter<HashCode> {
 
     private static final byte TAG_EMPTY = 1;
@@ -39,11 +37,11 @@ public class HashConverter_v1_21_5 implements DataConverter<HashCode> {
     private static final byte[] EMPTY_LIST = {TAG_LIST_START, TAG_LIST_END};
     private static final byte[] FALSE = {TAG_BOOLEAN, 0};
     private static final byte[] TRUE = {TAG_BOOLEAN, 1};
-    private static final Comparator<HashCode> HASH_CODE_COMPARATOR = Comparator.comparingLong(HashCode::padToLong);
+    private static final Comparator<HashCode> HASH_CODE_COMPARATOR = Comparator.comparingLong(HashCode::asLong);
     private static final Comparator<Map.Entry<HashCode, HashCode>> MAP_COMPARATOR = Map.Entry.<HashCode, HashCode>comparingByKey(HASH_CODE_COMPARATOR).thenComparing(Map.Entry.comparingByValue(HASH_CODE_COMPARATOR));
     private static final String TAG_ERROR = "Unable to convert HashCode to %s";
 
-    public static final HashConverter_v1_21_5 CRC32C = new HashConverter_v1_21_5(Hashing.crc32c());
+    public static final HashConverter_v1_21_5 CRC32C = new HashConverter_v1_21_5(HashFunction.CRC32C);
 
     private final HashFunction hashFunction;
     private final HashCode emptyHash;
@@ -54,11 +52,11 @@ public class HashConverter_v1_21_5 implements DataConverter<HashCode> {
 
     public HashConverter_v1_21_5(final HashFunction hashFunction) {
         this.hashFunction = hashFunction;
-        this.emptyHash = hashFunction.hashBytes(EMPTY_HASH);
-        this.emptyMapHash = hashFunction.hashBytes(EMPTY_MAP);
-        this.emptyListHash = hashFunction.hashBytes(EMPTY_LIST);
-        this.trueHash = hashFunction.hashBytes(TRUE);
-        this.falseHash = hashFunction.hashBytes(FALSE);
+        this.emptyHash = hashFunction.hash(EMPTY_HASH);
+        this.emptyMapHash = hashFunction.hash(EMPTY_MAP);
+        this.emptyListHash = hashFunction.hash(EMPTY_LIST);
+        this.trueHash = hashFunction.hash(TRUE);
+        this.falseHash = hashFunction.hash(FALSE);
     }
 
     @Override
@@ -88,37 +86,37 @@ public class HashConverter_v1_21_5 implements DataConverter<HashCode> {
 
     @Override
     public HashCode createByte(byte value) {
-        return this.hashFunction.newHasher(2).putByte(TAG_BYTE).putByte(value).hash();
+        return this.hashFunction.builder(2).addByte(TAG_BYTE).addByte(value).hash();
     }
 
     @Override
     public HashCode createShort(short value) {
-        return this.hashFunction.newHasher(3).putByte(TAG_SHORT).putShort(value).hash();
+        return this.hashFunction.builder(3).addByte(TAG_SHORT).addShort(value).hash();
     }
 
     @Override
     public HashCode createInt(int value) {
-        return this.hashFunction.newHasher(5).putByte(TAG_INT).putInt(value).hash();
+        return this.hashFunction.builder(5).addByte(TAG_INT).addInt(value).hash();
     }
 
     @Override
     public HashCode createLong(long value) {
-        return this.hashFunction.newHasher(9).putByte(TAG_LONG).putLong(value).hash();
+        return this.hashFunction.builder(9).addByte(TAG_LONG).addLong(value).hash();
     }
 
     @Override
     public HashCode createFloat(float value) {
-        return this.hashFunction.newHasher(5).putByte(TAG_FLOAT).putFloat(value).hash();
+        return this.hashFunction.builder(5).addByte(TAG_FLOAT).addFloat(value).hash();
     }
 
     @Override
     public HashCode createDouble(double value) {
-        return this.hashFunction.newHasher(9).putByte(TAG_DOUBLE).putDouble(value).hash();
+        return this.hashFunction.builder(9).addByte(TAG_DOUBLE).addDouble(value).hash();
     }
 
     @Override
     public HashCode createString(String value) {
-        return this.hashFunction.newHasher().putByte(TAG_STRING).putInt(value.length()).putUnencodedChars(value).hash();
+        return this.hashFunction.builder().addByte(TAG_STRING).addInt(value.length()).addCharSequence(value).hash();
     }
 
     @Override
@@ -134,9 +132,9 @@ public class HashConverter_v1_21_5 implements DataConverter<HashCode> {
 
     @Override
     public HashCode createList(List<HashCode> values) {
-        Hasher hasher = this.hashFunction.newHasher().putByte(TAG_LIST_START);
-        for (HashCode value : values) hasher.putBytes(value.asBytes());
-        return hasher.putByte(TAG_LIST_END).hash();
+        HashBuilder builder = this.hashFunction.builder().addByte(TAG_LIST_START);
+        for (HashCode value : values) builder.addBytes(value.asBytes());
+        return builder.addByte(TAG_LIST_END).hash();
     }
 
     @Override
@@ -146,25 +144,25 @@ public class HashConverter_v1_21_5 implements DataConverter<HashCode> {
 
     @Override
     public HashCode createByteArray(byte[] value) {
-        return this.hashFunction.newHasher(value.length + 2)
-                .putByte(TAG_BYTE_ARRAY_START)
-                .putBytes(value)
-                .putByte(TAG_BYTE_ARRAY_END)
+        return this.hashFunction.builder(value.length + 2)
+                .addByte(TAG_BYTE_ARRAY_START)
+                .addBytes(value)
+                .addByte(TAG_BYTE_ARRAY_END)
                 .hash();
     }
 
     @Override
     public HashCode createIntArray(int[] value) {
-        Hasher hasher = this.hashFunction.newHasher(value.length * 4 + 2).putByte(TAG_INT_ARRAY_START);
-        for (int i : value) hasher.putInt(i);
-        return hasher.putByte(TAG_INT_ARRAY_END).hash();
+        HashBuilder builder = this.hashFunction.builder(value.length * 4 + 2).addByte(TAG_INT_ARRAY_START);
+        for (int i : value) builder.addInt(i);
+        return builder.addByte(TAG_INT_ARRAY_END).hash();
     }
 
     @Override
     public HashCode createLongArray(long[] value) {
-        Hasher hasher = this.hashFunction.newHasher(value.length * 8 + 2).putByte(TAG_LONG_ARRAY_START);
-        for (long l : value) hasher.putLong(l);
-        return hasher.putByte(TAG_LONG_ARRAY_END).hash();
+        HashBuilder builder = this.hashFunction.builder(value.length * 8 + 2).addByte(TAG_LONG_ARRAY_START);
+        for (long l : value) builder.addLong(l);
+        return builder.addByte(TAG_LONG_ARRAY_END).hash();
     }
 
     @Override
@@ -174,13 +172,13 @@ public class HashConverter_v1_21_5 implements DataConverter<HashCode> {
 
     @Override
     public Result<HashCode> createMergedMap(Map<HashCode, HashCode> values) {
-        Hasher hasher = this.hashFunction.newHasher();
-        hasher.putByte(TAG_MAP_START);
+        HashBuilder builder = this.hashFunction.builder();
+        builder.addByte(TAG_MAP_START);
         values.entrySet().stream()
                 .sorted(MAP_COMPARATOR)
-                .forEach(entry -> hasher.putBytes(entry.getKey().asBytes())
-                        .putBytes(entry.getValue().asBytes()));
-        return Result.success(hasher.putByte(TAG_MAP_END).hash());
+                .forEach(entry -> builder.addBytes(entry.getKey().asBytes())
+                        .addBytes(entry.getValue().asBytes()));
+        return Result.success(builder.addByte(TAG_MAP_END).hash());
     }
 
     @Override
