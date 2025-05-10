@@ -9,7 +9,6 @@ import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
-import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
 import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
 import net.lenni0451.mcstructs.itemcomponents.registry.RegistryTag;
@@ -255,15 +254,6 @@ public class Types_v1_21_5 {
 
         private boolean hideTooltip = false;
         private List<ItemComponent<?>> hiddenComponents = new ArrayList<>();
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class AttributeModifiers {
-        public static final String MODIFIERS = "modifiers";
-
-        private List<Types_v1_21.AttributeModifier> modifiers;
     }
 
     @Data
