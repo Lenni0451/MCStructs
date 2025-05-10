@@ -6,7 +6,8 @@ import net.lenni0451.mcstructs.itemcomponents.registry.Registry;
 
 /**
  * A class that contains all the registries used in item components.<br>
- * Not every item component version will use all of these registries.
+ * Not every item component version will use all of these registries.<br>
+ * You need to extend this class to fill the registries with the correct data.
  */
 public class Registries {
 

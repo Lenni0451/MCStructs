@@ -18,28 +18,40 @@ import javax.annotation.Nullable;
 
 /**
  * The registry containing all item components.<br>
- * Components are registered internally and can't be registered by the user.
+ * Components are registered internally and can't be registered by the user.<br>
+ * By default, the registries and verifiers are noop and accept everything.
+ * You need to create a new instance of the required registry and pass implementations of {@link Registries} and {@link Verifiers} to it.
  */
 public abstract class ItemComponentRegistry {
 
     /**
-     * Item component registry for 1.20.5.
+     * Item component registry for 1.20.5.<br>
+     * The registries and verifiers are noop and accept everything.<br>
+     * It is recommended to create a new instance with your own registries and verifiers.
      */
     public static final ItemComponents_v1_20_5 V1_20_5 = new ItemComponents_v1_20_5();
     /**
-     * Item component registry for 1.21.
+     * Item component registry for 1.21.<br>
+     * The registries and verifiers are noop and accept everything.<br>
+     * It is recommended to create a new instance with your own registries and verifiers.
      */
     public static final ItemComponents_v1_21 V1_21 = new ItemComponents_v1_21();
     /**
-     * Item component registry for 1.21.2.
+     * Item component registry for 1.21.2.<br>
+     * The registries and verifiers are noop and accept everything.<br>
+     * It is recommended to create a new instance with your own registries and verifiers.
      */
     public static final ItemComponents_v1_21_2 V1_21_2 = new ItemComponents_v1_21_2();
     /**
-     * Item component registry for 1.21.4.
+     * Item component registry for 1.21.4.<br>
+     * The registries and verifiers are noop and accept everything.<br>
+     * It is recommended to create a new instance with your own registries and verifiers.
      */
     public static final ItemComponents_v1_21_4 V1_21_4 = new ItemComponents_v1_21_4();
     /**
-     * Item component registry for 1.21.5.
+     * Item component registry for 1.21.5.<br>
+     * The registries and verifiers are noop and accept everything.<br>
+     * It is recommended to create a new instance with your own registries and verifiers.
      */
     public static final ItemComponents_v1_21_5 V1_21_5 = new ItemComponents_v1_21_5();
     /**

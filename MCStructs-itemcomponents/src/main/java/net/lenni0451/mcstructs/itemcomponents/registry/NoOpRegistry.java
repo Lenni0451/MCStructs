@@ -4,6 +4,10 @@ import net.lenni0451.mcstructs.core.Identifier;
 
 import javax.annotation.Nullable;
 
+/**
+ * A no-op registry that does nothing.<br>
+ * Every value is valid, but the registry will not be able to convert them.
+ */
 public class NoOpRegistry extends Registry {
 
     public NoOpRegistry(final Identifier name) {

@@ -6,6 +6,9 @@ import net.lenni0451.mcstructs.core.utils.ToString;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
+/**
+ * An entry in a {@link Registry}.
+ */
 public class RegistryEntry {
 
     private final Registry registry;
@@ -25,10 +28,20 @@ public class RegistryEntry {
         this.cachedHashCode = this.networkId.hashCode();
     }
 
+    /**
+     * @return The registry this entry belongs to
+     */
     public Registry getRegistry() {
         return this.registry;
     }
 
+    /**
+     * Get the id of this entry.<br>
+     * If the id has not been resolved yet, it will be resolved using the registry.
+     * An exception will be thrown if the id is not found in the registry.
+     *
+     * @return The id of this entry
+     */
     public Identifier getId() {
         if (this.id == null) {
             this.id = this.registry.getId(this.networkId);
@@ -37,6 +50,13 @@ public class RegistryEntry {
         return this.id;
     }
 
+    /**
+     * Get the network id of this entry.<br>
+     * If the network id has not been resolved yet, it will be resolved using the registry.
+     * An exception will be thrown if the network id is not found in the registry.
+     *
+     * @return The network id of this entry
+     */
     public int getNetworkId() {
         if (this.networkId == null) {
             this.networkId = this.registry.getNetworkId(this.id);

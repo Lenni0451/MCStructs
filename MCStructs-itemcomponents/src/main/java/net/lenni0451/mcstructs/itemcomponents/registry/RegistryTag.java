@@ -6,9 +6,19 @@ import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
 
+/**
+ * A class that represents a tag in a {@link Registry}.<br>
+ * Tags are used to group multiple {@link RegistryEntry}s together.
+ */
 @EqualsAndHashCode
 public class RegistryTag {
 
+    /**
+     * Create a codec for this class bound to the given registry.
+     *
+     * @param registry The registry owning the tag
+     * @return The codec for this class
+     */
     public static Codec<RegistryTag> codec(final Registry registry) {
         return Codec.STRING
                 .verified(s -> s.startsWith("#") ? null : Result.error("Tag needs to start with #"))
@@ -33,10 +43,16 @@ public class RegistryTag {
         this.tag = tag;
     }
 
+    /**
+     * @return The registry this tag belongs to
+     */
     public Registry getRegistry() {
         return this.registry;
     }
 
+    /**
+     * @return The tag id
+     */
     public Identifier getTag() {
         return this.tag;
     }
