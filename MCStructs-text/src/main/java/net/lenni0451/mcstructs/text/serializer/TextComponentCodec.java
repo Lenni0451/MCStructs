@@ -66,6 +66,10 @@ public class TextComponentCodec {
      */
     public static final TextComponentCodec V1_21_5 = new TextComponentCodec(() -> SNbt.V1_21_5, () -> TextCodecs_v1_21_5.TEXT, () -> StyleCodecs_v1_21_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_21_5.INSTANCE);
     /**
+     * The text codec for 1.22.
+     */
+    public static final TextComponentCodec V1_22 = V1_21_5; //TODO: Actually implement this (requires dialogs)
+    /**
      * The latest text codec.
      */
     public static final TextComponentCodec LATEST = V1_21_5;
