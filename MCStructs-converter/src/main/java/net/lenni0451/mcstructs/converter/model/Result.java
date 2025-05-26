@@ -16,16 +16,16 @@ public class Result<T> {
     }
 
     public static <T> Result<T> error(final String error) {
-        return new Result<>(null, new IllegalStateException(error));
+        return new Result<>(null, new CodecException(error));
     }
 
     public static <T> Result<T> error(final Throwable cause) {
-        return new Result<>(null, new IllegalStateException(cause));
+        return new Result<>(null, new CodecException(cause));
     }
 
     public static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
         String errorMessages = errors.stream().filter(Result::isError).map(Result::error).map(s -> "[" + s + "]").collect(Collectors.joining(","));
-        IllegalStateException exception = new IllegalStateException(error + ": " + errorMessages);
+        CodecException exception = new CodecException(error + ": " + errorMessages);
         errors.stream().filter(Result::isError).map(r -> r.error).forEach(exception::addSuppressed);
         return new Result<>(null, exception);
     }
@@ -40,9 +40,9 @@ public class Result<T> {
 
 
     private final T result;
-    private final IllegalStateException error;
+    private final CodecException error;
 
-    private Result(final T result, final IllegalStateException error) {
+    private Result(final T result, final CodecException error) {
         this.result = result;
         this.error = error;
     }
