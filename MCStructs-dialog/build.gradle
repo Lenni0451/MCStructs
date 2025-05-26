@@ -1,0 +1,5 @@
+dependencies {
+    api project(":MCStructs-converter")
+    api project(":MCStructs-core")
+    api project(":MCStructs-text")
+}
