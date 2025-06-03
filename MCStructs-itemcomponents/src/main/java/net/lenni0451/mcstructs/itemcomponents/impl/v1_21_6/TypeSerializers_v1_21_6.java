@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.itemcomponents.impl.v1_22;
+package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
@@ -12,11 +12,11 @@ import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static net.lenni0451.mcstructs.itemcomponents.impl.v1_22.Types_v1_22.AttributeModifier;
+import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6.Types_v1_21_6.AttributeModifier;
 
-public class TypeSerializers_v1_22 extends TypeSerializers_v1_21_5 {
+public class TypeSerializers_v1_21_6 extends TypeSerializers_v1_21_5 {
 
-    public TypeSerializers_v1_22(final ItemComponentRegistry registry, final TextComponentCodec textComponentCodec) {
+    public TypeSerializers_v1_21_6(final ItemComponentRegistry registry, final TextComponentCodec textComponentCodec) {
         super(registry, textComponentCodec);
     }
 
@@ -26,7 +26,7 @@ public class TypeSerializers_v1_22 extends TypeSerializers_v1_21_5 {
         throw new UnsupportedOperationException();
     }
 
-    public Codec<AttributeModifier> attributeModifier_v1_22() {
+    public Codec<AttributeModifier> attributeModifier_v1_21_6() {
         return this.init(ATTRIBUTE_MODIFIER, () -> {
             Map<AttributeModifier.Display.Type, MapCodec<? extends AttributeModifier.Display>> codecs = new EnumMap<>(AttributeModifier.Display.Type.class);
             codecs.put(AttributeModifier.Display.Type.DEFAULT, MapCodec.unit(AttributeModifier.Display.Default::new));

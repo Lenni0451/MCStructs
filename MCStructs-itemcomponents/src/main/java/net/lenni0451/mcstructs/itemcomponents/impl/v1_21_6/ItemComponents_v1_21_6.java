@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.itemcomponents.impl.v1_22;
+package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
@@ -8,20 +8,20 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
-import net.lenni0451.mcstructs.itemcomponents.impl.v1_22.Types_v1_22.AttributeModifier;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6.Types_v1_21_6.AttributeModifier;
 import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
 import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.List;
 
-import static net.lenni0451.mcstructs.itemcomponents.impl.v1_22.Types_v1_22.Equippable;
+import static net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6.Types_v1_21_6.Equippable;
 
-public class ItemComponents_v1_22 extends ItemComponents_v1_21_5 {
+public class ItemComponents_v1_21_6 extends ItemComponents_v1_21_5 {
 
-    private final TypeSerializers_v1_22 typeSerializers = new TypeSerializers_v1_22(this, TextComponentCodec.V1_22);
+    private final TypeSerializers_v1_21_6 typeSerializers = new TypeSerializers_v1_21_6(this, TextComponentCodec.V1_21_6);
 
-    public final ItemComponent<List<AttributeModifier>> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", this.typeSerializers.attributeModifier_v1_22().listOf());
+    public final ItemComponent<List<AttributeModifier>> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", this.typeSerializers.attributeModifier_v1_21_6().listOf());
     public final ItemComponent<Equippable> EQUIPPABLE = this.register("equippable", MapCodecMerger.codec(
             Codec.named(Types_v1_21_2.EquipmentSlot.values()).mapCodec(Equippable.SLOT).required(), Equippable::getSlot,
             this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optional().defaulted(new EitherEntry<>(this.registries.sound.getEntry(Identifier.of("item.armor.equip_generic")))), Equippable::getEquipSound,
@@ -37,10 +37,10 @@ public class ItemComponents_v1_22 extends ItemComponents_v1_21_5 {
     ));
 
 
-    public ItemComponents_v1_22() {
+    public ItemComponents_v1_21_6() {
     }
 
-    public ItemComponents_v1_22(final Registries registries, final Verifiers verifiers) {
+    public ItemComponents_v1_21_6(final Registries registries, final Verifiers verifiers) {
         super(registries, verifiers);
     }
 

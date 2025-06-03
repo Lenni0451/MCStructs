@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.itemcomponents.impl.v1_22;
+package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,7 @@ import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
 import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
 
-public class Types_v1_22 {
+public class Types_v1_21_6 {
 
     @Data
     @NoArgsConstructor

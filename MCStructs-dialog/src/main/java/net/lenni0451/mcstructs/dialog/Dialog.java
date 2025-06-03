@@ -15,8 +15,11 @@ public abstract class Dialog {
     private final DialogType type;
     private TextComponent title;
     @Nullable
-    private TextComponent externalTitle = null;
+    private TextComponent externalTitle;
     private boolean canCloseWithEscape;
+    private boolean pause;
+    private AfterAction afterAction;
     private List<DialogBody> body;
+    private List<Input> inputs;
 
 }

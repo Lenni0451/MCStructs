@@ -26,17 +26,18 @@ public class NumberRangeInput implements DialogInput {
     @Value
     @AllArgsConstructor
     public static class Range {
-        private final double start;
-        private final double end;
+        private final float start;
+        private final float end;
         @Nullable
-        private final Double initial;
-        private final int steps;
+        private final Float initial;
+        @Nullable
+        private final Float step;
 
-        public Range(final double start, final double end, final int steps) {
+        public Range(final float start, final float end) {
             this.start = start;
             this.end = end;
             this.initial = null;
-            this.steps = steps;
+            this.step = null;
         }
     }
 

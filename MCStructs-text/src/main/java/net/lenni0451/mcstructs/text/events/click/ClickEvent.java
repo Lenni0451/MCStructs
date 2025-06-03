@@ -1,7 +1,11 @@
 package net.lenni0451.mcstructs.text.events.click;
 
+import net.lenni0451.mcstructs.converter.SerializedData;
+import net.lenni0451.mcstructs.core.Identifier;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.text.events.click.types.*;
 
+import javax.annotation.Nullable;
 import java.net.URI;
 
 /**
@@ -35,6 +39,14 @@ public abstract class ClickEvent {
 
     public static CopyToClipboardClickEvent copyToClipboard(final String value) {
         return new CopyToClipboardClickEvent(value);
+    }
+
+    public static ShowDialogClickEvent showDialog(final SerializedData<?> dialogData) {
+        return new ShowDialogClickEvent(dialogData);
+    }
+
+    public static CustomClickEvent custom(final Identifier id, @Nullable final NbtTag payload) {
+        return new CustomClickEvent(id, payload);
     }
 
 

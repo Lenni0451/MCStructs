@@ -13,8 +13,6 @@ public enum DialogType implements IdentifiedType {
     SERVER_LINKS(Identifier.of("server_links")),
     DIALOG_LIST(Identifier.of("dialog_list")),
     MULTI_ACTION(Identifier.of("multi_action")),
-    MULTI_ACTION_INPUT_FORM(Identifier.of("multi_action_input_form")),
-    SIMPLE_INPUT_FORM(Identifier.of("simple_input_form")),
     CONFIRMATION(Identifier.of("confirmation"));
 
     private final Identifier identifier;

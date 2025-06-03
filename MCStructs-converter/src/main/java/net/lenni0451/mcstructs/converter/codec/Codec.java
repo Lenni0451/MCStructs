@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.converter.codec;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.SerializedData;
 import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.mapcodec.impl.FieldMapCodec;
 import net.lenni0451.mcstructs.converter.mapcodec.impl.TypedMapCodec;
@@ -165,6 +166,17 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         return new UUID(mostSigBits, leastSigBits);
     });
     Codec<UUID> STRICT_STRING_UUID = Codec.STRING.mapThrowing(UUID::toString, UUID::fromString);
+    Codec<SerializedData<?>> RAW = new Codec<SerializedData<?>>() {
+        @Override
+        public <S> Result<S> serialize(DataConverter<S> converter, SerializedData<?> element) {
+            return element.convert(converter);
+        }
+
+        @Override
+        public <S> Result<SerializedData<?>> deserialize(DataConverter<S> converter, S data) {
+            return Result.success(new SerializedData<>(data, converter));
+        }
+    };
 
     static <T> Codec<T> unit(final Supplier<T> supplier) {
         return new Codec<T>() {

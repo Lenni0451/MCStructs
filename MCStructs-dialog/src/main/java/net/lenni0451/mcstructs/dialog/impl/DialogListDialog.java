@@ -4,12 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.lenni0451.mcstructs.dialog.Dialog;
-import net.lenni0451.mcstructs.dialog.DialogType;
+import net.lenni0451.mcstructs.dialog.*;
 import net.lenni0451.mcstructs.dialog.body.DialogBody;
 import net.lenni0451.mcstructs.dialog.types.ButtonListDialog;
 import net.lenni0451.mcstructs.text.TextComponent;
-import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -22,25 +20,29 @@ public class DialogListDialog extends ButtonListDialog {
 
     private List<Dialog> dialogs;
     @Nullable
-    private ClickEvent onCancel;
+    private ActionButton exitAction;
     private int buttonWidth;
 
-    public DialogListDialog(final TextComponent title, final boolean canCloseWithEscape, final List<DialogBody> body, final List<Dialog> dialogs, final int columns, final int buttonWidth) {
-        this(title, null, canCloseWithEscape, body, dialogs, null, columns, buttonWidth);
+    public DialogListDialog(final TextComponent title, final boolean canCloseWithEscape, final boolean pause, final AfterAction action, final List<DialogBody> body, final List<Input> inputs,
+                            final List<Dialog> dialogs, final int columns, final int buttonWidth) {
+        this(title, null, canCloseWithEscape, pause, action, body, inputs, dialogs, null, columns, buttonWidth);
     }
 
-    public DialogListDialog(final TextComponent title, @Nullable final TextComponent externalTitle, final boolean canCloseWithEscape, final List<DialogBody> body, final List<Dialog> dialogs, final int columns, final int buttonWidth) {
-        this(title, externalTitle, canCloseWithEscape, body, dialogs, null, columns, buttonWidth);
+    public DialogListDialog(final TextComponent title, final boolean canCloseWithEscape, final boolean pause, final AfterAction action, final List<DialogBody> body, final List<Input> inputs,
+                            final List<Dialog> dialogs, @Nullable final ActionButton exitAction, final int columns, final int buttonWidth) {
+        this(title, null, canCloseWithEscape, pause, action, body, inputs, dialogs, exitAction, columns, buttonWidth);
     }
 
-    public DialogListDialog(final TextComponent title, final boolean canCloseWithEscape, final List<DialogBody> body, final List<Dialog> dialogs, @Nullable final ClickEvent onCancel, final int columns, final int buttonWidth) {
-        this(title, null, canCloseWithEscape, body, dialogs, onCancel, columns, buttonWidth);
+    public DialogListDialog(final TextComponent title, @Nullable final TextComponent externalTitle, final boolean canCloseWithEscape, final boolean pause, final AfterAction action, final List<DialogBody> body, final List<Input> inputs,
+                            final List<Dialog> dialogs, final int columns, final int buttonWidth) {
+        this(title, externalTitle, canCloseWithEscape, pause, action, body, inputs, dialogs, null, columns, buttonWidth);
     }
 
-    public DialogListDialog(final TextComponent title, @Nullable final TextComponent externalTitle, final boolean canCloseWithEscape, final List<DialogBody> body, final List<Dialog> dialogs, @Nullable final ClickEvent onCancel, final int columns, final int buttonWidth) {
-        super(DialogType.DIALOG_LIST, title, externalTitle, canCloseWithEscape, body, columns);
+    public DialogListDialog(final TextComponent title, @Nullable final TextComponent externalTitle, final boolean canCloseWithEscape, final boolean pause, final AfterAction action, final List<DialogBody> body, final List<Input> inputs,
+                            final List<Dialog> dialogs, @Nullable final ActionButton exitAction, final int columns, final int buttonWidth) {
+        super(DialogType.DIALOG_LIST, title, externalTitle, canCloseWithEscape, pause, action, body, inputs, columns);
         this.dialogs = dialogs;
-        this.onCancel = onCancel;
+        this.exitAction = exitAction;
         this.buttonWidth = buttonWidth;
     }
 

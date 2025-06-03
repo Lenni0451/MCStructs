@@ -38,7 +38,7 @@ public class StringTemplate {
         return new StringTemplate(segments, variables);
     }
 
-    private static boolean isValidVariableName(final String string) {
+    public static boolean isValidVariableName(final String string) {
         char[] chars = string.toCharArray();
         for (char c : chars) {
             if (!Character.isLetterOrDigit(c) && c != '_') return false;
