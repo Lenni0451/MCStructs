@@ -134,7 +134,7 @@ public interface DataConverter<T> {
             @Override
             public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
                 try {
-                    return Result.success(converter.convertTo(DataConverter.this, data));
+                    return Result.success(DataConverter.this.fork(converter).convertTo(DataConverter.this, data));
                 } catch (Throwable t) {
                     return Result.error(t);
                 }
@@ -143,12 +143,16 @@ public interface DataConverter<T> {
             @Override
             public <S> Result<S> serialize(DataConverter<S> converter, T element) {
                 try {
-                    return Result.success(converter.convertFrom(DataConverter.this, element));
+                    return Result.success(converter.fork(converter).convertFrom(DataConverter.this, element));
                 } catch (Throwable t) {
                     return Result.error(t);
                 }
             }
         };
+    }
+
+    default <O> DataConverter<O> fork(final DataConverter<O> other) {
+        return other;
     }
 
 }

@@ -202,4 +202,9 @@ public class DelegatingConverter<T> implements DataConverter<T> {
         return this.delegate.toCodec();
     }
 
+    @Override
+    public <O> DataConverter<O> fork(DataConverter<O> other) {
+        return this.delegate.fork(other);
+    }
+
 }

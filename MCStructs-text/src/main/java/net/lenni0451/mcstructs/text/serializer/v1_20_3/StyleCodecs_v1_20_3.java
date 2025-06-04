@@ -174,7 +174,7 @@ public class StyleCodecs_v1_20_3 {
                 try {
                     CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
                     JsonElement rawName = JsonParser.parseString(tag.getString("name"));
-                    TextComponent name = rawName == null ? null : TextCodecs_v1_20_3.TEXT.deserialize(JsonConverter_v1_20_3.INSTANCE, rawName).getOrThrow(JsonParseException::new);
+                    TextComponent name = rawName == null ? null : TextCodecs_v1_20_3.TEXT.deserialize(converter.fork(JsonConverter_v1_20_3.INSTANCE), rawName).getOrThrow(JsonParseException::new);
                     Identifier type = Identifier.of(tag.getString("type"));
                     if (!isValid(converter, type, TextVerifier_v1_20_3.class, TextVerifier_v1_20_3::verifyRegistryEntity)) {
                         return Result.error("Invalid entity: " + type);

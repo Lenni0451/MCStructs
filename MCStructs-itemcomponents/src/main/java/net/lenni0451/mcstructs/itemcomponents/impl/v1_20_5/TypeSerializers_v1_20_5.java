@@ -54,12 +54,12 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
         return this.init(CUSTOM_DATA, () -> new Codec<CompoundTag>() {
             @Override
             public <T> Result<T> serialize(DataConverter<T> converter, CompoundTag component) {
-                return Result.success(NbtConverter_v1_20_3.INSTANCE.convertTo(converter, component));
+                return Result.success(converter.fork(NbtConverter_v1_20_3.INSTANCE).convertTo(converter, component));
             }
 
             @Override
             public <T> Result<CompoundTag> deserialize(DataConverter<T> converter, T data) {
-                NbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
+                NbtTag tag = converter.convertTo(converter.fork(NbtConverter_v1_20_3.INSTANCE), data);
                 if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
                 return Result.success(tag.asCompoundTag());
             }
@@ -72,12 +72,12 @@ public class TypeSerializers_v1_20_5 extends TypeSerializers {
                 new Codec<CompoundTag>() {
                     @Override
                     public <T> Result<T> serialize(DataConverter<T> converter, CompoundTag component) {
-                        return Result.success(NbtConverter_v1_20_3.INSTANCE.convertTo(converter, component));
+                        return Result.success(converter.fork(NbtConverter_v1_20_3.INSTANCE).convertTo(converter, component));
                     }
 
                     @Override
                     public <T> Result<CompoundTag> deserialize(DataConverter<T> converter, T data) {
-                        NbtTag tag = converter.convertTo(NbtConverter_v1_20_3.INSTANCE, data);
+                        NbtTag tag = converter.convertTo(converter.fork(NbtConverter_v1_20_3.INSTANCE), data);
                         if (!tag.isCompoundTag()) return Result.unexpected(tag, CompoundTag.class);
                         return Result.success(tag.asCompoundTag());
                     }

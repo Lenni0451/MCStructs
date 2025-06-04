@@ -157,7 +157,7 @@ public class StyleCodecs_v1_21_4 {
             public static final MapCodec<ItemHoverEvent> LEGACY_MAP_CODEC = createLegacy((converter, component) -> {
                 try {
                     CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
-                    return ITEM_STACK_CODEC.deserialize(NbtConverter_v1_20_3.INSTANCE, tag).map(ItemHoverEvent::new);
+                    return ITEM_STACK_CODEC.deserialize(converter.fork(NbtConverter_v1_20_3.INSTANCE), tag).map(ItemHoverEvent::new);
                 } catch (Throwable t) {
                     return Result.error(t);
                 }
@@ -175,7 +175,7 @@ public class StyleCodecs_v1_21_4 {
                 try {
                     CompoundTag tag = SNbt.V1_14.deserialize(component.asUnformattedString());
                     JsonElement rawName = JsonParser.parseString(tag.getString("name"));
-                    TextComponent name = rawName == null ? null : TextCodecs_v1_21_4.TEXT.deserialize(JsonConverter_v1_20_5.INSTANCE, rawName).getOrThrow(JsonParseException::new);
+                    TextComponent name = rawName == null ? null : TextCodecs_v1_21_4.TEXT.deserialize(converter.fork(JsonConverter_v1_20_5.INSTANCE), rawName).getOrThrow(JsonParseException::new);
                     Identifier type = Identifier.of(tag.getString("type"));
                     if (!isValid(converter, type, TextVerifier_v1_21_4.class, TextVerifier_v1_21_4::verifyRegistryEntity)) {
                         return Result.error("Invalid entity: " + type);
