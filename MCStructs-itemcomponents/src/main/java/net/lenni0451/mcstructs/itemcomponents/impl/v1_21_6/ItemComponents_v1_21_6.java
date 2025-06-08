@@ -9,8 +9,8 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6.Types_v1_21_6.AttributeModifier;
-import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
-import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
+import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.List;

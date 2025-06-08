@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.itemcomponents.registry;
+package net.lenni0451.mcstructs.registry;
 
 import net.lenni0451.mcstructs.core.Identifier;
 

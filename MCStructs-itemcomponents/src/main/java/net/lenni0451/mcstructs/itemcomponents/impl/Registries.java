@@ -1,8 +1,8 @@
 package net.lenni0451.mcstructs.itemcomponents.impl;
 
 import net.lenni0451.mcstructs.core.Identifier;
-import net.lenni0451.mcstructs.itemcomponents.registry.NoOpRegistry;
-import net.lenni0451.mcstructs.itemcomponents.registry.Registry;
+import net.lenni0451.mcstructs.registry.NoOpRegistry;
+import net.lenni0451.mcstructs.registry.Registry;
 
 /**
  * A class that contains all the registries used in item components.<br>

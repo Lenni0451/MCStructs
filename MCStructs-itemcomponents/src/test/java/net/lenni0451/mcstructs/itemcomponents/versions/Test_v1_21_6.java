@@ -7,8 +7,8 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6.ItemComponents_v1_21_6;
-import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.nbt.NbtTag;
+import net.lenni0451.mcstructs.registry.TagEntryList;
 
 import java.util.Arrays;
 

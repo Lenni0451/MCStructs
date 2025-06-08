@@ -1,6 +1,6 @@
 package net.lenni0451.mcstructs.itemcomponents.impl;
 
-import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
+import net.lenni0451.mcstructs.registry.RegistryEntry;
 
 /**
  * Verifier methods for not registry based things.

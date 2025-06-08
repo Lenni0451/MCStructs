@@ -74,7 +74,7 @@ public class TextComponentCodec {
     /**
      * The latest text codec.
      */
-    public static final TextComponentCodec LATEST = V1_21_5;
+    public static final TextComponentCodec LATEST = V1_21_6;
 
 
     private final Supplier<SNbt<CompoundTag>> sNbtSupplier;

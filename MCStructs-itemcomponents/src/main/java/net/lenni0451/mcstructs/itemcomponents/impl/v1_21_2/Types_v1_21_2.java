@@ -10,11 +10,11 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
-import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
-import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
-import net.lenni0451.mcstructs.itemcomponents.registry.RegistryTag;
-import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.RegistryEntry;
+import net.lenni0451.mcstructs.registry.RegistryTag;
+import net.lenni0451.mcstructs.registry.TagEntryList;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
