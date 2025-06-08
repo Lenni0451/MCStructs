@@ -22,6 +22,9 @@ import net.lenni0451.mcstructs.dialog.template.ParsedTemplate;
 import net.lenni0451.mcstructs.dialog.template.StringTemplate;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
+import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.TypedTagEntryList;
+import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.click.types.*;
 import net.lenni0451.mcstructs.text.serializer.v1_21_6.StyleCodecs_v1_21_6;
@@ -35,6 +38,7 @@ import java.util.function.Function;
 
 public class DialogCodecs_v1_21_6 {
 
+    private static final DialogRegistry_v1_21_6 REGISTRY = new DialogRegistry_v1_21_6();
     public static final Codec<Dialog> DIRECT_CODEC = Codec.lazyInit(() -> Codec.identified(DialogType.values()).typed(Dialog::getType, type -> {
         switch (type) {
             case NOTICE:
@@ -51,8 +55,11 @@ public class DialogCodecs_v1_21_6 {
                 throw new IllegalArgumentException("Unknown dialog type: " + type);
         }
     }));
+    public static final Codec<EitherEntry<Dialog>> CODEC = EitherEntry.codec(REGISTRY, DIRECT_CODEC);
+    public static final Codec<TypedTagEntryList<Dialog>> LIST_CODEC = TypedTagEntryList.codec(REGISTRY, DIRECT_CODEC, false);
 
     public static class InternalCodecs {
+        private static final Codec<TextComponent> TEXT_CODEC = TextCodecs_v1_21_6.TEXT;
         public static final Codec<ParsedTemplate> PARSED_TEMPLATE_CODEC = Codec.STRING.flatMap(template -> Result.success(template.getRaw()), s -> {
             try {
                 return Result.success(new ParsedTemplate(s, StringTemplate.parse(s)));
@@ -66,8 +73,8 @@ public class DialogCodecs_v1_21_6 {
         });
         public static final Codec<CompoundTag> COMPOUND_TAG_CODEC = Codec.RAW.flatMap(entries -> Result.success(new SerializedData<>(entries, NbtConverter_v1_21_5.INSTANCE)), serializedData -> serializedData.convert(NbtConverter_v1_21_5.INSTANCE).map(NbtTag::asCompoundTag));
         public static final Codec<ActionButton> ACTION_BUTTON_CODEC = MapCodecMerger.codec(
-                TextCodecs_v1_21_6.TEXT.mapCodec("label").required(), ActionButton::getLabel,
-                TextCodecs_v1_21_6.TEXT.mapCodec("tooltip").optional().defaulted(null), ActionButton::getTooltip,
+                TEXT_CODEC.mapCodec("label").required(), ActionButton::getLabel,
+                TEXT_CODEC.mapCodec("tooltip").optional().defaulted(null), ActionButton::getTooltip,
                 Codec.rangedInt(1, 1024).mapCodec("width").optional().defaulted(200), ActionButton::getWidth,
                 ActionCodecs.DIALOG_ACTION_CODEC.mapCodec("action").optional().defaulted(null), ActionButton::getAction,
                 ActionButton::new
@@ -173,11 +180,11 @@ public class DialogCodecs_v1_21_6 {
 
     public static class BodyCodecs {
         public static final MapCodec<PlainMessageBody> PLAIN_MESSAGE_BODY_MAP_CODEC = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_6.TEXT.mapCodec("contents").required(), PlainMessageBody::getContents,
+                InternalCodecs.TEXT_CODEC.mapCodec("contents").required(), PlainMessageBody::getContents,
                 Codec.rangedInt(1, 1024).mapCodec("width").optional().defaulted(200), PlainMessageBody::getWidth,
                 PlainMessageBody::new
         );
-        public static final Codec<PlainMessageBody> PLAIN_MESSAGE_BODY_CODEC = Codec.withAlternative(PLAIN_MESSAGE_BODY_MAP_CODEC.asCodec(), TextCodecs_v1_21_6.TEXT, text -> new PlainMessageBody(text, 200));
+        public static final Codec<PlainMessageBody> PLAIN_MESSAGE_BODY_CODEC = Codec.withAlternative(PLAIN_MESSAGE_BODY_MAP_CODEC.asCodec(), InternalCodecs.TEXT_CODEC, text -> new PlainMessageBody(text, 200));
         public static final MapCodec<ItemBody> ITEM_BODY_MAP_CODEC = MapCodecMerger.mapCodec(
                 Codec.RAW.mapCodec("item").required(), ItemBody::getItem,
                 PLAIN_MESSAGE_BODY_CODEC.mapCodec("description").optional().defaulted(null), ItemBody::getDescription,
@@ -202,7 +209,7 @@ public class DialogCodecs_v1_21_6 {
 
     public static class InputCodecs {
         public static final MapCodec<BooleanInput> BOOLEAN_INPUT_MAP_CODEC = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_6.TEXT.mapCodec("label").required(), BooleanInput::getLabel,
+                InternalCodecs.TEXT_CODEC.mapCodec("label").required(), BooleanInput::getLabel,
                 Codec.BOOLEAN.mapCodec("initial").optional().defaulted(false), BooleanInput::isInitial,
                 Codec.STRING.mapCodec("on_true").optional().defaulted("true"), BooleanInput::getOnTrue,
                 Codec.STRING.mapCodec("on_false").optional().defaulted("false"), BooleanInput::getOnFalse,
@@ -210,7 +217,7 @@ public class DialogCodecs_v1_21_6 {
         );
         public static final MapCodec<NumberRangeInput> NUMBER_RANGE_INPUT_MAP_CODEC = MapCodecMerger.mapCodec(
                 Codec.rangedInt(1, 1024).mapCodec("width").optional().defaulted(200), NumberRangeInput::getWidth,
-                TextCodecs_v1_21_6.TEXT.mapCodec("label").required(), NumberRangeInput::getLabel,
+                InternalCodecs.TEXT_CODEC.mapCodec("label").required(), NumberRangeInput::getLabel,
                 Codec.STRING.mapCodec("label_format").optional().defaulted("options.generic_value"), NumberRangeInput::getLabelFormat,
                 MapCodecMerger.mapCodec(
                         Codec.FLOAT.mapCodec("start").required(), NumberRangeInput.Range::getStart,
@@ -225,17 +232,17 @@ public class DialogCodecs_v1_21_6 {
                 Codec.rangedInt(1, 1024).mapCodec("width").optional().defaulted(200), SingleOptionInput::getWidth,
                 MapCodecMerger.codec(
                         Codec.STRING.mapCodec("id").required(), SingleOptionInput.Entry::getId,
-                        TextCodecs_v1_21_6.TEXT.mapCodec("display").optional().defaulted(null), SingleOptionInput.Entry::getDisplay,
+                        InternalCodecs.TEXT_CODEC.mapCodec("display").optional().defaulted(null), SingleOptionInput.Entry::getDisplay,
                         Codec.BOOLEAN.mapCodec("initial").optional().defaulted(false), SingleOptionInput.Entry::isInitial,
                         SingleOptionInput.Entry::new
                 ).nonEmptyList().mapCodec("options").required(), SingleOptionInput::getOptions,
-                TextCodecs_v1_21_6.TEXT.mapCodec("label").required(), SingleOptionInput::getLabel,
+                InternalCodecs.TEXT_CODEC.mapCodec("label").required(), SingleOptionInput::getLabel,
                 Codec.BOOLEAN.mapCodec("label_visible").optional().defaulted(true), SingleOptionInput::isLabelVisible,
                 SingleOptionInput::new
         );
         public static final MapCodec<TextInput> TEXT_INPUT_MAP_CODEC = MapCodecMerger.mapCodec(
                 Codec.rangedInt(1, 1024).mapCodec("with").optional().defaulted(200), TextInput::getWidth,
-                TextCodecs_v1_21_6.TEXT.mapCodec("label").required(), TextInput::getLabel,
+                InternalCodecs.TEXT_CODEC.mapCodec("label").required(), TextInput::getLabel,
                 Codec.BOOLEAN.mapCodec("label_visible").optional().defaulted(true), TextInput::isLabelVisible,
                 Codec.STRING.mapCodec("initial").optional().defaulted(""), TextInput::getInitial,
                 Codec.minInt(1).mapCodec("max_length").optional().defaulted(32), TextInput::getMaxLength,
@@ -265,8 +272,8 @@ public class DialogCodecs_v1_21_6 {
 
     public static class DialogCodecs {
         public static final MapCodec<ConfirmationDialog> CONFIRMATION_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_6.TEXT.mapCodec("title").required(), ConfirmationDialog::getTitle,
-                TextCodecs_v1_21_6.TEXT.mapCodec("external_title").optional().defaulted(null), ConfirmationDialog::getExternalTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("title").required(), ConfirmationDialog::getTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), ConfirmationDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), ConfirmationDialog::isCanCloseWithEscape,
                 Codec.BOOLEAN.mapCodec("pause").optional().defaulted(true), ConfirmationDialog::isPause,
                 InternalCodecs.AFTER_ACTION_CODEC.mapCodec("after_action").optional().defaulted(AfterAction.CLOSE), ConfirmationDialog::getAfterAction,
@@ -277,22 +284,22 @@ public class DialogCodecs_v1_21_6 {
                 ConfirmationDialog::new
         );
         public static final MapCodec<DialogListDialog> DIALOG_LIST_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_6.TEXT.mapCodec("title").required(), DialogListDialog::getTitle,
-                TextCodecs_v1_21_6.TEXT.mapCodec("external_title").optional().defaulted(null), DialogListDialog::getExternalTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("title").required(), DialogListDialog::getTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), DialogListDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), DialogListDialog::isCanCloseWithEscape,
                 Codec.BOOLEAN.mapCodec("pause").optional().defaulted(true), DialogListDialog::isPause,
                 InternalCodecs.AFTER_ACTION_CODEC.mapCodec("after_action").optional().defaulted(AfterAction.CLOSE), DialogListDialog::getAfterAction,
                 BodyCodecs.DIALOG_BODY_CODEC.compactListOf().mapCodec("body").optional().defaulted(List::isEmpty, ArrayList::new), DialogListDialog::getBody,
                 InternalCodecs.INPUT_CODEC.listOf().mapCodec("inputs").optional().defaulted(List::isEmpty, ArrayList::new), DialogListDialog::getInputs,
-                null, DialogListDialog::getDialogs, //TODO
+                LIST_CODEC.mapCodec("dialogs").required(), DialogListDialog::getDialogs,
                 InternalCodecs.ACTION_BUTTON_CODEC.mapCodec("exit_action").optional().defaulted(null), DialogListDialog::getExitAction,
                 Codec.minInt(1).mapCodec("columns").optional().defaulted(2), DialogListDialog::getColumns,
                 Codec.rangedInt(1, 1024).mapCodec("button_width").optional().defaulted(200), DialogListDialog::getButtonWidth,
                 DialogListDialog::new
         );
         public static final MapCodec<MultiActionDialog> MULTI_ACTION_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_6.TEXT.mapCodec("title").required(), MultiActionDialog::getTitle,
-                TextCodecs_v1_21_6.TEXT.mapCodec("external_title").optional().defaulted(null), MultiActionDialog::getExternalTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("title").required(), MultiActionDialog::getTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), MultiActionDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), MultiActionDialog::isCanCloseWithEscape,
                 Codec.BOOLEAN.mapCodec("pause").optional().defaulted(true), MultiActionDialog::isPause,
                 InternalCodecs.AFTER_ACTION_CODEC.mapCodec("after_action").optional().defaulted(AfterAction.CLOSE), MultiActionDialog::getAfterAction,
@@ -304,8 +311,8 @@ public class DialogCodecs_v1_21_6 {
                 MultiActionDialog::new
         );
         public static final MapCodec<NoticeDialog> NOTICE_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_6.TEXT.mapCodec("title").required(), NoticeDialog::getTitle,
-                TextCodecs_v1_21_6.TEXT.mapCodec("external_title").optional().defaulted(null), NoticeDialog::getExternalTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("title").required(), NoticeDialog::getTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), NoticeDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), NoticeDialog::isCanCloseWithEscape,
                 Codec.BOOLEAN.mapCodec("pause").optional().defaulted(true), NoticeDialog::isPause,
                 InternalCodecs.AFTER_ACTION_CODEC.mapCodec("after_action").optional().defaulted(AfterAction.CLOSE), NoticeDialog::getAfterAction,
@@ -315,8 +322,8 @@ public class DialogCodecs_v1_21_6 {
                 NoticeDialog::new
         );
         public static final MapCodec<ServerLinksDialog> SERVER_LINKS_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_6.TEXT.mapCodec("title").required(), ServerLinksDialog::getTitle,
-                TextCodecs_v1_21_6.TEXT.mapCodec("external_title").optional().defaulted(null), ServerLinksDialog::getExternalTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("title").required(), ServerLinksDialog::getTitle,
+                InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), ServerLinksDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), ServerLinksDialog::isCanCloseWithEscape,
                 Codec.BOOLEAN.mapCodec("pause").optional().defaulted(true), ServerLinksDialog::isPause,
                 InternalCodecs.AFTER_ACTION_CODEC.mapCodec("after_action").optional().defaulted(AfterAction.CLOSE), ServerLinksDialog::getAfterAction,

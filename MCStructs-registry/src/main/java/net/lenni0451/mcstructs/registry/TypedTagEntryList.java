@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A class that represents a {@link RegistryTag} or a list of {@link RegistryEntry}.
+ * A class that represents a {@link RegistryTag} or a list of {@link EitherEntry}.
  */
 @EqualsAndHashCode
-public class TagEntryList {
+public class TypedTagEntryList<T> {
 
     /**
      * Create a codec for this class bound to the given registry.
@@ -21,22 +21,22 @@ public class TagEntryList {
      * @param requireList Require single entries to be in a list
      * @return The codec for this class
      */
-    public static Codec<TagEntryList> codec(final Registry registry, final boolean requireList) {
-        return Codec.either(RegistryTag.codec(registry), HomogenousListCodec.codec(registry.entryCodec(), requireList))
+    public static <T> Codec<TypedTagEntryList<T>> codec(final Registry registry, final Codec<T> codec, final boolean requireList) {
+        return Codec.either(RegistryTag.codec(registry), HomogenousListCodec.codec(EitherEntry.codec(registry, codec), requireList))
                 .map(tagEntryList -> tagEntryList.isTag() ? Either.left(tagEntryList.getTag()) : Either.right(tagEntryList.getEntries()),
-                        either -> either.xmap(TagEntryList::new, TagEntryList::new));
+                        either -> either.xmap(TypedTagEntryList::new, TypedTagEntryList::new));
     }
 
 
     private final RegistryTag tag;
-    private final List<RegistryEntry> entries;
+    private final List<EitherEntry<T>> entries;
 
-    public TagEntryList(final RegistryTag tag) {
+    public TypedTagEntryList(final RegistryTag tag) {
         this.tag = tag;
         this.entries = null;
     }
 
-    public TagEntryList(final List<RegistryEntry> entries) {
+    public TypedTagEntryList(final List<EitherEntry<T>> entries) {
         this.tag = null;
         this.entries = entries;
     }
@@ -65,7 +65,7 @@ public class TagEntryList {
     /**
      * @return The {@link RegistryEntry}s of this list
      */
-    public List<RegistryEntry> getEntries() {
+    public List<EitherEntry<T>> getEntries() {
         return this.entries;
     }
 
