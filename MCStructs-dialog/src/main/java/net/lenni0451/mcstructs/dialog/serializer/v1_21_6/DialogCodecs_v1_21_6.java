@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.dialog.serializer.v1_21_6;
 
+import lombok.RequiredArgsConstructor;
 import net.lenni0451.mcstructs.converter.SerializedData;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
@@ -18,11 +19,13 @@ import net.lenni0451.mcstructs.dialog.body.ItemBody;
 import net.lenni0451.mcstructs.dialog.body.PlainMessageBody;
 import net.lenni0451.mcstructs.dialog.impl.*;
 import net.lenni0451.mcstructs.dialog.input.*;
+import net.lenni0451.mcstructs.dialog.serializer.DialogSerializer;
 import net.lenni0451.mcstructs.dialog.template.ParsedTemplate;
 import net.lenni0451.mcstructs.dialog.template.StringTemplate;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
 import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Registry;
 import net.lenni0451.mcstructs.registry.TypedTagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
@@ -36,27 +39,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class DialogCodecs_v1_21_6 {
+@RequiredArgsConstructor
+public class DialogCodecs_v1_21_6 extends DialogSerializer {
 
-    private static final DialogRegistry_v1_21_6 REGISTRY = new DialogRegistry_v1_21_6();
-    public static final Codec<Dialog> DIRECT_CODEC = Codec.lazyInit(() -> Codec.identified(DialogType.values()).typed(Dialog::getType, type -> {
+    private final Registry registry;
+    private final DialogCodecs dialogCodecs = new DialogCodecs();
+    public final Codec<Dialog> directCodec = Codec.identified(DialogType.values()).typed(Dialog::getType, type -> {
         switch (type) {
             case NOTICE:
-                return DialogCodecs.NOTICE_DIALOG_MAP_CODEC;
+                return this.dialogCodecs.noticeDialogMapCodec;
             case SERVER_LINKS:
-                return DialogCodecs.SERVER_LINKS_DIALOG_MAP_CODEC;
+                return this.dialogCodecs.serverLinksDialogMapCodec;
             case DIALOG_LIST:
-                return DialogCodecs.DIALOG_LIST_DIALOG_MAP_CODEC;
+                return this.dialogCodecs.dialogListDialogMapCodec;
             case MULTI_ACTION:
-                return DialogCodecs.MULTI_ACTION_DIALOG_MAP_CODEC;
+                return this.dialogCodecs.multiActionDialogMapCodec;
             case CONFIRMATION:
-                return DialogCodecs.CONFIRMATION_DIALOG_MAP_CODEC;
+                return this.dialogCodecs.confirmationDialogMapCodec;
             default:
                 throw new IllegalArgumentException("Unknown dialog type: " + type);
         }
-    }));
-    public static final Codec<EitherEntry<Dialog>> CODEC = EitherEntry.codec(REGISTRY, DIRECT_CODEC);
-    public static final Codec<TypedTagEntryList<Dialog>> LIST_CODEC = TypedTagEntryList.codec(REGISTRY, DIRECT_CODEC, false);
+    });
+    public final Codec<EitherEntry<Dialog>> codec = EitherEntry.codec(this.registry, this.directCodec);
+    public final Codec<TypedTagEntryList<Dialog>> listCodec = TypedTagEntryList.codec(this.registry, this.directCodec, false);
 
     public static class InternalCodecs {
         private static final Codec<TextComponent> TEXT_CODEC = TextCodecs_v1_21_6.TEXT;
@@ -270,8 +275,8 @@ public class DialogCodecs_v1_21_6 {
         });
     }
 
-    public static class DialogCodecs {
-        public static final MapCodec<ConfirmationDialog> CONFIRMATION_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
+    public class DialogCodecs {
+        public final MapCodec<ConfirmationDialog> confirmationDialogMapCodec = MapCodecMerger.mapCodec(
                 InternalCodecs.TEXT_CODEC.mapCodec("title").required(), ConfirmationDialog::getTitle,
                 InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), ConfirmationDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), ConfirmationDialog::isCanCloseWithEscape,
@@ -283,7 +288,7 @@ public class DialogCodecs_v1_21_6 {
                 InternalCodecs.ACTION_BUTTON_CODEC.mapCodec("no").required(), ConfirmationDialog::getNoButton,
                 ConfirmationDialog::new
         );
-        public static final MapCodec<DialogListDialog> DIALOG_LIST_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
+        public final MapCodec<DialogListDialog> dialogListDialogMapCodec = MapCodecMerger.mapCodec(
                 InternalCodecs.TEXT_CODEC.mapCodec("title").required(), DialogListDialog::getTitle,
                 InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), DialogListDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), DialogListDialog::isCanCloseWithEscape,
@@ -291,13 +296,13 @@ public class DialogCodecs_v1_21_6 {
                 InternalCodecs.AFTER_ACTION_CODEC.mapCodec("after_action").optional().defaulted(AfterAction.CLOSE), DialogListDialog::getAfterAction,
                 BodyCodecs.DIALOG_BODY_CODEC.compactListOf().mapCodec("body").optional().defaulted(List::isEmpty, ArrayList::new), DialogListDialog::getBody,
                 InternalCodecs.INPUT_CODEC.listOf().mapCodec("inputs").optional().defaulted(List::isEmpty, ArrayList::new), DialogListDialog::getInputs,
-                LIST_CODEC.mapCodec("dialogs").required(), DialogListDialog::getDialogs,
+                DialogCodecs_v1_21_6.this.listCodec.mapCodec("dialogs").required(), DialogListDialog::getDialogs,
                 InternalCodecs.ACTION_BUTTON_CODEC.mapCodec("exit_action").optional().defaulted(null), DialogListDialog::getExitAction,
                 Codec.minInt(1).mapCodec("columns").optional().defaulted(2), DialogListDialog::getColumns,
                 Codec.rangedInt(1, 1024).mapCodec("button_width").optional().defaulted(200), DialogListDialog::getButtonWidth,
                 DialogListDialog::new
         );
-        public static final MapCodec<MultiActionDialog> MULTI_ACTION_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
+        public final MapCodec<MultiActionDialog> multiActionDialogMapCodec = MapCodecMerger.mapCodec(
                 InternalCodecs.TEXT_CODEC.mapCodec("title").required(), MultiActionDialog::getTitle,
                 InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), MultiActionDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), MultiActionDialog::isCanCloseWithEscape,
@@ -310,7 +315,7 @@ public class DialogCodecs_v1_21_6 {
                 Codec.minInt(1).mapCodec("columns").optional().defaulted(2), MultiActionDialog::getColumns,
                 MultiActionDialog::new
         );
-        public static final MapCodec<NoticeDialog> NOTICE_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
+        public final MapCodec<NoticeDialog> noticeDialogMapCodec = MapCodecMerger.mapCodec(
                 InternalCodecs.TEXT_CODEC.mapCodec("title").required(), NoticeDialog::getTitle,
                 InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), NoticeDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), NoticeDialog::isCanCloseWithEscape,
@@ -321,7 +326,7 @@ public class DialogCodecs_v1_21_6 {
                 InternalCodecs.ACTION_BUTTON_CODEC.mapCodec("action").optional().defaulted(NoticeDialog::isDefaultAction, NoticeDialog::defaultAction), NoticeDialog::getAction,
                 NoticeDialog::new
         );
-        public static final MapCodec<ServerLinksDialog> SERVER_LINKS_DIALOG_MAP_CODEC = MapCodecMerger.mapCodec(
+        public final MapCodec<ServerLinksDialog> serverLinksDialogMapCodec = MapCodecMerger.mapCodec(
                 InternalCodecs.TEXT_CODEC.mapCodec("title").required(), ServerLinksDialog::getTitle,
                 InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), ServerLinksDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), ServerLinksDialog::isCanCloseWithEscape,
