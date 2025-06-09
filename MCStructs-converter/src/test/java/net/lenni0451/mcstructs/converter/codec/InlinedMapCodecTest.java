@@ -45,7 +45,7 @@ public class InlinedMapCodecTest {
         CompoundTag tag = new CompoundTag()
                 .addString("s1", "Test1");
 
-        assertThrows(IllegalStateException.class, () -> codec.deserialize(NbtConverter_v1_20_3.INSTANCE, tag).get());
+        assertThrows(Throwable.class, () -> codec.deserialize(NbtConverter_v1_20_3.INSTANCE, tag).get());
     }
 
 

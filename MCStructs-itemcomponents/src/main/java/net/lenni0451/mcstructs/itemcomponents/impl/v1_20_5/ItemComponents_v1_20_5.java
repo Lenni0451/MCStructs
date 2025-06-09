@@ -317,7 +317,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
 
     @Override
     public <D> ItemComponentMap mapFrom(DataConverter<D> converter, D data) {
-        Map<String, D> map = converter.asStringTypeMap(data).getOrThrow();
+        Map<String, D> map = converter.asStringTypeMap(data).get();
         ItemComponentMap out = new ItemComponentMap(this);
         for (Map.Entry<String, D> entry : map.entrySet()) {
             String name = entry.getKey();

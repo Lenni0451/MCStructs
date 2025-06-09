@@ -167,7 +167,7 @@ public class HashConverter_v1_21_5 implements DataConverter<HashCode> {
 
     @Override
     public HashCode createUnsafeMap(Map<HashCode, HashCode> values) {
-        return this.createMergedMap(values).getOrThrow();
+        return this.createMergedMap(values).get();
     }
 
     @Override
