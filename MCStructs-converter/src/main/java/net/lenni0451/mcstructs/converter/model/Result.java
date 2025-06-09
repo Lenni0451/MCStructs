@@ -9,25 +9,25 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Result<T> {
+public abstract class Result<T> {
 
     public static <T> Result<T> success(final T result) {
-        return new Result<>(result, null);
+        return new Success<>(result);
     }
 
     public static <T> Result<T> error(final String error) {
-        return new Result<>(null, new CodecException(error));
+        return new Error<>(new CodecException(error));
     }
 
     public static <T> Result<T> error(final Throwable cause) {
-        return new Result<>(null, new CodecException(cause));
+        return new Error<>(new CodecException(cause));
     }
 
     public static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
-        String errorMessages = errors.stream().filter(Result::isError).map(Result::error).map(s -> "[" + s + "]").collect(Collectors.joining(","));
+        String errorMessages = errors.stream().filter(Result::isError).map(result -> result.error().getMessage()).map(s -> "[" + s + "]").collect(Collectors.joining(","));
         CodecException exception = new CodecException(error + ": " + errorMessages);
-        errors.stream().filter(Result::isError).map(r -> r.error).forEach(exception::addSuppressed);
-        return new Result<>(null, exception);
+        errors.stream().filter(Result::isError).map(Result::error).forEach(exception::addSuppressed);
+        return new Error<>(exception);
     }
 
     public static <T> Result<T> unexpected(final Object actual, final Class<?>... expected) {
@@ -38,49 +38,44 @@ public class Result<T> {
         return error("Expected " + String.join("/", expected) + " but got " + (actual == null ? "null" : actual.getClass().getSimpleName()));
     }
 
+    protected abstract T result();
 
-    private final T result;
-    private final CodecException error;
-
-    private Result(final T result, final CodecException error) {
-        this.result = result;
-        this.error = error;
-    }
+    protected abstract CodecException error();
 
     public T get() {
         this.validate();
-        return this.result;
+        return this.result();
     }
 
     public T getOrThrow() {
-        if (this.isError()) throw this.error;
-        return this.result;
+        if (this.isError()) throw this.error();
+        return this.result();
     }
 
     @SneakyThrows
     public T getOrThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier) {
-        if (this.isError()) throw exceptionSupplier.apply(this.error);
-        return this.result;
+        if (this.isError()) throw exceptionSupplier.apply(this.error());
+        return this.result();
     }
 
     public T orElse(final T other) {
-        return this.isError() ? other : this.result;
+        return this.isError() ? other : this.result();
     }
 
     @SneakyThrows
     public T orElseThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier) {
-        if (this.isError()) throw exceptionSupplier.apply(this.error);
-        return this.result;
+        if (this.isError()) throw exceptionSupplier.apply(this.error());
+        return this.result();
     }
 
     public <N> Result<N> map(final Function<T, N> mapper) {
         if (this.isError()) return this.mapError();
-        return Result.success(mapper.apply(this.result));
+        return Result.success(mapper.apply(this.result()));
     }
 
     public <N> Result<N> mapResult(final Function<T, Result<N>> mapper) {
         if (this.isError()) return this.mapError();
-        return mapper.apply(this.result);
+        return mapper.apply(this.result());
     }
 
     public <N> Result<N> mapError() {
@@ -88,28 +83,60 @@ public class Result<T> {
         return (Result<N>) this;
     }
 
-    public String error() {
-        return this.error.getMessage();
-    }
-
     public boolean isSuccessful() {
         return !this.isError();
     }
 
     public boolean isError() {
-        return this.error != null;
+        return this.error() != null;
     }
 
     public void validate() {
-        if (this.isError()) throw new IllegalStateException("Tried to get result from error", this.error);
+        if (this.isError()) throw new IllegalStateException("Tried to get result from error", this.error());
     }
 
     @Override
     public String toString() {
         return ToString.of(this)
-                .add("result", this.result, r -> this.error == null)
-                .add("error", this.error, Objects::nonNull)
+                .add("result", this.result(), r -> this.error() == null)
+                .add("error", this.error(), Objects::nonNull)
                 .toString();
+    }
+
+    private static final class Success<T> extends Result<T> {
+        private final T result;
+
+        private Success(final T result) {
+            this.result = result;
+        }
+
+        @Override
+        public T result() {
+            return this.result;
+        }
+
+        @Override
+        protected CodecException error() {
+            return null;
+        }
+    }
+
+    private static final class Error<T> extends Result<T> {
+        private final CodecException error;
+
+        private Error(final CodecException error) {
+            this.error = error;
+        }
+
+        @Override
+        protected CodecException error() {
+            return this.error;
+        }
+
+        @Override
+        protected T result() {
+            return null;
+        }
     }
 
 }

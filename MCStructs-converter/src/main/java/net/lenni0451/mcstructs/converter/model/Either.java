@@ -4,14 +4,14 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class Either<L, R> {
+public abstract class Either<L, R> {
 
     public static <L, R> Either<L, R> left(@Nonnull L left) {
-        return new Either<>(left, null);
+        return new Left<>(left);
     }
 
     public static <L, R> Either<L, R> right(@Nonnull R right) {
-        return new Either<>(null, right);
+        return new Right<>(right);
     }
 
     public static <T> T unwrap(final Either<? extends T, ? extends T> either) {
@@ -19,56 +19,44 @@ public class Either<L, R> {
     }
 
 
-    private final L left;
-    private final R right;
+    public abstract L getLeft();
 
-    private Either(final L left, final R right) {
-        this.left = left;
-        this.right = right;
-    }
-
-    public L getLeft() {
-        return this.left;
-    }
-
-    public R getRight() {
-        return this.right;
-    }
+    public abstract R getRight();
 
     public boolean isLeft() {
-        return this.left != null;
+        return this.getLeft() != null;
     }
 
     public boolean isRight() {
-        return this.right != null;
+        return this.getRight() != null;
     }
 
     public <ML, MR> Either<ML, MR> map(final Function<L, ML> leftMapper, final Function<R, MR> rightMapper) {
         if (this.isLeft()) {
-            return Either.left(leftMapper.apply(this.left));
+            return Either.left(leftMapper.apply(this.getLeft()));
         } else {
-            return Either.right(rightMapper.apply(this.right));
+            return Either.right(rightMapper.apply(this.getRight()));
         }
     }
 
     public <T> T xmap(final Function<L, T> leftMapper, final Function<R, T> rightMapper) {
-        return this.isLeft() ? leftMapper.apply(this.left) : rightMapper.apply(this.right);
+        return this.isLeft() ? leftMapper.apply(this.getLeft()) : rightMapper.apply(this.getRight());
     }
 
     public Either<R, L> swap() {
         if (this.isLeft()) {
-            return Either.right(this.left);
+            return Either.right(this.getLeft());
         } else {
-            return Either.left(this.right);
+            return Either.left(this.getRight());
         }
     }
 
     @Override
     public String toString() {
         if (this.isLeft()) {
-            return "Left{" + this.left + "}";
+            return "Left{" + this.getLeft() + "}";
         } else {
-            return "Right{" + this.right + "}";
+            return "Right{" + this.getRight() + "}";
         }
     }
 
@@ -77,12 +65,48 @@ public class Either<L, R> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Either<?, ?> either = (Either<?, ?>) o;
-        return Objects.equals(this.left, either.left) && Objects.equals(this.right, either.right);
+        return Objects.equals(this.getLeft(), either.getLeft()) && Objects.equals(this.getRight(), either.getRight());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.left, this.right);
+        return Objects.hash(this.getLeft(), this.getRight());
+    }
+
+    private static final class Left<L, R> extends Either<L, R> {
+        private final L left;
+
+        private Left(final L left) {
+            this.left = left;
+        }
+
+        @Override
+        public L getLeft() {
+            return this.left;
+        }
+
+        @Override
+        public R getRight() {
+            return null;
+        }
+    }
+
+    private static final class Right<L, R> extends Either<L, R> {
+        private final R right;
+
+        private Right(final R right) {
+            this.right = right;
+        }
+
+        @Override
+        public L getLeft() {
+            return null;
+        }
+
+        @Override
+        public R getRight() {
+            return this.right;
+        }
     }
 
 }
