@@ -81,16 +81,7 @@ public abstract class TextComponent implements Copyable<TextComponent> {
      * @return The siblings of this component
      */
     public List<TextComponent> getSiblings() {
-        if (this.siblings == null) {
-            this.siblings = new ArrayList<>();
-        }
-        return this.siblings;
-    }
-
-    private List<TextComponent> getSiblingsOrDummy() {
-        if (this.siblings == null) {
-            return Collections.emptyList();
-        }
+        if (this.siblings == null) this.siblings = new ArrayList<>();
         return this.siblings;
     }
 
@@ -103,7 +94,9 @@ public abstract class TextComponent implements Copyable<TextComponent> {
      */
     public TextComponent forEach(final Consumer<TextComponent> consumer) {
         consumer.accept(this);
-        for (TextComponent sibling : this.getSiblingsOrDummy()) sibling.forEach(consumer);
+        if (this.siblings != null) {
+            for (TextComponent sibling : this.siblings) sibling.forEach(consumer);
+        }
         return this;
     }
 
@@ -112,9 +105,7 @@ public abstract class TextComponent implements Copyable<TextComponent> {
      */
     @Nonnull
     public Style getStyle() {
-        if (this.style == null) {
-            this.style = new Style();
-        }
+        if (this.style == null) this.style = new Style();
         return this.style;
     }
 
@@ -168,7 +159,8 @@ public abstract class TextComponent implements Copyable<TextComponent> {
      * @return This component
      */
     public TextComponent setSiblingParentStyle() {
-        for (TextComponent sibling : this.getSiblingsOrDummy()) {
+        if (this.siblings == null) return this;
+        for (TextComponent sibling : this.siblings) {
             sibling.getStyle().setParent(this.getStyle());
             sibling.setSiblingParentStyle();
         }
@@ -183,7 +175,8 @@ public abstract class TextComponent implements Copyable<TextComponent> {
      * @see Style#mergeParent()
      */
     public TextComponent mergeSiblingParentStyle() {
-        for (TextComponent sibling : this.getSiblingsOrDummy()) {
+        if (this.siblings == null) return this;
+        for (TextComponent sibling : this.siblings) {
             sibling.getStyle().setParent(this.getStyle());
             sibling.getStyle().mergeParent();
             sibling.mergeSiblingParentStyle();
@@ -200,7 +193,9 @@ public abstract class TextComponent implements Copyable<TextComponent> {
      */
     public <C extends TextComponent> C copyMetaTo(final C component) {
         component.setStyle(this.getStyle().copy());
-        for (TextComponent sibling : this.getSiblingsOrDummy()) component.append(sibling.copy());
+        if (this.siblings != null) {
+            for (TextComponent sibling : this.siblings) component.append(sibling.copy());
+        }
         return component;
     }
 
@@ -209,7 +204,9 @@ public abstract class TextComponent implements Copyable<TextComponent> {
      */
     public String asUnformattedString() {
         StringBuilder out = new StringBuilder(this.asSingleString());
-        for (TextComponent sibling : this.getSiblingsOrDummy()) out.append(sibling.asUnformattedString());
+        if (this.siblings != null) {
+            for (TextComponent sibling : this.siblings) out.append(sibling.asUnformattedString());
+        }
         return out.toString();
     }
 

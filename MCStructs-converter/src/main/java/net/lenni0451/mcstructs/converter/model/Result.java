@@ -1,104 +1,76 @@
 package net.lenni0451.mcstructs.converter.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
-import net.lenni0451.mcstructs.core.utils.ToString;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class Result<T> {
+public interface Result<T> {
 
-    public static <T> Result<T> success(final T result) {
+    static <T> Result<T> success(final T result) {
         return new Success<>(result);
     }
 
-    public static <T> Result<T> error(final String error) {
+    static <T> Result<T> error(final String error) {
         return new Error<>(new CodecException(error));
     }
 
-    public static <T> Result<T> error(final Throwable cause) {
+    static <T> Result<T> error(final Throwable cause) {
         return new Error<>(new CodecException(cause));
     }
 
-    public static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
-        String errorMessages = errors.stream().filter(Result::isError).map(result -> result.error().getMessage()).map(s -> "[" + s + "]").collect(Collectors.joining(","));
+    static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
+        String errorMessages = errors.stream().filter(Result::isError).map(Result::getError).map(CodecException::getMessage).map(s -> "[" + s + "]").collect(Collectors.joining(","));
         CodecException exception = new CodecException(error + ": " + errorMessages);
-        errors.stream().filter(Result::isError).map(Result::error).forEach(exception::addSuppressed);
+        errors.stream().filter(Result::isError).map(Result::getError).forEach(exception::addSuppressed);
         return new Error<>(exception);
     }
 
-    public static <T> Result<T> unexpected(final Object actual, final Class<?>... expected) {
+    static <T> Result<T> unexpected(final Object actual, final Class<?>... expected) {
         return unexpected(actual, Arrays.stream(expected).map(Class::getSimpleName).toArray(String[]::new));
     }
 
-    public static <T> Result<T> unexpected(final Object actual, final String... expected) {
+    static <T> Result<T> unexpected(final Object actual, final String... expected) {
         return error("Expected " + String.join("/", expected) + " but got " + (actual == null ? "null" : actual.getClass().getSimpleName()));
     }
 
-    protected abstract T result();
 
-    protected abstract CodecException error();
+    T get();
 
-    public T get() {
-        if (this.isError()) throw this.error();
-        return this.result();
-    }
+    CodecException getError();
 
-    @SneakyThrows
-    public T getOrThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier) {
-        if (this.isError()) throw exceptionSupplier.apply(this.error());
-        return this.result();
-    }
+    T getOrThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier);
 
-    public T orElse(final T other) {
-        return this.isError() ? other : this.result();
-    }
+    T orElse(final T other);
 
     @SneakyThrows
-    public T orElseThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier) {
-        if (this.isError()) throw exceptionSupplier.apply(this.error());
-        return this.result();
-    }
+    T orElseThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier);
 
-    public <N> Result<N> map(final Function<T, N> mapper) {
-        if (this.isError()) return this.mapError();
-        return Result.success(mapper.apply(this.result()));
-    }
+    <N> Result<N> map(final Function<T, N> mapper);
 
-    public <N> Result<N> mapResult(final Function<T, Result<N>> mapper) {
-        if (this.isError()) return this.mapError();
-        return mapper.apply(this.result());
-    }
+    <N> Result<N> mapResult(final Function<T, Result<N>> mapper);
 
-    public <N> Result<N> mapError() {
-        if (!this.isError()) return Result.error("No error");
-        return (Result<N>) this;
-    }
+    <N> Result<N> mapError();
 
-    public boolean isSuccessful() {
-        return !this.isError();
-    }
+    boolean isSuccessful();
 
-    public boolean isError() {
-        return this.error() != null;
-    }
-
-    public void validate() {
-        if (this.isError()) throw new IllegalStateException("Tried to get result from error", this.error());
-    }
+    boolean isError();
 
     @Override
-    public String toString() {
-        return ToString.of(this)
-                .add("result", this.result(), r -> this.error() == null)
-                .add("error", this.error(), Objects::nonNull)
-                .toString();
-    }
+    String toString();
 
-    private static final class Success<T> extends Result<T> {
+    @Override
+    boolean equals(Object obj);
+
+    @Override
+    int hashCode();
+
+
+    @EqualsAndHashCode(callSuper = false)
+    class Success<T> implements Result<T> {
         private final T result;
 
         private Success(final T result) {
@@ -106,17 +78,63 @@ public abstract class Result<T> {
         }
 
         @Override
-        public T result() {
+        public T get() {
             return this.result;
         }
 
         @Override
-        protected CodecException error() {
+        public CodecException getError() {
             return null;
+        }
+
+        @Override
+        public T getOrThrow(Function<Throwable, ? extends Throwable> exceptionSupplier) {
+            return this.result;
+        }
+
+        @Override
+        public T orElse(T other) {
+            return this.result;
+        }
+
+        @Override
+        public T orElseThrow(Function<Throwable, ? extends Throwable> exceptionSupplier) {
+            return this.result;
+        }
+
+        @Override
+        public <N> Result<N> map(Function<T, N> mapper) {
+            return Result.success(mapper.apply(this.result));
+        }
+
+        @Override
+        public <N> Result<N> mapResult(Function<T, Result<N>> mapper) {
+            return mapper.apply(this.result);
+        }
+
+        @Override
+        public <N> Result<N> mapError() {
+            return Result.error("No error");
+        }
+
+        @Override
+        public boolean isSuccessful() {
+            return true;
+        }
+
+        @Override
+        public boolean isError() {
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            return "Success{" + this.result + "}";
         }
     }
 
-    private static final class Error<T> extends Result<T> {
+    @EqualsAndHashCode(callSuper = false)
+    class Error<T> implements Result<T> {
         private final CodecException error;
 
         private Error(final CodecException error) {
@@ -124,13 +142,60 @@ public abstract class Result<T> {
         }
 
         @Override
-        protected CodecException error() {
+        public T get() {
+            throw this.error;
+        }
+
+        @Override
+        public CodecException getError() {
             return this.error;
         }
 
         @Override
-        protected T result() {
-            return null;
+        @SneakyThrows
+        public T getOrThrow(Function<Throwable, ? extends Throwable> exceptionSupplier) {
+            throw exceptionSupplier.apply(this.error);
+        }
+
+        @Override
+        public T orElse(T other) {
+            return other;
+        }
+
+        @Override
+        @SneakyThrows
+        public T orElseThrow(Function<Throwable, ? extends Throwable> exceptionSupplier) {
+            throw exceptionSupplier.apply(this.error);
+        }
+
+        @Override
+        public <N> Result<N> map(Function<T, N> mapper) {
+            return this.mapError();
+        }
+
+        @Override
+        public <N> Result<N> mapResult(Function<T, Result<N>> mapper) {
+            return this.mapError();
+        }
+
+        @Override
+        public <N> Result<N> mapError() {
+            return (Result<N>) this;
+        }
+
+        @Override
+        public boolean isSuccessful() {
+            return false;
+        }
+
+        @Override
+        public boolean isError() {
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return "Error{" + this.error.getMessage() + "}";
         }
     }
 
