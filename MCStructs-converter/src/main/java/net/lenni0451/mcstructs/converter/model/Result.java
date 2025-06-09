@@ -43,11 +43,6 @@ public abstract class Result<T> {
     protected abstract CodecException error();
 
     public T get() {
-        this.validate();
-        return this.result();
-    }
-
-    public T getOrThrow() {
         if (this.isError()) throw this.error();
         return this.result();
     }

@@ -233,7 +233,7 @@ public class TextComponentCodec {
      * @return The deserialized text component
      */
     public TextComponent deserialize(final NbtTag nbt) {
-        return this.getTextCodec().deserialize(this.nbtConverter, nbt).getOrThrow();
+        return this.getTextCodec().deserialize(this.nbtConverter, nbt).get();
     }
 
     /**
@@ -253,7 +253,7 @@ public class TextComponentCodec {
      * @return The serialized nbt tag
      */
     public NbtTag serializeNbtTree(final TextComponent component) {
-        return this.getTextCodec().serialize(this.nbtConverter, component).getOrThrow();
+        return this.getTextCodec().serialize(this.nbtConverter, component).get();
     }
 
     /**
