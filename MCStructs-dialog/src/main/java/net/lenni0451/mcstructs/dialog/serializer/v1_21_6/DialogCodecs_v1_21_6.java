@@ -1,5 +1,6 @@
 package net.lenni0451.mcstructs.dialog.serializer.v1_21_6;
 
+import lombok.Getter;
 import net.lenni0451.mcstructs.converter.SerializedData;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
@@ -41,8 +42,11 @@ import java.util.function.Function;
 public class DialogCodecs_v1_21_6 extends DialogSerializer {
 
     private final DialogCodecs dialogCodecs;
+    @Getter
     public final Codec<Dialog> directCodec;
+    @Getter
     public final Codec<EitherEntry<Dialog>> codec;
+    @Getter
     public final Codec<TypedTagEntryList<Dialog>> listCodec;
 
     public DialogCodecs_v1_21_6(final Registry registry) {

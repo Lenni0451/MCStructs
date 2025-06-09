@@ -40,8 +40,8 @@ import java.util.function.Supplier;
  * The text component serializer and deserializer wrapper class for multiple types of input and output.<br>
  * Use the static default fields for a specific minecraft version or create your own serializer/deserializer.<br>
  * <br>
- * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} class because components can now be serialized to nbt.<br>
- * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} will still be updated using this wrapper method.
+ * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link TextComponentSerializer} class because components can now be serialized to nbt.<br>
+ * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link TextComponentSerializer} will still be updated using this wrapper method.
  */
 @ParametersAreNonnullByDefault
 public class TextComponentCodec {
@@ -287,10 +287,10 @@ public class TextComponentCodec {
     }
 
     /**
-     * @return A wrapper for this codec to use it as a {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer}.
+     * @return A wrapper for this codec to use it as a {@link TextComponentSerializer}.
      */
-    public net.lenni0451.mcstructs.text.serializer.TextComponentSerializer asSerializer() {
-        return new net.lenni0451.mcstructs.text.serializer.TextComponentSerializer(this, () -> new GsonBuilder()
+    public TextComponentSerializer asSerializer() {
+        return new TextComponentSerializer(this, () -> new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, (JsonSerializer<TextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
                 .registerTypeHierarchyAdapter(TextComponent.class, (JsonDeserializer<TextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
                 .disableHtmlEscaping()
