@@ -1,6 +1,5 @@
 package net.lenni0451.mcstructs.dialog.serializer.v1_21_6;
 
-import lombok.RequiredArgsConstructor;
 import net.lenni0451.mcstructs.converter.SerializedData;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
@@ -39,29 +38,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@RequiredArgsConstructor
 public class DialogCodecs_v1_21_6 extends DialogSerializer {
 
-    private final Registry registry;
-    private final DialogCodecs dialogCodecs = new DialogCodecs();
-    public final Codec<Dialog> directCodec = Codec.identified(DialogType.values()).typed(Dialog::getType, type -> {
-        switch (type) {
-            case NOTICE:
-                return this.dialogCodecs.noticeDialogMapCodec;
-            case SERVER_LINKS:
-                return this.dialogCodecs.serverLinksDialogMapCodec;
-            case DIALOG_LIST:
-                return this.dialogCodecs.dialogListDialogMapCodec;
-            case MULTI_ACTION:
-                return this.dialogCodecs.multiActionDialogMapCodec;
-            case CONFIRMATION:
-                return this.dialogCodecs.confirmationDialogMapCodec;
-            default:
-                throw new IllegalArgumentException("Unknown dialog type: " + type);
-        }
-    });
-    public final Codec<EitherEntry<Dialog>> codec = EitherEntry.codec(this.registry, this.directCodec);
-    public final Codec<TypedTagEntryList<Dialog>> listCodec = TypedTagEntryList.codec(this.registry, this.directCodec, false);
+    private final DialogCodecs dialogCodecs;
+    public final Codec<Dialog> directCodec;
+    public final Codec<EitherEntry<Dialog>> codec;
+    public final Codec<TypedTagEntryList<Dialog>> listCodec;
+
+    public DialogCodecs_v1_21_6(final Registry registry) {
+        this.dialogCodecs = new DialogCodecs();
+        this.directCodec = Codec.identified(DialogType.values()).typed(Dialog::getType, type -> {
+            switch (type) {
+                case NOTICE:
+                    return this.dialogCodecs.noticeDialogMapCodec;
+                case SERVER_LINKS:
+                    return this.dialogCodecs.serverLinksDialogMapCodec;
+                case DIALOG_LIST:
+                    return this.dialogCodecs.dialogListDialogMapCodec;
+                case MULTI_ACTION:
+                    return this.dialogCodecs.multiActionDialogMapCodec;
+                case CONFIRMATION:
+                    return this.dialogCodecs.confirmationDialogMapCodec;
+                default:
+                    throw new IllegalArgumentException("Unknown dialog type: " + type);
+            }
+        });
+        this.codec = EitherEntry.codec(registry, this.directCodec);
+        this.listCodec = TypedTagEntryList.codec(registry, this.directCodec, false);
+    }
 
     public static class InternalCodecs {
         private static final Codec<TextComponent> TEXT_CODEC = TextCodecs_v1_21_6.TEXT;
@@ -288,7 +292,7 @@ public class DialogCodecs_v1_21_6 extends DialogSerializer {
                 InternalCodecs.ACTION_BUTTON_CODEC.mapCodec("no").required(), ConfirmationDialog::getNoButton,
                 ConfirmationDialog::new
         );
-        public final MapCodec<DialogListDialog> dialogListDialogMapCodec = MapCodecMerger.mapCodec(
+        public final MapCodec<DialogListDialog> dialogListDialogMapCodec = MapCodec.lazyInit(() -> MapCodecMerger.mapCodec(
                 InternalCodecs.TEXT_CODEC.mapCodec("title").required(), DialogListDialog::getTitle,
                 InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), DialogListDialog::getExternalTitle,
                 Codec.BOOLEAN.mapCodec("can_close_with_escape").optional().defaulted(true), DialogListDialog::isCanCloseWithEscape,
@@ -301,7 +305,7 @@ public class DialogCodecs_v1_21_6 extends DialogSerializer {
                 Codec.minInt(1).mapCodec("columns").optional().defaulted(2), DialogListDialog::getColumns,
                 Codec.rangedInt(1, 1024).mapCodec("button_width").optional().defaulted(200), DialogListDialog::getButtonWidth,
                 DialogListDialog::new
-        );
+        ));
         public final MapCodec<MultiActionDialog> multiActionDialogMapCodec = MapCodecMerger.mapCodec(
                 InternalCodecs.TEXT_CODEC.mapCodec("title").required(), MultiActionDialog::getTitle,
                 InternalCodecs.TEXT_CODEC.mapCodec("external_title").optional().defaulted(null), MultiActionDialog::getExternalTitle,

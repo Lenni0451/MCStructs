@@ -62,6 +62,24 @@ public interface MapCodec<T> extends MapSerializer<T>, MapDeserializer<T> {
         return new RecursiveMapCodec<>(creator);
     }
 
+    static <T> MapCodec<T> lazyInit(final Supplier<MapCodec<T>> supplier) {
+        return new MapCodec<T>() {
+            private MapCodec<T> codec;
+
+            @Override
+            public <S> Result<Map<S, S>> serialize(DataConverter<S> converter, Map<S, S> map, T element) {
+                if (this.codec == null) this.codec = supplier.get();
+                return this.codec.serialize(converter, map, element);
+            }
+
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, Map<S, S> map) {
+                if (this.codec == null) this.codec = supplier.get();
+                return this.codec.deserialize(converter, map);
+            }
+        };
+    }
+
 
     default FieldMapCodec.Builder.Stage1<T> field(final String fieldName) {
         return this.asCodec().mapCodec(fieldName);
