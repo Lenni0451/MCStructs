@@ -57,11 +57,11 @@ public class TextCodecs_v1_21_4 {
             Codec.STRING.mapCodec("keybind").required(), KeybindComponent::getKeybind,
             KeybindComponent::new
     );
-    public static final MapCodec<ScoreComponent> SCORE_COMPONENT = MapCodecMerger.mapCodec(
+    public static final MapCodec<ScoreComponent> SCORE_COMPONENT = MapCodecMerger.codec(
             Codec.STRING.mapCodec("name").required(), ScoreComponent::getName,
             Codec.STRING.mapCodec("objective").required(), ScoreComponent::getObjective,
             ScoreComponent::new
-    );
+    ).mapCodec("score").required();
     public static final MapCodec<SelectorComponent> SELECTOR_COMPONENT = MapCodecMerger.mapCodec(
             Codec.STRING.converterVerified(verify(TextVerifier_v1_21_4.class, TextVerifier_v1_21_4::verifySelector, "Invalid selector")).mapCodec("selector").required(), SelectorComponent::getSelector,
             TEXT.mapCodec("separator").optional().defaulted(null), SelectorComponent::getSeparator,
