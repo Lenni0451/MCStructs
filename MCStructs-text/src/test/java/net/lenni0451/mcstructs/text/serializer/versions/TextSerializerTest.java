@@ -2,7 +2,6 @@ package net.lenni0451.mcstructs.text.serializer.versions;
 
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.StringComponent;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -38,7 +37,6 @@ public abstract class TextSerializerTest {
 
     protected abstract String serialize(final TextComponent component);
 
-    @Test
     protected abstract void runTests();
 
     protected void executeDeserializeTests(final TextComponent... deserializeResults) {
