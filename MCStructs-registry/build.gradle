@@ -1,3 +1,7 @@
+plugins {
+    id "project.defaults"
+}
+
 dependencies {
     api project(':MCStructs-core')
     api project(':MCStructs-converter')

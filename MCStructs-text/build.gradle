@@ -1,5 +1,9 @@
+plugins {
+    id "project.defaults"
+}
+
 dependencies {
-    api "com.google.code.gson:gson:2.13.1"
+    api libs.gson
 
     api project(":MCStructs-converter")
     api project(":MCStructs-core")

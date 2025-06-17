@@ -4,39 +4,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "gradle"
-    directory: "/"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/MCStructs-all"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/MCStructs-converter"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/MCStructs-core"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/MCStructs-data"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/MCStructs-itemcomponents"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/MCStructs-nbt"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/MCStructs-snbt"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/MCStructs-text"
+  - directory: "/"
+    package-ecosystem: "gradle"
     schedule:
       interval: "daily"
