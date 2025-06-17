@@ -25,12 +25,13 @@ public class ItemComponents_v1_21_6 extends ItemComponents_v1_21_5 {
     public final ItemComponent<Equippable> EQUIPPABLE = this.register("equippable", MapCodecMerger.codec(
             Codec.named(Types_v1_21_2.EquipmentSlot.values()).mapCodec(Equippable.SLOT).required(), Equippable::getSlot,
             this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optional().defaulted(new EitherEntry<>(this.registries.sound.getEntry(Identifier.of("item.armor.equip_generic")))), Equippable::getEquipSound,
-            Codec.STRING_IDENTIFIER.mapCodec("asset_id").optional().defaulted(null), Equippable::getModel,
+            Codec.STRING_IDENTIFIER.mapCodec("asset_id").optional().defaulted(null), Equippable::getAssetId,
             Codec.STRING_IDENTIFIER.mapCodec(Equippable.CAMERA_OVERLAY).optional().defaulted(null), Equippable::getCameraOverlay,
             TagEntryList.codec(this.registries.entityType, false).mapCodec(Equippable.ALLOWED_ENTITIES).optional().defaulted(null), Equippable::getAllowedEntities,
             Codec.BOOLEAN.mapCodec(Equippable.DISPENSABLE).optional().defaulted(true), Equippable::isDispensable,
             Codec.BOOLEAN.mapCodec(Equippable.SWAPPABLE).optional().defaulted(true), Equippable::isSwappable,
             Codec.BOOLEAN.mapCodec(Equippable.DAMAGE_ON_HURT).optional().defaulted(true), Equippable::isDamageOnHurt,
+            Codec.BOOLEAN.mapCodec(Equippable.EQUIP_ON_INTERACT).optional().defaulted(false), Equippable::isEquipOnInteract,
             Codec.BOOLEAN.mapCodec(Equippable.CAN_BE_SHEARED).optional().defaulted(false), Equippable::isCanBeSheared,
             this.typeSerializers.soundEvent().mapCodec(Equippable.SHEARING_SOUND).optional().defaulted(new EitherEntry<>(this.registries.sound.getEntry(Identifier.of("item.shears.snip")))), Equippable::getEquipSound,
             Equippable::new

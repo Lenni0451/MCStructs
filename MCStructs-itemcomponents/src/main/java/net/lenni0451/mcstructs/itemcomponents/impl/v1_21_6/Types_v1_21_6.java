@@ -78,23 +78,25 @@ public class Types_v1_21_6 {
     public static class Equippable {
         public static final String SLOT = "slot";
         public static final String EQUIP_SOUND = "equip_sound";
-        public static final String MODEL = "model";
+        public static final String ASSET_ID = "asset_id";
         public static final String CAMERA_OVERLAY = "camera_overlay";
         public static final String ALLOWED_ENTITIES = "allowed_entities";
         public static final String DISPENSABLE = "dispensable";
         public static final String SWAPPABLE = "swappable";
         public static final String DAMAGE_ON_HURT = "damage_on_hurt";
+        public static final String EQUIP_ON_INTERACT = "equip_on_interact";
         public static final String CAN_BE_SHEARED = "can_be_sheared";
         public static final String SHEARING_SOUND = "shearing_sound";
 
         private Types_v1_21_2.EquipmentSlot slot;
         private EitherEntry<Types_v1_20_5.SoundEvent> equipSound; //Default: item.armor.equip_generic
-        private Identifier model = null;
+        private Identifier assetId = null;
         private Identifier cameraOverlay = null;
         private TagEntryList allowedEntities = null;
         private boolean dispensable = true;
         private boolean swappable = true;
         private boolean damageOnHurt = true;
+        private boolean equipOnInteract = false;
         private boolean canBeSheared = false;
         private EitherEntry<Types_v1_20_5.SoundEvent> shearingSound = null; //Default: item.shears.snip
 
