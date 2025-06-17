@@ -30,6 +30,11 @@ public class TypeSerializers_v1_21_6 extends TypeSerializers_v1_21_5 {
         return this.init(ATTRIBUTE_MODIFIER, () -> {
             Map<AttributeModifier.Display.Type, MapCodec<? extends AttributeModifier.Display>> codecs = new EnumMap<>(AttributeModifier.Display.Type.class);
             codecs.put(AttributeModifier.Display.Type.DEFAULT, MapCodec.unit(AttributeModifier.Display.Default::new));
+            codecs.put(AttributeModifier.Display.Type.HIDDEN, MapCodec.unit(AttributeModifier.Display.Hidden::new));
+            codecs.put(AttributeModifier.Display.Type.OVERRIDE, MapCodecMerger.mapCodec(
+                    this.textComponentCodec.getTextCodec().mapCodec(AttributeModifier.Display.OverrideText.VALUE).required(), AttributeModifier.Display.OverrideText::getValue,
+                    AttributeModifier.Display.OverrideText::new
+            ));
             return MapCodecMerger.codec(
                     this.registry.getRegistries().attributeModifier.entryCodec().mapCodec(AttributeModifier.TYPE).required(), AttributeModifier::getType,
                     MapCodecMerger.mapCodec(

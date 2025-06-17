@@ -63,6 +63,7 @@ public class Types_v1_21_6 {
 
             @Data
             @NoArgsConstructor
+            @AllArgsConstructor
             class OverrideText implements Display {
                 public static final String VALUE = "value";
 
