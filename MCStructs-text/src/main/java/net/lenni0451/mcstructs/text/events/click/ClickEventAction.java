@@ -24,7 +24,16 @@ public enum ClickEventAction implements NamedType {
     /**
      * Added in Minecraft 1.16.
      */
-    COPY_TO_CLIPBOARD("copy_to_clipboard", true);
+    COPY_TO_CLIPBOARD("copy_to_clipboard", true),
+    /**
+     * Added in Minecraft 1.21.6.
+     */
+    SHOW_DIALOG("show_dialog", true),
+    /**
+     * Added in Minecraft 1.21.6.
+     */
+    CUSTOM("custom", true),
+    ;
 
     @Nullable
     public static ClickEventAction byName(final String name) {

@@ -26,6 +26,8 @@ import net.lenni0451.mcstructs.text.serializer.v1_21_4.StyleCodecs_v1_21_4;
 import net.lenni0451.mcstructs.text.serializer.v1_21_4.TextCodecs_v1_21_4;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.StyleCodecs_v1_21_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
+import net.lenni0451.mcstructs.text.serializer.v1_21_6.StyleCodecs_v1_21_6;
+import net.lenni0451.mcstructs.text.serializer.v1_21_6.TextCodecs_v1_21_6;
 import net.lenni0451.mcstructs.text.serializer.verify.TextVerifier;
 import net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter;
 
@@ -38,8 +40,8 @@ import java.util.function.Supplier;
  * The text component serializer and deserializer wrapper class for multiple types of input and output.<br>
  * Use the static default fields for a specific minecraft version or create your own serializer/deserializer.<br>
  * <br>
- * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} class because components can now be serialized to nbt.<br>
- * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer} will still be updated using this wrapper method.
+ * This class will now be used for implementations of new minecraft versions (1.20.3+) instead of the {@link TextComponentSerializer} class because components can now be serialized to nbt.<br>
+ * Backwards compatibility is supported through the {@link #asSerializer()} method. The fields in {@link TextComponentSerializer} will still be updated using this wrapper method.
  */
 @ParametersAreNonnullByDefault
 public class TextComponentCodec {
@@ -66,9 +68,13 @@ public class TextComponentCodec {
      */
     public static final TextComponentCodec V1_21_5 = new TextComponentCodec(() -> SNbt.V1_21_5, () -> TextCodecs_v1_21_5.TEXT, () -> StyleCodecs_v1_21_5.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_21_5.INSTANCE);
     /**
+     * The text codec for 1.21.6.
+     */
+    public static final TextComponentCodec V1_21_6 = new TextComponentCodec(() -> SNbt.V1_21_5, () -> TextCodecs_v1_21_6.TEXT, () -> StyleCodecs_v1_21_6.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_21_5.INSTANCE);
+    /**
      * The latest text codec.
      */
-    public static final TextComponentCodec LATEST = V1_21_5;
+    public static final TextComponentCodec LATEST = V1_21_6;
 
 
     private final Supplier<SNbt<CompoundTag>> sNbtSupplier;
@@ -281,10 +287,10 @@ public class TextComponentCodec {
     }
 
     /**
-     * @return A wrapper for this codec to use it as a {@link net.lenni0451.mcstructs.text.serializer.TextComponentSerializer}.
+     * @return A wrapper for this codec to use it as a {@link TextComponentSerializer}.
      */
-    public net.lenni0451.mcstructs.text.serializer.TextComponentSerializer asSerializer() {
-        return new net.lenni0451.mcstructs.text.serializer.TextComponentSerializer(this, () -> new GsonBuilder()
+    public TextComponentSerializer asSerializer() {
+        return new TextComponentSerializer(this, () -> new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, (JsonSerializer<TextComponent>) (src, typeOfSrc, context) -> this.serializeJsonTree(src))
                 .registerTypeHierarchyAdapter(TextComponent.class, (JsonDeserializer<TextComponent>) (src, typeOfSrc, context) -> this.deserializeJsonTree(src))
                 .disableHtmlEscaping()

@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.converter.codec;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
+import net.lenni0451.mcstructs.converter.SerializedData;
 import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.mapcodec.impl.FieldMapCodec;
 import net.lenni0451.mcstructs.converter.mapcodec.impl.TypedMapCodec;
@@ -165,6 +166,17 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         return new UUID(mostSigBits, leastSigBits);
     });
     Codec<UUID> STRICT_STRING_UUID = Codec.STRING.mapThrowing(UUID::toString, UUID::fromString);
+    Codec<SerializedData<?>> RAW = new Codec<SerializedData<?>>() {
+        @Override
+        public <S> Result<S> serialize(DataConverter<S> converter, SerializedData<?> element) {
+            return element.convert(converter);
+        }
+
+        @Override
+        public <S> Result<SerializedData<?>> deserialize(DataConverter<S> converter, S data) {
+            return Result.success(new SerializedData<>(data, converter));
+        }
+    };
 
     static <T> Codec<T> unit(final Supplier<T> supplier) {
         return new Codec<T>() {
@@ -316,6 +328,14 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
+    static <T> Codec<T> withAlternative(final Codec<T> codec, final Codec<T> alternative) {
+        return either(codec, alternative).map(Either::left, Either::unwrap);
+    }
+
+    static <T, A> Codec<T> withAlternative(final Codec<T> codec, final Codec<A> alternative, final Function<A, T> mapper) {
+        return either(codec, alternative).map(Either::left, either -> either.xmap(Function.identity(), mapper));
+    }
+
     @SafeVarargs
     static <T> Codec<T> oneOf(final Codec<T>... codecs) {
         if (codecs.length == 0) throw new IllegalArgumentException("At least one codec is required");
@@ -384,12 +404,34 @@ public interface Codec<T> extends DataSerializer<T>, DataDeserializer<T> {
         };
     }
 
+    static <T> Codec<List<T>> compactList(final Codec<T> elementCodec) {
+        return compactList(elementCodec, elementCodec.listOf());
+    }
+
     static <T> Codec<List<T>> compactList(final Codec<T> elementCodec, final Codec<List<T>> listCodec) {
         return Codec.either(listCodec, elementCodec).map(list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list), either -> either.xmap(list -> list, item -> {
             List<T> list = new ArrayList<>();
             list.add(item);
             return list;
         }));
+    }
+
+    static <T> Codec<T> lazyInit(final Supplier<Codec<T>> initializer) {
+        return new Codec<T>() {
+            private Codec<T> codec;
+
+            @Override
+            public <S> Result<S> serialize(DataConverter<S> converter, T element) {
+                if (this.codec == null) this.codec = initializer.get();
+                return this.codec.serialize(converter, element);
+            }
+
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, S data) {
+                if (this.codec == null) this.codec = initializer.get();
+                return this.codec.deserialize(converter, data);
+            }
+        };
     }
 
 

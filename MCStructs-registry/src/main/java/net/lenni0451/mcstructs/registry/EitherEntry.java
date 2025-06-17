@@ -1,4 +1,4 @@
-package net.lenni0451.mcstructs.itemcomponents.registry;
+package net.lenni0451.mcstructs.registry;
 
 import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.converter.codec.Codec;

@@ -1,36 +1,18 @@
-package net.lenni0451.mcstructs.itemcomponents.registry;
+package net.lenni0451.mcstructs.registry;
 
 import lombok.EqualsAndHashCode;
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.core.utils.ToString;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
- * A class that represents a list of {@link RegistryEntry}s or a {@link RegistryTag}.
+ * A class that represents a {@link RegistryTag} or a list of {@link RegistryEntry}.
  */
 @EqualsAndHashCode
 public class TagEntryList {
-
-    private static Codec<List<RegistryEntry>> homogenousList(final Codec<RegistryEntry> entryCodec, final boolean requireList) {
-        Codec<List<RegistryEntry>> listCodec = entryCodec.listOf();
-        if (requireList) {
-            return listCodec;
-        } else {
-            return Codec.either(listCodec, entryCodec)
-                    .map(registryEntries -> {
-                        if (registryEntries.size() == 1) {
-                            return Either.right(registryEntries.get(0));
-                        } else {
-                            return Either.left(registryEntries);
-                        }
-                    }, either -> either.xmap(Function.identity(), Arrays::asList));
-        }
-    }
 
     /**
      * Create a codec for this class bound to the given registry.
@@ -40,7 +22,7 @@ public class TagEntryList {
      * @return The codec for this class
      */
     public static Codec<TagEntryList> codec(final Registry registry, final boolean requireList) {
-        return Codec.either(RegistryTag.codec(registry), homogenousList(registry.entryCodec(), requireList))
+        return Codec.either(RegistryTag.codec(registry), HomogenousListCodec.codec(registry.entryCodec(), requireList))
                 .map(tagEntryList -> tagEntryList.isTag() ? Either.left(tagEntryList.getTag()) : Either.right(tagEntryList.getEntries()),
                         either -> either.xmap(TagEntryList::new, TagEntryList::new));
     }

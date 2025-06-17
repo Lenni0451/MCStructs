@@ -13,7 +13,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeMo
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.AttributeModifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.Food;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21.JukeboxPlayable;
-import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.EitherEntry;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;

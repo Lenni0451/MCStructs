@@ -8,9 +8,9 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
-import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
-import net.lenni0451.mcstructs.itemcomponents.registry.RegistryTag;
-import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
+import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.RegistryTag;
+import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;

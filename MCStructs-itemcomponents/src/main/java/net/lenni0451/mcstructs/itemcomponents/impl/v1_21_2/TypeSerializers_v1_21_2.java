@@ -10,7 +10,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.TypeSerializers_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
-import net.lenni0451.mcstructs.itemcomponents.registry.TagEntryList;
+import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.EnumMap;

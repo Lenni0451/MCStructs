@@ -52,7 +52,8 @@ public class LegacyStringDeserializer {
     }
 
     /**
-     * Replaced by {@link StringFormat#fromString(String, ColorHandling, DeserializerUnknownHandling)}.
+     * Replaced by {@link StringFormat#fromString(String, ColorHandling, DeserializerUnknownHandling)}.<br>
+     * Currently has no replacement for the styleSupplier. This method will only be removed once a replacement with a styleSupplier is available in StringFormat.
      */
     @Deprecated
     public static TextComponent parse(final String s, final char colorChar, final Supplier<Style> styleSupplier, final Function<Character, TextFormatting> formattingResolver) {

@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
-import net.lenni0451.mcstructs.itemcomponents.registry.EitherEntry;
-import net.lenni0451.mcstructs.itemcomponents.registry.RegistryEntry;
+import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.text.TextComponent;
 
 import javax.annotation.Nullable;

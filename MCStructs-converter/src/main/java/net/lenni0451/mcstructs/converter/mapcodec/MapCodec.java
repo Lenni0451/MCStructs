@@ -2,6 +2,7 @@ package net.lenni0451.mcstructs.converter.mapcodec;
 
 import net.lenni0451.mcstructs.converter.DataConverter;
 import net.lenni0451.mcstructs.converter.codec.Codec;
+import net.lenni0451.mcstructs.converter.codec.ThrowingFunction;
 import net.lenni0451.mcstructs.converter.mapcodec.impl.FieldMapCodec;
 import net.lenni0451.mcstructs.converter.mapcodec.impl.RecursiveMapCodec;
 import net.lenni0451.mcstructs.converter.model.Result;
@@ -61,6 +62,24 @@ public interface MapCodec<T> extends MapSerializer<T>, MapDeserializer<T> {
         return new RecursiveMapCodec<>(creator);
     }
 
+    static <T> MapCodec<T> lazyInit(final Supplier<MapCodec<T>> supplier) {
+        return new MapCodec<T>() {
+            private MapCodec<T> codec;
+
+            @Override
+            public <S> Result<Map<S, S>> serialize(DataConverter<S> converter, Map<S, S> map, T element) {
+                if (this.codec == null) this.codec = supplier.get();
+                return this.codec.serialize(converter, map, element);
+            }
+
+            @Override
+            public <S> Result<T> deserialize(DataConverter<S> converter, Map<S, S> map) {
+                if (this.codec == null) this.codec = supplier.get();
+                return this.codec.deserialize(converter, map);
+            }
+        };
+    }
+
 
     default FieldMapCodec.Builder.Stage1<T> field(final String fieldName) {
         return this.asCodec().mapCodec(fieldName);
@@ -76,6 +95,30 @@ public interface MapCodec<T> extends MapSerializer<T>, MapDeserializer<T> {
             @Override
             public <S> Result<N> deserialize(DataConverter<S> converter, Map<S, S> map) {
                 return MapCodec.this.deserialize(converter, map).map(deserializer);
+            }
+        };
+    }
+
+    default <N> MapCodec<N> mapThrowing(final ThrowingFunction<N, T> serializer, final ThrowingFunction<T, N> deserializer) {
+        return new MapCodec<N>() {
+            @Override
+            public <S> Result<Map<S, S>> serialize(DataConverter<S> converter, Map<S, S> map, N element) {
+                try {
+                    return MapCodec.this.serialize(converter, map, serializer.apply(element));
+                } catch (Throwable t) {
+                    return Result.error(t);
+                }
+            }
+
+            @Override
+            public <S> Result<N> deserialize(DataConverter<S> converter, Map<S, S> map) {
+                return MapCodec.this.deserialize(converter, map).mapResult(t -> {
+                    try {
+                        return Result.success(deserializer.apply(t));
+                    } catch (Throwable t2) {
+                        return Result.error(t2);
+                    }
+                });
             }
         };
     }
