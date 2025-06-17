@@ -30,7 +30,7 @@ public class Test_v1_21_6 extends ItemComponentTest<ItemComponents_v1_21_6> {
     @Override
     protected void register(ItemComponents_v1_21_6 registry) {
         register(registry.ATTRIBUTE_MODIFIERS, Arrays.asList(new AttributeModifier(registry.getRegistries().attributeModifier.getEntry(Identifier.of("test")), new Types_v1_21.AttributeModifier.EntityAttribute(Identifier.of("test"), 1, Types_v1_21.AttributeModifier.EntityAttribute.Operation.ADD_MULTIPLIED_TOTAL))));
-        register(registry.EQUIPPABLE, new Equippable(Types_v1_21_2.EquipmentSlot.CHEST, registry.getRegistries().sound.getLeftEntry(Identifier.of("test")), Identifier.of("test"), Identifier.of("test2"), new TagEntryList(Arrays.asList(registry.getRegistries().entityType.getEntry(Identifier.of("test1")), registry.getRegistries().entityType.getEntry(Identifier.of("test2")))), false, false, false, true, registry.getRegistries().sound.getLeftEntry(Identifier.of("test"))));
+        register(registry.EQUIPPABLE, new Equippable(Types_v1_21_2.EquipmentSlot.CHEST, registry.getRegistries().sound.getLeftEntry(Identifier.of("test")), Identifier.of("test"), Identifier.of("test2"), new TagEntryList(Arrays.asList(registry.getRegistries().entityType.getEntry(Identifier.of("test1")), registry.getRegistries().entityType.getEntry(Identifier.of("test2")))), false, false, false, true, true, registry.getRegistries().sound.getLeftEntry(Identifier.of("test"))));
     }
 
 }
