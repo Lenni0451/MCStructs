@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class ButtonListDialog extends Dialog {
+public abstract class ButtonListDialog extends Dialog {
 
     private int columns;
 
