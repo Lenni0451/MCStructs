@@ -150,6 +150,22 @@ public abstract class StringFormat {
      * @return The converted text component
      */
     public TextComponent fromString(final String s, final ColorHandling colorHandling, final DeserializerUnknownHandling unknownHandling) {
+        return this.fromString(s, colorHandling, unknownHandling, true);
+    }
+
+    /**
+     * Convert a string to a {@link TextComponent}.<br>
+     * The color handling is used to determine if color codes should be treated as reset codes.<br>
+     * The unknown handling is used to determine what should happen if an unsupported formatting is encountered.<br>
+     * The string will be split into multiple components if multiple formatting codes are present.<br>
+     * Empty sections are ignored if {@code ignoreEmptySections} is {@code true}, otherwise they are included as empty components.
+     *
+     * @param s               The string to convert
+     * @param colorHandling   The color handling
+     * @param unknownHandling The unknown handling
+     * @return The converted text component
+     */
+    public TextComponent fromString(final String s, final ColorHandling colorHandling, final DeserializerUnknownHandling unknownHandling, final boolean ignoreEmptySections) {
         TextStringReader reader = new TextStringReader(s);
         Style currentStyle = new Style();
         List<TextComponent> components = new ArrayList<>();
@@ -164,7 +180,7 @@ public abstract class StringFormat {
                     formatting = unknownHandling.handle(resolved, currentText);
                     if (formatting == null) continue;
                 }
-                if (currentText.length() > 0) {
+                if (currentText.length() > 0 || !ignoreEmptySections) {
                     components.add(TextComponent.of(currentText.toString()).setStyle(currentStyle.copy()));
                     currentText.setLength(0);
                 }
@@ -174,7 +190,7 @@ public abstract class StringFormat {
                 currentStyle.setFormatting(formatting);
             }
         }
-        if (currentText.length() > 0) {
+        if (currentText.length() > 0 || !ignoreEmptySections) {
             components.add(TextComponent.of(currentText.toString()).setStyle(currentStyle));
         }
         if (components.size() == 1) return components.get(0);
@@ -185,7 +201,8 @@ public abstract class StringFormat {
      * Convert a {@link TextComponent} to a string.<br>
      * The unknown handling is used to determine what should happen if an unsupported formatting is encountered.<br>
      * A reset code will be added at the start of every new section if the previous section had any formattings.<br>
-     * Some string formats may require a reset code at the end of the string. It is only inserted if {@link #shouldResetAtEnd()} return {@code true} and the last section had any formattings.
+     * Some string formats may require a reset code at the end of the string. It is only inserted if {@link #shouldResetAtEnd()} return {@code true} and the last section had any formattings.<br>
+     * The style of empty components will not be applied.
      *
      * @param component       The component to convert
      * @param colorHandling   The color handling
@@ -193,6 +210,22 @@ public abstract class StringFormat {
      * @return The converted string
      */
     public String toString(final TextComponent component, final ColorHandling colorHandling, final SerializerUnknownHandling unknownHandling) {
+        return this.toString(component, colorHandling, unknownHandling, true);
+    }
+
+    /**
+     * Convert a {@link TextComponent} to a string.<br>
+     * The unknown handling is used to determine what should happen if an unsupported formatting is encountered.<br>
+     * A reset code will be added at the start of every new section if the previous section had any formattings.<br>
+     * Some string formats may require a reset code at the end of the string. It is only inserted if {@link #shouldResetAtEnd()} return {@code true} and the last section had any formattings.<br>
+     * Empty components are ignored if {@code ignoreEmptyComponents} is {@code true}, otherwise their style will be applied (and immediately overwritten by the next component's style).
+     *
+     * @param component       The component to convert
+     * @param colorHandling   The color handling
+     * @param unknownHandling The unknown handling
+     * @return The converted string
+     */
+    public String toString(final TextComponent component, final ColorHandling colorHandling, final SerializerUnknownHandling unknownHandling, final boolean ignoreEmptyComponents) {
         StringBuilder output = new StringBuilder();
         Style lastStyle = null;
         List<TextComponent> texts = new ArrayList<>();
@@ -207,7 +240,7 @@ public abstract class StringFormat {
                 }
             } else {
                 String text = current.asSingleString();
-                if (!text.isEmpty()) {
+                if (!text.isEmpty() || !ignoreEmptyComponents) {
                     Style currentStyle = current.getStyle();
                     if (!currentStyle.equals(lastStyle)) {
                         TextFormatting[] formattings = currentStyle.getFormattings();
@@ -303,7 +336,7 @@ public abstract class StringFormat {
     }
 
     /**
-     * Append a style to the given string.<br>
+     * Prepend a style to the given string.<br>
      * This only works with formatting codes (colors, bold, italic, etc.).<br>
      * If the style contains an unknown formatting code the {@link SerializerUnknownHandling} will be used to resolve it.
      *
