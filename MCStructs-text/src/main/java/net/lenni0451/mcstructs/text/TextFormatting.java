@@ -266,8 +266,18 @@ public class TextFormatting {
      * @return The lowercase name of the formatting or the rgb value as a hex string if it's a rgb color
      */
     public String serialize() {
-        if (Type.RGB.equals(this.type)) return "#" + String.format("%06X", this.rgbValue);
-        else return this.name;
+        if (Type.RGB.equals(this.type)) {
+            final StringBuilder result = new StringBuilder();
+            result.append("#");
+            final String hex = Integer.toHexString(this.rgbValue);
+            for (int i = 0; i < 6 - hex.length(); i++) {
+                result.append('0');
+            }
+            result.append(hex);
+            return result.toString();
+        } else {
+            return this.name;
+        }
     }
 
     @Override
