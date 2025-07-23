@@ -23,8 +23,8 @@ class TextFormattingTest {
     @Test
     void parse() {
         assertEquals(TextFormatting.RED, TextFormatting.parse("red"));
-        assertTrue(TextFormatting.parse("#FF0000").isColor());
-        assertTrue(TextFormatting.parse("#FF0000").isRGBColor());
+        assertTrue(TextFormatting.parse("#ff0000").isColor());
+        assertTrue(TextFormatting.parse("#ff0000").isRGBColor());
     }
 
     @Test
@@ -59,7 +59,7 @@ class TextFormattingTest {
     @Test
     void serialize() {
         assertEquals("red", TextFormatting.RED.serialize());
-        assertEquals("#FF0000", TextFormatting.parse("#ff0000").serialize());
+        assertEquals("#ff0000", TextFormatting.parse("#ff0000").serialize());
         assertEquals(7, TextFormatting.parse("#1").serialize().length());
     }
 
