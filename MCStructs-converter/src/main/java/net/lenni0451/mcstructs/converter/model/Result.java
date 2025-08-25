@@ -46,7 +46,6 @@ public interface Result<T> {
 
     T orElse(final T other);
 
-    @SneakyThrows
     T orElseThrow(final Function<Throwable, ? extends Throwable> exceptionSupplier);
 
     <N> Result<N> map(final Function<T, N> mapper);

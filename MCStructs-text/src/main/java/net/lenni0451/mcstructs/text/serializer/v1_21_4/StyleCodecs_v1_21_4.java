@@ -24,6 +24,7 @@ import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.EntityHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
 import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
+import net.lenni0451.mcstructs.text.font.ResourceFont;
 
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -45,7 +46,13 @@ public class StyleCodecs_v1_21_4 {
             ClickEventCodec.CODEC.mapCodec("clickEvent").optional().defaulted(null), Style::getClickEvent,
             HoverEventCodec.CODEC.mapCodec("hoverEvent").optional().defaulted(null), Style::getHoverEvent,
             Codec.STRING.mapCodec("insertion").optional().defaulted(null), Style::getInsertion,
-            Codec.STRING_IDENTIFIER.mapCodec("font").optional().defaulted(null), Style::getFont,
+            Codec.STRING_IDENTIFIER.mapCodec("font").optional().defaulted(null).mapThrowing(fontDescription -> {
+                if (fontDescription == null) return null;
+                return ((ResourceFont) fontDescription).getId();
+            }, id -> {
+                if (id == null) return null;
+                return new ResourceFont(id);
+            }), Style::getFont,
             Style::new
     );
     public static final Codec<Style> CODEC = MAP_CODEC.asCodec();

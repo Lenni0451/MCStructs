@@ -314,6 +314,11 @@ public class Types_v1_20_5 {
             private String value;
             @Nullable
             private String signature;
+
+            public Property(final String name, final String value) {
+                this.name = name;
+                this.value = value;
+            }
         }
     }
 

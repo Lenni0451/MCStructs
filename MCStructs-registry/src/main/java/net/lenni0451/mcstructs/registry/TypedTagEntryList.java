@@ -19,6 +19,8 @@ public class TypedTagEntryList<T> {
      *
      * @param registry    The registry owning the tag
      * @param requireList Require single entries to be in a list
+     * @param codec       The codec of the entries
+     * @param <T>         The type of the entries
      * @return The codec for this class
      */
     public static <T> Codec<TypedTagEntryList<T>> codec(final Registry registry, final Codec<T> codec, final boolean requireList) {

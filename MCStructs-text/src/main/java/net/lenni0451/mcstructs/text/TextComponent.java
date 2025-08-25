@@ -29,7 +29,8 @@ import java.util.function.Consumer;
  * - {@link KeybindComponent}<br>
  * - {@link BlockNbtSource}<br>
  * - {@link EntityNbtSource}<br>
- * - {@link StorageNbtSource}
+ * - {@link StorageNbtSource}<br>
+ * - {@link ObjectComponent}
  */
 @EqualsAndHashCode
 public abstract class TextComponent implements Copyable<TextComponent> {
@@ -95,7 +96,9 @@ public abstract class TextComponent implements Copyable<TextComponent> {
     public TextComponent forEach(final Consumer<TextComponent> consumer) {
         consumer.accept(this);
         if (this.siblings != null) {
-            for (TextComponent sibling : this.siblings) sibling.forEach(consumer);
+            for (TextComponent sibling : this.siblings) {
+                sibling.forEach(consumer);
+            }
         }
         return this;
     }
@@ -330,6 +333,14 @@ public abstract class TextComponent implements Copyable<TextComponent> {
 
     public static NbtComponent storageNbt(final String component, final boolean resolve, @Nullable final TextComponent separator, final Identifier id) {
         return new NbtComponent(component, resolve, separator, new StorageNbtSource(id));
+    }
+
+    public static ObjectComponent atlasSprite(final Identifier sprite) {
+        return new ObjectComponent(new ObjectComponent.AtlasSprite(sprite));
+    }
+
+    public static ObjectComponent atlasSprite(final Identifier atlas, final Identifier sprite) {
+        return new ObjectComponent(new ObjectComponent.AtlasSprite(atlas, sprite));
     }
 
 }

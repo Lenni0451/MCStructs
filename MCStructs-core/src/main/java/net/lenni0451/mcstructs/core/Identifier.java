@@ -66,6 +66,11 @@ public class Identifier {
         return new Identifier(key, value);
     }
 
+    public static String stripDefaultNamespace(final Identifier id) {
+        if (id.getKey().equals(DEFAULT_NAMESPACE)) return id.getValue();
+        return id.get();
+    }
+
 
     private final String key;
     private final String value;

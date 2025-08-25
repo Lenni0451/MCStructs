@@ -7,6 +7,7 @@ import com.google.gson.JsonSerializer;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.types.*;
+import net.lenni0451.mcstructs.text.font.ResourceFont;
 
 import java.lang.reflect.Type;
 
@@ -31,7 +32,13 @@ public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
             serializedStyle.add("clickEvent", clickEvent);
         }
         if (src.getHoverEvent() != null) serializedStyle.add("hoverEvent", context.serialize(src.getHoverEvent()));
-        if (src.getFont() != null) serializedStyle.addProperty("font", src.getFont().get());
+        if (src.getFont() != null) {
+            if (src.getFont() instanceof ResourceFont) {
+                serializedStyle.addProperty("font", ((ResourceFont) src.getFont()).getId().get());
+            } else {
+                throw new IllegalStateException("Unsupported font type: " + src.getFont().getClass().getName());
+            }
+        }
 
         return serializedStyle;
     }

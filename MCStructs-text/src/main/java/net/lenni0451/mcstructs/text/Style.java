@@ -5,6 +5,8 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
+import net.lenni0451.mcstructs.text.font.FontDescription;
+import net.lenni0451.mcstructs.text.font.ResourceFont;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ public class Style implements Copyable<Style> {
     private ClickEvent clickEvent;
     private HoverEvent hoverEvent;
     private String insertion;
-    private Identifier font;
+    private FontDescription font;
 
     public Style() {
     }
@@ -32,7 +34,15 @@ public class Style implements Copyable<Style> {
         this(color, null, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, insertion, font);
     }
 
+    public Style(final TextFormatting color, final Boolean obfuscated, final Boolean bold, final Boolean strikethrough, final Boolean underlined, final Boolean italic, final ClickEvent clickEvent, final HoverEvent hoverEvent, final String insertion, final FontDescription font) {
+        this(color, null, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, insertion, font);
+    }
+
     public Style(final TextFormatting color, final Integer shadowColor, final Boolean obfuscated, final Boolean bold, final Boolean strikethrough, final Boolean underlined, final Boolean italic, final ClickEvent clickEvent, final HoverEvent hoverEvent, final String insertion, final Identifier font) {
+        this(color, shadowColor, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, insertion, new ResourceFont(font));
+    }
+
+    public Style(final TextFormatting color, final Integer shadowColor, final Boolean obfuscated, final Boolean bold, final Boolean strikethrough, final Boolean underlined, final Boolean italic, final ClickEvent clickEvent, final HoverEvent hoverEvent, final String insertion, final FontDescription font) {
         if (color != null && !color.isColor()) throw new IllegalArgumentException("The color must be a color");
         this.color = color;
         this.shadowColor = shadowColor;
@@ -380,6 +390,16 @@ public class Style implements Copyable<Style> {
      * @return The current style
      */
     public Style setFont(final Identifier font) {
+        return this.setFont(new ResourceFont(font));
+    }
+
+    /**
+     * Set the font of this style.
+     *
+     * @param font The font
+     * @return The current style
+     */
+    public Style setFont(final FontDescription font) {
         this.font = font;
         return this;
     }
@@ -387,7 +407,7 @@ public class Style implements Copyable<Style> {
     /**
      * @return The font of this style
      */
-    public Identifier getFont() {
+    public FontDescription getFont() {
         if (this.font == null && this.parent != null) return this.parent.getFont();
         return this.font;
     }

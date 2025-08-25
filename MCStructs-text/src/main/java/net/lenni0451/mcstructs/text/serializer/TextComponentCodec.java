@@ -28,6 +28,8 @@ import net.lenni0451.mcstructs.text.serializer.v1_21_5.StyleCodecs_v1_21_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
 import net.lenni0451.mcstructs.text.serializer.v1_21_6.StyleCodecs_v1_21_6;
 import net.lenni0451.mcstructs.text.serializer.v1_21_6.TextCodecs_v1_21_6;
+import net.lenni0451.mcstructs.text.serializer.v1_21_9.StyleCodecs_v1_21_9;
+import net.lenni0451.mcstructs.text.serializer.v1_21_9.TextCodecs_v1_21_9;
 import net.lenni0451.mcstructs.text.serializer.verify.TextVerifier;
 import net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter;
 
@@ -72,9 +74,13 @@ public class TextComponentCodec {
      */
     public static final TextComponentCodec V1_21_6 = new TextComponentCodec(() -> SNbt.V1_21_5, () -> TextCodecs_v1_21_6.TEXT, () -> StyleCodecs_v1_21_6.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_21_5.INSTANCE);
     /**
+     * The text codec for 1.21.9.
+     */
+    public static final TextComponentCodec V1_21_9 = new TextComponentCodec(() -> SNbt.V1_21_5, () -> TextCodecs_v1_21_9.TEXT, () -> StyleCodecs_v1_21_9.CODEC, JsonConverter_v1_20_5.INSTANCE, NbtConverter_v1_21_5.INSTANCE);
+    /**
      * The latest text codec.
      */
-    public static final TextComponentCodec LATEST = V1_21_6;
+    public static final TextComponentCodec LATEST = V1_21_9;
 
 
     private final Supplier<SNbt<CompoundTag>> sNbtSupplier;

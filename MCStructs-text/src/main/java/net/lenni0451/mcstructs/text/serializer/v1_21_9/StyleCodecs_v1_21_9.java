@@ -1,8 +1,9 @@
-package net.lenni0451.mcstructs.text.serializer.v1_21_5;
+package net.lenni0451.mcstructs.text.serializer.v1_21_9;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
 import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.v1_21_5.NbtConverter_v1_21_5;
 import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.nbt.NbtTag;
@@ -20,11 +21,11 @@ import net.lenni0451.mcstructs.text.font.ResourceFont;
 
 import static net.lenni0451.mcstructs.text.serializer.verify.VerifyingConverter.verify;
 
-public class StyleCodecs_v1_21_5 {
+public class StyleCodecs_v1_21_9 {
 
     public static final MapCodec<Style> MAP_CODEC = MapCodecMerger.mapCodec(
             TextFormattingCodec.CODEC.mapCodec("color").optional().defaulted(null), Style::getColor,
-            ExtraCodecs_v1_21_5.ARGB_COLOR.mapCodec("shadow_color").optional().defaulted(null), Style::getShadowColor,
+            ExtraCodecs_v1_21_9.ARGB_COLOR.mapCodec("shadow_color").optional().defaulted(null), Style::getShadowColor,
             Codec.BOOLEAN.mapCodec("obfuscated").optional().defaulted(null), Style::getObfuscated,
             Codec.BOOLEAN.mapCodec("bold").optional().defaulted(null), Style::getBold,
             Codec.BOOLEAN.mapCodec("strikethrough").optional().defaulted(null), Style::getStrikethrough,
@@ -56,7 +57,7 @@ public class StyleCodecs_v1_21_5 {
 
     public static class ClickEventCodec {
         public static final MapCodec<OpenUrlClickEvent> OPEN_URL = MapCodecMerger.mapCodec(
-                ExtraCodecs_v1_21_5.UNTRUSTED_URI.mapCodec("url").required(), OpenUrlClickEvent::asUri,
+                ExtraCodecs_v1_21_9.UNTRUSTED_URI.mapCodec("url").required(), OpenUrlClickEvent::asUri,
                 ClickEvent::openUrl
         );
         public static final MapCodec<OpenFileClickEvent> OPEN_FILE = MapCodecMerger.mapCodec(
@@ -64,11 +65,11 @@ public class StyleCodecs_v1_21_5 {
                 ClickEvent::openFile
         );
         public static final MapCodec<RunCommandClickEvent> RUN_COMMAND = MapCodecMerger.mapCodec(
-                ExtraCodecs_v1_21_5.CHAT_STRING.mapCodec("command").required(), RunCommandClickEvent::getCommand,
+                ExtraCodecs_v1_21_9.CHAT_STRING.mapCodec("command").required(), RunCommandClickEvent::getCommand,
                 ClickEvent::runCommand
         );
         public static final MapCodec<SuggestCommandClickEvent> SUGGEST_COMMAND = MapCodecMerger.mapCodec(
-                ExtraCodecs_v1_21_5.CHAT_STRING.mapCodec("command").required(), SuggestCommandClickEvent::getCommand,
+                ExtraCodecs_v1_21_9.CHAT_STRING.mapCodec("command").required(), SuggestCommandClickEvent::getCommand,
                 ClickEvent::suggestCommand
         );
         public static final MapCodec<ChangePageClickEvent> CHANGE_PAGE = MapCodecMerger.mapCodec(
@@ -78,6 +79,15 @@ public class StyleCodecs_v1_21_5 {
         public static final MapCodec<CopyToClipboardClickEvent> COPY_TO_CLIPBOARD = MapCodecMerger.mapCodec(
                 Codec.STRING.mapCodec("value").required(), CopyToClipboardClickEvent::getValue,
                 ClickEvent::copyToClipboard
+        );
+        public static final MapCodec<ShowDialogClickEvent> SHOW_DIALOG = MapCodecMerger.mapCodec(
+                Codec.RAW.mapCodec("dialog").required(), ShowDialogClickEvent::getDialogData,
+                ClickEvent::showDialog
+        );
+        public static final MapCodec<CustomClickEvent> CUSTOM = MapCodecMerger.mapCodec(
+                Codec.STRING_IDENTIFIER.mapCodec("id").required(), CustomClickEvent::getId,
+                NbtConverter_v1_21_5.INSTANCE.toCodec().mapCodec("payload").required(), CustomClickEvent::getPayload,
+                ClickEvent::custom
         );
         public static final Codec<ClickEvent> CODEC = Codec.named(ClickEventAction.OPEN_URL, ClickEventAction.OPEN_FILE, ClickEventAction.RUN_COMMAND, ClickEventAction.SUGGEST_COMMAND, ClickEventAction.CHANGE_PAGE, ClickEventAction.COPY_TO_CLIPBOARD).verified(type -> {
             if (type.isUserDefinable()) return null;
@@ -96,6 +106,10 @@ public class StyleCodecs_v1_21_5 {
                     return CHANGE_PAGE;
                 case COPY_TO_CLIPBOARD:
                     return COPY_TO_CLIPBOARD;
+                case SHOW_DIALOG:
+                    return SHOW_DIALOG;
+                case CUSTOM:
+                    return CUSTOM;
                 default:
                     return MapCodec.failing("Unknown click event action: " + action);
             }
@@ -104,22 +118,22 @@ public class StyleCodecs_v1_21_5 {
 
     public static class HoverEventCodec {
         public static final MapCodec<TextHoverEvent> TEXT = MapCodecMerger.mapCodec(
-                TextCodecs_v1_21_5.TEXT.mapCodec("value").required(), TextHoverEvent::getText,
+                TextCodecs_v1_21_9.TEXT.mapCodec("value").required(), TextHoverEvent::getText,
                 TextHoverEvent::new
         );
         public static final MapCodec<ItemHoverEvent> ITEM = MapCodecMerger.mapCodec(
-                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, TextVerifier_v1_21_5::verifyRegistryItem, "Invalid item")).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getId(),
+                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_9.class, TextVerifier_v1_21_9::verifyRegistryItem, "Invalid item")).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getId(),
                 Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), hoverEvent -> hoverEvent.asModern().getCount(),
                 NbtConverter_v1_20_3.INSTANCE.toCodec().verified(tag -> {
                     if (!tag.isCompoundTag()) return Result.error("Expected a compound tag");
                     return null;
-                }).map(NbtTag::asCompoundTag, NbtTag::asCompoundTag).converterVerified(verify(TextVerifier_v1_21_5.class, TextVerifier_v1_21_5::verifyDataComponents, "Invalid data components")).mapCodec("components").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getTag(),
+                }).map(NbtTag::asCompoundTag, NbtTag::asCompoundTag).converterVerified(verify(TextVerifier_v1_21_9.class, TextVerifier_v1_21_9::verifyDataComponents, "Invalid data components")).mapCodec("components").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getTag(),
                 ItemHoverEvent::new
         );
         public static final MapCodec<EntityHoverEvent> ENTITY = MapCodecMerger.mapCodec(
-                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, TextVerifier_v1_21_5::verifyRegistryEntity, "Invalid entity")).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getType(),
-                ExtraCodecs_v1_21_5.LENIENT_UUID.mapCodec("uuid").required(), hoverEvent -> hoverEvent.asModern().getUuid(),
-                TextCodecs_v1_21_5.TEXT.mapCodec("name").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getName(),
+                Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_9.class, TextVerifier_v1_21_9::verifyRegistryEntity, "Invalid entity")).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getType(),
+                ExtraCodecs_v1_21_9.LENIENT_UUID.mapCodec("uuid").required(), hoverEvent -> hoverEvent.asModern().getUuid(),
+                TextCodecs_v1_21_9.TEXT.mapCodec("name").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getName(),
                 EntityHoverEvent::new
         );
         public static final Codec<HoverEvent> CODEC = Codec.named(HoverEventAction.SHOW_TEXT, HoverEventAction.SHOW_ITEM, HoverEventAction.SHOW_ENTITY).verified(action -> {

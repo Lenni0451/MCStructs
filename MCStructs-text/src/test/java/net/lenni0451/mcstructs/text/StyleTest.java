@@ -7,6 +7,7 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.click.types.ChangePageClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEventAction;
 import net.lenni0451.mcstructs.text.events.hover.impl.ItemHoverEvent;
+import net.lenni0451.mcstructs.text.font.ResourceFont;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -196,7 +197,7 @@ class StyleTest {
     @Test
     @Order(1)
     void getFont() {
-        assertEquals(Identifier.of("minecraft:default"), style.getFont());
+        assertEquals(new ResourceFont(Identifier.of("minecraft:default")), style.getFont());
     }
 
     @Test
