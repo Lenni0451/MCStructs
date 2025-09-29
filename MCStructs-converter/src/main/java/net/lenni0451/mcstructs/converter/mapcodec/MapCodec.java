@@ -5,8 +5,10 @@ import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.ThrowingFunction;
 import net.lenni0451.mcstructs.converter.mapcodec.impl.FieldMapCodec;
 import net.lenni0451.mcstructs.converter.mapcodec.impl.RecursiveMapCodec;
+import net.lenni0451.mcstructs.converter.model.Either;
 import net.lenni0451.mcstructs.converter.model.Result;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -76,6 +78,24 @@ public interface MapCodec<T> extends MapSerializer<T>, MapDeserializer<T> {
             public <S> Result<T> deserialize(DataConverter<S> converter, Map<S, S> map) {
                 if (this.codec == null) this.codec = supplier.get();
                 return this.codec.deserialize(converter, map);
+            }
+        };
+    }
+
+    static <L, R> MapCodec<Either<L, R>> either(final MapCodec<L> leftCodec, final MapCodec<R> rightCodec) {
+        return new MapCodec<Either<L, R>>() {
+            @Override
+            public <S> Result<Map<S, S>> serialize(DataConverter<S> converter, Map<S, S> map, Either<L, R> element) {
+                return element.xmap(l -> leftCodec.serialize(converter, map, l), r -> rightCodec.serialize(converter, map, r));
+            }
+
+            @Override
+            public <S> Result<Either<L, R>> deserialize(DataConverter<S> converter, Map<S, S> map) {
+                Result<L> left = leftCodec.deserialize(converter, map);
+                if (left.isSuccessful()) return left.map(Either::left);
+                Result<R> right = rightCodec.deserialize(converter, map);
+                if (right.isSuccessful()) return right.map(Either::right);
+                return Result.mergeErrors("Failed to deserialize as either left or right", Arrays.asList(left, right));
             }
         };
     }

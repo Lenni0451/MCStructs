@@ -3,15 +3,15 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_9;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
-import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6.ItemComponents_v1_21_6;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_9.Types_v1_21_9.ResolvableProfile;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 public class ItemComponents_v1_21_9 extends ItemComponents_v1_21_6 {
 
     private final TypeSerializers_v1_21_9 typeSerializers = new TypeSerializers_v1_21_9(this, TextComponentCodec.V1_21_9);
 
-    public final ItemComponent<Types_v1_20_5.GameProfile> ATTRIBUTE_MODIFIERS = this.register("profile", this.typeSerializers.gameProfile());
+    public final ItemComponent<ResolvableProfile> PROFILE = this.register("profile", this.typeSerializers.resolvableProfile());
 
 
     public ItemComponents_v1_21_9() {

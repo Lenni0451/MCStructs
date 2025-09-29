@@ -4,11 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import net.lenni0451.mcstructs.converter.SerializedData;
+import net.lenni0451.mcstructs.converter.impl.v1_21_5.NbtConverter_v1_21_5;
+import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.core.utils.ToString;
+import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.font.AtlasSpriteFont;
 import net.lenni0451.mcstructs.text.font.FontDescription;
+import net.lenni0451.mcstructs.text.font.PlayerSpriteFont;
 
 @Getter
 @Setter
@@ -83,6 +88,38 @@ public class ObjectComponent extends TextComponent {
             return ToString.of(this)
                     .add("atlas", this.atlas)
                     .add("sprite", this.sprite)
+                    .toString();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @EqualsAndHashCode(callSuper = false)
+    public static class PlayerSprite implements ObjectInfo {
+        private SerializedData<?> profile;
+        private boolean hat;
+
+        @Override
+        public FontDescription getUpdatedFont() {
+            return new PlayerSpriteFont(this.profile, this.hat);
+        }
+
+        @Override
+        public String getDescription() {
+            String profileName = this.profile.convert(NbtConverter_v1_21_5.INSTANCE).map(NbtTag::asCompoundTag).mapResult(compound -> {
+                String name = compound.getString("name", null);
+                return name == null ? Result.error("No name in profile") : Result.success(name);
+            }).orElse(null);
+            if (profileName == null) return "[unknown player head]";
+            return "[" + profileName + " head]";
+        }
+
+        @Override
+        public String toString() {
+            return ToString.of(this)
+                    .add("profile", this.profile)
+                    .add("hat", this.hat)
                     .toString();
         }
     }

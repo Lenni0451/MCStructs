@@ -72,11 +72,7 @@ public class TextCodecs_v1_21_9 {
             NbtComponent::new
     );
     public static final MapCodec<ObjectComponent> OBJECT_COMPONENT = MapCodecMerger.mapCodec(
-            MapCodecMerger.mapCodec(
-                    Codec.STRING_IDENTIFIER.mapCodec("atlas").optional().defaulted(ObjectComponent.AtlasSprite.DEFAULT_ATLAS), ObjectComponent.AtlasSprite::getAtlas,
-                    Codec.STRING_IDENTIFIER.mapCodec("sprite").required(), ObjectComponent.AtlasSprite::getSprite,
-                    ObjectComponent.AtlasSprite::new
-            ).mapThrowing(objectInfo -> (ObjectComponent.AtlasSprite) objectInfo, atlasSprite -> atlasSprite), ObjectComponent::getObjectInfo,
+            createLegacyComponentMatcher(ObjectInfos.values(), ObjectInfos::getCodec, ObjectInfos::forObjectInfo, "object"), ObjectComponent::getObjectInfo,
             ObjectComponent::new
     );
 
@@ -102,6 +98,7 @@ public class TextCodecs_v1_21_9 {
             if (component instanceof ScoreComponent) return SCORE;
             if (component instanceof SelectorComponent) return SELECTOR;
             if (component instanceof NbtComponent) return NBT;
+            if (component instanceof ObjectComponent) return OBJECT;
             throw new IllegalArgumentException("Unknown component type: " + component.getClass().getName());
         }
     }
@@ -130,6 +127,30 @@ public class TextCodecs_v1_21_9 {
             if (dataSource instanceof BlockNbtSource) return BLOCK;
             if (dataSource instanceof StorageNbtSource) return STORAGE;
             throw new IllegalArgumentException("Unknown data source type: " + dataSource.getClass().getName());
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private enum ObjectInfos implements NamedType {
+        ATLAS_SPRITE("atlas", MapCodecMerger.mapCodec(
+                Codec.STRING_IDENTIFIER.mapCodec("atlas").optional().defaulted(ObjectComponent.AtlasSprite.DEFAULT_ATLAS), ObjectComponent.AtlasSprite::getAtlas,
+                Codec.STRING_IDENTIFIER.mapCodec("sprite").required(), ObjectComponent.AtlasSprite::getSprite,
+                ObjectComponent.AtlasSprite::new
+        )),
+        PLAYER_SPRITE("player", MapCodecMerger.mapCodec(
+                Codec.RAW.mapCodec("player").required(), ObjectComponent.PlayerSprite::getProfile,
+                Codec.BOOLEAN.mapCodec("hat").optional().defaulted(true), ObjectComponent.PlayerSprite::isHat,
+                ObjectComponent.PlayerSprite::new
+        ));
+
+        private final String name;
+        private final MapCodec<? extends ObjectComponent.ObjectInfo> codec;
+
+        public static ObjectInfos forObjectInfo(final ObjectComponent.ObjectInfo objectInfo) {
+            if (objectInfo instanceof ObjectComponent.AtlasSprite) return ATLAS_SPRITE;
+            if (objectInfo instanceof ObjectComponent.PlayerSprite) return PLAYER_SPRITE;
+            throw new IllegalArgumentException("Unknown object info type: " + objectInfo.getClass().getName());
         }
     }
 
