@@ -86,7 +86,7 @@ public class TypeSerializers_v1_21_9 extends TypeSerializers_v1_21_6 {
             );
             Codec<ResourceTexture> resourceTexture = Codec.STRING_IDENTIFIER.map(ResourceTexture::getId, ResourceTexture::new);
             MapCodec<PlayerSkinPatch> skinPatch = MapCodecMerger.mapCodec(
-                    resourceTexture.mapCodec(PlayerSkinPatch.TEXTURE).optional().defaulted(null), PlayerSkinPatch::getTexture,
+                    resourceTexture.mapCodec(PlayerSkinPatch.TEXTURE).optional().defaulted(null), PlayerSkinPatch::getBody,
                     resourceTexture.mapCodec(PlayerSkinPatch.CAPE).optional().defaulted(null), PlayerSkinPatch::getCape,
                     resourceTexture.mapCodec(PlayerSkinPatch.ELYTRA).optional().defaulted(null), PlayerSkinPatch::getElytra,
                     Codec.named(PlayerModelType.values()).mapCodec(PlayerSkinPatch.MODEL).optional().defaulted(null), PlayerSkinPatch::getModel,

@@ -11,6 +11,8 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 public class Types_v1_21_9 {
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ResourceTexture {
         private Identifier id;
         private Identifier texturePath;
@@ -39,7 +41,7 @@ public class Types_v1_21_9 {
         public static final String ELYTRA = "elytra";
         public static final String MODEL = "model";
 
-        private ResourceTexture texture;
+        private ResourceTexture body;
         private ResourceTexture cape;
         private ResourceTexture elytra;
         private PlayerModelType model;
