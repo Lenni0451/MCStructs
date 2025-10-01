@@ -6,7 +6,7 @@ jetbrainsAnnotations = { module = "org.jetbrains:annotations", version = "26.0.2
 lombok = { module = "org.projectlombok:lombok", version = "1.18.42" }
 gson = { module = "com.google.code.gson:gson", version = "2.13.2" }
 
-junit-bom = { module = "org.junit:junit-bom", version = "5.13.4" }
+junit-bom = { module = "org.junit:junit-bom", version = "6.0.0" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
