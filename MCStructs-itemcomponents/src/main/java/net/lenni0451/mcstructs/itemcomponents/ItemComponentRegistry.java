@@ -10,6 +10,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_11.ItemComponents_v1_21_11;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.ItemComponents_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
@@ -69,9 +70,15 @@ public abstract class ItemComponentRegistry {
      */
     public static final ItemComponents_v1_21_9 V1_21_9 = new ItemComponents_v1_21_9();
     /**
+     * Item component registry for 1.21.11.<br>
+     * The registries and verifiers are noop and accept everything.<br>
+     * It is recommended to create a new instance with your own registries and verifiers.
+     */
+    public static final ItemComponents_v1_21_11 V1_21_11 = new ItemComponents_v1_21_11();
+    /**
      * The latest item component registry.
      */
-    public static final ItemComponentRegistry LATEST = V1_21_9;
+    public static final ItemComponentRegistry LATEST = V1_21_11;
 
 
     private final ItemComponentList components;

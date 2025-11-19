@@ -37,6 +37,7 @@ public class Registries {
     public final Registry chickenVariant = this.register(Identifier.of("chicken_variant"));
     public final Registry paintingVariant = this.register(Identifier.of("painting_variant"));
     public final Registry dimension = this.register(Identifier.of("dimension"));
+    public final Registry zombieNautilusVariant = this.register(Identifier.of("zombie_nautilus_variant"));
 
     protected Registry register(final Identifier name) {
         return new NoOpRegistry(name);
