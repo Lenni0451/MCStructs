@@ -203,11 +203,15 @@ public class Types_v1_21_11 {
     public static class AttackRange {
         public static final String MIN_REACH = "min_reach";
         public static final String MAX_REACH = "max_reach";
+        public static final String MIN_CREATIVE_REACH = "min_creative_reach";
+        public static final String MAX_CREATIVE_REACH = "max_creative_reach";
         public static final String HITBOX_MARGIN = "hitbox_margin";
         public static final String MOB_FACTOR = "mob_factor";
 
         private float minReach = 0;
         private float maxReach = 3;
+        private float minCreativeReach = 0;
+        private float maxCreativeReach = 5;
         private float hitboxMargin = 0.3F;
         private float mobFactor = 1;
     }

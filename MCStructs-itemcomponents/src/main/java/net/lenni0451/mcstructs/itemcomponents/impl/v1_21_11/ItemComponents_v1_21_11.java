@@ -69,6 +69,8 @@ public class ItemComponents_v1_21_11 extends ItemComponents_v1_21_9 {
     public final ItemComponent<AttackRange> ATTACK_RANGE = this.register("attack_range", MapCodecMerger.codec(
             Codec.rangedFloat(0, 64).mapCodec(AttackRange.MIN_REACH).optional().defaulted(0F), AttackRange::getMinReach,
             Codec.rangedFloat(0, 64).mapCodec(AttackRange.MAX_REACH).optional().defaulted(3F), AttackRange::getMaxReach,
+            Codec.rangedFloat(0, 64).mapCodec(AttackRange.MIN_CREATIVE_REACH).optional().defaulted(0F), AttackRange::getMinReach,
+            Codec.rangedFloat(0, 64).mapCodec(AttackRange.MAX_CREATIVE_REACH).optional().defaulted(5F), AttackRange::getMaxReach,
             Codec.rangedFloat(0, 1).mapCodec(AttackRange.HITBOX_MARGIN).optional().defaulted(0.3F), AttackRange::getHitboxMargin,
             Codec.rangedFloat(0, 2).mapCodec(AttackRange.MOB_FACTOR).optional().defaulted(1F), AttackRange::getMobFactor,
             AttackRange::new
