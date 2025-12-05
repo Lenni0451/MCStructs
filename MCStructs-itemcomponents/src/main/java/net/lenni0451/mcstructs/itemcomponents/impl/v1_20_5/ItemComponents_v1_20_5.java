@@ -12,7 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.nbt.NbtType;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -175,7 +175,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
         if (!tag.contains("id", NbtType.STRING)) return Result.error("Block entity data tag does not contain an id");
         return Result.success(null);
     }));
-    public final ItemComponent<EitherEntry<Instrument>> INSTRUMENT = this.register("instrument", EitherEntry.codec(
+    public final ItemComponent<Holder<Instrument>> INSTRUMENT = this.register("instrument", Holder.fileCodec(
             this.registries.instrument,
             MapCodecMerger.codec(
                     this.typeSerializers.soundEvent().mapCodec(Instrument.SOUND_EVENT).required(), Instrument::getSoundEvent,
@@ -243,7 +243,7 @@ public class ItemComponents_v1_20_5 extends ItemComponentRegistry {
     ));
     public final ItemComponent<Identifier> NOTE_BLOCK_SOUND = this.register("note_block_sound", Codec.STRING_IDENTIFIER);
     public final ItemComponent<List<BannerPattern>> BANNER_PATTERNS = this.register("banner_patterns", MapCodecMerger.codec(
-            EitherEntry.codec(
+            Holder.fileCodec(
                     this.registries.bannerPattern,
                     MapCodecMerger.codec(
                             Codec.STRING_IDENTIFIER.mapCodec(BannerPattern.Pattern.ASSET_ID).required(), BannerPattern.Pattern::getAssetId,

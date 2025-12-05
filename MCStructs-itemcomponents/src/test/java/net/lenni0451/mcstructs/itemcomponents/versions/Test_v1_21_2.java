@@ -29,12 +29,12 @@ public class Test_v1_21_2 extends ItemComponentTest<ItemComponents_v1_21_2> {
     protected void register(ItemComponents_v1_21_2 registry) {
         register(registry.ITEM_MODEL, Identifier.of("test"));
         register(registry.FOOD, new Types_v1_21_2.Food(123, 0.24F, false));
-        register(registry.CONSUMABLE, new Types_v1_21_2.Consumable(1.87F, Types_v1_21_2.Consumable.ItemUseAnimation.BOW, registry.getRegistries().sound.getLeftEntry(Identifier.of("test")), false, Arrays.asList(new Types_v1_21_2.ConsumeEffect.ClearAllEffects(), new Types_v1_21_2.ConsumeEffect.RemoveEffects(new TagEntryList(registry.getRegistries().statusEffect.getTag(Identifier.of("test")))))));
+        register(registry.CONSUMABLE, new Types_v1_21_2.Consumable(1.87F, Types_v1_21_2.Consumable.ItemUseAnimation.BOW, registry.getRegistries().sound.getHolder(Identifier.of("test")), false, Arrays.asList(new Types_v1_21_2.ConsumeEffect.ClearAllEffects(), new Types_v1_21_2.ConsumeEffect.RemoveEffects(new TagEntryList(registry.getRegistries().statusEffect.getTag(Identifier.of("test")))))));
         register(registry.USE_REMAINDER, new Types_v1_20_5.ItemStack(registry.getRegistries().item.getEntry(Identifier.of("test")), 123, registry.getItemDefaults()));
         register(registry.USE_COOLDOWN, new Types_v1_21_2.UseCooldown(1.23F, Identifier.of("test")));
         register(registry.DAMAGE_RESISTANT, new Types_v1_21_2.DamageResistant(registry.getRegistries().damageType.getTag(Identifier.of("test"))));
         register(registry.ENCHANTABLE, new Types_v1_21_2.Enchantable(123));
-        register(registry.EQUIPPABLE, new Types_v1_21_2.Equippable(Types_v1_21_2.EquipmentSlot.CHEST, registry.getRegistries().sound.getLeftEntry(Identifier.of("test")), Identifier.of("test"), Identifier.of("test2"), new TagEntryList(Arrays.asList(registry.getRegistries().entityType.getEntry(Identifier.of("test1")), registry.getRegistries().entityType.getEntry(Identifier.of("test2")))), false, false, false));
+        register(registry.EQUIPPABLE, new Types_v1_21_2.Equippable(Types_v1_21_2.EquipmentSlot.CHEST, registry.getRegistries().sound.getHolder(Identifier.of("test")), Identifier.of("test"), Identifier.of("test2"), new TagEntryList(Arrays.asList(registry.getRegistries().entityType.getEntry(Identifier.of("test1")), registry.getRegistries().entityType.getEntry(Identifier.of("test2")))), false, false, false));
         register(registry.REPAIRABLE, new Types_v1_21_2.Repairable(new TagEntryList(Arrays.asList(registry.getRegistries().item.getEntry(Identifier.of("test1")), registry.getRegistries().item.getEntry(Identifier.of("test2"))))));
         register(registry.GLIDER, true);
         register(registry.TOOLTIP_STYLE, Identifier.of("test"));

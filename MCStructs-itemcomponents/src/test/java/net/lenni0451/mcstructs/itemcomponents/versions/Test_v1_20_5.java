@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.ItemComponents_v1_20_5;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.components.StringComponent;
@@ -84,7 +84,7 @@ public class Test_v1_20_5 extends ItemComponentTest<ItemComponents_v1_20_5> {
         register(registry.SUSPICIOUS_STEW_EFFECTS, Arrays.asList(new SuspiciousStewEffect(registry.getRegistries().statusEffect.getEntry(Identifier.of("test")), 123), new SuspiciousStewEffect(registry.getRegistries().statusEffect.getEntry(Identifier.of("test12")), 654)));
         register(registry.WRITABLE_BOOK_CONTENT, new WritableBook(Arrays.asList(new RawFilteredPair<>("page1", "filtered page 1"), new RawFilteredPair<>("page2", "filtered page 2"))));
         register(registry.WRITTEN_BOOK_CONTENT, new WrittenBook(new RawFilteredPair<>("title"), "author", 3, Arrays.asList(new RawFilteredPair<>(new StringComponent("page1")), new RawFilteredPair<>(new StringComponent("page2"), new StringComponent("filtered page2"))), true));
-        register(registry.TRIM, new ArmorTrim(registry.getRegistries().armorTrimMaterial.getLeftEntry(Identifier.of("test")), new EitherEntry<>(new ArmorTrimPattern(Identifier.of("pattern"), registry.getRegistries().item.getEntry(Identifier.of("test")), new StringComponent("description"))), false));
+        register(registry.TRIM, new ArmorTrim(registry.getRegistries().armorTrimMaterial.getHolder(Identifier.of("test")), new Holder<>(new ArmorTrimPattern(Identifier.of("pattern"), registry.getRegistries().item.getEntry(Identifier.of("test")), new StringComponent("description"))), false));
         register(registry.DEBUG_STICK_STATE, init(() -> {
             Map<RegistryEntry, String> states = new HashMap<>();
             states.put(registry.getRegistries().block.getEntry(Identifier.of("test")), "state");
@@ -94,7 +94,7 @@ public class Test_v1_20_5 extends ItemComponentTest<ItemComponents_v1_20_5> {
         register(registry.ENTITY_DATA, new CompoundTag().addString("id", "pig"));
         register(registry.BUCKET_ENTITY_DATA, new CompoundTag().addLongArray("test2", 4, 5, 6));
         register(registry.BLOCK_ENTITY_DATA, new CompoundTag().addString("id", "pig"));
-        register(registry.INSTRUMENT, new EitherEntry<>(new Instrument(new EitherEntry<>(new SoundEvent(Identifier.of("test"), 0.5F)), 12, 13)));
+        register(registry.INSTRUMENT, new Holder<>(new Instrument(new Holder<>(new SoundEvent(Identifier.of("test"), 0.5F)), 12, 13)));
         register(registry.OMINOUS_BOTTLE_AMPLIFIER, 2);
         register(registry.RECIPES, Arrays.asList(Identifier.of("test"), Identifier.of("test2")));
         register(registry.LODESTONE_TRACKER, new LodestoneTracker(new LodestoneTracker.GlobalPos(registry.getRegistries().dimension.getEntry(Identifier.of("test")), new BlockPos(12, 21, 34)), false));
@@ -106,7 +106,7 @@ public class Test_v1_20_5 extends ItemComponentTest<ItemComponents_v1_20_5> {
             return properties;
         })));
         register(registry.NOTE_BLOCK_SOUND, Identifier.of("test"));
-        register(registry.BANNER_PATTERNS, Collections.singletonList(new BannerPattern(new EitherEntry<>(new BannerPattern.Pattern(Identifier.of("test"), "translation")), DyeColor.RED)));
+        register(registry.BANNER_PATTERNS, Collections.singletonList(new BannerPattern(new Holder<>(new BannerPattern.Pattern(Identifier.of("test"), "translation")), DyeColor.RED)));
         register(registry.BASE_COLOR, DyeColor.YELLOW);
         register(registry.POT_DECORATIONS, Arrays.asList(registry.getRegistries().item.getEntry(Identifier.of("test")), registry.getRegistries().item.getEntry(Identifier.of("test2"))));
         register(registry.CONTAINER, Arrays.asList(new ContainerSlot(10, new ItemStack(registry.getRegistries().item.getEntry(Identifier.of("test")), 12, registry.getItemDefaults())), new ContainerSlot(20, new ItemStack(registry.getRegistries().item.getEntry(Identifier.of("test2")), 34, registry.getItemDefaults()))));

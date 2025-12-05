@@ -9,7 +9,7 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -90,7 +90,7 @@ public class Types_v1_21_6 {
         public static final String SHEARING_SOUND = "shearing_sound";
 
         private Types_v1_21_2.EquipmentSlot slot;
-        private EitherEntry<Types_v1_20_5.SoundEvent> equipSound; //Default: item.armor.equip_generic
+        private Holder<Types_v1_20_5.SoundEvent> equipSound; //Default: item.armor.equip_generic
         private Identifier assetId = null;
         private Identifier cameraOverlay = null;
         private TagEntryList allowedEntities = null;
@@ -99,7 +99,7 @@ public class Types_v1_21_6 {
         private boolean damageOnHurt = true;
         private boolean equipOnInteract = false;
         private boolean canBeSheared = false;
-        private EitherEntry<Types_v1_20_5.SoundEvent> shearingSound = null; //Default: item.shears.snip
+        private Holder<Types_v1_20_5.SoundEvent> shearingSound = null; //Default: item.shears.snip
 
         public Equippable(final Types_v1_21_2.EquipmentSlot slot) {
             this.slot = slot;

@@ -9,7 +9,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6.Types_v1_21_6.AttributeModifier;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
@@ -24,7 +24,7 @@ public class ItemComponents_v1_21_6 extends ItemComponents_v1_21_5 {
     public final ItemComponent<List<AttributeModifier>> ATTRIBUTE_MODIFIERS = this.register("attribute_modifiers", this.typeSerializers.attributeModifier_v1_21_6().listOf());
     public final ItemComponent<Equippable> EQUIPPABLE = this.register("equippable", MapCodecMerger.codec(
             Codec.named(Types_v1_21_2.EquipmentSlot.values()).mapCodec(Equippable.SLOT).required(), Equippable::getSlot,
-            this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optional().defaulted(new EitherEntry<>(this.registries.sound.getEntry(Identifier.of("item.armor.equip_generic")))), Equippable::getEquipSound,
+            this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optional().defaulted(new Holder<>(this.registries.sound.getEntry(Identifier.of("item.armor.equip_generic")))), Equippable::getEquipSound,
             Codec.STRING_IDENTIFIER.mapCodec("asset_id").optional().defaulted(null), Equippable::getAssetId,
             Codec.STRING_IDENTIFIER.mapCodec(Equippable.CAMERA_OVERLAY).optional().defaulted(null), Equippable::getCameraOverlay,
             TagEntryList.codec(this.registries.entityType, false).mapCodec(Equippable.ALLOWED_ENTITIES).optional().defaulted(null), Equippable::getAllowedEntities,
@@ -33,7 +33,7 @@ public class ItemComponents_v1_21_6 extends ItemComponents_v1_21_5 {
             Codec.BOOLEAN.mapCodec(Equippable.DAMAGE_ON_HURT).optional().defaulted(true), Equippable::isDamageOnHurt,
             Codec.BOOLEAN.mapCodec(Equippable.EQUIP_ON_INTERACT).optional().defaulted(false), Equippable::isEquipOnInteract,
             Codec.BOOLEAN.mapCodec(Equippable.CAN_BE_SHEARED).optional().defaulted(false), Equippable::isCanBeSheared,
-            this.typeSerializers.soundEvent().mapCodec(Equippable.SHEARING_SOUND).optional().defaulted(new EitherEntry<>(this.registries.sound.getEntry(Identifier.of("item.shears.snip")))), Equippable::getEquipSound,
+            this.typeSerializers.soundEvent().mapCodec(Equippable.SHEARING_SOUND).optional().defaulted(new Holder<>(this.registries.sound.getEntry(Identifier.of("item.shears.snip")))), Equippable::getEquipSound,
             Equippable::new
     ));
 

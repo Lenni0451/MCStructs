@@ -9,10 +9,10 @@ import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
-import net.lenni0451.mcstructs.registry.RegistryTag;
 import net.lenni0451.mcstructs.registry.TagEntryList;
+import net.lenni0451.mcstructs.registry.TagKey;
 import net.lenni0451.mcstructs.text.TextComponent;
 
 import java.util.ArrayList;
@@ -211,9 +211,9 @@ public class Types_v1_21_5 {
         private float disableCooldownScale = 1;
         private List<DamageReduction> damageReductions = Collections.singletonList(new DamageReduction(90, null, 0, 1));
         private ItemDamageFunction itemDamage = null;
-        private RegistryTag bypassedBy = null;
-        private EitherEntry<Types_v1_20_5.SoundEvent> blockSound = null;
-        private EitherEntry<Types_v1_20_5.SoundEvent> disabledSound = null;
+        private TagKey bypassedBy = null;
+        private Holder<Types_v1_20_5.SoundEvent> blockSound = null;
+        private Holder<Types_v1_20_5.SoundEvent> disabledSound = null;
 
 
         @Data
@@ -294,8 +294,8 @@ public class Types_v1_21_5 {
         public static final String MATERIAL = "material";
         public static final String PATTERN = "pattern";
 
-        private EitherEntry<ArmorTrimMaterial> material;
-        private EitherEntry<ArmorTrimPattern> pattern;
+        private Holder<ArmorTrimMaterial> material;
+        private Holder<ArmorTrimPattern> pattern;
     }
 
 }

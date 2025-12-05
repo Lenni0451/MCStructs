@@ -8,9 +8,9 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.ItemComponents_v1_21;
-import net.lenni0451.mcstructs.registry.EitherEntry;
-import net.lenni0451.mcstructs.registry.RegistryTag;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.TagEntryList;
+import net.lenni0451.mcstructs.registry.TagKey;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
     public final ItemComponent<Consumable> CONSUMABLE = this.register("consumable", MapCodecMerger.codec(
             Codec.minFloat(0).mapCodec(Consumable.CONSUME_SECONDS).optional().defaulted(1.6F), Consumable::getConsumeSeconds,
             Codec.named(Consumable.ItemUseAnimation.values()).mapCodec(Consumable.ANIMATION).optional().defaulted(Consumable.ItemUseAnimation.EAT), Consumable::getAnimation,
-            this.typeSerializers.soundEvent().mapCodec(Consumable.SOUND).optional().defaulted(this.registries.sound.getLeftEntry(Identifier.of("entity.generic.eat"))), Consumable::getSound,
+            this.typeSerializers.soundEvent().mapCodec(Consumable.SOUND).optional().defaulted(this.registries.sound.getHolder(Identifier.of("entity.generic.eat"))), Consumable::getSound,
             Codec.BOOLEAN.mapCodec(Consumable.HAS_CONSUME_PARTICLES).optional().defaulted(true), Consumable::isHasConsumeParticles,
             this.typeSerializers.consumeEffect().listOf().mapCodec(Consumable.ON_CONSUME_EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), Consumable::getOnConsumeEffects,
             Consumable::new
@@ -55,7 +55,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
             UseCooldown::new
     ));
     public final ItemComponent<DamageResistant> DAMAGE_RESISTANT = this.register("damage_resistant", MapCodecMerger.codec(
-            RegistryTag.codec(this.registries.damageType).mapCodec(DamageResistant.TYPES).required(), DamageResistant::getTypes,
+            TagKey.hashedCodec(this.registries.damageType).mapCodec(DamageResistant.TYPES).required(), DamageResistant::getTypes,
             DamageResistant::new
     ));
     public final ItemComponent<Enchantable> ENCHANTABLE = this.register("enchantable", MapCodecMerger.codec(
@@ -64,7 +64,7 @@ public class ItemComponents_v1_21_2 extends ItemComponents_v1_21 {
     ));
     public final ItemComponent<Equippable> EQUIPPABLE = this.register("equippable", MapCodecMerger.codec(
             Codec.named(EquipmentSlot.values()).mapCodec(Equippable.SLOT).required(), Equippable::getSlot,
-            this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optional().defaulted(new EitherEntry<>(this.registries.sound.getEntry(Identifier.of("item.armor.equip_generic")))), Equippable::getEquipSound,
+            this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optional().defaulted(new Holder<>(this.registries.sound.getEntry(Identifier.of("item.armor.equip_generic")))), Equippable::getEquipSound,
             Codec.STRING_IDENTIFIER.mapCodec(Equippable.MODEL).optional().defaulted(null), Equippable::getModel,
             Codec.STRING_IDENTIFIER.mapCodec(Equippable.CAMERA_OVERLAY).optional().defaulted(null), Equippable::getCameraOverlay,
             TagEntryList.codec(this.registries.entityType, false).mapCodec(Equippable.ALLOWED_ENTITIES).optional().defaulted(null), Equippable::getAllowedEntities,

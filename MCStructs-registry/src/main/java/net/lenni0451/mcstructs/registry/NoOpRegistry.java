@@ -40,8 +40,8 @@ public class NoOpRegistry extends Registry {
 
     @Nullable
     @Override
-    public RegistryTag getTag(Identifier tag) {
-        return new RegistryTag(this, tag);
+    public TagKey getTag(Identifier tag) {
+        return new TagKey(this, tag);
     }
 
 }

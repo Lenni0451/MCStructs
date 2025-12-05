@@ -7,7 +7,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.TypeSerializers_v1_21_4;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.Types_v1_21_5.ArmorTrimMaterial;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.Types_v1_21_5.ArmorTrimPattern;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
@@ -33,12 +33,12 @@ public class TypeSerializers_v1_21_5 extends TypeSerializers_v1_21_4 {
 
     @Override
     @Deprecated
-    public Codec<EitherEntry<Types_v1_20_5.ArmorTrimMaterial>> armorTrimMaterial() {
+    public Codec<Holder<Types_v1_20_5.ArmorTrimMaterial>> armorTrimMaterial() {
         throw new UnsupportedOperationException();
     }
 
-    public Codec<EitherEntry<ArmorTrimMaterial>> armorTrimMaterial_v1_21_5() {
-        return this.init(ARMOR_TRIM_MATERIAL, () -> EitherEntry.codec(
+    public Codec<Holder<ArmorTrimMaterial>> armorTrimMaterial_v1_21_5() {
+        return this.init(ARMOR_TRIM_MATERIAL, () -> Holder.fileCodec(
                 this.registry.getRegistries().armorTrimMaterial,
                 MapCodecMerger.codec(
                         Codec.STRING_IDENTIFIER_PATH.mapCodec(ArmorTrimMaterial.ASSET_NAME).required(), ArmorTrimMaterial::getAssetName,
@@ -51,12 +51,12 @@ public class TypeSerializers_v1_21_5 extends TypeSerializers_v1_21_4 {
 
     @Override
     @Deprecated
-    public Codec<EitherEntry<Types_v1_20_5.ArmorTrimPattern>> armorTrimPattern() {
+    public Codec<Holder<Types_v1_20_5.ArmorTrimPattern>> armorTrimPattern() {
         throw new UnsupportedOperationException();
     }
 
-    public Codec<EitherEntry<ArmorTrimPattern>> armorTrimPattern_v1_21_5() {
-        return this.init(ARMOR_TRIM_PATTERN, () -> EitherEntry.codec(
+    public Codec<Holder<ArmorTrimPattern>> armorTrimPattern_v1_21_5() {
+        return this.init(ARMOR_TRIM_PATTERN, () -> Holder.fileCodec(
                 this.registry.getRegistries().armorTrimPattern,
                 MapCodecMerger.codec(
                         Codec.STRING_IDENTIFIER.mapCodec(ArmorTrimPattern.ASSET_ID).required(), ArmorTrimPattern::getAssetId,

@@ -8,8 +8,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_11.Types_v1_21_11.*;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_9.ItemComponents_v1_21_9;
-import net.lenni0451.mcstructs.registry.EitherEntry;
-import net.lenni0451.mcstructs.registry.RegistryEntry;
+import net.lenni0451.mcstructs.registry.EitherHolder;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
@@ -26,14 +25,7 @@ public class ItemComponents_v1_21_11 extends ItemComponents_v1_21_9 {
             UseEffects::new
     ));
     public final ItemComponent<Float> MINIMUM_ATTACK_CHARGE = this.register("minimum_attack_charge", Codec.rangedFloat(0, 1));
-    public final ItemComponent<EitherEntry<DamageType>> DAMAGE_TYPE = this.register("damage_type", EitherEntry.codec(this.getRegistries().damageType, MapCodecMerger.codec(
-            Codec.STRING.mapCodec(DamageType.MESSAGE_ID).required(), DamageType::getMessageId,
-            Codec.named(DamageScaling.values()).mapCodec(DamageType.SCALING).required(), DamageType::getScaling,
-            Codec.FLOAT.mapCodec(DamageType.EXHAUSTION).required(), DamageType::getExhaustion,
-            Codec.named(DamageEffects.values()).mapCodec(DamageType.EFFECTS).optional().defaulted(DamageEffects.HURT), DamageType::getEffects,
-            Codec.named(DeathMessageType.values()).mapCodec(DamageType.DEATH_MESSAGE_TYPE).optional().defaulted(DeathMessageType.DEFAULT), DamageType::getDeathMessageType,
-            DamageType::new
-    )));
+    public final ItemComponent<EitherHolder<Object>> DAMAGE_TYPE = this.register("damage_type", EitherHolder.fixedCodec(this.registries.damageType));
     public final ItemComponent<KineticWeapon> KINETIC_WEAPON = this.register("kinetic_weapon", MapCodecMerger.codec(
             Codec.minInt(0).mapCodec(KineticWeapon.CONTACT_COOLDOWN_TICKS).optional().defaulted(10), KineticWeapon::getContactCooldownTicks,
             Codec.minInt(0).mapCodec(KineticWeapon.DELAY_TICKS).optional().defaulted(0), KineticWeapon::getDelayTicks,
@@ -61,7 +53,7 @@ public class ItemComponents_v1_21_11 extends ItemComponents_v1_21_9 {
     public final ItemComponent<Consumable> CONSUMABLE = this.register("consumable", MapCodecMerger.codec(
             Codec.minFloat(0).mapCodec(Consumable.CONSUME_SECONDS).optional().defaulted(1.6F), Consumable::getConsumeSeconds,
             Codec.named(Consumable.ItemUseAnimation.values()).mapCodec(Consumable.ANIMATION).optional().defaulted(Consumable.ItemUseAnimation.EAT), Consumable::getAnimation,
-            this.typeSerializers.soundEvent().mapCodec(Consumable.SOUND).optional().defaulted(this.registries.sound.getLeftEntry(Identifier.of("entity.generic.eat"))), Consumable::getSound,
+            this.typeSerializers.soundEvent().mapCodec(Consumable.SOUND).optional().defaulted(this.registries.sound.getHolder(Identifier.of("entity.generic.eat"))), Consumable::getSound,
             Codec.BOOLEAN.mapCodec(Consumable.HAS_CONSUME_PARTICLES).optional().defaulted(true), Consumable::isHasConsumeParticles,
             this.typeSerializers.consumeEffect().listOf().mapCodec(Consumable.ON_CONSUME_EFFECTS).optional().defaulted(List::isEmpty, ArrayList::new), Consumable::getOnConsumeEffects,
             Consumable::new
@@ -69,13 +61,13 @@ public class ItemComponents_v1_21_11 extends ItemComponents_v1_21_9 {
     public final ItemComponent<AttackRange> ATTACK_RANGE = this.register("attack_range", MapCodecMerger.codec(
             Codec.rangedFloat(0, 64).mapCodec(AttackRange.MIN_REACH).optional().defaulted(0F), AttackRange::getMinReach,
             Codec.rangedFloat(0, 64).mapCodec(AttackRange.MAX_REACH).optional().defaulted(3F), AttackRange::getMaxReach,
-            Codec.rangedFloat(0, 64).mapCodec(AttackRange.MIN_CREATIVE_REACH).optional().defaulted(0F), AttackRange::getMinReach,
-            Codec.rangedFloat(0, 64).mapCodec(AttackRange.MAX_CREATIVE_REACH).optional().defaulted(5F), AttackRange::getMaxReach,
+            Codec.rangedFloat(0, 64).mapCodec(AttackRange.MIN_CREATIVE_REACH).optional().defaulted(0F), AttackRange::getMinCreativeReach,
+            Codec.rangedFloat(0, 64).mapCodec(AttackRange.MAX_CREATIVE_REACH).optional().defaulted(5F), AttackRange::getMaxCreativeReach,
             Codec.rangedFloat(0, 1).mapCodec(AttackRange.HITBOX_MARGIN).optional().defaulted(0.3F), AttackRange::getHitboxMargin,
             Codec.rangedFloat(0, 2).mapCodec(AttackRange.MOB_FACTOR).optional().defaulted(1F), AttackRange::getMobFactor,
             AttackRange::new
     ));
-    public final ItemComponent<RegistryEntry> ZOMBIE_NAUTILUS_VARIANT = this.register("zombie_nautilus/variant", this.registries.zombieNautilusVariant.entryCodec());
+    public final ItemComponent<EitherHolder<Object>> ZOMBIE_NAUTILUS_VARIANT = this.register("zombie_nautilus/variant", EitherHolder.fixedCodec(this.registries.zombieNautilusVariant));
 
 
     public ItemComponents_v1_21_11() {

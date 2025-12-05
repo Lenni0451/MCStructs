@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A class that represents a {@link RegistryTag} or a list of {@link EitherEntry}.
+ * A class that represents a {@link TagKey} or a list of {@link Holder}.
  */
 @EqualsAndHashCode
 public class TypedTagEntryList<T> {
@@ -24,27 +24,27 @@ public class TypedTagEntryList<T> {
      * @return The codec for this class
      */
     public static <T> Codec<TypedTagEntryList<T>> codec(final Registry registry, final Codec<T> codec, final boolean requireList) {
-        return Codec.either(RegistryTag.codec(registry), HomogenousListCodec.codec(EitherEntry.codec(registry, codec), requireList))
+        return Codec.either(TagKey.hashedCodec(registry), HomogenousListCodec.codec(Holder.fileCodec(registry, codec), requireList))
                 .map(tagEntryList -> tagEntryList.isTag() ? Either.left(tagEntryList.getTag()) : Either.right(tagEntryList.getEntries()),
                         either -> either.xmap(TypedTagEntryList::new, TypedTagEntryList::new));
     }
 
 
-    private final RegistryTag tag;
-    private final List<EitherEntry<T>> entries;
+    private final TagKey tag;
+    private final List<Holder<T>> entries;
 
-    public TypedTagEntryList(final RegistryTag tag) {
+    public TypedTagEntryList(final TagKey tag) {
         this.tag = tag;
         this.entries = null;
     }
 
-    public TypedTagEntryList(final List<EitherEntry<T>> entries) {
+    public TypedTagEntryList(final List<Holder<T>> entries) {
         this.tag = null;
         this.entries = entries;
     }
 
     /**
-     * @return If this list has a {@link RegistryTag}
+     * @return If this list has a {@link TagKey}
      */
     public boolean isTag() {
         return this.tag != null;
@@ -58,16 +58,16 @@ public class TypedTagEntryList<T> {
     }
 
     /**
-     * @return The {@link RegistryTag} of this list
+     * @return The {@link TagKey} of this list
      */
-    public RegistryTag getTag() {
+    public TagKey getTag() {
         return this.tag;
     }
 
     /**
      * @return The {@link RegistryEntry}s of this list
      */
-    public List<EitherEntry<T>> getEntries() {
+    public List<Holder<T>> getEntries() {
         return this.entries;
     }
 

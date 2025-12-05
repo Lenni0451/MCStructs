@@ -8,10 +8,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
-import net.lenni0451.mcstructs.registry.EitherEntry;
-import net.lenni0451.mcstructs.registry.RegistryEntry;
-import net.lenni0451.mcstructs.registry.RegistryTag;
-import net.lenni0451.mcstructs.registry.TagEntryList;
+import net.lenni0451.mcstructs.registry.*;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 import net.lenni0451.mcstructs.text.serializer.v1_21_5.TextCodecs_v1_21_5;
@@ -70,10 +67,10 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
     public final ItemComponent<RabbitVariant> RABBIT_VARIANT = this.register("rabbit/variant", Codec.named(RabbitVariant.values()));
     public final ItemComponent<RegistryEntry> PIG_VARIANT = this.register("pig/variant", this.registries.pigVariant.entryCodec());
     public final ItemComponent<RegistryEntry> COW_VARIANT = this.register("cow/variant", this.registries.cowVariant.entryCodec());
-    public final ItemComponent<RegistryEntry> CHICKEN_VARIANT = this.register("chicken/variant", this.registries.chickenVariant.entryCodec());
+    public final ItemComponent<EitherHolder<Object>> CHICKEN_VARIANT = this.register("chicken/variant", EitherHolder.fixedCodec(this.registries.chickenVariant));
     public final ItemComponent<RegistryEntry> FROG_VARIANT = this.register("frog/variant", this.registries.frogVariant.entryCodec());
     public final ItemComponent<HorseVariant> HORSE_VARIANT = this.register("horse/variant", Codec.named(HorseVariant.values()));
-    public final ItemComponent<EitherEntry<PaintingVariant>> PAINTING_VARIANT = this.register("painting/variant", EitherEntry.codec(
+    public final ItemComponent<Holder<PaintingVariant>> PAINTING_VARIANT = this.register("painting/variant", Holder.fileCodec(
             this.registries.paintingVariant,
             MapCodecMerger.codec(
                     Codec.rangedInt(1, 16).mapCodec(PaintingVariant.WIDTH).required(), PaintingVariant::getWidth,
@@ -106,14 +103,14 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
                     Codec.FLOAT.mapCodec(BlocksAttacks.ItemDamageFunction.FACTOR).required(), BlocksAttacks.ItemDamageFunction::getFactor,
                     BlocksAttacks.ItemDamageFunction::new
             ).mapCodec(BlocksAttacks.ITEM_DAMAGE).optional().defaulted(itemDamageFunction -> itemDamageFunction.getThreshold() == 1 && itemDamageFunction.getBase() == 0 && itemDamageFunction.getFactor() == 1, () -> new BlocksAttacks.ItemDamageFunction(1, 0, 1)), BlocksAttacks::getItemDamage,
-            RegistryTag.codec(this.registries.damageType).mapCodec(BlocksAttacks.BYPASSED_BY).optional().defaulted(null), BlocksAttacks::getBypassedBy,
+            TagKey.hashedCodec(this.registries.damageType).mapCodec(BlocksAttacks.BYPASSED_BY).optional().defaulted(null), BlocksAttacks::getBypassedBy,
             this.typeSerializers.soundEvent().mapCodec(BlocksAttacks.BLOCK_SOUND).optional().defaulted(null), BlocksAttacks::getBlockSound,
             this.typeSerializers.soundEvent().mapCodec(BlocksAttacks.DISABLED_SOUND).optional().defaulted(null), BlocksAttacks::getDisabledSound,
             BlocksAttacks::new
     ));
-    public final ItemComponent<EitherEntry<Types_v1_20_5.SoundEvent>> BREAK_SOUND = this.register("break_sound", this.typeSerializers.soundEvent());
-    public final ItemComponent<RegistryTag> PROVIDES_BANNER_PATTERNS = this.register("provides_banner_patterns", RegistryTag.codec(this.registries.bannerPattern));
-    public final ItemComponent<RegistryTag> PROVIDES_TRIM_MATERIAL = this.register("provides_trim_material", RegistryTag.codec(this.registries.armorTrimMaterial));
+    public final ItemComponent<Holder<Types_v1_20_5.SoundEvent>> BREAK_SOUND = this.register("break_sound", this.typeSerializers.soundEvent());
+    public final ItemComponent<TagKey> PROVIDES_BANNER_PATTERNS = this.register("provides_banner_patterns", TagKey.hashedCodec(this.registries.bannerPattern));
+    public final ItemComponent<TagKey> PROVIDES_TRIM_MATERIAL = this.register("provides_trim_material", TagKey.hashedCodec(this.registries.armorTrimMaterial));
     public final ItemComponent<TooltipDisplay> TOOLTIP_DISPLAY = this.register("tooltip_display", MapCodecMerger.codec(
             Codec.BOOLEAN.mapCodec(TooltipDisplay.HIDE_TOOLTIP).optional().defaulted(false), TooltipDisplay::isHideTooltip,
             this.getComponentCodec().listOf().mapCodec(TooltipDisplay.HIDDEN_COMPONENTS).optional().defaulted(List::isEmpty, ArrayList::new), TooltipDisplay::getHiddenComponents,
@@ -125,7 +122,7 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
     public final ItemComponent<List<Types_v1_20_5.BlockPredicate>> CAN_BREAK = this.copy("can_break", this.CAN_PLACE_ON);
     public final ItemComponent<Map<RegistryEntry, Integer>> ENCHANTMENTS = this.register("enchantments", this.typeSerializers.enchantmentLevels());
     public final ItemComponent<Map<RegistryEntry, Integer>> STORED_ENCHANTMENTS = this.copy("stored_enchantments", this.ENCHANTMENTS);
-    public final ItemComponent<EitherEntry<Types_v1_21.JukeboxPlayable.JukeboxSong>> JUKEBOX_PLAYABLE = this.register("jukebox_playable", EitherEntry.codec(this.registries.jukeboxSong, MapCodecMerger.codec(
+    public final ItemComponent<Holder<Types_v1_21.JukeboxPlayable.JukeboxSong>> JUKEBOX_PLAYABLE = this.register("jukebox_playable", Holder.fileCodec(this.registries.jukeboxSong, MapCodecMerger.codec(
             this.typeSerializers.soundEvent().mapCodec(Types_v1_21.JukeboxPlayable.JukeboxSong.SOUND_EVENT).required(), Types_v1_21.JukeboxPlayable.JukeboxSong::getSoundEvent,
             this.typeSerializers.rawTextComponent().mapCodec(Types_v1_21.JukeboxPlayable.JukeboxSong.DESCRIPTION).required(), Types_v1_21.JukeboxPlayable.JukeboxSong::getDescription,
             Codec.minExclusiveFloat(0).mapCodec(Types_v1_21.JukeboxPlayable.JukeboxSong.LENGTH_IN_SECONDS).required(), Types_v1_21.JukeboxPlayable.JukeboxSong::getLengthInSeconds,

@@ -4,7 +4,7 @@ import lombok.*;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,29 +22,6 @@ public class Types_v1_21_11 {
         private boolean canSprint = false;
         private boolean interactVibrations = true;
         private float speedMultiplier = 0.2F;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class DamageType {
-        public static final String MESSAGE_ID = "message_id";
-        public static final String SCALING = "scaling";
-        public static final String EXHAUSTION = "exhaustion";
-        public static final String EFFECTS = "effects";
-        public static final String DEATH_MESSAGE_TYPE = "death_message_type";
-
-        private String messageId;
-        private DamageScaling scaling;
-        private float exhaustion;
-        private DamageEffects effects = DamageEffects.HURT;
-        private DeathMessageType deathMessageType = DeathMessageType.DEFAULT;
-
-        public DamageType(final String messageId, final DamageScaling scaling, final float exhaustion) {
-            this.messageId = messageId;
-            this.scaling = scaling;
-            this.exhaustion = exhaustion;
-        }
     }
 
     @Getter
@@ -101,8 +78,8 @@ public class Types_v1_21_11 {
         private Condition damageConditions = null;
         private float forwardMovement = 0;
         private float damageMultiplier = 1;
-        private EitherEntry<Types_v1_20_5.SoundEvent> sound = null;
-        private EitherEntry<Types_v1_20_5.SoundEvent> hitSound = null;
+        private Holder<Types_v1_20_5.SoundEvent> sound = null;
+        private Holder<Types_v1_20_5.SoundEvent> hitSound = null;
 
 
         @Data
@@ -134,8 +111,8 @@ public class Types_v1_21_11 {
 
         private boolean dealsKnockback = true;
         private boolean dismounts = false;
-        private EitherEntry<Types_v1_20_5.SoundEvent> sound;
-        private EitherEntry<Types_v1_20_5.SoundEvent> hitSound;
+        private Holder<Types_v1_20_5.SoundEvent> sound;
+        private Holder<Types_v1_20_5.SoundEvent> hitSound;
     }
 
     @Data
@@ -171,7 +148,7 @@ public class Types_v1_21_11 {
 
         private float consumeSeconds = 1.6F;
         private Consumable.ItemUseAnimation animation = Consumable.ItemUseAnimation.EAT;
-        private EitherEntry<Types_v1_20_5.SoundEvent> sound; //Default: entity.generic.eat
+        private Holder<Types_v1_20_5.SoundEvent> sound; //Default: entity.generic.eat
         private boolean hasConsumeParticles = true;
         private List<Types_v1_21_2.ConsumeEffect> onConsumeEffects = new ArrayList<>();
 

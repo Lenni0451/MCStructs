@@ -8,7 +8,7 @@ import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentMap;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -203,7 +203,7 @@ public class Types_v1_20_5 {
         public static final String PATTERN = "pattern";
         public static final String COLOR = "color";
 
-        private EitherEntry<Pattern> pattern;
+        private Holder<Pattern> pattern;
         private DyeColor color;
 
 
@@ -378,7 +378,7 @@ public class Types_v1_20_5 {
         public static final String USE_DURATION = "use_duration";
         public static final String RANGE = "range";
 
-        private EitherEntry<SoundEvent> soundEvent;
+        private Holder<SoundEvent> soundEvent;
         private int useDuration;
         private float range;
     }
@@ -613,11 +613,11 @@ public class Types_v1_20_5 {
         public static final String PATTERN = "pattern";
         public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
 
-        private EitherEntry<ArmorTrimMaterial> material;
-        private EitherEntry<ArmorTrimPattern> pattern;
+        private Holder<ArmorTrimMaterial> material;
+        private Holder<ArmorTrimPattern> pattern;
         private boolean showInTooltip = true;
 
-        public ArmorTrim(final EitherEntry<ArmorTrimMaterial> material, final EitherEntry<ArmorTrimPattern> pattern) {
+        public ArmorTrim(final Holder<ArmorTrimMaterial> material, final Holder<ArmorTrimPattern> pattern) {
             this.material = material;
             this.pattern = pattern;
         }

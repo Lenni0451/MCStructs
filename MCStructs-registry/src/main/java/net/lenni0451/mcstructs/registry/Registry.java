@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
- * A class that represents a registry of {@link RegistryEntry}s and {@link RegistryTag}s.
+ * A class that represents a registry of {@link RegistryEntry}s and {@link TagKey}s.
  */
 public abstract class Registry {
 
@@ -77,41 +77,41 @@ public abstract class Registry {
     public abstract Identifier getId(final int networkId);
 
     /**
-     * Get an {@link EitherEntry} for the given id.
+     * Get an {@link Holder} for the given id.
      *
      * @param id  The id of the entry
      * @param <T> The type of the entry
      * @return The entry or null if it does not exist
      */
     @Nullable
-    public <T> EitherEntry<T> getLeftEntry(final Identifier id) {
+    public <T> Holder<T> getHolder(final Identifier id) {
         RegistryEntry entry = this.getEntry(id);
         if (entry == null) return null;
-        return new EitherEntry<>(entry);
+        return new Holder<>(entry);
     }
 
     /**
-     * Get an {@link EitherEntry} for the given network id.
+     * Get an {@link Holder} for the given network id.
      *
      * @param networkId The network id of the entry
      * @param <T>       The type of the entry
      * @return The entry or null if it does not exist
      */
     @Nullable
-    public <T> EitherEntry<T> getLeftEntry(final int networkId) {
+    public <T> Holder<T> getHolder(final int networkId) {
         RegistryEntry entry = this.getEntry(networkId);
         if (entry == null) return null;
-        return new EitherEntry<>(entry);
+        return new Holder<>(entry);
     }
 
     /**
-     * Get the {@link RegistryTag} for the given tag id.
+     * Get the {@link TagKey} for the given tag id.
      *
      * @param tag The id of the tag
      * @return The tag or null if it does not exist
      */
     @Nullable
-    public abstract RegistryTag getTag(final Identifier tag);
+    public abstract TagKey getTag(final Identifier tag);
 
     @Override
     public String toString() {

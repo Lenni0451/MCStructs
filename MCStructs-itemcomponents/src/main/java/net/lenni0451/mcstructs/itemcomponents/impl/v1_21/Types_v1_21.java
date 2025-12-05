@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.text.TextComponent;
 
@@ -51,7 +51,7 @@ public class Types_v1_21 {
         public static final String SONG = "song";
         public static final String SHOW_IN_TOOLTIP = "show_in_tooltip";
 
-        private EitherEntry<JukeboxSong> song;
+        private Holder<JukeboxSong> song;
         private boolean showInTooltip = true;
 
 
@@ -64,7 +64,7 @@ public class Types_v1_21 {
             public static final String LENGTH_IN_SECONDS = "length_in_seconds";
             public static final String COMPARATOR_OUTPUT = "comparator_output";
 
-            private EitherEntry<Types_v1_20_5.SoundEvent> soundEvent;
+            private Holder<Types_v1_20_5.SoundEvent> soundEvent;
             private TextComponent description;
             private float lengthInSeconds;
             private int comparatorOutput;

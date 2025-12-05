@@ -11,15 +11,9 @@ import net.lenni0451.mcstructs.core.utils.ToString;
  * Tags are used to group multiple {@link RegistryEntry}s together.
  */
 @EqualsAndHashCode
-public class RegistryTag {
+public class TagKey {
 
-    /**
-     * Create a codec for this class bound to the given registry.
-     *
-     * @param registry The registry owning the tag
-     * @return The codec for this class
-     */
-    public static Codec<RegistryTag> codec(final Registry registry) {
+    public static Codec<TagKey> hashedCodec(final Registry registry) {
         return Codec.STRING
                 .verified(s -> s.startsWith("#") ? null : Result.error("Tag needs to start with #"))
                 .flatMap(identifier -> Result.success("#" + identifier.get()), s -> {
@@ -28,7 +22,7 @@ public class RegistryTag {
                     else return Result.success(id);
                 })
                 .flatMap(registryTag -> Result.success(registryTag.getTag()), identifier -> {
-                    RegistryTag tag = registry.getTag(identifier);
+                    TagKey tag = registry.getTag(identifier);
                     if (tag == null) return Result.error("Registry " + registry.getName() + " doesn't contain tag " + identifier);
                     return Result.success(tag);
                 });
@@ -38,7 +32,7 @@ public class RegistryTag {
     private final Registry registry;
     private final Identifier tag;
 
-    public RegistryTag(final Registry registry, final Identifier tag) {
+    public TagKey(final Registry registry, final Identifier tag) {
         this.registry = registry;
         this.tag = tag;
     }

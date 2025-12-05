@@ -4,7 +4,7 @@ import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.dialog.Dialog;
 import net.lenni0451.mcstructs.dialog.serializer.v1_21_6.DialogCodecs_v1_21_6;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.NoOpRegistry;
 import net.lenni0451.mcstructs.registry.TypedTagEntryList;
 
@@ -34,7 +34,7 @@ public abstract class DialogSerializer {
      *
      * @return The registry codec
      */
-    public abstract Codec<EitherEntry<Dialog>> getCodec();
+    public abstract Codec<Holder<Dialog>> getCodec();
 
     /**
      * Get the codec for a tag or list of dialogs.<br>

@@ -9,7 +9,8 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.EitherHolder;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.components.StringComponent;
@@ -55,18 +56,18 @@ public class Test_v1_21_5 extends ItemComponentTest<ItemComponents_v1_21_5> {
         register(registry.RABBIT_VARIANT, RabbitVariant.EVIL);
         register(registry.PIG_VARIANT, registry.getRegistries().pigVariant.getEntry(Identifier.of("test")));
         register(registry.COW_VARIANT, registry.getRegistries().cowVariant.getEntry(Identifier.of("test")));
-        register(registry.CHICKEN_VARIANT, registry.getRegistries().chickenVariant.getEntry(Identifier.of("test")));
+        register(registry.CHICKEN_VARIANT, new EitherHolder<>(registry.getRegistries().chickenVariant.getHolder(Identifier.of("test"))));
         register(registry.FROG_VARIANT, registry.getRegistries().frogVariant.getEntry(Identifier.of("test")));
         register(registry.HORSE_VARIANT, HorseVariant.BROWN);
-        register(registry.PAINTING_VARIANT, new EitherEntry<>(new PaintingVariant(1, 2, Identifier.of("test"), new StringComponent("a"), new StringComponent("b"))));
+        register(registry.PAINTING_VARIANT, new Holder<>(new PaintingVariant(1, 2, Identifier.of("test"), new StringComponent("a"), new StringComponent("b"))));
         register(registry.LLAMA_VARIANT, LlamaVariant.BROWN);
         register(registry.AXOLOTL_VARIANT, AxolotlVariant.BLUE);
         register(registry.CAT_VARIANT, registry.getRegistries().catVariant.getEntry(Identifier.of("test")));
         register(registry.CAT_COLLAR, Types_v1_20_5.DyeColor.LIGHT_BLUE);
         register(registry.SHEEP_COLOR, Types_v1_20_5.DyeColor.MAGENTA);
         register(registry.SHULKER_COLOR, Types_v1_20_5.DyeColor.WHITE);
-        register(registry.BLOCKS_ATTACKS, new BlocksAttacks(12, 34, Arrays.asList(new BlocksAttacks.DamageReduction(12, new TagEntryList(registry.getRegistries().damageType.getTag(Identifier.of("test"))), 1, 2)), new BlocksAttacks.ItemDamageFunction(12, 34, 56), registry.getRegistries().damageType.getTag(Identifier.of("test")), registry.getRegistries().sound.getLeftEntry(Identifier.of("test")), registry.getRegistries().sound.getLeftEntry(Identifier.of("test"))));
-        register(registry.BREAK_SOUND, registry.getRegistries().sound.getLeftEntry(Identifier.of("test")));
+        register(registry.BLOCKS_ATTACKS, new BlocksAttacks(12, 34, Arrays.asList(new BlocksAttacks.DamageReduction(12, new TagEntryList(registry.getRegistries().damageType.getTag(Identifier.of("test"))), 1, 2)), new BlocksAttacks.ItemDamageFunction(12, 34, 56), registry.getRegistries().damageType.getTag(Identifier.of("test")), registry.getRegistries().sound.getHolder(Identifier.of("test")), registry.getRegistries().sound.getHolder(Identifier.of("test"))));
+        register(registry.BREAK_SOUND, registry.getRegistries().sound.getHolder(Identifier.of("test")));
         register(registry.PROVIDES_BANNER_PATTERNS, registry.getRegistries().bannerPattern.getTag(Identifier.of("test")));
         register(registry.PROVIDES_TRIM_MATERIAL, registry.getRegistries().armorTrimMaterial.getTag(Identifier.of("test")));
         register(registry.TOOLTIP_DISPLAY, new TooltipDisplay(true, Arrays.asList(registry.TOOLTIP_DISPLAY, registry.BREAK_SOUND)));
@@ -86,7 +87,7 @@ public class Test_v1_21_5 extends ItemComponentTest<ItemComponents_v1_21_5> {
             return enchantments;
         }));
         copy(registry.STORED_ENCHANTMENTS, registry.ENCHANTMENTS);
-        register(registry.TRIM, new ArmorTrim(registry.getRegistries().armorTrimMaterial.getLeftEntry(Identifier.of("test")), registry.getRegistries().armorTrimPattern.getLeftEntry(Identifier.of("test"))));
+        register(registry.TRIM, new ArmorTrim(registry.getRegistries().armorTrimMaterial.getHolder(Identifier.of("test")), registry.getRegistries().armorTrimPattern.getHolder(Identifier.of("test"))));
         register(registry.UNBREAKABLE, true);
     }
 

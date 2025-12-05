@@ -24,7 +24,7 @@ import net.lenni0451.mcstructs.dialog.template.ParsedTemplate;
 import net.lenni0451.mcstructs.dialog.template.StringTemplate;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.Registry;
 import net.lenni0451.mcstructs.registry.TypedTagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -45,7 +45,7 @@ public class DialogCodecs_v1_21_6 extends DialogSerializer {
     @Getter
     public final Codec<Dialog> directCodec;
     @Getter
-    public final Codec<EitherEntry<Dialog>> codec;
+    public final Codec<Holder<Dialog>> codec;
     @Getter
     public final Codec<TypedTagEntryList<Dialog>> listCodec;
 
@@ -67,7 +67,7 @@ public class DialogCodecs_v1_21_6 extends DialogSerializer {
                     throw new IllegalArgumentException("Unknown dialog type: " + type);
             }
         });
-        this.codec = EitherEntry.codec(registry, this.directCodec);
+        this.codec = Holder.fileCodec(registry, this.directCodec);
         this.listCodec = TypedTagEntryList.codec(registry, this.directCodec, false);
     }
 

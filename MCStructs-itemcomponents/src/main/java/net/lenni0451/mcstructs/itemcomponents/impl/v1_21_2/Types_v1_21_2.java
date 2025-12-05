@@ -11,10 +11,10 @@ import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
-import net.lenni0451.mcstructs.registry.EitherEntry;
+import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
-import net.lenni0451.mcstructs.registry.RegistryTag;
 import net.lenni0451.mcstructs.registry.TagEntryList;
+import net.lenni0451.mcstructs.registry.TagKey;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class Types_v1_21_2 {
 
         private float consumeSeconds = 1.6F;
         private ItemUseAnimation animation = ItemUseAnimation.EAT;
-        private EitherEntry<Types_v1_20_5.SoundEvent> sound; //Default: entity.generic.eat
+        private Holder<Types_v1_20_5.SoundEvent> sound; //Default: entity.generic.eat
         private boolean hasConsumeParticles = true;
         private List<ConsumeEffect> onConsumeEffects = new ArrayList<>();
 
@@ -120,7 +120,7 @@ public class Types_v1_21_2 {
     public static class DamageResistant {
         public static final String TYPES = "types";
 
-        private RegistryTag types;
+        private TagKey types;
     }
 
     @Data
@@ -137,7 +137,7 @@ public class Types_v1_21_2 {
         public static final String DAMAGE_ON_HURT = "damage_on_hurt";
 
         private EquipmentSlot slot;
-        private EitherEntry<Types_v1_20_5.SoundEvent> equipSound; //Default: item.armor.equip_generic
+        private Holder<Types_v1_20_5.SoundEvent> equipSound; //Default: item.armor.equip_generic
         private Identifier model = null;
         private Identifier cameraOverlay = null;
         private TagEntryList allowedEntities = null;
@@ -328,7 +328,7 @@ public class Types_v1_21_2 {
             public static final String SOUND = "sound";
 
             private final Type type = Type.PLAY_SOUND;
-            private EitherEntry<Types_v1_20_5.SoundEvent> sound;
+            private Holder<Types_v1_20_5.SoundEvent> sound;
         }
     }
 

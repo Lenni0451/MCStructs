@@ -14,26 +14,22 @@ import java.util.Objects;
  * @param <T> The type of the value
  * @see Either
  */
-@EqualsAndHashCode
-public class EitherEntry<T> {
+@EqualsAndHashCode(doNotUseGetters = true)
+public class Holder<T> {
 
-    /**
-     * Create a codec for this class bound to the given registry.
-     *
-     * @param registry The registry owning the entry
-     * @param codec    The codec for the value
-     * @param <T>      The type of the value
-     * @return The codec for this class
-     */
-    public static <T> Codec<EitherEntry<T>> codec(final Registry registry, final Codec<T> codec) {
-        return Codec.either(codec, registry.entryCodec()).map(Either::swap, Either::swap).map(EitherEntry::either, EitherEntry::new);
+    public static <T> Codec<Holder<T>> fileCodec(final Registry registry, final Codec<T> codec) {
+        return Codec.either(codec, registry.entryCodec()).map(Either::swap, Either::swap).map(Holder::either, Holder::new);
+    }
+
+    public static <T> Codec<Holder<T>> fixedCodec(final Registry registry) {
+        return Codec.either(Codec.<T>failing("Can't encode/decode value in fixed codec for registry " + registry.getName()), registry.entryCodec()).map(Either::swap, Either::swap).map(Holder::either, Holder::new);
     }
 
 
     private final RegistryEntry entry;
     private final T value;
 
-    public EitherEntry(final Either<RegistryEntry, T> either) {
+    public Holder(final Either<RegistryEntry, T> either) {
         if (either.isLeft()) {
             this.entry = either.getLeft();
             this.value = null;
@@ -43,12 +39,12 @@ public class EitherEntry<T> {
         }
     }
 
-    public EitherEntry(@Nonnull final RegistryEntry entry) {
+    public Holder(@Nonnull final RegistryEntry entry) {
         this.entry = entry;
         this.value = null;
     }
 
-    public EitherEntry(@Nonnull final T value) {
+    public Holder(@Nonnull final T value) {
         this.entry = null;
         this.value = value;
     }
@@ -56,7 +52,7 @@ public class EitherEntry<T> {
     /**
      * @return If this either is a {@link RegistryEntry}
      */
-    public boolean isLeft() {
+    public boolean isEntry() {
         return this.entry != null;
     }
 
@@ -64,15 +60,15 @@ public class EitherEntry<T> {
      * @return The {@link RegistryEntry}
      * @throws IllegalStateException If this either is not a {@link RegistryEntry}
      */
-    public RegistryEntry getLeft() {
-        if (this.entry == null) throw new IllegalStateException("Either is not left");
+    public RegistryEntry getEntry() {
+        if (this.entry == null) throw new IllegalStateException("Either is not an entry");
         return this.entry;
     }
 
     /**
      * @return If this either is a value
      */
-    public boolean isRight() {
+    public boolean isValue() {
         return this.value != null;
     }
 
@@ -80,8 +76,8 @@ public class EitherEntry<T> {
      * @return The value
      * @throws IllegalStateException If this either is not a value
      */
-    public T getRight() {
-        if (this.value == null) throw new IllegalStateException("Either is not right");
+    public T getValue() {
+        if (this.value == null) throw new IllegalStateException("Either is not a value");
         return this.value;
     }
 
