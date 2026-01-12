@@ -3,10 +3,8 @@ package net.lenni0451.mcstructs.converter.model;
 import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public interface Result<T> {
 
