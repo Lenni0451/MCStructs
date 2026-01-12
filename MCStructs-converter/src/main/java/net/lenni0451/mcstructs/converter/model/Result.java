@@ -23,9 +23,23 @@ public interface Result<T> {
     }
 
     static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
-        String errorMessages = errors.stream().filter(Result::isError).map(Result::getError).map(CodecException::getMessage).map(s -> "[" + s + "]").collect(Collectors.joining(","));
-        CodecException exception = new CodecException(error + ": " + errorMessages);
-        errors.stream().filter(Result::isError).map(Result::getError).forEach(exception::addSuppressed);
+        StringBuilder errorMessagesBuilder = new StringBuilder(128);
+        for (Result<?> result : errors) {
+            if (result.isError()) {
+                if (errorMessagesBuilder.length() > 0) {
+                    errorMessagesBuilder.append(',');
+                }
+                errorMessagesBuilder.append('[')
+                        .append(result.getError().getMessage())
+                        .append(']');
+            }
+        }
+        CodecException exception = new CodecException(error + ": " + errorMessagesBuilder);
+        for (Result<?> result : errors) {
+            if (result.isError()) {
+                exception.addSuppressed(result.getError());
+            }
+        }
         return new Error<>(exception);
     }
 
