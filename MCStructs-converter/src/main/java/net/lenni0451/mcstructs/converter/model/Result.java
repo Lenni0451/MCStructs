@@ -3,10 +3,8 @@ package net.lenni0451.mcstructs.converter.model;
 import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public interface Result<T> {
 
@@ -23,14 +21,32 @@ public interface Result<T> {
     }
 
     static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
-        String errorMessages = errors.stream().filter(Result::isError).map(Result::getError).map(CodecException::getMessage).map(s -> "[" + s + "]").collect(Collectors.joining(","));
-        CodecException exception = new CodecException(error + ": " + errorMessages);
-        errors.stream().filter(Result::isError).map(Result::getError).forEach(exception::addSuppressed);
+        StringBuilder errorMessagesBuilder = new StringBuilder(128);
+        for (Result<?> result : errors) {
+            if (result.isError()) {
+                if (errorMessagesBuilder.length() > 0) {
+                    errorMessagesBuilder.append(',');
+                }
+                errorMessagesBuilder.append('[')
+                        .append(result.getError().getMessage())
+                        .append(']');
+            }
+        }
+        CodecException exception = new CodecException(error + ": " + errorMessagesBuilder);
+        for (Result<?> result : errors) {
+            if (result.isError()) {
+                exception.addSuppressed(result.getError());
+            }
+        }
         return new Error<>(exception);
     }
 
     static <T> Result<T> unexpected(final Object actual, final Class<?>... expected) {
-        return unexpected(actual, Arrays.stream(expected).map(Class::getSimpleName).toArray(String[]::new));
+        String[] names = new String[expected.length];
+        for (int i = 0; i < expected.length; i++) {
+            names[i] = expected[i].getSimpleName();
+        }
+        return unexpected(actual, names);
     }
 
     static <T> Result<T> unexpected(final Object actual, final String... expected) {
