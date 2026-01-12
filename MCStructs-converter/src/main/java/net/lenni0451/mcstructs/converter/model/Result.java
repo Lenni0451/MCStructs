@@ -44,7 +44,11 @@ public interface Result<T> {
     }
 
     static <T> Result<T> unexpected(final Object actual, final Class<?>... expected) {
-        return unexpected(actual, Arrays.stream(expected).map(Class::getSimpleName).toArray(String[]::new));
+        String[] names = new String[expected.length];
+        for (int i = 0; i < expected.length; i++) {
+            names[i] = expected[i].getSimpleName();
+        }
+        return unexpected(actual, names);
     }
 
     static <T> Result<T> unexpected(final Object actual, final String... expected) {
