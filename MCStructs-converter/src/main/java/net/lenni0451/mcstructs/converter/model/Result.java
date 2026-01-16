@@ -21,24 +21,7 @@ public interface Result<T> {
     }
 
     static <T> Result<T> mergeErrors(final String error, final Collection<Result<?>> errors) {
-        StringBuilder errorMessagesBuilder = new StringBuilder(128);
-        for (Result<?> result : errors) {
-            if (result.isError()) {
-                if (errorMessagesBuilder.length() > 0) {
-                    errorMessagesBuilder.append(',');
-                }
-                errorMessagesBuilder.append('[')
-                        .append(result.getError().getMessage())
-                        .append(']');
-            }
-        }
-        CodecException exception = new CodecException(error + ": " + errorMessagesBuilder);
-        for (Result<?> result : errors) {
-            if (result.isError()) {
-                exception.addSuppressed(result.getError());
-            }
-        }
-        return new Error<>(exception);
+        return new Error<>(new MergedCodecException(error, errors));
     }
 
     static <T> Result<T> unexpected(final Object actual, final Class<?>... expected) {
