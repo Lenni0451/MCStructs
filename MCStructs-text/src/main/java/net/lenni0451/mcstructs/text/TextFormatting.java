@@ -112,7 +112,7 @@ public class TextFormatting {
      */
     @Nullable
     public static TextFormatting parse(final String s) {
-        if (s.startsWith("#")) {
+        if (!s.isEmpty() && s.charAt(0) == '#') {
             try {
                 return new TextFormatting(Integer.parseInt(s.substring(1), 16));
             } catch (NumberFormatException e) {
