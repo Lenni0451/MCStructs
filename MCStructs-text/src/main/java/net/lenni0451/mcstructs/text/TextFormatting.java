@@ -112,7 +112,7 @@ public class TextFormatting {
      */
     @Nullable
     public static TextFormatting parse(final String s) {
-        if (s.startsWith("#")) {
+        if (!s.isEmpty() && s.charAt(0) == '#') {
             try {
                 return new TextFormatting(Integer.parseInt(s.substring(1), 16));
             } catch (NumberFormatException e) {
@@ -267,7 +267,7 @@ public class TextFormatting {
      */
     public String serialize() {
         if (Type.RGB.equals(this.type)) {
-            final StringBuilder result = new StringBuilder();
+            final StringBuilder result = new StringBuilder(7);
             result.append('#');
             final String hex = Integer.toHexString(this.rgbValue);
             for (int i = 0; i < 6 - hex.length(); i++) {
