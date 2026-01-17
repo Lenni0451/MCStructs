@@ -196,7 +196,7 @@ public class ListTag<T extends NbtTag> implements NbtTag, Iterable<T> {
 
     @Override
     public ListTag copy() {
-        List<NbtTag> value = new ArrayList<>();
+        List<NbtTag> value = new ArrayList<>(this.value.size());
         for (T val : this.value) value.add(val.copy());
         return new ListTag<>(value);
     }

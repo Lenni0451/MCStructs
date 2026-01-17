@@ -189,7 +189,7 @@ public class NbtConverter_v1_20_3 implements DataConverter<NbtTag> {
     public Result<List<NbtTag>> asList(NbtTag element) {
         if (element.isListTag()) {
             ListTag<?> listTag = element.asListTag();
-            List<NbtTag> list = new ArrayList<>();
+            List<NbtTag> list = new ArrayList<>(listTag.size());
             if (NbtType.COMPOUND.equals(listTag.getType())) {
                 for (NbtTag tag : listTag) {
                     CompoundTag compound = tag.asCompoundTag();
