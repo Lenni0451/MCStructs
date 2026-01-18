@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.text.stringformat.matcher;
 import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.stringformat.StringFormat;
 import net.lenni0451.mcstructs.text.stringformat.TextStringReader;
+import net.lenni0451.mcstructs.text.utils.TextUtils;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +39,7 @@ public class AdventureRgbStringFormat extends StringFormat {
 
     @Override
     public void write(StringBuilder builder, TextFormatting formatting) {
-        builder.append(this.colorChar).append("#").append(String.format("%06X", formatting.getRgbValue()));
+        builder.append(this.colorChar).append("#").append(TextUtils.formatRGBValue(formatting.getRgbValue()));
     }
 
 }

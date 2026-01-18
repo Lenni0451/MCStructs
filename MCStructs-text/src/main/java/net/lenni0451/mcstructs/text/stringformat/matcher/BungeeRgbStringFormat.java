@@ -3,6 +3,7 @@ package net.lenni0451.mcstructs.text.stringformat.matcher;
 import net.lenni0451.mcstructs.text.TextFormatting;
 import net.lenni0451.mcstructs.text.stringformat.StringFormat;
 import net.lenni0451.mcstructs.text.stringformat.TextStringReader;
+import net.lenni0451.mcstructs.text.utils.TextUtils;
 
 import javax.annotation.Nullable;
 
@@ -45,8 +46,8 @@ public class BungeeRgbStringFormat extends StringFormat {
 
     @Override
     public void write(StringBuilder builder, TextFormatting formatting) {
-        builder.append(this.colorChar).append("x");
-        String hex = String.format("%06X", formatting.getRgbValue());
+        builder.append(this.colorChar).append('x');
+        String hex = TextUtils.formatRGBValue(formatting.getRgbValue());
         for (int i = 0; i < hex.length(); i++) {
             builder.append(this.colorChar).append(hex.charAt(i));
         }

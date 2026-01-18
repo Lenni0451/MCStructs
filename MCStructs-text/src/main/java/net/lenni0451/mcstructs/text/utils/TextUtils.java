@@ -24,6 +24,8 @@ public class TextUtils {
 
     private static final String URL_PATTERN = "(?:https?://)?[\\w._-]+\\.\\w{2,}(?:/\\S*)?";
 
+    private static final char[] HEX_DIGITS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
     /**
      * Make URLs in the given text component clickable.
      *
@@ -261,6 +263,28 @@ public class TextUtils {
         });
         addCurrent.run();
         return components.toArray(new TextComponent[0]);
+    }
+
+    /**
+     * Formats the given RGB integer value into a hexadecimal color string.<br>
+     * The resulting string is always in the {@code #RRGGBB} format.<br>
+     * Each color channel is extracted using bitwise operations.<br>
+     * The input value is expected to contain RGB data in the lower 24 bits.
+     *
+     * <p>Example: {@code 0xFF0000 -> "#FF0000"}</p>
+     *
+     * @param rgbValue the RGB color value encoded as an integer
+     * @return a hexadecimal color string in {@code #RRGGBB} format
+     */
+    public static String formatRGBValue(int rgbValue) {
+        return new String(new char[]{
+                HEX_DIGITS[(rgbValue >> 20) & 0xF],
+                HEX_DIGITS[(rgbValue >> 16) & 0xF],
+                HEX_DIGITS[(rgbValue >> 12) & 0xF],
+                HEX_DIGITS[(rgbValue >> 8) & 0xF],
+                HEX_DIGITS[(rgbValue >> 4) & 0xF],
+                HEX_DIGITS[rgbValue & 0xF]
+        });
     }
 
 }

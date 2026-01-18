@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.text;
 
 import net.lenni0451.mcstructs.core.utils.ToString;
+import net.lenni0451.mcstructs.text.utils.TextUtils;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
@@ -269,10 +270,7 @@ public class TextFormatting {
         if (Type.RGB.equals(this.type)) {
             final StringBuilder result = new StringBuilder(7);
             result.append('#');
-            final String hex = Integer.toHexString(this.rgbValue);
-            for (int i = 0; i < 6 - hex.length(); i++) {
-                result.append('0');
-            }
+            final String hex = TextUtils.formatRGBValue(this.rgbValue);
             result.append(hex);
             return result.toString();
         } else {
@@ -299,7 +297,15 @@ public class TextFormatting {
                 .add("type", this.type)
                 .add("name", this.name, s -> !this.type.equals(Type.RGB))
                 .add("code", this.code, c -> !this.type.equals(Type.RGB))
-                .add("rgbValue", this.rgbValue, i -> this.type.equals(Type.RGB), i -> String.format("#%06X", i))
+                .add("rgbValue",
+                        this.rgbValue,
+                        i -> this.type == Type.RGB,
+                        i -> {
+                            StringBuilder sb = new StringBuilder(7).append('#');
+                            String hex = TextUtils.formatRGBValue(this.rgbValue);
+                            return sb.append(hex).toString();
+                        }
+                )
                 .toString();
     }
 
