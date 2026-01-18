@@ -115,7 +115,7 @@ public class TextFormatting {
     public static TextFormatting parse(final String s) {
         if (!s.isEmpty() && s.charAt(0) == '#') {
             try {
-                return new TextFormatting(parseIntSkipFirst(s, 16));
+                return new TextFormatting(parseIntSkipFirst(s));
             } catch (NumberFormatException e) {
                 return null;
             }
@@ -124,7 +124,7 @@ public class TextFormatting {
         }
     }
 
-    private static int parseIntSkipFirst(String s, int radix) throws NumberFormatException {
+    private static int parseIntSkipFirst(String s) throws NumberFormatException {
 
         int result = 0;
         boolean negative = false;
@@ -148,16 +148,16 @@ public class TextFormatting {
                     throw new NumberFormatException("For input string: \"" + s + "\"");
                 i++;
             }
-            multmin = limit / radix;
+            multmin = limit / 16;
             while (i < len) {
-                digit = Character.digit(s.charAt(i++), radix);
+                digit = Character.digit(s.charAt(i++), 16);
                 if (digit < 0) {
                     throw new NumberFormatException("For input string: \"" + s + "\"");
                 }
                 if (result < multmin) {
                     throw new NumberFormatException("For input string: \"" + s + "\"");
                 }
-                result *= radix;
+                result *= 16;
                 if (result < limit + digit) {
                     throw new NumberFormatException("For input string: \"" + s + "\"");
                 }
