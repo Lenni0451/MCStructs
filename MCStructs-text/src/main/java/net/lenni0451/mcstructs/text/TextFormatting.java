@@ -124,7 +124,7 @@ public class TextFormatting {
         }
     }
 
-    public static int parseIntSkipFirst(String s, int radix) throws NumberFormatException {
+    private static int parseIntSkipFirst(String s, int radix) throws NumberFormatException {
 
         int result = 0;
         boolean negative = false;
