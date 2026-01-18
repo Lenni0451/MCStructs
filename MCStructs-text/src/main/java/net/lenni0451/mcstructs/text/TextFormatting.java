@@ -115,13 +115,71 @@ public class TextFormatting {
     public static TextFormatting parse(final String s) {
         if (!s.isEmpty() && s.charAt(0) == '#') {
             try {
-                return new TextFormatting(Integer.parseInt(s.substring(1), 16));
+                return new TextFormatting(parseIntSkipFirst(s, 16));
             } catch (NumberFormatException e) {
                 return null;
             }
         } else {
             return getByName(s);
         }
+    }
+
+    public static int parseIntSkipFirst(String s, int radix) throws NumberFormatException {
+        if (s == null) {
+            throw new NumberFormatException("null");
+        }
+
+        if (radix < Character.MIN_RADIX) {
+            throw new NumberFormatException("radix " + radix +
+                    " less than Character.MIN_RADIX");
+        }
+
+        if (radix > Character.MAX_RADIX) {
+            throw new NumberFormatException("radix " + radix +
+                    " greater than Character.MAX_RADIX");
+        }
+
+        int result = 0;
+        boolean negative = false;
+        int i = 1;
+        int len = s.length();
+        int limit = -Integer.MAX_VALUE;
+        int multmin;
+        int digit;
+
+        if (len > 1) {
+            char firstChar = s.charAt(i);
+            if (firstChar < '0') {
+                if (firstChar == '-') {
+                    negative = true;
+                    limit = Integer.MIN_VALUE;
+                } else if (firstChar != '+') {
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                }
+
+                if (i + 1 == len)
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                i++;
+            }
+            multmin = limit / radix;
+            while (i < len) {
+                digit = Character.digit(s.charAt(i++), radix);
+                if (digit < 0) {
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                }
+                if (result < multmin) {
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                }
+                result *= radix;
+                if (result < limit + digit) {
+                    throw new NumberFormatException("For input string: \"" + s + "\"");
+                }
+                result -= digit;
+            }
+        } else {
+            throw new NumberFormatException("For input string: \"" + s + "\"");
+        }
+        return negative ? result : -result;
     }
 
     /**
