@@ -125,9 +125,6 @@ public class TextFormatting {
     }
 
     public static int parseIntSkipFirst(String s, int radix) throws NumberFormatException {
-        if (s == null) {
-            throw new NumberFormatException("null");
-        }
 
         if (radix < Character.MIN_RADIX) {
             throw new NumberFormatException("radix " + radix +
