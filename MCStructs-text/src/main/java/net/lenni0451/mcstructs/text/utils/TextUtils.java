@@ -12,7 +12,6 @@ import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.translation.Translator;
 
 import javax.annotation.Nullable;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,7 +31,7 @@ public class TextUtils {
      */
     public static TextComponent makeURLsClickable(final TextComponent component) {
         return replace(component, URL_PATTERN, comp -> {
-            comp.getStyle().setClickEvent(ClickEvent.openUrl(URI.create(comp.asSingleString())));
+            comp.getStyle().setClickEvent(ClickEvent.openUrl(comp.asSingleString()));
             return comp;
         });
     }

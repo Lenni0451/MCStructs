@@ -13,6 +13,10 @@ import java.net.URI;
  */
 public abstract class ClickEvent {
 
+    public static OpenUrlClickEvent openUrl(final String url) {
+        return new OpenUrlClickEvent(url);
+    }
+
     public static OpenUrlClickEvent openUrl(final URI url) {
         return new OpenUrlClickEvent(url);
     }

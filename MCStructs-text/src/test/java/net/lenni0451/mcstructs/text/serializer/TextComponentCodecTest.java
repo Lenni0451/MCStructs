@@ -22,7 +22,6 @@ import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.FieldSource;
 
-import java.net.URI;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,7 +53,7 @@ class TextComponentCodecTest {
             .append(new StringComponent("hover text").setStyle(new Style().setHoverEvent(new TextHoverEvent(new StringComponent("text")))))
             .append(new StringComponent("hover item").setStyle(new Style().setHoverEvent(new ItemHoverEvent(Identifier.of("stone"), 64, new CompoundTag().add("display", new CompoundTag().addString("Name", "name"))))))
             .append(new StringComponent("hover entity").setStyle(new Style().setHoverEvent(new EntityHoverEvent(Identifier.of("player"), UUID.randomUUID(), new StringComponent("name")))))
-            .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openUrl(URI.create("https://example.com"))).setFont(Identifier.of("font")).setInsertion("insertion")));
+            .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openUrl("https://example.com")).setFont(Identifier.of("font")).setInsertion("insertion")));
 
     @ParameterizedTest
     @FieldSource("codecs")

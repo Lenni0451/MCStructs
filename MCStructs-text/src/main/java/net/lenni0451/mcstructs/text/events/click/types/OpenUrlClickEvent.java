@@ -17,7 +17,7 @@ public class OpenUrlClickEvent extends ClickEvent {
     public OpenUrlClickEvent(final String url) {
         super(ClickEventAction.OPEN_URL);
         try {
-            this.url = new UriHolder(URI.create(url));
+            this.url = new UriHolder(new URI(url));
         } catch (Throwable t) {
             this.url = new StringHolder(url);
         }
