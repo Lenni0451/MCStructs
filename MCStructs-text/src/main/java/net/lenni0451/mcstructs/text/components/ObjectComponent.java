@@ -15,6 +15,9 @@ import net.lenni0451.mcstructs.text.font.AtlasSpriteFont;
 import net.lenni0451.mcstructs.text.font.FontDescription;
 import net.lenni0451.mcstructs.text.font.PlayerSpriteFont;
 
+import javax.annotation.Nullable;
+import java.util.Objects;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,6 +25,12 @@ import net.lenni0451.mcstructs.text.font.PlayerSpriteFont;
 public class ObjectComponent extends TextComponent {
 
     private ObjectInfo objectInfo;
+    @Nullable
+    private TextComponent fallback;
+
+    public ObjectComponent(final ObjectInfo objectInfo) {
+        this(objectInfo, null);
+    }
 
     @Override
     public String asSingleString() {
@@ -29,8 +38,9 @@ public class ObjectComponent extends TextComponent {
     }
 
     @Override
-    public TextComponent copy() {
-        return new ObjectComponent(this.objectInfo);
+    public TextComponent shallowCopy() {
+        ObjectComponent component = new ObjectComponent(this.objectInfo, this.fallback == null ? null : this.fallback.copy());
+        return component.setStyle(this.getStyle().copy());
     }
 
     @Override
@@ -39,6 +49,7 @@ public class ObjectComponent extends TextComponent {
                 .add("siblings", this.getSiblings(), siblings -> !siblings.isEmpty())
                 .add("style", this.getStyle(), style -> !style.isEmpty())
                 .add("objectInfo", this.objectInfo)
+                .add("fallback", this.fallback, Objects::nonNull)
                 .toString();
     }
 

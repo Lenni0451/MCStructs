@@ -16,6 +16,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_6.ItemComponents_v1_21_6;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_9.ItemComponents_v1_21_9;
+import net.lenni0451.mcstructs.itemcomponents.impl.v26_1.ItemComponents_v26_1;
 
 import javax.annotation.Nullable;
 
@@ -76,9 +77,15 @@ public abstract class ItemComponentRegistry {
      */
     public static final ItemComponents_v1_21_11 V1_21_11 = new ItemComponents_v1_21_11();
     /**
+     * Item component registry for 26.1.<br>
+     * The registries and verifiers are noop and accept everything.<br>
+     * It is recommended to create a new instance with your own registries and verifiers.
+     */
+    public static final ItemComponents_v26_1 V26_1 = new ItemComponents_v26_1();
+    /**
      * The latest item component registry.
      */
-    public static final ItemComponentRegistry LATEST = V1_21_11;
+    public static final ItemComponentRegistry LATEST = V26_1;
 
 
     private final ItemComponentList components;

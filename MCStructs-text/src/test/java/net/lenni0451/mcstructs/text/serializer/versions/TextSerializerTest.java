@@ -75,7 +75,7 @@ public abstract class TextSerializerTest {
         }
 
         @Override
-        public TextComponent copy() {
+        public TextComponent shallowCopy() {
             return this;
         }
 

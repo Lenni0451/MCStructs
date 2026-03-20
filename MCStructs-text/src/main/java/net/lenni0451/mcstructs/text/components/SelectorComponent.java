@@ -66,11 +66,6 @@ public class SelectorComponent extends TextComponent {
     }
 
     @Override
-    public TextComponent copy() {
-        return this.copyMetaTo(this.shallowCopy());
-    }
-
-    @Override
     public TextComponent shallowCopy() {
         if (this.separator == null) return new SelectorComponent(this.selector, null).setStyle(this.getStyle().copy());
         else return new SelectorComponent(this.selector, this.separator.copy()).setStyle(this.getStyle().copy());

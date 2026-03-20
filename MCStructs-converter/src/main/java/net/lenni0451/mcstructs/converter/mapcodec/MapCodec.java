@@ -143,6 +143,26 @@ public interface MapCodec<T> extends MapSerializer<T>, MapDeserializer<T> {
         };
     }
 
+    default MapCodec<T> verified(final Function<T, Result<Void>> verifier) {
+        return new MapCodec<T>() {
+            @Override
+            public <S> Result<Map<S, S>> serialize(final DataConverter<S> converter, final Map<S, S> map, final T element) {
+                Result<Void> verify = verifier.apply(element);
+                if (verify != null && verify.isError()) return verify.mapError();
+                return MapCodec.this.serialize(converter, map, element);
+            }
+
+            @Override
+            public <S> Result<T> deserialize(final DataConverter<S> converter, final Map<S, S> map) {
+                Result<T> result = MapCodec.this.deserialize(converter, map);
+                if (result.isError()) return result;
+                Result<Void> verify = verifier.apply(result.get());
+                if (verify != null && verify.isError()) return verify.mapError();
+                return result;
+            }
+        };
+    }
+
     default MapCodec<T> defaulted(final T defaultValue) {
         return this.map(
                 value -> Objects.equals(value, defaultValue) ? null : value,

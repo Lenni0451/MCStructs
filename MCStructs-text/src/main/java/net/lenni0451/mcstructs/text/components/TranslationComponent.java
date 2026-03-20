@@ -152,11 +152,6 @@ public class TranslationComponent extends TextComponent {
     }
 
     @Override
-    public TextComponent copy() {
-        return this.copyMetaTo(this.shallowCopy());
-    }
-
-    @Override
     public TextComponent shallowCopy() {
         Object[] copyArgs = new Object[this.args.length];
         for (int i = 0; i < this.args.length; i++) {

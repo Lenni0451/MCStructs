@@ -32,9 +32,13 @@ public class Registries {
     public final Registry wolfSoundVariant = this.register(Identifier.of("wolf_sound_variant"));
     public final Registry frogVariant = this.register(Identifier.of("frog_variant"));
     public final Registry catVariant = this.register(Identifier.of("cat_variant"));
+    public final Registry catSoundVariant = this.register(Identifier.of("cat_sound_variant"));
     public final Registry pigVariant = this.register(Identifier.of("pig_variant"));
+    public final Registry pigSoundVariant = this.register(Identifier.of("pig_sound_variant"));
     public final Registry cowVariant = this.register(Identifier.of("cow_variant"));
+    public final Registry cowSoundVariant = this.register(Identifier.of("cow_sound_variant"));
     public final Registry chickenVariant = this.register(Identifier.of("chicken_variant"));
+    public final Registry chickenSoundVariant = this.register(Identifier.of("chicken_sound_variant"));
     public final Registry paintingVariant = this.register(Identifier.of("painting_variant"));
     public final Registry dimension = this.register(Identifier.of("dimension"));
     public final Registry zombieNautilusVariant = this.register(Identifier.of("zombie_nautilus_variant"));

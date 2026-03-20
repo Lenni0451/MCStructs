@@ -197,7 +197,9 @@ public abstract class TextComponent implements Copyable<TextComponent> {
     public <C extends TextComponent> C copyMetaTo(final C component) {
         component.setStyle(this.getStyle().copy());
         if (this.siblings != null) {
-            for (TextComponent sibling : this.siblings) component.append(sibling.copy());
+            for (TextComponent sibling : this.siblings) {
+                component.append(sibling.copy());
+            }
         }
         return component;
     }
@@ -228,19 +230,23 @@ public abstract class TextComponent implements Copyable<TextComponent> {
     public abstract String asSingleString();
 
     @Override
-    public abstract TextComponent copy();
+    public TextComponent copy() {
+        TextComponent component = this.shallowCopy();
+        if (this.siblings != null) {
+            for (TextComponent sibling : this.siblings) {
+                component.append(sibling.copy());
+            }
+        }
+        return component;
+    }
 
     /**
      * Create a shallow copy of this component.<br>
-     * This will only copy the component itself and not its siblings.
+     * This will only copy the component itself (including style) and not its siblings.
      *
      * @return The shallow copy
      */
-    public TextComponent shallowCopy() {
-        TextComponent copy = this.copy();
-        copy.getSiblings().clear();
-        return copy;
-    }
+    public abstract TextComponent shallowCopy();
 
     public abstract String toString();
 
@@ -339,8 +345,16 @@ public abstract class TextComponent implements Copyable<TextComponent> {
         return new ObjectComponent(new ObjectComponent.AtlasSprite(sprite));
     }
 
+    public static ObjectComponent atlasSprite(final Identifier sprite, @Nullable final TextComponent fallback) {
+        return new ObjectComponent(new ObjectComponent.AtlasSprite(sprite), fallback);
+    }
+
     public static ObjectComponent atlasSprite(final Identifier atlas, final Identifier sprite) {
         return new ObjectComponent(new ObjectComponent.AtlasSprite(atlas, sprite));
+    }
+
+    public static ObjectComponent atlasSprite(final Identifier atlas, final Identifier sprite, @Nullable final TextComponent fallback) {
+        return new ObjectComponent(new ObjectComponent.AtlasSprite(atlas, sprite), fallback);
     }
 
 }
