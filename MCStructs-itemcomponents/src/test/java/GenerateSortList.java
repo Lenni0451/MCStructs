@@ -3,7 +3,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Test {
+public class GenerateSortList {
 
     public static void main(String[] args) throws Throwable {
         String clipboardContent = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
@@ -12,7 +12,7 @@ public class Test {
         while (matcher.find()) {
             System.out.print("\"" + matcher.group(1) + "\", ");
         }
-        System.out.print(");");
+        System.out.println(");");
     }
 
 }
