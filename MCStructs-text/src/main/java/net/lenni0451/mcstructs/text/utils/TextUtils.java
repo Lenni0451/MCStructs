@@ -12,6 +12,8 @@ import net.lenni0451.mcstructs.text.events.hover.impl.TextHoverEvent;
 import net.lenni0451.mcstructs.text.translation.Translator;
 
 import javax.annotation.Nullable;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -24,14 +26,35 @@ public class TextUtils {
     private static final String URL_PATTERN = "(?:https?://)?[\\w._-]+\\.\\w{2,}(?:/\\S*)?";
 
     /**
-     * Make URLs in the given text component clickable.
+     * Make URLs in the given text component clickable.<br>
+     * The lenient parser is used by default, be aware that this can cause exceptions if the URL is not a valid URI.
+     * If you are using Minecraft 1.21.5 or newer, it is recommended to use {@link #makeURLsClickable(TextComponent, boolean)} with lenient set to {@code false} to avoid potential exceptions.
      *
      * @param component The component to make clickable
      * @return The component with clickable URLs
      */
     public static TextComponent makeURLsClickable(final TextComponent component) {
+        return makeURLsClickable(component, true);
+    }
+
+    /**
+     * Make URLs in the given text component clickable.
+     *
+     * @param component The component to make clickable
+     * @param lenient   If true, the URL will be used as is. Minecraft 1.21.5+ started parsing the URL as URI, the serializer can throw an exception if an invalid URI is entered.
+     *                  If false, the URL will be parsed as a URI and ignored if it is invalid. This is the recommended option for Minecraft 1.21.5+.
+     * @return The component with clickable URLs
+     */
+    public static TextComponent makeURLsClickable(final TextComponent component, final boolean lenient) {
         return replace(component, URL_PATTERN, comp -> {
-            comp.getStyle().setClickEvent(ClickEvent.openUrl(comp.asSingleString()));
+            if (lenient) {
+                comp.getStyle().setClickEvent(ClickEvent.openUrl(comp.asSingleString()));
+            } else {
+                try {
+                    comp.getStyle().setClickEvent(ClickEvent.openUrl(new URI(comp.asSingleString())));
+                } catch (URISyntaxException ignored) {
+                }
+            }
             return comp;
         });
     }

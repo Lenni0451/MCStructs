@@ -15,15 +15,45 @@ class TextUtilsTest {
 
     @Test
     void makeURLsClickable() {
-        String url = "https://lenni0451.net";
+        String validURI = "https://lenni0451.net";
+        String invalidURI = "https://lenni0451.net/##";
 
-        TextComponent component = new StringComponent("Check out my website: " + url + " it's awesome!");
-        component = TextUtils.makeURLsClickable(component);
-        assertEquals(new StringComponent("")
-                        .append("Check out my website: ")
-                        .append(new StringComponent(url).setStyle(new Style().setClickEvent(ClickEvent.openUrl(url))))
-                        .append(" it's awesome!"),
-                component);
+        { // Valid URI, strict parser
+            TextComponent component = new StringComponent("Check out my website: " + validURI + " it's awesome!");
+            component = TextUtils.makeURLsClickable(component, false);
+            assertEquals(new StringComponent("")
+                            .append("Check out my website: ")
+                            .append(new StringComponent(validURI).setStyle(new Style().setClickEvent(ClickEvent.openUrl(validURI))))
+                            .append(" it's awesome!"),
+                    component);
+        }
+        { // Valid URI, lenient parser
+            TextComponent component = new StringComponent("Check out my website: " + validURI + " it's awesome!");
+            component = TextUtils.makeURLsClickable(component, true);
+            assertEquals(new StringComponent("")
+                            .append("Check out my website: ")
+                            .append(new StringComponent(validURI).setStyle(new Style().setClickEvent(ClickEvent.openUrl(validURI))))
+                            .append(" it's awesome!"),
+                    component);
+        }
+        { // Invalid URI, strict parser
+            TextComponent component = new StringComponent("Check out my website: " + invalidURI + " it's awesome!");
+            component = TextUtils.makeURLsClickable(component, false);
+            assertEquals(new StringComponent("")
+                            .append("Check out my website: ")
+                            .append(new StringComponent(invalidURI)) // The URI parse should throw an exception and the URL should be skipped
+                            .append(" it's awesome!"),
+                    component);
+        }
+        { // Invalid URI, lenient parser
+            TextComponent component = new StringComponent("Check out my website: " + invalidURI + " it's awesome!");
+            component = TextUtils.makeURLsClickable(component, true);
+            assertEquals(new StringComponent("")
+                            .append("Check out my website: ")
+                            .append(new StringComponent(invalidURI).setStyle(new Style().setClickEvent(ClickEvent.openUrl(invalidURI))))
+                            .append(" it's awesome!"),
+                    component);
+        }
     }
 
     @Test
