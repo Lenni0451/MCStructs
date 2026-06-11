@@ -2,7 +2,7 @@ package net.lenni0451.mcstructs.text.serializer.v1_21_5;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
-import net.lenni0451.mcstructs.converter.impl.v1_20_3.NbtConverter_v1_20_3;
+import net.lenni0451.mcstructs.converter.impl.v1_21_5.NbtConverter_v1_21_5;
 import net.lenni0451.mcstructs.converter.mapcodec.MapCodec;
 import net.lenni0451.mcstructs.converter.model.Result;
 import net.lenni0451.mcstructs.nbt.NbtTag;
@@ -110,7 +110,7 @@ public class StyleCodecs_v1_21_5 {
         public static final MapCodec<ItemHoverEvent> ITEM = MapCodecMerger.mapCodec(
                 Codec.STRING_IDENTIFIER.converterVerified(verify(TextVerifier_v1_21_5.class, TextVerifier_v1_21_5::verifyRegistryItem, "Invalid item")).mapCodec("id").required(), hoverEvent -> hoverEvent.asModern().getId(),
                 Codec.rangedInt(1, 99).mapCodec("count").optional().elseGet(() -> 1), hoverEvent -> hoverEvent.asModern().getCount(),
-                NbtConverter_v1_20_3.INSTANCE.toCodec().verified(tag -> {
+                NbtConverter_v1_21_5.INSTANCE.toCodec().verified(tag -> {
                     if (!tag.isCompoundTag()) return Result.error("Expected a compound tag");
                     return null;
                 }).map(NbtTag::asCompoundTag, NbtTag::asCompoundTag).converterVerified(verify(TextVerifier_v1_21_5.class, TextVerifier_v1_21_5::verifyDataComponents, "Invalid data components")).mapCodec("components").optional().defaulted(null), hoverEvent -> hoverEvent.asModern().getTag(),
