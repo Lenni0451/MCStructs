@@ -201,9 +201,13 @@ public class TextComponentSerializer {
      */
     public static final TextComponentSerializer V26_1 = TextComponentCodec.V26_1.asSerializer();
     /**
+     * The text component serializer for 26.2.
+     */
+    public static final TextComponentSerializer V26_2 = TextComponentCodec.V26_2.asSerializer();
+    /**
      * The latest text component serializer.
      */
-    public static final TextComponentSerializer LATEST = V26_1;
+    public static final TextComponentSerializer LATEST = V26_2;
 
 
     private final TextComponentCodec parentCodec;

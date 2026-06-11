@@ -35,6 +35,8 @@ class TextComponentCodecTest {
             TextComponentCodec.V1_21_2,
             TextComponentCodec.V1_21_4,
             TextComponentCodec.V1_21_5,
+            TextComponentCodec.V26_1,
+            TextComponentCodec.V26_2,
             TextComponentCodec.LATEST
     };
     private static final TextComponentCodec[] legacyCodecs = new TextComponentCodec[]{
