@@ -6,7 +6,6 @@ import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v26_1.ItemComponents_v26_1;
-import net.lenni0451.mcstructs.itemcomponents.impl.v26_2.Types_v26_2.SulfurCubeContent;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class ItemComponents_v26_2 extends ItemComponents_v26_1 {
 
 
     public final ItemComponent<List<ItemStackTemplate>> CHARGED_PROJECTILES = this.register("charged_projectiles", this.typeSerializers.itemStackTemplate().listOf(1024));
-    public final ItemComponent<SulfurCubeContent> SULFUR_CUBE_CONTENT = this.register("sulfur_cube_content", this.typeSerializers.itemStackTemplate().map(SulfurCubeContent::getAbsorbedBlockItemStack, SulfurCubeContent::new));
+    public final ItemComponent<ItemStackTemplate> SULFUR_CUBE_CONTENT = this.register("sulfur_cube_content", this.typeSerializers.itemStackTemplate());
 
     public ItemComponents_v26_2() {
     }

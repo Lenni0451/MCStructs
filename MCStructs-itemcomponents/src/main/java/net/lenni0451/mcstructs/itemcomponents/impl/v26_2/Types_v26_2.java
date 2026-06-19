@@ -21,11 +21,4 @@ public class Types_v26_2 {
         private ItemComponentMap components;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SulfurCubeContent {
-        private ItemStackTemplate absorbedBlockItemStack;
-    }
-
 }
