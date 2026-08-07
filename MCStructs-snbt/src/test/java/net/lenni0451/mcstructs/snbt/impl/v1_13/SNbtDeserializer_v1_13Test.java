@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class SNbtDeserializer_v1_13Test extends SNbtDeserializerTest {
 
-    private static final String[] expectedResults = {
+    private static final String[] EXPECTED_RESULTS = {
             "{id:5}",
             "{id:5b}",
             "{test:1,id:\"hello\"}",
@@ -38,7 +38,7 @@ class SNbtDeserializer_v1_13Test extends SNbtDeserializerTest {
 
     @Test
     void runTests() {
-        executeTests(SNbt.V1_13, expectedResults);
+        executeTests(SNbt.V1_13, EXPECTED_RESULTS);
     }
 
 }

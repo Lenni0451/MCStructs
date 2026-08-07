@@ -416,17 +416,17 @@ public class Style implements Copyable<Style> {
      * @return If the style is empty
      */
     public boolean isEmpty() {
-        return this.getColor() == null &&
-                this.getShadowColor() == null &&
-                this.getBold() == null &&
-                this.getItalic() == null &&
-                this.getUnderlined() == null &&
-                this.getStrikethrough() == null &&
-                this.getObfuscated() == null &&
-                this.getClickEvent() == null &&
-                this.getHoverEvent() == null &&
-                this.getInsertion() == null &&
-                this.getFont() == null;
+        return this.getColor() == null
+                && this.getShadowColor() == null
+                && this.getBold() == null
+                && this.getItalic() == null
+                && this.getUnderlined() == null
+                && this.getStrikethrough() == null
+                && this.getObfuscated() == null
+                && this.getClickEvent() == null
+                && this.getHoverEvent() == null
+                && this.getInsertion() == null
+                && this.getFont() == null;
     }
 
     /**

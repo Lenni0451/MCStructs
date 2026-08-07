@@ -5,6 +5,7 @@
 
 <suppressions>
     <suppress files="MCStructs-data" checks="Regexp"/>
+    <suppress files="MCStructs-data" checks="ConstantName"/>
     <suppress files="ItemComponents_" checks="MemberName"/>
     <suppress files="TextComponentCodec" checks="RequireThis"/>
 </suppressions>

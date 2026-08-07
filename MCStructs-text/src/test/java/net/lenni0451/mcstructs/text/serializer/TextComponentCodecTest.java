@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 class TextComponentCodecTest {
 
-    private static final TextComponentCodec[] codecs = new TextComponentCodec[]{
+    private static final TextComponentCodec[] CODECS = new TextComponentCodec[]{
             TextComponentCodec.V1_20_3,
             TextComponentCodec.V1_20_5,
             TextComponentCodec.V1_21_2,
@@ -39,7 +39,7 @@ class TextComponentCodecTest {
             TextComponentCodec.V26_2,
             TextComponentCodec.LATEST
     };
-    private static final TextComponentCodec[] legacyCodecs = new TextComponentCodec[]{
+    private static final TextComponentCodec[] LEGACY_CODECS = new TextComponentCodec[]{
             TextComponentCodec.V1_20_3,
             TextComponentCodec.V1_20_5,
             TextComponentCodec.V1_21_2,
@@ -58,7 +58,7 @@ class TextComponentCodecTest {
             .append(new StringComponent("style").setStyle(new Style().setFormatting(TextFormatting.ALL.values().toArray(new TextFormatting[0])).setClickEvent(ClickEvent.openUrl("https://example.com")).setFont(Identifier.of("font")).setInsertion("insertion")));
 
     @ParameterizedTest
-    @FieldSource("codecs")
+    @FieldSource("CODECS")
     void serializeDeserializeJson(final TextComponentCodec codec) {
         JsonElement json = codec.serializeJsonTree(this.text);
         TextComponent deserialized = codec.deserializeJsonTree(json);
@@ -66,7 +66,7 @@ class TextComponentCodecTest {
     }
 
     @ParameterizedTest
-    @FieldSource("codecs")
+    @FieldSource("CODECS")
     void serializeDeserializeNbt(final TextComponentCodec codec) {
         NbtTag nbt = codec.serializeNbtTree(this.text);
         TextComponent deserialized = codec.deserializeNbtTree(nbt);
@@ -74,7 +74,7 @@ class TextComponentCodecTest {
     }
 
     @ParameterizedTest
-    @FieldSource("legacyCodecs")
+    @FieldSource("LEGACY_CODECS")
     void legacyItemDeserialization(final TextComponentCodec codec) throws SNbtSerializeException {
         CompoundTag legacyNbt = new CompoundTag()
                 .add("id", "stone")
@@ -89,11 +89,11 @@ class TextComponentCodecTest {
         HoverEvent hoverEvent = modernDeserialized.getStyle().getHoverEvent();
         ItemHoverEvent itemHoverEvent = assertInstanceOf(ItemHoverEvent.class, hoverEvent);
         assertEquals(Identifier.of("stone"), itemHoverEvent.asModern().getId());
-//        assertEquals(5, itemHoverEvent.getCount()); //The 1.20.5 version broke the legacy deserialize. The count is now lowercase
+        // assertEquals(5, itemHoverEvent.getCount()); //The 1.20.5 version broke the legacy deserialize. The count is now lowercase
     }
 
     @ParameterizedTest
-    @FieldSource("legacyCodecs")
+    @FieldSource("LEGACY_CODECS")
     void legacyEntityDeserialization(final TextComponentCodec codec) throws SNbtSerializeException {
         UUID randomUUID = UUID.randomUUID();
         CompoundTag legacyNbt = new CompoundTag()
@@ -115,7 +115,7 @@ class TextComponentCodecTest {
     }
 
     @ParameterizedTest
-    @FieldSource("codecs")
+    @FieldSource("CODECS")
     void arrayWithTag(final TextComponentCodec codec) {
         ListTag<NbtTag> tags = new ListTag<>()
                 .add(new CompoundTag()

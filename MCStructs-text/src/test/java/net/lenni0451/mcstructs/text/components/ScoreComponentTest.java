@@ -10,49 +10,49 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ScoreComponentTest {
 
-    private static final ScoreComponent component = new ScoreComponent("name", "objective");
+    private static final ScoreComponent COMPONENT = new ScoreComponent("name", "objective");
 
     @Test
     void getName() {
-        assertEquals("name", component.getName());
+        assertEquals("name", COMPONENT.getName());
     }
 
     @Test
     void getObjective() {
-        assertEquals("objective", component.getObjective());
+        assertEquals("objective", COMPONENT.getObjective());
     }
 
     @Test
     @Order(0)
     void getValue() {
-        assertNull(component.getValue());
+        assertNull(COMPONENT.getValue());
     }
 
     @Test
     @Order(1)
     void setValue() {
-        component.setValue("value");
-        assertEquals("value", component.getValue());
+        COMPONENT.setValue("value");
+        assertEquals("value", COMPONENT.getValue());
     }
 
     @Test
     @Order(2)
     void asSingleString() {
-        assertEquals("value", component.asSingleString());
+        assertEquals("value", COMPONENT.asSingleString());
     }
 
     @Test
     @Order(2)
     void copy() {
-        ScoreComponent copy = (ScoreComponent) component.copy();
-        assertEquals(component, copy);
-        assertNotSame(component, copy);
+        ScoreComponent copy = (ScoreComponent) COMPONENT.copy();
+        assertEquals(COMPONENT, copy);
+        assertNotSame(COMPONENT, copy);
     }
 
     @Test
     @Order(2)
     void shallowCopy() {
-        ScoreComponent copy = (ScoreComponent) component.copy();
+        ScoreComponent copy = (ScoreComponent) COMPONENT.copy();
         copy.append("Test");
         assertEquals(1, copy.getSiblings().size());
         assertEquals(0, copy.shallowCopy().getSiblings().size());

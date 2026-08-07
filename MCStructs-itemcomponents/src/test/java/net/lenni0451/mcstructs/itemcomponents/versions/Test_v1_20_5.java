@@ -62,7 +62,7 @@ public class Test_v1_20_5 extends ItemComponentTest<ItemComponents_v1_20_5> {
         register(registry.HIDE_ADDITIONAL_TOOLTIP, true);
         register(registry.HIDE_TOOLTIP, true);
         register(registry.REPAIR_COST, 987);
-//        register(registry.CREATIVE_SLOT_LOCK, true);
+        // register(registry.CREATIVE_SLOT_LOCK, true);
         register(registry.ENCHANTMENT_GLINT_OVERRIDE, true);
         register(registry.INTANGIBLE_PROJECTILE, true);
         register(registry.FOOD, new Food(10, 20, true, 14, Collections.singletonList(new Food.Effect(new StatusEffect(registry.getRegistries().statusEffect.getEntry(Identifier.of("test")), 123, 456, true, true, false, null), 0.5F))));
@@ -77,7 +77,7 @@ public class Test_v1_20_5 extends ItemComponentTest<ItemComponents_v1_20_5> {
             mapDecorations.put("test", new MapDecoration(registry.getRegistries().mapDecorationType.getEntry(Identifier.of("test")), 12, 13, 1.8F));
             return mapDecorations;
         }));
-//        register(registry.MAP_POST_PROCESSING, MapPostProcessing.LOCK);
+        // register(registry.MAP_POST_PROCESSING, MapPostProcessing.LOCK);
         register(registry.CHARGED_PROJECTILES, Collections.singletonList(new ItemStack(registry.getRegistries().item.getEntry(Identifier.of("test")), 12, registry.getItemDefaults())));
         register(registry.BUNDLE_CONTENTS, Collections.singletonList(new ItemStack(registry.getRegistries().item.getEntry(Identifier.of("test2")), 34, registry.getItemDefaults())));
         register(registry.POTION_CONTENTS, new PotionContents(registry.getRegistries().potion.getEntry(Identifier.of("test")), 123, Arrays.asList(new StatusEffect(registry.getRegistries().statusEffect.getEntry(Identifier.of("test2")), 123, 456, true, true, false, null), new StatusEffect(registry.getRegistries().statusEffect.getEntry(Identifier.of("test3")), 123, 456, true, true, false, null))));

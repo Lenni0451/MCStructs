@@ -10,18 +10,18 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 class BlockNbtSourceTest {
 
-    private static final NbtComponent component = new NbtComponent("test", true, new StringComponent("separator"), new BlockNbtSource("pos"));
+    private static final NbtComponent COMPONENT = new NbtComponent("test", true, new StringComponent("separator"), new BlockNbtSource("pos"));
 
     @Test
     void copy() {
-        TextComponent copy = component.copy();
-        assertEquals(component, copy);
-        assertNotSame(component, copy);
+        TextComponent copy = COMPONENT.copy();
+        assertEquals(COMPONENT, copy);
+        assertNotSame(COMPONENT, copy);
     }
 
     @Test
     void shallowCopy() {
-        NbtComponent copy = (NbtComponent) component.copy();
+        NbtComponent copy = (NbtComponent) COMPONENT.copy();
         copy.append("Test");
         assertEquals(1, copy.getSiblings().size());
         assertEquals(0, copy.shallowCopy().getSiblings().size());

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SNbtDeserializer_v1_21_5Test extends SNbtDeserializerTest {
 
-    private static final String[] expectedResults = {
+    private static final String[] EXPECTED_RESULTS = {
             "{id:5}",
             "{id:5b}",
             "{test:1,id:\"hello\"}",
@@ -43,7 +43,7 @@ class SNbtDeserializer_v1_21_5Test extends SNbtDeserializerTest {
 
     @Test
     void runTests() {
-        executeTests(SNbt.V1_21_5, expectedResults);
+        executeTests(SNbt.V1_21_5, EXPECTED_RESULTS);
     }
 
     @Test

@@ -11,20 +11,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TextComponentSerializerTest {
 
-    private static final String basicComponent = "{\"text\":\"Hello World\"}";
-    private static final String lenientComponent = "{\"text\":\n//Test comment\n\"Hello World\"}";
-    private static final StringComponent deserializedComponent = new StringComponent("Hello World");
+    private static final String BASIC_COMPONENT = "{\"text\":\"Hello World\"}";
+    private static final String LENIENT_COMPONENT = "{\"text\":\n//Test comment\n\"Hello World\"}";
+    private static final StringComponent DESERIALIZED_COMPONENT = new StringComponent("Hello World");
 
     @Test
     void serialize() {
-        assertEquals("\"Hello World\"", TextComponentSerializer.V1_8.serialize(deserializedComponent));
-        assertEquals(basicComponent, TextComponentSerializer.V1_16.serialize(deserializedComponent));
+        assertEquals("\"Hello World\"", TextComponentSerializer.V1_8.serialize(DESERIALIZED_COMPONENT));
+        assertEquals(BASIC_COMPONENT, TextComponentSerializer.V1_16.serialize(DESERIALIZED_COMPONENT));
     }
 
     @Test
     void serializeJson() {
-        JsonElement element1_8 = TextComponentSerializer.V1_8.serializeJson(deserializedComponent);
-        JsonElement element1_16 = TextComponentSerializer.V1_16.serializeJson(deserializedComponent);
+        JsonElement element1_8 = TextComponentSerializer.V1_8.serializeJson(DESERIALIZED_COMPONENT);
+        JsonElement element1_16 = TextComponentSerializer.V1_16.serializeJson(DESERIALIZED_COMPONENT);
 
         assertInstanceOf(JsonPrimitive.class, element1_8);
         assertTrue(element1_8.isJsonPrimitive());
@@ -37,20 +37,20 @@ class TextComponentSerializerTest {
 
     @Test
     void deserialize() {
-        assertEquals(deserializedComponent, TextComponentSerializer.V1_8.deserialize(basicComponent));
-        assertEquals(deserializedComponent, TextComponentSerializer.V1_8.deserialize(lenientComponent));
+        assertEquals(DESERIALIZED_COMPONENT, TextComponentSerializer.V1_8.deserialize(BASIC_COMPONENT));
+        assertEquals(DESERIALIZED_COMPONENT, TextComponentSerializer.V1_8.deserialize(LENIENT_COMPONENT));
     }
 
     @Test
     void deserializeReader() {
-        assertEquals(deserializedComponent, TextComponentSerializer.V1_8.deserializeReader(basicComponent));
-        assertThrows(JsonSyntaxException.class, () -> TextComponentSerializer.V1_8.deserializeReader(lenientComponent));
+        assertEquals(DESERIALIZED_COMPONENT, TextComponentSerializer.V1_8.deserializeReader(BASIC_COMPONENT));
+        assertThrows(JsonSyntaxException.class, () -> TextComponentSerializer.V1_8.deserializeReader(LENIENT_COMPONENT));
     }
 
     @Test
     void deserializeLenientReader() {
-        assertEquals(deserializedComponent, TextComponentSerializer.V1_8.deserializeLenientReader(basicComponent));
-        assertEquals(deserializedComponent, TextComponentSerializer.V1_8.deserializeLenientReader(lenientComponent));
+        assertEquals(DESERIALIZED_COMPONENT, TextComponentSerializer.V1_8.deserializeLenientReader(BASIC_COMPONENT));
+        assertEquals(DESERIALIZED_COMPONENT, TextComponentSerializer.V1_8.deserializeLenientReader(LENIENT_COMPONENT));
     }
 
 }

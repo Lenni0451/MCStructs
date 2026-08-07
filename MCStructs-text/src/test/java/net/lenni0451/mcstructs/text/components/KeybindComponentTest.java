@@ -11,32 +11,32 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class KeybindComponentTest {
 
-    private static final KeybindComponent component = new KeybindComponent("key.forward");
+    private static final KeybindComponent COMPONENT = new KeybindComponent("key.forward");
 
     @Test
     @Order(0)
     void setTranslator() {
-        component.setTranslator(s -> "test");
+        COMPONENT.setTranslator(s -> "test");
     }
 
     @Test
     @Order(1)
     void asSingleString() {
-        assertEquals("test", component.asSingleString());
+        assertEquals("test", COMPONENT.asSingleString());
     }
 
     @Test
     @Order(1)
     void copy() {
-        KeybindComponent copy = (KeybindComponent) component.copy();
-        assertEquals(component, copy);
-        assertNotSame(component, copy);
+        KeybindComponent copy = (KeybindComponent) COMPONENT.copy();
+        assertEquals(COMPONENT, copy);
+        assertNotSame(COMPONENT, copy);
     }
 
     @Test
     @Order(1)
     void shallowCopy() {
-        KeybindComponent copy = (KeybindComponent) component.copy();
+        KeybindComponent copy = (KeybindComponent) COMPONENT.copy();
         copy.append("Test");
         assertEquals(1, copy.getSiblings().size());
         assertEquals(0, copy.shallowCopy().getSiblings().size());

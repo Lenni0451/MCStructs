@@ -34,7 +34,7 @@ public class AnsiStringFormat extends StringFormat {
         map.put(TextFormatting.LIGHT_PURPLE, "95");
         map.put(TextFormatting.YELLOW, "93");
         map.put(TextFormatting.WHITE, "97");
-//        map.put(TextFormatting.OBFUSCATED, ""); //Not supported
+        // map.put(TextFormatting.OBFUSCATED, ""); //Not supported
         map.put(TextFormatting.BOLD, "1");
         map.put(TextFormatting.STRIKETHROUGH, "9");
         map.put(TextFormatting.UNDERLINE, "4");
@@ -58,7 +58,7 @@ public class AnsiStringFormat extends StringFormat {
         map.put("95", TextFormatting.LIGHT_PURPLE);
         map.put("93", TextFormatting.YELLOW);
         map.put("97", TextFormatting.WHITE);
-//        map.put("", TextFormatting.OBFUSCATED); //Not supported
+        // map.put("", TextFormatting.OBFUSCATED); //Not supported
         map.put("1", TextFormatting.BOLD);
         map.put("9", TextFormatting.STRIKETHROUGH);
         map.put("4", TextFormatting.UNDERLINE);

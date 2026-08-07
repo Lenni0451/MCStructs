@@ -7,33 +7,33 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 class SelectorComponentTest {
 
-    private static final SelectorComponent component = new SelectorComponent("@a", new StringComponent("separator"));
+    private static final SelectorComponent COMPONENT = new SelectorComponent("@a", new StringComponent("separator"));
 
     @Test
     void getSelector() {
-        assertEquals("@a", component.getSelector());
+        assertEquals("@a", COMPONENT.getSelector());
     }
 
     @Test
     void getSeparator() {
-        assertEquals(new StringComponent("separator"), component.getSeparator());
+        assertEquals(new StringComponent("separator"), COMPONENT.getSeparator());
     }
 
     @Test
     void asSingleString() {
-        assertEquals("@a", component.asSingleString());
+        assertEquals("@a", COMPONENT.asSingleString());
     }
 
     @Test
     void copy() {
-        SelectorComponent copy = (SelectorComponent) component.copy();
-        assertEquals(component, copy);
-        assertNotSame(component, copy);
+        SelectorComponent copy = (SelectorComponent) COMPONENT.copy();
+        assertEquals(COMPONENT, copy);
+        assertNotSame(COMPONENT, copy);
     }
 
     @Test
     void shallowCopy() {
-        SelectorComponent copy = (SelectorComponent) component.copy();
+        SelectorComponent copy = (SelectorComponent) COMPONENT.copy();
         copy.append("Test");
         assertEquals(1, copy.getSiblings().size());
         assertEquals(0, copy.shallowCopy().getSiblings().size());

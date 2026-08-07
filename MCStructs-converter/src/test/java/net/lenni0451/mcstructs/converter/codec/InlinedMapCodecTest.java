@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InlinedMapCodecTest {
 
-    private static final Codec<C1> codec = MapCodecMerger.codec(
+    private static final Codec<C1> CODEC = MapCodecMerger.codec(
             Codec.STRING.mapCodec("s1").required(), C1::getS1,
             MapCodec.recursive(c -> MapCodecMerger.mapCodec(
                     Codec.STRING.mapCodec("s2").required(), C2::getS,
@@ -37,7 +37,7 @@ public class InlinedMapCodecTest {
                         .add("extra", new CompoundTag()
                                 .addString("s2", "Test4")));
 
-        assertEquals(new C1("Test1", new C2("Test2", new C2("Test3", new C2("Test4", null)))), codec.deserialize(NbtConverter_v1_20_3.INSTANCE, tag).get());
+        assertEquals(new C1("Test1", new C2("Test2", new C2("Test3", new C2("Test4", null)))), CODEC.deserialize(NbtConverter_v1_20_3.INSTANCE, tag).get());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class InlinedMapCodecTest {
         CompoundTag tag = new CompoundTag()
                 .addString("s1", "Test1");
 
-        assertThrows(Throwable.class, () -> codec.deserialize(NbtConverter_v1_20_3.INSTANCE, tag).get());
+        assertThrows(Throwable.class, () -> CODEC.deserialize(NbtConverter_v1_20_3.INSTANCE, tag).get());
     }
 
 

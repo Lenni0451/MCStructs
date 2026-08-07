@@ -74,7 +74,7 @@ public class LegacyStringUtils {
      */
     @Deprecated
     public static String[] split(final String s, final String split, final boolean unknownWhite) {
-//        return StringFormat.vanilla().split(s, split, ColorHandling.RESET, SerializerUnknownHandling.THROW, unknownWhite ? DeserializerUnknownHandling.WHITE : DeserializerUnknownHandling.IGNORE);
+        // return StringFormat.vanilla().split(s, split, ColorHandling.RESET, SerializerUnknownHandling.THROW, unknownWhite ? DeserializerUnknownHandling.WHITE : DeserializerUnknownHandling.IGNORE);
         return split(s, split, (c) -> {
             TextFormatting formatting = TextFormatting.getByCode(c);
             if (formatting == null) {
@@ -90,7 +90,7 @@ public class LegacyStringUtils {
      */
     @Deprecated
     public static String[] split(final String s, final String split, final Function<Character, TextFormatting> formattingResolver) {
-//        return StringFormat.vanilla().split(s, split, ColorHandling.RESET, SerializerUnknownHandling.THROW, (resolved, currentText) -> formattingResolver.apply(resolved.raw().charAt(0)));
+        // return StringFormat.vanilla().split(s, split, ColorHandling.RESET, SerializerUnknownHandling.THROW, (resolved, currentText) -> formattingResolver.apply(resolved.raw().charAt(0)));
         String[] parts = s.split(Pattern.quote(split));
         for (int i = 1; i < parts.length; i++) {
             String prev = parts[i - 1];

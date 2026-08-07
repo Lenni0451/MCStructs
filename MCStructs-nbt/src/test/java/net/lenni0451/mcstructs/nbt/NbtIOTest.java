@@ -16,25 +16,25 @@ import static org.junit.jupiter.api.Assertions.*;
 class NbtIOTest {
 
     private static final NbtIO NBT_IO = NbtIO.LATEST;
-    private static final CompoundTag compoundTag = new CompoundTag();
+    private static final CompoundTag COMPOUND_TAG = new CompoundTag();
     private static byte[] uncompressed;
     private static byte[] compressed;
     private static byte[] named;
 
     @BeforeAll
     static void prepare() throws IOException {
-        compoundTag.addByteArray("ByteArray", (byte) 0, (byte) 1, (byte) 2, (byte) 3, (byte) 4, (byte) 5);
-        compoundTag.addByte("Byte", (byte) 0);
-        compoundTag.addCompound("Compound", new CompoundTag());
-        compoundTag.addDouble("Double", 0D);
-        compoundTag.addFloat("Float", 0F);
-        compoundTag.addIntArray("IntArray", 0, 1, 2, 3, 4, 5);
-        compoundTag.addInt("Int", 0);
-        compoundTag.addList("List");
-        compoundTag.addLongArray("LongArray", 0L, 1L, 2L, 3L, 4L, 5L);
-        compoundTag.addLong("Long", 0L);
-        compoundTag.addShort("Short", (short) 0);
-        compoundTag.addString("String", "Hello World");
+        COMPOUND_TAG.addByteArray("ByteArray", (byte) 0, (byte) 1, (byte) 2, (byte) 3, (byte) 4, (byte) 5);
+        COMPOUND_TAG.addByte("Byte", (byte) 0);
+        COMPOUND_TAG.addCompound("Compound", new CompoundTag());
+        COMPOUND_TAG.addDouble("Double", 0D);
+        COMPOUND_TAG.addFloat("Float", 0F);
+        COMPOUND_TAG.addIntArray("IntArray", 0, 1, 2, 3, 4, 5);
+        COMPOUND_TAG.addInt("Int", 0);
+        COMPOUND_TAG.addList("List");
+        COMPOUND_TAG.addLongArray("LongArray", 0L, 1L, 2L, 3L, 4L, 5L);
+        COMPOUND_TAG.addLong("Long", 0L);
+        COMPOUND_TAG.addShort("Short", (short) 0);
+        COMPOUND_TAG.addString("String", "Hello World");
 
         uncompressed = readResource("uncompressed.nbt");
         compressed = readResource("compressed.nbt");
@@ -64,8 +64,8 @@ class NbtIOTest {
     void write() {
         ByteArrayOutputStream uncompressed = new ByteArrayOutputStream();
         ByteArrayOutputStream compressed = new ByteArrayOutputStream();
-        assertDoesNotThrow(() -> NBT_IO.write(uncompressed, "", compoundTag, false));
-        assertDoesNotThrow(() -> NBT_IO.write(compressed, "", compoundTag, true));
+        assertDoesNotThrow(() -> NBT_IO.write(uncompressed, "", COMPOUND_TAG, false));
+        assertDoesNotThrow(() -> NBT_IO.write(compressed, "", COMPOUND_TAG, true));
 
         assertArrayEquals(NbtIOTest.uncompressed, uncompressed.toByteArray());
         assertArrayEquals(NbtIOTest.uncompressed, assertDoesNotThrow(() -> decompress(compressed.toByteArray())));
@@ -76,8 +76,8 @@ class NbtIOTest {
         NbtTag uncompressed = assertDoesNotThrow(() -> NBT_IO.read(new ByteArrayInputStream(NbtIOTest.uncompressed), false, NbtReadTracker.unlimitedDepth()));
         NbtTag compressed = assertDoesNotThrow(() -> NBT_IO.read(new ByteArrayInputStream(NbtIOTest.compressed), true, NbtReadTracker.unlimitedDepth()));
 
-        assertEquals(compoundTag, uncompressed);
-        assertEquals(compoundTag, compressed);
+        assertEquals(COMPOUND_TAG, uncompressed);
+        assertEquals(COMPOUND_TAG, compressed);
     }
 
     @Test
