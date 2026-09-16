@@ -10,6 +10,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.Types_v1_21_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v26_2.Types_v26_2.ItemStackTemplate;
 import net.lenni0451.mcstructs.registry.Holder;
+import net.lenni0451.mcstructs.registry.ResourceKey;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.TextComponent;
 
@@ -70,9 +71,13 @@ public class Types_v26_3 {
         public static final String RIGHT = "right";
         public static final String FRONT = "front";
 
+        @Nullable
         private ItemStackTemplate back;
+        @Nullable
         private ItemStackTemplate left;
+        @Nullable
         private ItemStackTemplate right;
+        @Nullable
         private ItemStackTemplate front;
     }
 
@@ -81,13 +86,13 @@ public class Types_v26_3 {
     @AllArgsConstructor
     public static class ResolvableInt {
         private Integer value;
-        private Identifier key;
+        private ResourceKey key;
 
         public ResolvableInt(final int value) {
             this.value = value;
         }
 
-        public ResolvableInt(final Identifier key) {
+        public ResolvableInt(final ResourceKey key) {
             this.key = key;
         }
 
@@ -99,7 +104,7 @@ public class Types_v26_3 {
             return new ResolvableInt(value);
         }
 
-        public static ResolvableInt of(final Identifier key) {
+        public static ResolvableInt of(final ResourceKey key) {
             return new ResolvableInt(key);
         }
     }
@@ -109,13 +114,13 @@ public class Types_v26_3 {
     @AllArgsConstructor
     public static class ResolvableFloat {
         private Float value;
-        private Identifier key;
+        private ResourceKey key;
 
         public ResolvableFloat(final float value) {
             this.value = value;
         }
 
-        public ResolvableFloat(final Identifier key) {
+        public ResolvableFloat(final ResourceKey key) {
             this.key = key;
         }
 
@@ -127,7 +132,7 @@ public class Types_v26_3 {
             return new ResolvableFloat(value);
         }
 
-        public static ResolvableFloat of(final Identifier key) {
+        public static ResolvableFloat of(final ResourceKey key) {
             return new ResolvableFloat(key);
         }
     }

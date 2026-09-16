@@ -44,6 +44,8 @@ public class Registries {
     public final Registry zombieNautilusVariant = this.register(Identifier.of("zombie_nautilus_variant"));
     public final Registry blockTransformer = this.register(Identifier.of("block_transformer"));
     public final Registry decoratedPotPattern = this.register(Identifier.of("decorated_pot_pattern"));
+    public final Registry contextIntProvider = this.register(Identifier.of("context_int_provider"));
+    public final Registry contextFloatProvider = this.register(Identifier.of("context_float_provider"));
 
     protected Registry register(final Identifier name) {
         return new NoOpRegistry(name);

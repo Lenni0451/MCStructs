@@ -12,6 +12,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2.Consume
 import net.lenni0451.mcstructs.itemcomponents.impl.v26_2.TypeSerializers_v26_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v26_3.Types_v26_3.*;
 import net.lenni0451.mcstructs.registry.Holder;
+import net.lenni0451.mcstructs.registry.ResourceKey;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.serializer.TextComponentCodec;
 
@@ -68,14 +69,14 @@ public class TypeSerializers_v26_3 extends TypeSerializers_v26_2 {
     }
 
     public Codec<ResolvableInt> resolvableInt() {
-        return this.init(RESOLVABLE_INT, () -> Codec.either(Codec.INTEGER, Codec.STRING_IDENTIFIER).map(
+        return this.init(RESOLVABLE_INT, () -> Codec.either(Codec.INTEGER, ResourceKey.codec(registry.getRegistries().contextIntProvider)).map(
                 resolvableInt -> resolvableInt.isConstant() ? Either.left(resolvableInt.getValue()) : Either.right(resolvableInt.getKey()),
                 either -> either.xmap(ResolvableInt::new, ResolvableInt::new)
         ));
     }
 
     public Codec<ResolvableFloat> resolvableFloat() {
-        return this.init(RESOLVABLE_FLOAT, () -> Codec.either(Codec.FLOAT, Codec.STRING_IDENTIFIER).map(
+        return this.init(RESOLVABLE_FLOAT, () -> Codec.either(Codec.FLOAT, ResourceKey.codec(registry.getRegistries().contextFloatProvider)).map(
                 resolvableFloat -> resolvableFloat.isConstant() ? Either.left(resolvableFloat.getValue()) : Either.right(resolvableFloat.getKey()),
                 either -> either.xmap(ResolvableFloat::new, ResolvableFloat::new)
         ));

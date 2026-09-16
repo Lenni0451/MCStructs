@@ -13,6 +13,7 @@ import net.lenni0451.mcstructs.itemcomponents.impl.v26_3.ItemComponents_v26_3;
 import net.lenni0451.mcstructs.itemcomponents.impl.v26_3.Types_v26_3.*;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.registry.Holder;
+import net.lenni0451.mcstructs.registry.ResourceKey;
 import net.lenni0451.mcstructs.registry.TagEntryList;
 import net.lenni0451.mcstructs.text.components.StringComponent;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class Test_v26_3 extends ItemComponentTest<ItemComponents_v26_3> {
         this.register(registry.VILLAGER_FOOD, new VillagerFood(5));
         this.register(registry.COMPOSTABLE, new Compostable(new ResolvableInt(1)));
         this.register(registry.COOKING_FUEL, new CookingFuel(new ResolvableInt(200), new ResolvableFloat(1.5F)));
-        this.register(registry.BREWING_FUEL, new BrewingFuel(new ResolvableInt(Identifier.of("test:provider")), new ResolvableFloat(Identifier.of("test:speed"))));
+        this.register(registry.BREWING_FUEL, new BrewingFuel(new ResolvableInt(new ResourceKey(registry.getRegistries().contextIntProvider, Identifier.of("test:provider"))), new ResolvableFloat(new ResourceKey(registry.getRegistries().contextFloatProvider, Identifier.of("test:speed")))));
         this.register(registry.MOB_VISIBILITY, new MobVisibility(new TagEntryList(Collections.singletonList(registry.getRegistries().entityType.getEntry(Identifier.of("test")))), 0.5F));
         this.register(registry.PROVIDES_POTTERY_PATTERN, registry.getRegistries().decoratedPotPattern.getEntry(Identifier.of("test")));
         this.register(registry.SIGN_TEXT_FRONT, new SignText(Arrays.asList(new StringComponent("Line 1"), new StringComponent("Line 2"), new StringComponent("Line 3"), new StringComponent("Line 4")), Arrays.asList(new StringComponent("FLine 1"), new StringComponent("FLine 2"), new StringComponent("FLine 3"), new StringComponent("FLine 4")), Types_v1_20_5.DyeColor.RED, true));
