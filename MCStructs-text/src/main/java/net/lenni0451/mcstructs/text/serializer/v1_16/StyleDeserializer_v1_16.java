@@ -9,6 +9,7 @@ import net.lenni0451.mcstructs.text.events.click.ClickEventAction;
 import net.lenni0451.mcstructs.text.events.click.types.ChangePageClickEvent;
 import net.lenni0451.mcstructs.text.events.click.types.OpenUrlClickEvent;
 import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
+import net.lenni0451.mcstructs.text.utils.JsonUtils;
 
 import java.lang.reflect.Type;
 
@@ -16,6 +17,16 @@ import static net.lenni0451.mcstructs.text.utils.JsonUtils.getJsonObject;
 import static net.lenni0451.mcstructs.text.utils.JsonUtils.getString;
 
 public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
+
+    private final JsonDeserializer<HoverEvent> hoverEventDeserializer;
+
+    public StyleDeserializer_v1_16() {
+        this((json, typeOfT, context) -> context.deserialize(json, typeOfT));
+    }
+
+    public StyleDeserializer_v1_16(final JsonDeserializer<HoverEvent> hoverEventDeserializer) {
+        this.hoverEventDeserializer = hoverEventDeserializer;
+    }
 
     @Override
     public Style deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -45,7 +56,7 @@ public class StyleDeserializer_v1_16 implements JsonDeserializer<Style> {
         }
         if (rawStyle.has("hoverEvent")) {
             JsonObject rawHoverEvent = getJsonObject(rawStyle, "hoverEvent");
-            HoverEvent hoverEvent = context.deserialize(rawHoverEvent, HoverEvent.class);
+            HoverEvent hoverEvent = JsonUtils.deserialize(this.hoverEventDeserializer, rawHoverEvent, HoverEvent.class, context);
             if (hoverEvent != null && hoverEvent.getAction().isUserDefinable()) {
                 style.setHoverEvent(hoverEvent);
             }

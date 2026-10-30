@@ -1,6 +1,7 @@
 package net.lenni0451.mcstructs.text.serializer.v1_8;
 
 import com.google.gson.*;
+import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
 import net.lenni0451.mcstructs.text.components.ScoreComponent;
 import net.lenni0451.mcstructs.text.components.SelectorComponent;
@@ -12,6 +13,16 @@ import java.util.Map;
 
 public class TextSerializer_v1_8 implements JsonSerializer<TextComponent> {
 
+    private final JsonSerializer<Style> styleSerializer;
+
+    public TextSerializer_v1_8() {
+        this((src, typeOfSrc, context) -> context.serialize(src));
+    }
+
+    public TextSerializer_v1_8(final JsonSerializer<Style> styleSerializer) {
+        this.styleSerializer = styleSerializer;
+    }
+
     @Override
     public JsonElement serialize(TextComponent src, Type typeOfSrc, JsonSerializationContext context) {
         if (src instanceof StringComponent && src.getStyle().isEmpty() && src.getSiblings().isEmpty()) {
@@ -20,8 +31,8 @@ public class TextSerializer_v1_8 implements JsonSerializer<TextComponent> {
             JsonObject serializedComponent = new JsonObject();
 
             if (!src.getStyle().isEmpty()) {
-                JsonElement serializedStyle = context.serialize(src.getStyle());
-                if (serializedStyle.isJsonObject()) {
+                JsonElement serializedStyle = this.styleSerializer.serialize(src.getStyle(), Style.class, context);
+                if (serializedStyle != null && serializedStyle.isJsonObject()) {
                     JsonObject serializedStyleObject = serializedStyle.getAsJsonObject();
                     for (Map.Entry<String, JsonElement> entry : serializedStyleObject.entrySet()) serializedComponent.add(entry.getKey(), entry.getValue());
                 }

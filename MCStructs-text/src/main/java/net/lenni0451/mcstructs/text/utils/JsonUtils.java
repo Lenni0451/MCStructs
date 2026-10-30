@@ -1,12 +1,10 @@
 package net.lenni0451.mcstructs.text.utils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -160,6 +158,14 @@ public class JsonUtils {
     public static JsonObject getJsonObject(final JsonObject object, final String key) {
         if (object.has(key)) return getJsonObject(object.get(key), key);
         else throw new JsonSyntaxException("Missing " + key + ", expected to find a JsonObject");
+    }
+
+    public static <T> T deserialize(final JsonDeserializer<T> deserializer, final JsonElement json, final Type type, final JsonDeserializationContext context) {
+        try {
+            return deserializer.deserialize(json, type, context);
+        } catch (IllegalStateException e) { // wrap in JsonSyntaxException to keep the same behavior as calling through context
+            throw new JsonSyntaxException(e);
+        }
     }
 
 

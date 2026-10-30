@@ -26,7 +26,7 @@ public class StyleSerializer_v1_8 extends EventSerializers_v1_8 implements JsonS
         if (src.getStrikethrough() != null) serializedStyle.addProperty("strikethrough", src.isStrikethrough());
         if (src.getObfuscated() != null) serializedStyle.addProperty("obfuscated", src.isObfuscated());
         if (src.getColor() != null && !src.getColor().isRGBColor()) serializedStyle.addProperty("color", src.getColor().serialize());
-        if (src.getInsertion() != null) serializedStyle.add("insertion", context.serialize(src.getInsertion()));
+        if (src.getInsertion() != null) serializedStyle.addProperty("insertion", src.getInsertion());
         if (src.getClickEvent() != null) {
             JsonObject clickEvent = new JsonObject();
             clickEvent.addProperty("action", src.getClickEvent().getAction().getName());

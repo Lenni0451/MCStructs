@@ -25,15 +25,19 @@ public interface Result<T> {
     }
 
     static <T> Result<T> unexpected(final Object actual, final Class<?>... expected) {
-        String[] names = new String[expected.length];
-        for (int i = 0; i < expected.length; i++) {
-            names[i] = expected[i].getSimpleName();
-        }
-        return unexpected(actual, names);
+        Class<?> actualType = actual == null ? null : actual.getClass();
+        return new Error<>(new LazyCodecException(() -> {
+            String[] names = new String[expected.length];
+            for (int i = 0; i < expected.length; i++) {
+                names[i] = expected[i].getSimpleName();
+            }
+            return "Expected " + String.join("/", names) + " but got " + (actualType == null ? "null" : actualType.getSimpleName());
+        }));
     }
 
     static <T> Result<T> unexpected(final Object actual, final String... expected) {
-        return error("Expected " + String.join("/", expected) + " but got " + (actual == null ? "null" : actual.getClass().getSimpleName()));
+        Class<?> actualType = actual == null ? null : actual.getClass();
+        return new Error<>(new LazyCodecException(() -> "Expected " + String.join("/", expected) + " but got " + (actualType == null ? "null" : actualType.getSimpleName())));
     }
 
 
