@@ -7,11 +7,22 @@ import com.google.gson.JsonSerializer;
 import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.events.click.ClickEvent;
 import net.lenni0451.mcstructs.text.events.click.types.*;
+import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.font.ResourceFont;
 
 import java.lang.reflect.Type;
 
 public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
+
+    private final JsonSerializer<HoverEvent> hoverEventSerializer;
+
+    public StyleSerializer_v1_16() {
+        this((src, typeOfSrc, context) -> context.serialize(src));
+    }
+
+    public StyleSerializer_v1_16(final JsonSerializer<HoverEvent> hoverEventSerializer) {
+        this.hoverEventSerializer = hoverEventSerializer;
+    }
 
     @Override
     public JsonElement serialize(Style src, Type typeOfSrc, JsonSerializationContext context) {
@@ -24,14 +35,14 @@ public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
         if (src.getStrikethrough() != null) serializedStyle.addProperty("strikethrough", src.isStrikethrough());
         if (src.getObfuscated() != null) serializedStyle.addProperty("obfuscated", src.isObfuscated());
         if (src.getColor() != null) serializedStyle.addProperty("color", src.getColor().serialize());
-        if (src.getInsertion() != null) serializedStyle.add("insertion", context.serialize(src.getInsertion()));
+        if (src.getInsertion() != null) serializedStyle.addProperty("insertion", src.getInsertion());
         if (src.getClickEvent() != null) {
             JsonObject clickEvent = new JsonObject();
             clickEvent.addProperty("action", src.getClickEvent().getAction().getName());
             clickEvent.addProperty("value", this.serializeClickEvent(src.getClickEvent()));
             serializedStyle.add("clickEvent", clickEvent);
         }
-        if (src.getHoverEvent() != null) serializedStyle.add("hoverEvent", context.serialize(src.getHoverEvent()));
+        if (src.getHoverEvent() != null) serializedStyle.add("hoverEvent", this.hoverEventSerializer.serialize(src.getHoverEvent(), HoverEvent.class, context));
         if (src.getFont() != null) {
             if (src.getFont() instanceof ResourceFont) {
                 serializedStyle.addProperty("font", ((ResourceFont) src.getFont()).getId().get());

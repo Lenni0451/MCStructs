@@ -8,6 +8,7 @@ import net.lenni0451.mcstructs.text.components.*;
 import net.lenni0451.mcstructs.text.components.nbt.BlockNbtSource;
 import net.lenni0451.mcstructs.text.components.nbt.EntityNbtSource;
 import net.lenni0451.mcstructs.text.components.nbt.StorageNbtSource;
+import net.lenni0451.mcstructs.text.utils.JsonUtils;
 
 import java.lang.reflect.Type;
 
@@ -15,6 +16,16 @@ import static net.lenni0451.mcstructs.text.utils.JsonUtils.getBoolean;
 import static net.lenni0451.mcstructs.text.utils.JsonUtils.getString;
 
 public class TextDeserializer_v1_15 implements JsonDeserializer<TextComponent> {
+
+    private final JsonDeserializer<Style> styleDeserializer;
+
+    public TextDeserializer_v1_15() {
+        this((json, typeOfT, context) -> context.deserialize(json, typeOfT));
+    }
+
+    public TextDeserializer_v1_15(final JsonDeserializer<Style> styleDeserializer) {
+        this.styleDeserializer = styleDeserializer;
+    }
 
     @Override
     public TextComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -81,7 +92,7 @@ public class TextDeserializer_v1_15 implements JsonDeserializer<TextComponent> {
                 for (JsonElement element : extra) component.append(this.deserialize(element, typeOfT, context));
             }
 
-            Style newStyle = context.deserialize(rawComponent, Style.class);
+            Style newStyle = JsonUtils.deserialize(this.styleDeserializer, rawComponent, Style.class, context);
             if (newStyle != null) component.setStyle(newStyle);
             return component;
         } else {
