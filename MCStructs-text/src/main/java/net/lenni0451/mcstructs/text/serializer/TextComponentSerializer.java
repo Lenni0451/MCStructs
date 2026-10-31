@@ -3,9 +3,7 @@ package net.lenni0451.mcstructs.text.serializer;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import net.lenni0451.mcstructs.snbt.SNbt;
-import net.lenni0451.mcstructs.text.Style;
 import net.lenni0451.mcstructs.text.TextComponent;
-import net.lenni0451.mcstructs.text.events.hover.HoverEvent;
 import net.lenni0451.mcstructs.text.serializer.v1_12.StyleDeserializer_v1_12;
 import net.lenni0451.mcstructs.text.serializer.v1_12.StyleSerializer_v1_12;
 import net.lenni0451.mcstructs.text.serializer.v1_12.TextDeserializer_v1_12;
@@ -59,13 +57,11 @@ public class TextComponentSerializer {
      * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_7 = new TextComponentSerializer(() -> {
-        StyleDeserializer_v1_7 styleDeserializer = new StyleDeserializer_v1_7(SNbt.V1_7);
         StyleSerializer_v1_7 styleSerializer = new StyleSerializer_v1_7(SNbt.V1_7);
+        StyleDeserializer_v1_7 styleDeserializer = new StyleDeserializer_v1_7(SNbt.V1_7);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_7(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_7(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
                 .create();
     }, true);
     /**
@@ -73,13 +69,11 @@ public class TextComponentSerializer {
      * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_8 = new TextComponentSerializer(() -> {
-        StyleDeserializer_v1_8 styleDeserializer = new StyleDeserializer_v1_8(SNbt.V1_8);
         StyleSerializer_v1_8 styleSerializer = new StyleSerializer_v1_8(SNbt.V1_8);
+        StyleDeserializer_v1_8 styleDeserializer = new StyleDeserializer_v1_8(SNbt.V1_8);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_8(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_8(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
                 .create();
     }, true);
     /**
@@ -87,13 +81,11 @@ public class TextComponentSerializer {
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_9 = new TextComponentSerializer(() -> {
-        StyleDeserializer_v1_9 styleDeserializer = new StyleDeserializer_v1_9(SNbt.V1_8);
         StyleSerializer_v1_9 styleSerializer = new StyleSerializer_v1_9(SNbt.V1_8);
+        StyleDeserializer_v1_9 styleDeserializer = new StyleDeserializer_v1_9(SNbt.V1_8);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_9(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_8(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
                 .create();
     }, true);
     /**
@@ -101,13 +93,11 @@ public class TextComponentSerializer {
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_12 = new TextComponentSerializer(() -> {
-        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_12);
         StyleSerializer_v1_12 styleSerializer = new StyleSerializer_v1_12(SNbt.V1_12);
+        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_12);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_12(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_12(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
                 .create();
     });
     /**
@@ -115,13 +105,11 @@ public class TextComponentSerializer {
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_14 = new TextComponentSerializer(() -> {
-        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_14);
         StyleSerializer_v1_12 styleSerializer = new StyleSerializer_v1_12(SNbt.V1_14);
+        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_14);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_14(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_14(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
                 .disableHtmlEscaping()
                 .create();
     });
@@ -130,13 +118,11 @@ public class TextComponentSerializer {
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_15 = new TextComponentSerializer(() -> {
-        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_14);
         StyleSerializer_v1_12 styleSerializer = new StyleSerializer_v1_12(SNbt.V1_14);
+        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_14);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_15(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_15(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
                 .disableHtmlEscaping()
                 .create();
     });
@@ -145,17 +131,13 @@ public class TextComponentSerializer {
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_16 = new TextComponentSerializer(() -> {
-        HoverEventDeserializer_v1_16 hoverEventDeserializer = new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbt.V1_14);
         HoverEventSerializer_v1_16 hoverEventSerializer = new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16, SNbt.V1_14);
-        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
         StyleSerializer_v1_16 styleSerializer = new StyleSerializer_v1_16(hoverEventSerializer);
+        HoverEventDeserializer_v1_16 hoverEventDeserializer = new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbt.V1_14);
+        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_16(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_16(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
-                .registerTypeHierarchyAdapter(HoverEvent.class, hoverEventDeserializer)
-                .registerTypeHierarchyAdapter(HoverEvent.class, hoverEventSerializer)
                 .disableHtmlEscaping()
                 .create();
     });
@@ -164,17 +146,13 @@ public class TextComponentSerializer {
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_17 = new TextComponentSerializer(() -> {
-        HoverEventDeserializer_v1_16 hoverEventDeserializer = new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbt.V1_14);
         HoverEventSerializer_v1_16 hoverEventSerializer = new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17, SNbt.V1_14);
-        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
         StyleSerializer_v1_16 styleSerializer = new StyleSerializer_v1_16(hoverEventSerializer);
+        HoverEventDeserializer_v1_16 hoverEventDeserializer = new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbt.V1_14);
+        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_17(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_17(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
-                .registerTypeHierarchyAdapter(HoverEvent.class, hoverEventDeserializer)
-                .registerTypeHierarchyAdapter(HoverEvent.class, hoverEventSerializer)
                 .disableHtmlEscaping()
                 .create();
     });
@@ -183,17 +161,13 @@ public class TextComponentSerializer {
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_18 = new TextComponentSerializer(() -> {
-        HoverEventDeserializer_v1_18 hoverEventDeserializer = new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbt.V1_14);
         HoverEventSerializer_v1_16 hoverEventSerializer = new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18, SNbt.V1_14);
-        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
         StyleSerializer_v1_16 styleSerializer = new StyleSerializer_v1_16(hoverEventSerializer);
+        HoverEventDeserializer_v1_18 hoverEventDeserializer = new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbt.V1_14);
+        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_17(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_17(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
-                .registerTypeHierarchyAdapter(HoverEvent.class, hoverEventDeserializer)
-                .registerTypeHierarchyAdapter(HoverEvent.class, hoverEventSerializer)
                 .disableHtmlEscaping()
                 .create();
     });
@@ -202,17 +176,13 @@ public class TextComponentSerializer {
      * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
      */
     public static final TextComponentSerializer V1_19_4 = new TextComponentSerializer(() -> {
-        HoverEventDeserializer_v1_18 hoverEventDeserializer = new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_19_4, SNbt.V1_14);
         HoverEventSerializer_v1_16 hoverEventSerializer = new HoverEventSerializer_v1_16(TextComponentSerializer.V1_19_4, SNbt.V1_14);
-        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
         StyleSerializer_v1_16 styleSerializer = new StyleSerializer_v1_16(hoverEventSerializer);
+        HoverEventDeserializer_v1_18 hoverEventDeserializer = new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_19_4, SNbt.V1_14);
+        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
         return new GsonBuilder()
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_19_4(styleSerializer))
                 .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_19_4(styleDeserializer))
-                .registerTypeAdapter(Style.class, styleDeserializer)
-                .registerTypeAdapter(Style.class, styleSerializer)
-                .registerTypeHierarchyAdapter(HoverEvent.class, hoverEventDeserializer)
-                .registerTypeHierarchyAdapter(HoverEvent.class, hoverEventSerializer)
                 .disableHtmlEscaping()
                 .create();
     });
