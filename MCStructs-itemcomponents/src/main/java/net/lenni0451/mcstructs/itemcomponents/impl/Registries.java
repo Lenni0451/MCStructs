@@ -46,6 +46,7 @@ public class Registries {
     public final Registry decoratedPotPattern = this.register(Identifier.of("decorated_pot_pattern"));
     public final Registry contextIntProvider = this.register(Identifier.of("context_int_provider"));
     public final Registry contextFloatProvider = this.register(Identifier.of("context_float_provider"));
+    public final Registry dispenseBehavior = this.register(Identifier.of("dispense_behavior"));
 
     protected Registry register(final Identifier name) {
         return new NoOpRegistry(name);

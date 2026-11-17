@@ -33,7 +33,7 @@ public class ItemComponents_v1_21_6 extends ItemComponents_v1_21_5 {
             Codec.BOOLEAN.mapCodec(Equippable.DAMAGE_ON_HURT).optional().defaulted(true), Equippable::isDamageOnHurt,
             Codec.BOOLEAN.mapCodec(Equippable.EQUIP_ON_INTERACT).optional().defaulted(false), Equippable::isEquipOnInteract,
             Codec.BOOLEAN.mapCodec(Equippable.CAN_BE_SHEARED).optional().defaulted(false), Equippable::isCanBeSheared,
-            this.typeSerializers.soundEvent().mapCodec(Equippable.SHEARING_SOUND).optional().defaulted(new Holder<>(this.registries.sound.getEntry(Identifier.of("item.shears.snip")))), Equippable::getEquipSound,
+            this.typeSerializers.soundEvent().mapCodec(Equippable.SHEARING_SOUND).optional().defaulted(new Holder<>(this.registries.sound.getEntry(Identifier.of("item.shears.snip")))), Equippable::getShearingSound,
             Equippable::new
     ));
 
