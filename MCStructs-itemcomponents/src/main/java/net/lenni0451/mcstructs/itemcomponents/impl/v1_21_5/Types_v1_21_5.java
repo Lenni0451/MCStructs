@@ -9,6 +9,7 @@ import net.lenni0451.mcstructs.converter.types.NamedType;
 import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.registry.Holder;
 import net.lenni0451.mcstructs.registry.RegistryEntry;
 import net.lenni0451.mcstructs.registry.TagEntryList;
@@ -296,6 +297,35 @@ public class Types_v1_21_5 {
 
         private Holder<ArmorTrimMaterial> material;
         private Holder<ArmorTrimPattern> pattern;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Equippable {
+        public static final String SLOT = "slot";
+        public static final String EQUIP_SOUND = "equip_sound";
+        public static final String ASSET_ID = "asset_id";
+        public static final String CAMERA_OVERLAY = "camera_overlay";
+        public static final String ALLOWED_ENTITIES = "allowed_entities";
+        public static final String DISPENSABLE = "dispensable";
+        public static final String SWAPPABLE = "swappable";
+        public static final String DAMAGE_ON_HURT = "damage_on_hurt";
+        public static final String EQUIP_ON_INTERACT = "equip_on_interact";
+
+        private Types_v1_21_2.EquipmentSlot slot;
+        private Holder<Types_v1_20_5.SoundEvent> equipSound; //Default: item.armor.equip_generic
+        private Identifier assetId = null;
+        private Identifier cameraOverlay = null;
+        private TagEntryList allowedEntities = null;
+        private boolean dispensable = true;
+        private boolean swappable = true;
+        private boolean damageOnHurt = true;
+        private boolean equipOnInteract = false;
+
+        public Equippable(final Types_v1_21_2.EquipmentSlot slot) {
+            this.slot = slot;
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponentRegistry;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5.ItemComponents_v1_21_5;
 import net.lenni0451.mcstructs.nbt.NbtTag;
 import net.lenni0451.mcstructs.nbt.tags.CompoundTag;
@@ -40,6 +41,7 @@ public class Test_v1_21_5 extends ItemComponentTest<ItemComponents_v1_21_5> {
         register(registry.LORE, Arrays.asList(new StringComponent("Test1"), new StringComponent("Test2")));
         register(registry.WRITTEN_BOOK_CONTENT, new Types_v1_20_5.WrittenBook(new Types_v1_20_5.RawFilteredPair<>("title"), "author", 3, Arrays.asList(new Types_v1_20_5.RawFilteredPair<>(new StringComponent("page1")), new Types_v1_20_5.RawFilteredPair<>(new StringComponent("page2"), new StringComponent("filtered page2"))), true));
         register(registry.WEAPON, new Weapon(32, 12.3F));
+        register(registry.EQUIPPABLE, new Equippable(Types_v1_21_2.EquipmentSlot.CHEST, registry.getRegistries().sound.getHolder(Identifier.of("test")), Identifier.of("test"), Identifier.of("test2"), new TagEntryList(Arrays.asList(registry.getRegistries().entityType.getEntry(Identifier.of("test1")), registry.getRegistries().entityType.getEntry(Identifier.of("test2")))), false, false, false, true));
         register(registry.POTION_DURATION_SCALE, 12.3F);
         register(registry.TOOL, new ToolComponent(Arrays.asList(new Types_v1_20_5.ToolComponent.Rule(new TagEntryList(registry.getRegistries().block.getTag(Identifier.of("test"))), 10F, true)), 12.3F, 10, true));
         register(registry.VILLAGER_VARIANT, VillagerVariant.SAVANNA);

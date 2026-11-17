@@ -2,11 +2,13 @@ package net.lenni0451.mcstructs.itemcomponents.impl.v1_21_5;
 
 import net.lenni0451.mcstructs.converter.codec.Codec;
 import net.lenni0451.mcstructs.converter.codec.map.MapCodecMerger;
+import net.lenni0451.mcstructs.core.Identifier;
 import net.lenni0451.mcstructs.itemcomponents.ItemComponent;
 import net.lenni0451.mcstructs.itemcomponents.impl.Registries;
 import net.lenni0451.mcstructs.itemcomponents.impl.Verifiers;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_20_5.Types_v1_20_5;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21.Types_v1_21;
+import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_2.Types_v1_21_2;
 import net.lenni0451.mcstructs.itemcomponents.impl.v1_21_4.ItemComponents_v1_21_4;
 import net.lenni0451.mcstructs.registry.*;
 import net.lenni0451.mcstructs.text.TextComponent;
@@ -135,6 +137,18 @@ public class ItemComponents_v1_21_5 extends ItemComponents_v1_21_4 {
             ArmorTrim::new
     ));
     public final ItemComponent<Boolean> UNBREAKABLE = this.register("unbreakable", Codec.UNIT);
+    public final ItemComponent<Equippable> EQUIPPABLE = this.register("equippable", MapCodecMerger.codec(
+            Codec.named(Types_v1_21_2.EquipmentSlot.values()).mapCodec(Equippable.SLOT).required(), Equippable::getSlot,
+            this.typeSerializers.soundEvent().mapCodec(Equippable.EQUIP_SOUND).optional().defaulted(new Holder<>(this.registries.sound.getEntry(Identifier.of("item.armor.equip_generic")))), Equippable::getEquipSound,
+            Codec.STRING_IDENTIFIER.mapCodec(Equippable.ASSET_ID).optional().defaulted(null), Equippable::getAssetId,
+            Codec.STRING_IDENTIFIER.mapCodec(Equippable.CAMERA_OVERLAY).optional().defaulted(null), Equippable::getCameraOverlay,
+            TagEntryList.codec(this.registries.entityType, false).mapCodec(Equippable.ALLOWED_ENTITIES).optional().defaulted(null), Equippable::getAllowedEntities,
+            Codec.BOOLEAN.mapCodec(Equippable.DISPENSABLE).optional().defaulted(true), Equippable::isDispensable,
+            Codec.BOOLEAN.mapCodec(Equippable.SWAPPABLE).optional().defaulted(true), Equippable::isSwappable,
+            Codec.BOOLEAN.mapCodec(Equippable.DAMAGE_ON_HURT).optional().defaulted(true), Equippable::isDamageOnHurt,
+            Codec.BOOLEAN.mapCodec(Equippable.EQUIP_ON_INTERACT).optional().defaulted(false), Equippable::isEquipOnInteract,
+            Equippable::new
+    ));
     private ItemComponent<?> HIDE_ADDITIONAL_TOOLTIP;
     private ItemComponent<?> HIDE_TOOLTIP;
 
